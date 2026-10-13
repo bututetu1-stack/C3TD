@@ -195,7 +195,7 @@ Assets/
 - JSON は自前の `MiniJson` + `JsonMapper` で読む（JsonUtility では配列の配列や辞書が読めないため）。`//` コメントと末尾のカンマを書いてよい。知らないキーは警告を出して無視するので、綴りの間違いはコンソールで分かる。経路は読み込み時に検査する（範囲外・歩けないマスを通る・S で始まり B で終わらない）。
 - データ：`Data/rules.json`（DP の回復・上限、撤退で戻る割合、最低ダメージ、スローの速さ）、`Data/classes.json`（職業ごとの置ける地形・攻撃のしかた・ダメージの種類・標準ブロック数・範囲・弾の画像・色）、`Data/squad.json`（はじめの編成と、編成画面での部員の並び）、`Data/campaign.json`（章とステージの並び）、`Data/Characters/{id}.json`。ステージの `description` は作戦選択の説明。
 - 敵の JSON：`res`（術耐性%）、`artScale`（絵の大きさ）、`artFacing`（絵の向き。課題とレポートは `Left`）、`lifeDamage`（拠点に着いたら減るライフ。ボスの締切は 2）。
-- ステージの JSON の `hints`：`{ "time": 秒, "duration": 秒, "text": "…" }` の配列。その時刻に画面の左下にヒントが出る（いまは 1-1 だけ）。
+- ステージの JSON の `hints`：`{ "time": 秒, "duration": 秒, "text": "…" }` の配列。その時刻に画面の左下にヒントが出る（1-1 は操作の説明を4つ、1-2・1-4・1-5 は1つずつ。1-3 はなし）。
 - 部員の JSON の追加項目：`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る）・`endLine`（終わったときのセリフ。吹き出し）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
 - スキル（`Skills/SkillRunner`・`Skills/SkillEffects` の先頭に一覧あり）：
   - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）。

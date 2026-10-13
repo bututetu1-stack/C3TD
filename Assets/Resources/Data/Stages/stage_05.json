@@ -29,5 +29,8 @@
     { "time": 56, "enemy": "shimekiri", "path": "south", "count": 1, "interval": 0 },
     { "time": 60, "enemy": "kadai",     "path": "north", "count": 4, "interval": 2 },
     { "time": 68, "enemy": "shotest",   "path": "south", "count": 5, "interval": 0.8 }
+  ],
+  "hints": [
+    { "time": 52, "duration": 9, "text": "締切（ボス）が来る！ 拠点に着かれるとライフが2減る。重装で止めて、必殺技を集中させよう。" }
   ]
 }

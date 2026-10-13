@@ -31,5 +31,8 @@
     { "time": 50, "enemy": "kadai",   "path": "top",    "count": 3, "interval": 1.5 },
     { "time": 51, "enemy": "kadai",   "path": "bottom", "count": 3, "interval": 1.5 },
     { "time": 58, "enemy": "shotest", "path": "middle", "count": 6, "interval": 0.6 }
+  ],
+  "hints": [
+    { "time": 2.2, "duration": 8, "text": "小テストは足が速い。早めに道をふさごう。敵をクリックすると、体力や速さが見られる。" }
   ]
 }
