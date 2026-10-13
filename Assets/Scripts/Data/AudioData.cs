@@ -26,4 +26,7 @@ public class AudioEntry
 
     /// <summary>使う部分の終わり（秒）。0 ならファイルの終わり（BGM は終わりの静かな部分を自動で除く）</summary>
     public float end;
+
+    /// <summary>BGM で true なら、1回目も start から鳴らす（イントロを飛ばす）。false なら1回目だけ頭から</summary>
+    public bool skipIntro;
 }

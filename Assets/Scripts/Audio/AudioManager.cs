@@ -154,7 +154,7 @@ public class AudioManager : MonoBehaviour
 
         current.clip = clip;
         current.volume = self.bgmVolume;
-        current.time = 0f;
+        current.time = entry != null && entry.skipIntro ? self.bgmStart : 0f;
         current.Play();
     }
 
