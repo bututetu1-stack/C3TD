@@ -254,12 +254,13 @@ public class StageSelectScreen
         detailEnemyTotal.text = total.ToString();
 
         detailEnemies.Clear();
+        HashSet<string> seenBefore = EnemiesBefore(id);
         // 敵の種類が多いときは3列にして、小さく並べる（下の「編成へ」に隠れないように）
         detailEnemies.EnableInClassList("detail-enemies--many", counts.Count > 6);
         foreach (var kv in counts)
         {
             EnemyData enemy = GameData.Enemy(kv.Key);
-            if (enemy != null) detailEnemies.Add(EnemyChip(enemy, kv.Value));
+            if (enemy != null) detailEnemies.Add(EnemyChip(enemy, kv.Value, !seenBefore.Contains(enemy.id)));
         }
 
         UIFactory.SetVisible(detailLock, !open);
@@ -268,7 +269,22 @@ public class StageSelectScreen
 
     // ================= 部品 =================
 
-    private static VisualElement EnemyChip(EnemyData enemy, int count)
+    /// <summary>このステージより前の作戦（campaign.json の順）のウェーブに出てくる敵</summary>
+    private static HashSet<string> EnemiesBefore(string stageId)
+    {
+        var seen = new HashSet<string>();
+        foreach (string id in GameData.Campaign.AllStages())
+        {
+            if (id == stageId) break;
+            StageData s = GameData.Stage(id);
+            if (s == null) continue;
+            foreach (WaveData w in s.waves) seen.Add(w.enemy);
+        }
+        return seen;
+    }
+
+    /// <summary>敵の札。この作戦で初めて出る敵には、アイコンの左上に「NEW」</summary>
+    private static VisualElement EnemyChip(EnemyData enemy, int count, bool isNew)
     {
         var chip = UIFactory.Box("enemy-chip");
         var icon = UIFactory.Box("enemy-icon");
@@ -288,6 +304,7 @@ public class StageSelectScreen
         text.Add(UIFactory.Text(enemy.name + (enemy.boss ? "（ボス）" : ""), UIFont.Body, "enemy-name"));
         text.Add(UIFactory.Text("×" + count, UIFont.Display, "enemy-count"));
         chip.Add(text);
+        if (isNew) chip.Add(UIFactory.Text("NEW", UIFont.Display, "enemy-new"));
         return chip;
     }
 
