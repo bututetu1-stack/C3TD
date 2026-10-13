@@ -230,7 +230,7 @@ Assets/
 - SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down` `skill` `skill_ready` `summon` `buff`。BGM はステージの `bgm` に書いたキー（いまはどのステージも `battle`）と、メニューの `menu`。
 - テスト用のキー：出撃中は Space 一時停止、R やり直し、N 次のステージ（最後の次は最初・編成はそのまま）、Esc・右クリックで選択とドラッグの取り消し。メニューでは Esc で1つ前の画面、タイトルで Space・Enter。Boot シーンの GameBootstrap の `startStage` にステージ id を書くと、タイトルと編成を飛ばしてそこから始まる。
 - 確かめ方は `docs/snippets/README.md`（画面の撮影、部員を置く、マウスを流し込む、自動で戦わせてバランスを見る）。ステージや敵の数値を変えたら、`BalanceRun` で「初めて遊ぶ人のまね」を30回と、上手な置き方の「必殺技あり／なし」を回して、表を更新する。初めて遊ぶ人のまねの勝ちの割合は、いまの目安で 1-1・1-2 がほぼ全勝、1-3 が9割、1-4 が7割くらい。
-- テストで戦うとクリアの記録が PlayerPrefs に残るので、終わったら `Progress.ResetAll()` で消してオーナーに渡す。
+- テストで戦うとクリアの記録と編成が PlayerPrefs に残る。オーナーがもう遊んでいるときは、テストの前に `PlayerPrefs.GetString("c3td.progress.v1")` を取っておき、終わったら `SetString` で書き戻して `PlayerPrefs.Save()` する（`Progress` は再生のたびに読み直す）。オーナーがまだ遊んでいなければ `Progress.ResetAll()` で消してよい。2026-10-13 にデスクトップで、オーナーのクリアの記録を消してしまった。
 - テストの環境（エディタが背面）では、流し込んだマウスの「押した瞬間」「離した瞬間」を取りこぼすことがある。クリックの確かめは、当たり判定（`BattleInput` の `EnemyAt` など）と表示（`Inspect`・`Select`）を分けて呼んで確かめる。
 
 ### 気をつけること
