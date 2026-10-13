@@ -1,0 +1,19 @@
+{
+  // テスト用のダミー（実在の部員ではない）。安くて早く置ける前衛。必殺技で DP を稼ぐ
+  "id": "dummy_vanguard",
+  "name": "先鋒ダミー",
+  "class": "Guard",
+  "cost": 7,
+  "redeployTime": 50,
+  "color": "#C9763A",
+  "stats": { "hp": 1300, "atk": 340, "def": 160, "attackInterval": 1.0, "block": 1, "range": 1 },
+  "ultimate": {
+    "name": "テスト：補給",
+    "description": "DPを10増やす",
+    "spCost": 24,
+    "initialSp": 12,
+    "spCharge": "PerSecond",
+    "duration": 0,
+    "effects": [ { "type": "Dp", "value": 10, "target": "Self" } ]
+  }
+}

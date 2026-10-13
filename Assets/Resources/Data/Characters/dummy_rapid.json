@@ -1,0 +1,18 @@
+{
+  // テスト用のダミー（実在の部員ではない）。弱いが速く撃つ狙撃。小テストのような脆い敵向き
+  "id": "dummy_rapid",
+  "name": "速射ダミー",
+  "class": "Sniper",
+  "cost": 9,
+  "redeployTime": 60,
+  "color": "#D9A93A",
+  "stats": { "hp": 900, "atk": 250, "def": 50, "attackInterval": 0.5, "range": 2.5 },
+  "ultimate": {
+    "name": "テスト：連射",
+    "description": "8秒間、攻撃間隔が40%短くなる（攻撃するたびにSPが溜まる）",
+    "spCost": 25,
+    "spCharge": "OnAttack",
+    "duration": 8,
+    "effects": [ { "type": "StatModifier", "stat": "attackInterval", "percent": -40, "target": "Self" } ]
+  }
+}

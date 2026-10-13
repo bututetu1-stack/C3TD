@@ -25,6 +25,7 @@ public class SkillContext
 ///   Stun         duration 秒動けなくする
 ///   Summon       周りの空きマスに unitId を count 体置く（inheritStatsPercent で召喚者の能力を引き継ぐ）
 ///   MultiHit     攻撃が hits 回当たる
+///   Dp           DP を value 増やす（上限は rules.json の dpMax）
 /// 対象：Self / Target / AreaAroundSelf（半径 radius、省略時 1.5 マス）/ AlliesInRange / EnemiesInRange
 /// </summary>
 public static class SkillEffects
@@ -83,6 +84,15 @@ public static class SkillEffects
             {
                 StatModifier m = caster.AddModifier("hits", 0f, Mathf.Max(0, e.hits - 1), duration);
                 if (ctx.Collected != null && e.duration <= 0f) ctx.Collected.Add(new KeyValuePair<Unit, StatModifier>(caster, m));
+                break;
+            }
+
+            case EffectType.Dp:
+            {
+                int amount = Mathf.RoundToInt(e.value);
+                if (amount <= 0) break;
+                ctx.Battle.State.AddDp(amount, ctx.Battle.Rules.dpMax);
+                FloatingText.Status(caster.Center, "DP +" + amount);
                 break;
             }
         }

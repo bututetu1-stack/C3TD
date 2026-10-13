@@ -1,0 +1,28 @@
+{
+  // テスト用のダミー（実在の部員ではない）。遅いが一発が重い狙撃。レポートのような硬い敵向き
+  "id": "dummy_heavy",
+  "name": "徹甲ダミー",
+  "class": "Sniper",
+  "cost": 17,
+  "redeployTime": 70,
+  "color": "#B88A2E",
+  "stats": { "hp": 1000, "atk": 980, "def": 60, "attackInterval": 2.5, "range": 3.5 },
+  "trait": {
+    "name": "テスト：装甲破り",
+    "description": "攻撃した敵の防御力を2.5秒間30%下げる",
+    "trigger": "OnAttack",
+    // 攻撃間隔より長くすると自分の分が重なるので、攻撃間隔と同じにしている
+    "effects": [ { "type": "StatModifier", "stat": "def", "percent": -30, "duration": 2.5, "target": "Target" } ]
+  },
+  "ultimate": {
+    "name": "テスト：狙撃態勢",
+    "description": "12秒間、攻撃力が50%上がり、射程が1マス伸びる",
+    "spCost": 25,
+    "spCharge": "PerSecond",
+    "duration": 12,
+    "effects": [
+      { "type": "StatModifier", "stat": "atk", "percent": 50, "target": "Self" },
+      { "type": "StatModifier", "stat": "range", "value": 1, "target": "Self" }
+    ]
+  }
+}

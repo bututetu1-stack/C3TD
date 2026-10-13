@@ -37,6 +37,7 @@ public enum EffectType
     Stun,
     Summon,
     MultiHit,
+    Dp,
 }
 
 /// <summary>スキルの効果の対象</summary>
