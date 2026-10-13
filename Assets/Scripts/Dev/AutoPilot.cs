@@ -15,11 +15,22 @@ public class AutoPilot : MonoBehaviour
     /// <summary>0 より大きければ、毎フレームこの速さにする（早送りで確かめる用）</summary>
     public float TimeScale;
 
+    /// <summary>
+    /// true なら初めて遊ぶ人のまね。DP が足りる人と置く場所を Seed でばらばらに選ぶ
+    /// （場所は、いちばん良い場所の点数の NoviceCut 倍以上のところから）。置いたあと NoviceDelay 秒は次を置かない。
+    /// </summary>
+    public bool Novice;
+    public int Seed;
+    public float NoviceCut = 0.6f;
+    public float NoviceDelay = 2f;
+
     /// <summary>置く順番（職業）</summary>
     private static readonly UnitClass[] Order =
         { UnitClass.Guard, UnitClass.Sniper, UnitClass.Defender, UnitClass.Caster, UnitClass.Medic };
 
     private Battle battle;
+    private System.Random rng;
+    private float noviceWait;
     // 経路のマスごとの「通る経路の数」と「拠点への近さ（0〜1）」
     private readonly Dictionary<Vector2Int, int> pathCount = new Dictionary<Vector2Int, int>();
     private readonly Dictionary<Vector2Int, float> progress = new Dictionary<Vector2Int, float>();
@@ -38,6 +49,8 @@ public class AutoPilot : MonoBehaviour
                 progress[c] = Mathf.Max(progress.TryGetValue(c, out float q) ? q : 0f, p);
             }
         }
+
+        rng = new System.Random(Seed);
     }
 
     private static List<Vector2Int> Expand(List<Vector2Int> points)
@@ -62,6 +75,12 @@ public class AutoPilot : MonoBehaviour
             foreach (Character c in battle.Characters.ToArray())
                 if (c != null && c.Alive && c.Skills != null && c.Skills.HasUltimate && c.Skills.Ready) c.Skills.Activate();
 
+        if (Novice)
+        {
+            DeployNovice();
+            return;
+        }
+
         // 優先の高い順に、置ける人を1人置く。優先の高い人の DP が足りないなら貯める
         foreach (UnitClass cls in Order)
         {
@@ -73,6 +92,37 @@ public class AutoPilot : MonoBehaviour
                 Vector2Int? cell = BestCell(m);
                 if (cell.HasValue && battle.Deploy(m, cell.Value) != null) return;
             }
+        }
+    }
+
+    /// <summary>いま DP が足りる人からばらばらに1人選んで、まあまあ良い場所のどこかへ置く</summary>
+    private void DeployNovice()
+    {
+        noviceWait -= Time.deltaTime;
+        if (noviceWait > 0f) return;
+        var ready = new List<SquadMember>();
+        foreach (SquadMember m in battle.Squad)
+            if (m.Ready && battle.CanAfford(m)) ready.Add(m);
+        while (ready.Count > 0)
+        {
+            SquadMember m = ready[rng.Next(ready.Count)];
+            ready.Remove(m);
+            var cells = new List<Vector2Int>();
+            var scores = new List<float>();
+            float best = 0f;
+            foreach (Vector2Int cell in battle.PlaceableCells(m))
+            {
+                float s = Score(m, cell);
+                if (s <= 0f) continue;
+                cells.Add(cell);
+                scores.Add(s);
+                best = Mathf.Max(best, s);
+            }
+            for (int i = cells.Count - 1; i >= 0; i--)
+                if (scores[i] < best * NoviceCut) cells.RemoveAt(i);
+            if (cells.Count == 0) continue;
+            if (battle.Deploy(m, cells[rng.Next(cells.Count)]) != null) noviceWait = NoviceDelay;
+            return;
         }
     }
 
