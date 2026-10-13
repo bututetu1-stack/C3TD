@@ -16,6 +16,7 @@ public enum IconKind
     Back,    // 戻る
     Lock,    // 未開放
     Star,    // ★
+    Menu,    // メニュー（横線3本）
 }
 
 /// <summary>Painter2D で描く小さなアイコン（フォントに頼らないので、どの環境でも同じ形）</summary>
@@ -178,6 +179,11 @@ public class IconView : VisualElement
                 p.MoveTo(new Vector2(c.x + s * 0.26f, c.y - s * 0.26f));
                 p.LineTo(new Vector2(c.x - s * 0.26f, c.y + s * 0.26f));
                 p.Stroke();
+                break;
+
+            case IconKind.Menu:
+                for (int i = -1; i <= 1; i++)
+                    Rect(p, c.x - s * 0.3f, c.y + i * s * 0.2f - s * 0.055f, s * 0.6f, s * 0.11f);
                 break;
 
             case IconKind.Next:

@@ -136,7 +136,14 @@ public class BattleInput : MonoBehaviour
 
         Mouse mouse = Mouse.current;
         Keyboard kb = Keyboard.current;
-        bool cancel = (kb != null && kb.escapeKey.wasPressedThisFrame) || (mouse != null && mouse.rightButton.wasPressedThisFrame);
+        bool escape = kb != null && kb.escapeKey.wasPressedThisFrame;
+        if (hud != null && hud.MenuOpen)
+        {
+            // メニューを開いているあいだはマップを触らない。Esc で閉じる
+            if (escape) hud.CloseMenu();
+            return;
+        }
+        bool cancel = escape || (mouse != null && mouse.rightButton.wasPressedThisFrame);
         if (mouse == null)
         {
             battle.Highlight.Clear();
@@ -174,6 +181,8 @@ public class BattleInput : MonoBehaviour
 
         if (cancel)
         {
+            // 選んでいるものがなければ、Esc でメニューを開く
+            if (escape && Selected == null && Inspected == null && hud != null) hud.OpenMenu();
             Select(null);
             Inspect(null);
         }

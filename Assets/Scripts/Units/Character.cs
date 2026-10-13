@@ -63,6 +63,8 @@ public class Character : Unit
     private SpriteRenderer buffAura;
     private Transform sleepMark;
     private float age;
+    // 降りてくる演出の経過。一時停止中に置いたときも着地まで見せるよう、止まっているあいだは実時間で進める
+    private float dropAge;
     private float attackTimer;
     private float flash;
     private float lunge;
@@ -215,6 +217,7 @@ public class Character : Unit
     {
         float dt = Time.deltaTime;
         age += dt;
+        if (dropAge < DeployDropTime) dropAge += TimeController.Paused ? Time.unscaledDeltaTime : dt;
         if (battle != null && Alive && battle.State.Phase == GamePhase.Playing)
         {
             TickStatus(dt);
@@ -419,7 +422,7 @@ public class Character : Unit
     /// <summary>上から降りてきて着地し、攻撃では前へ突っ込む（近接）か少し縮む（遠距離）。スタン中は傾いて止まる</summary>
     private void Animate(float dt)
     {
-        float drop = Mathf.Clamp01(age / DeployDropTime);
+        float drop = Mathf.Clamp01(dropAge / DeployDropTime);
         float land = Ease.OutBack(drop);
         float breathe = Stunned ? 1f : 1f + 0.015f * Mathf.Sin(age * 2.4f);
 

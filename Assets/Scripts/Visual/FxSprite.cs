@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 一度だけ再生して消えるスプライトの演出。大きさが start → end に変わりながら薄れていく。
 /// 動き（速度と減速）・回転・遅れて始まる、を足せる。一時停止中は止まる。
+/// ただし一時停止中に作ったもの（止めたまま配置・撤退・必殺技を使ったとき）は、止まったまま残らないよう実時間で動く。
 /// </summary>
 public class FxSprite : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class FxSprite : MonoBehaviour
     private Vector3 velocity;
     private float drag;
     private float spin;
+    private bool realtime;
 
     public static FxSprite Create(Sprite sprite, Vector3 position, Color color, float life, float startScale, float endScale, int order)
     {
@@ -32,6 +34,7 @@ public class FxSprite : MonoBehaviour
         fx.life = Mathf.Max(0.01f, life);
         fx.startScale = startScale;
         fx.endScale = endScale;
+        fx.realtime = TimeController.Paused;
         fx.Apply(0f);
         return fx;
     }
@@ -72,7 +75,7 @@ public class FxSprite : MonoBehaviour
 
     void Update()
     {
-        float dt = Time.deltaTime;
+        float dt = realtime ? Time.unscaledDeltaTime : Time.deltaTime;
         age += dt;
         if (age < delay) return;
         sr.enabled = true;

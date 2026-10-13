@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-/// <summary>ダメージや回復の数字。少し跳ねて浮かび上がり、消える</summary>
+/// <summary>ダメージや回復の数字。少し跳ねて浮かび上がり、消える（一時停止中に出たものは実時間で動く）</summary>
 public class FloatingText : MonoBehaviour
 {
     private const int Order = 90;
@@ -11,6 +11,7 @@ public class FloatingText : MonoBehaviour
     private Color color;
     private Vector3 start;
     private float age;
+    private bool realtime;
 
     public static void Damage(Vector3 position, float amount, Color color)
     {
@@ -38,11 +39,12 @@ public class FloatingText : MonoBehaviour
         ft.text = tmp;
         ft.color = color;
         ft.start = tmp.transform.position;
+        ft.realtime = TimeController.Paused;
     }
 
     void Update()
     {
-        age += Time.deltaTime;
+        age += realtime ? Time.unscaledDeltaTime : Time.deltaTime;
         float t = Mathf.Clamp01(age / Life);
         transform.position = start + new Vector3(0f, 0.38f * Ease.OutCubic(t), 0f);
         float pop = t < 0.15f ? Mathf.Lerp(1.5f, 1f, t / 0.15f) : 1f;
