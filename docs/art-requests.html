@@ -299,6 +299,7 @@
         <strong>いま依頼中（2026-10-14 に更新）</strong>
         <div class="status-list">
           <span class="chip gold">新：第2章の敵 6体（通知・論文・睡魔・再履修・グループワーク・期末試験）</span>
+          <span class="chip gold">新：第3章の敵 6体（エントリーシート・下書き・面接官・お祈りメール・グループディスカッション・最終面接）</span>
           <span class="chip gold">新：物理鉄人のカットイン立ち絵</span>
           <span class="chip gold">効果音 summon（艦娘の召喚。水しぶきと汽笛）</span>
         </div>
@@ -324,6 +325,7 @@
       <a href="#style">共通の画風</a>
       <a href="#enemies">敵</a>
       <a href="#enemies2">第2章の敵</a>
+      <a href="#enemies3">第3章の敵</a>
       <a href="#map">出撃口・拠点・背景</a>
       <a href="#m1fx">出現と突破</a>
       <a href="#m2">配置と攻撃（M2）</a>
@@ -386,6 +388,12 @@
     <h2>第2章の敵<span class="tag">ENEMIES 2</span></h2>
     <p class="section-note">第2章「後期」で出てくる6体です。いまは色付きの図形に「通」「論」などの文字で代わりにしています。通知は空を飛ぶので、ゲーム側で少し持ち上げて描きます（絵は地面に立たせなくてよい）。</p>
     <div class="cards" data-group="enemies2"></div>
+  </section>
+
+  <section id="enemies3">
+    <h2>第3章の敵<span class="tag">ENEMIES 3</span></h2>
+    <p class="section-note">第3章「就活」で出てくる6体です（下書きは、エントリーシートを倒すと出てくる小さな敵）。お祈りメールは空を飛ぶので、ゲーム側で少し持ち上げて描きます。</p>
+    <div class="cards" data-group="enemies3"></div>
   </section>
 
   <section id="map">
@@ -571,6 +579,20 @@
       prompt: "グループワークの班を表すモンスター。4枚の小さなプリント用紙が肩を組んで円陣を組み、ひとかたまりになっている。真ん中にホワイトボードのような四角い盾を掲げ、全員が気合いの入った顔をしている。色は黄土色と白、アクセントは琥珀色。" },
     { group: "enemies2", path: "Art/Enemies/kimatsu.png", title: "期末試験（ボス）", scene: "第2章のボス。14 秒ごとに小テストを呼ぶ。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true, priority: true,
       prompt: "「期末試験」を擬人化した、大きなボスモンスター。分厚い試験問題の冊子が積み重なってできた巨人で、胸に巨大な答案用紙の顔（赤く光る目、ギザギザの口）がある。肩には鉛筆が槍のように突き刺さり、背中から黒い炎とともに答案用紙が何枚も舞う。威圧感があり、ほかの敵より大きく堂々と描く。読める文字や数字は描かない。色は深い紫と黒、アクセントは赤と金。" },
+
+    // ---------------- 第3章の敵（2026-10-14） ----------------
+    { group: "enemies3", path: "Art/Enemies/es.png", title: "エントリーシート", scene: "倒すと「下書き」2 体に分かれる敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "就職活動のエントリーシートが、気合いの入ったモンスターになったもの。体はびっしり書き込まれた用紙（読める文字は描かない、細い線の模様だけ）で、上の角に小さな証明写真の枠がある。鉢巻をしめ、細い手足でずんずん歩く。用紙の端に、何度も消しゴムで消したような跡。色は白と水色、アクセントは紺。" },
+    { group: "enemies3", path: "Art/Enemies/shitagaki.png", title: "下書き", scene: "エントリーシートを倒すと出てくる、速くて脆い小さな敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "くしゃくしゃに丸められた下書きの紙が、小さなモンスターになって走っているもの。体は小さく、しわだらけで、鉛筆の走り書きのような線がある（読める文字は描かない）。慌てた顔で、前のめりに全速力で走る。色は薄い灰色と白、アクセントは水色。" },
+    { group: "enemies3", path: "Art/Enemies/mensetsukan.png", title: "面接官", scene: "離れたところから部員を撃ち、防御を下げる敵（圧迫面接）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "スーツを着た面接官を、少し不気味でコミカルなモンスターにしたもの。体は紺色のスーツ、顔はのっぺりした丸い頭に光るメガネだけがあり、表情は読めない。片手にクリップボード、もう片方の手から鋭い質問の矢印のような光を放っている。背筋がまっすぐで威圧感がある。色は紺とグレー、アクセントは冷たい水色。" },
+    { group: "enemies3", path: "Art/Enemies/oinori.png", title: "お祈りメール", scene: "空を飛ぶ敵。場にいるあいだ DP の回復を遅くする", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "不採用を知らせる「お祈りメール」の封筒が、天使の羽を生やして空を飛んでいるモンスター。封筒の体に、両手を合わせて祈るような細い腕があり、申し訳なさそうな、でも少し冷たい笑顔。頭の上に小さな光の輪。足はなく、空中に浮いている。読める文字は描かない。色は淡い紫と白、アクセントは金。" },
+    { group: "enemies3", path: "Art/Enemies/gd.png", title: "グループディスカッション", scene: "まわりの敵の攻撃力を上げる敵（足元の琥珀色の輪はゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "グループディスカッションをする就活生たちを表すモンスター。机を囲んだ3つの小さな頭（名札を付けたスーツ姿、顔は描き分ける）が、一斉に手を挙げて熱く議論している。真ん中から吹き出しの形をした熱気のオーラが立ちのぼる。読める文字は描かない。色は青緑と白、アクセントは琥珀色。" },
+    { group: "enemies3", path: "Art/Enemies/saishu.png", title: "最終面接（ボス）", scene: "第3章のボス。16 秒ごとの「圧迫質問」でまわりの部員を動けなくする。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true, priority: true,
+      prompt: "「最終面接」を擬人化した、大きなボスモンスター。重厚な面接の机と椅子が合体した巨人で、机の上に、腕を組んだ巨大な影のような面接官の上半身が乗っている。顔は影になっていて、赤く光る2つの目だけが見える。背後に高層ビルのシルエットと、圧をかけるような赤い光の波紋。威圧感があり、ほかの敵より大きく堂々と描く。読める文字や数字は描かない。色は濃紺と黒、アクセントは赤と金。" },
 
     // ---------------- 出撃口・拠点・背景 ----------------
     { group: "map", path: "Art/Map/Spawn.png", title: "出撃口の印", scene: "出撃口（S）のマスの上で、ゆっくり回る", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", now: true,
