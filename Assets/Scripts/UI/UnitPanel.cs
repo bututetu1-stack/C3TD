@@ -120,6 +120,22 @@ public class UnitPanel
         return box;
     }
 
+
+    /// <summary>
+    /// 札を、選んだものと反対の側に寄せる（左にいれば右に出す）。左端の出撃口を隠さないため。
+    /// 動くもの（敵）は真ん中付近で行ったり来たりしないよう、左右 0.4 / 0.6 を越えたときだけ切り替える。
+    /// </summary>
+    public static void PlaceOpposite(VisualElement info, Vector3 world, bool sticky)
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return;
+        float x = cam.WorldToViewportPoint(world).x;
+        bool right = info.ClassListContains("unit-info--right");
+        if (!sticky) right = x < 0.5f;
+        else if (x < 0.4f) right = true;
+        else if (x > 0.6f) right = false;
+        info.EnableInClassList("unit-info--right", right);
+    }
     public void Refresh(Character c)
     {
         // 破棄された部員は Unity では null と等しくなるので、参照そのもので比べる
@@ -129,7 +145,11 @@ public class UnitPanel
             shown = c;
             shownHp = shownAtk = -1;
             shownTrait = shownSkill = null;
-            if (c != null) Fill(c);
+            if (c != null)
+            {
+                Fill(c);
+                PlaceOpposite(info, c.Center, false);
+            }
             UIFactory.SetVisible(info, c != null);
             UIFactory.SetVisible(actions, c != null);
         }

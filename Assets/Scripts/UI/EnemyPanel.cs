@@ -20,6 +20,7 @@ public class EnemyPanel
     private readonly Label stateLabel;
     private Enemy shown;
     private string shownText;
+    private Enemy placedFor;
 
     public EnemyPanel(VisualElement root)
     {
@@ -81,6 +82,8 @@ public class EnemyPanel
             UIFactory.SetVisible(info, e != null);
         }
         if (e == null) return;
+        UnitPanel.PlaceOpposite(info, e.Center, ReferenceEquals(e, placedFor));
+        placedFor = e;
 
         // 体力と、必殺技などで変わる数値・状態は毎フレーム確かめる（変わったときだけ書き換える）
         string text = Mathf.CeilToInt(e.Hp) + "|" + Mathf.RoundToInt(e.Atk) + "|" + Mathf.RoundToInt(e.Def) + "|" + e.Stunned + "|" + (e.BlockedBy != null ? e.BlockedBy.Data.name : "");

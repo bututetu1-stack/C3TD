@@ -1201,3 +1201,8 @@
     color: rgb(244, 182, 63);
     margin-top: 12px;
 }
+
+.unit-info--right {
+    left: auto;
+    right: 20px;
+}
