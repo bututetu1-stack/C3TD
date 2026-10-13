@@ -138,6 +138,14 @@ public abstract class Unit : MonoBehaviour
         return healed;
     }
 
+    /// <summary>倒されたあとに起き上がる（OnDeath の中から呼ぶ）</summary>
+    protected void Revive(float hp)
+    {
+        Hp = Mathf.Clamp(hp, 1f, MaxHp);
+        Alive = true;
+        if (healthBar != null) healthBar.Set(Hp / MaxHp);
+    }
+
     /// <summary>撤退・拠点到達などで、倒されずに場から消える</summary>
     public void Despawn()
     {

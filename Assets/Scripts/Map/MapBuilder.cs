@@ -69,9 +69,9 @@ public static class MapBuilder
     }
 
     /// <summary>敵の経路に、拠点へ流れる矢印を並べる</summary>
-    public static void DrawPath(List<Vector3> points, Transform parent)
+    public static void DrawPath(List<Vector3> points, Transform parent, bool air = false)
     {
-        PathFlow.Create(points, parent, Palette.PathMark, OrderPath);
+        PathFlow.Create(points, parent, air ? Palette.AirPathMark : Palette.PathMark, OrderPath);
     }
 
     /// <summary>出撃口・拠点の印。Art/Map/{name}.png があればその絵を、なければ光の輪を出す</summary>

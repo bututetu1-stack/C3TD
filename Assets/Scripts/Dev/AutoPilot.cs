@@ -31,7 +31,10 @@ public class AutoPilot : MonoBehaviour
     private Battle battle;
     private System.Random rng;
     private float noviceWait;
-    // 経路のマスごとの「通る経路の数」と「拠点への近さ（0〜1）」
+    // 経路のマスごとの「通る経路の数」と「拠点への近さ（0〜1）」。
+    // ground は地上の経路だけ（近接を置く場所）、pathCount・progress は飛ぶ敵の経路も入れたもの（遠距離の射程に入れる場所）
+    private readonly Dictionary<Vector2Int, int> groundCount = new Dictionary<Vector2Int, int>();
+    private readonly Dictionary<Vector2Int, float> groundProgress = new Dictionary<Vector2Int, float>();
     private readonly Dictionary<Vector2Int, int> pathCount = new Dictionary<Vector2Int, int>();
     private readonly Dictionary<Vector2Int, float> progress = new Dictionary<Vector2Int, float>();
 
@@ -40,29 +43,42 @@ public class AutoPilot : MonoBehaviour
         battle = GetComponent<Battle>();
         foreach (var kv in battle.Stage.paths)
         {
-            List<Vector2Int> cells = Expand(kv.Value);
-            for (int i = 0; i < cells.Count; i++)
-            {
-                Vector2Int c = cells[i];
-                pathCount[c] = (pathCount.TryGetValue(c, out int n) ? n : 0) + 1;
-                float p = cells.Count > 1 ? i / (float)(cells.Count - 1) : 1f;
-                progress[c] = Mathf.Max(progress.TryGetValue(c, out float q) ? q : 0f, p);
-            }
+            AddPath(kv.Value, groundCount, groundProgress);
+            AddPath(kv.Value, pathCount, progress);
         }
+        if (battle.Stage.airPaths != null)
+            foreach (var kv in battle.Stage.airPaths) AddPath(kv.Value, pathCount, progress);
 
         rng = new System.Random(Seed);
     }
 
+    private static void AddPath(List<Vector2Int> points, Dictionary<Vector2Int, int> count, Dictionary<Vector2Int, float> near)
+    {
+        List<Vector2Int> cells = Expand(points);
+        for (int i = 0; i < cells.Count; i++)
+        {
+            Vector2Int c = cells[i];
+            count[c] = (count.TryGetValue(c, out int n) ? n : 0) + 1;
+            float p = cells.Count > 1 ? i / (float)(cells.Count - 1) : 1f;
+            near[c] = Mathf.Max(near.TryGetValue(c, out float q) ? q : 0f, p);
+        }
+    }
+
+    /// <summary>経路の点と点のあいだのマス（飛ぶ敵の斜めの線も、細かく区切ってたどる）</summary>
     private static List<Vector2Int> Expand(List<Vector2Int> points)
     {
         var cells = new List<Vector2Int>();
-        for (int i = 0; i < points.Count; i++)
+        for (int i = 0; i + 1 < points.Count; i++)
         {
-            if (i == 0) { cells.Add(points[0]); continue; }
-            Vector2Int a = points[i - 1], b = points[i];
-            Vector2Int step = new Vector2Int(System.Math.Sign(b.x - a.x), System.Math.Sign(b.y - a.y));
-            for (Vector2Int c = a + step; c != b + step; c += step) cells.Add(c);
+            Vector2 a = points[i], b = points[i + 1];
+            int steps = Mathf.Max(1, Mathf.CeilToInt(Vector2.Distance(a, b) * 2f));
+            for (int k = 0; k <= steps; k++)
+            {
+                Vector2Int c = Vector2Int.RoundToInt(Vector2.Lerp(a, b, (float)k / steps));
+                if (cells.Count == 0 || cells[cells.Count - 1] != c) cells.Add(c);
+            }
         }
+        if (cells.Count == 0 && points.Count == 1) cells.Add(points[0]);
         return cells;
     }
 
@@ -150,8 +166,8 @@ public class AutoPilot : MonoBehaviour
         if (m.Class.placement == Placement.Ground)
         {
             // 合流点の、拠点の少し手前
-            if (!pathCount.TryGetValue(cell, out int n)) return 0f;
-            float p = progress[cell];
+            if (!groundCount.TryGetValue(cell, out int n)) return 0f;
+            float p = groundProgress[cell];
             return n * 100f + p * 40f - (p > 0.95f ? 30f : 0f);
         }
 

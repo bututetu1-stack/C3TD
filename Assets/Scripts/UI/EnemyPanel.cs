@@ -18,6 +18,7 @@ public class EnemyPanel
     private readonly Label speedValue;
     private readonly Label lifeValue;
     private readonly Label stateLabel;
+    private readonly Label traitsLabel;
     private Enemy shown;
     private string shownText;
     private Enemy placedFor;
@@ -52,6 +53,9 @@ public class EnemyPanel
         speedValue = AddStat(stats, "SPEED");
         lifeValue = AddStat(stats, "LIFE");
         info.Add(stats);
+
+        traitsLabel = UIFactory.Text("", UIFont.Medium, "enemy-traits");
+        info.Add(traitsLabel);
 
         stateLabel = UIFactory.Text("", UIFont.Medium, "enemy-state");
         info.Add(stateLabel);
@@ -117,5 +121,45 @@ public class EnemyPanel
         resValue.text = Mathf.RoundToInt(e.Res).ToString();
         speedValue.text = d.speed.ToString("0.0#");
         lifeValue.text = "-" + d.lifeDamage;
+        string traits = Traits(d);
+        traitsLabel.text = traits;
+        UIFactory.SetVisible(traitsLabel, traits.Length > 0);
+    }
+
+    /// <summary>特別な性質の説明（なければ空）</summary>
+    private static string Traits(EnemyData d)
+    {
+        var lines = new System.Collections.Generic.List<string>();
+        if (d.flying) lines.Add("飛行：止められず、前衛・重装は攻撃できない");
+        if (d.range > 0f)
+        {
+            string line = "遠距離：射程 " + d.range.ToString("0.#") + " マスの部員を" + (d.damageType == DamageType.Arts ? "術で" : "") + "攻撃";
+            if (d.stunOnHit > 0f) line += "し、" + d.stunOnHit.ToString("0.#") + " 秒眠らせる";
+            lines.Add(line);
+        }
+        else if (d.stunOnHit > 0f)
+        {
+            lines.Add("攻撃した部員を " + d.stunOnHit.ToString("0.#") + " 秒眠らせる");
+        }
+        if (d.revive > 0) lines.Add("倒されても " + d.revive + " 回起き上がる（体力 " + d.reviveHpPercent.ToString("0") + "%）");
+        if (d.aura != null && !string.IsNullOrEmpty(d.aura.stat))
+            lines.Add("まわり " + d.aura.radius.ToString("0.#") + " マスの敵の" + StatName(d.aura.stat) + "を " + d.aura.percent.ToString("+0;-0") + "%");
+        if (d.summon != null && !string.IsNullOrEmpty(d.summon.enemy))
+        {
+            EnemyData minion = GameData.Enemy(d.summon.enemy);
+            lines.Add(d.summon.interval.ToString("0") + " 秒ごとに" + (minion != null ? minion.name : d.summon.enemy) + "を " + d.summon.count + " 体呼ぶ");
+        }
+        return string.Join("\n", lines);
+    }
+
+    private static string StatName(string stat)
+    {
+        switch (stat)
+        {
+            case "atk": return "攻撃力";
+            case "def": return "防御力";
+            case "speed": return "速さ";
+            default: return stat;
+        }
     }
 }

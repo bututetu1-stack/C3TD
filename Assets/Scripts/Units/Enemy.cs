@@ -52,24 +52,45 @@ public class Enemy : Unit
     private Transform slowMark;
     private Transform defDownMark;
 
+    // 特別な性質（EnemyData の flying / range / revive / aura / summon）
+    private int revivesLeft;
+    private float rangedTimer;
+    private float summonTimer;
+    private float auraTimer;
+    private readonly Dictionary<Enemy, StatModifier> auraTargets = new Dictionary<Enemy, StatModifier>();
+    private Transform buffMark;
+
+    /// <summary>たどっている経路と、次に向かう点（手下を呼ぶときに使う）</summary>
+    public List<Vector3> Path { get { return path; } }
+    public int NextPoint { get { return nextPoint; } }
+
     public static Enemy Spawn(EnemyData data, List<Vector3> path, Battle battle, Transform parent)
+    {
+        return SpawnOnPath(data, path, 1, path[0], battle, parent);
+    }
+
+    /// <summary>経路の途中（position から nextPoint の点へ向かうところ）に出す。ボスが呼ぶ手下など</summary>
+    public static Enemy SpawnOnPath(EnemyData data, List<Vector3> path, int nextPoint, Vector3 position, Battle battle, Transform parent)
     {
         var obj = new GameObject("Enemy_" + data.id);
         obj.transform.SetParent(parent, false);
-        obj.transform.position = path[0];
+        obj.transform.position = position;
         var enemy = obj.AddComponent<Enemy>();
         enemy.Data = data;
         enemy.battle = battle;
         enemy.path = path;
-        enemy.nextPoint = 1;
+        enemy.nextPoint = Mathf.Clamp(nextPoint, 1, path.Count);
         enemy.InitHealth(data.hp);
+        enemy.revivesLeft = data.revive;
+        enemy.rangedTimer = data.attackInterval * 0.5f;
+        enemy.summonTimer = data.summon != null ? data.summon.firstDelay : 0f;
         enemy.remainingFrom = new float[path.Count];
         for (int i = path.Count - 2; i >= 0; i--)
             enemy.remainingFrom[i] = enemy.remainingFrom[i + 1] + Vector3.Distance(path[i], path[i + 1]);
         enemy.BuildVisual();
         enemy.UpdateRemaining();
         enemy.UpdateDepth();
-        Fx.EnemySpawn(path[0], Palette.Hex(data.color, Palette.EnemyFallback));
+        Fx.EnemySpawn(position, Palette.Hex(data.color, Palette.EnemyFallback));
         return enemy;
     }
 
@@ -88,6 +109,10 @@ public class Enemy : Unit
             PulseRing.Create(transform, SpriteFactory.Glow, Palette.BossAura, 1.2f, size * 1.4f, size * 2.6f, 0f, 0);
             PulseRing.Create(transform, SpriteFactory.ThinRing, Palette.WithAlpha(Palette.BossOutline, 0.8f), 1.2f, size * 0.9f, size * 1.9f, 0.5f, 0);
         }
+
+        // まわりの敵を強くする敵は、届く範囲に琥珀色の輪を出す
+        if (Data.aura != null && !string.IsNullOrEmpty(Data.aura.stat))
+            PulseRing.Create(transform, SpriteFactory.ThinRing, Palette.WithAlpha(Palette.Amber, 0.6f), 2f, Data.aura.radius * 0.8f, Data.aura.radius * 2f, 0f, 0);
 
         visual = new GameObject("Visual").transform;
         visual.SetParent(transform, false);
@@ -151,28 +176,34 @@ public class Enemy : Unit
         UpdateDebuffMarks();
 
         if (BlockedBy != null && !BlockedBy.Alive) BlockedBy = null;
+        UpdateAura(dt);
         if (Stunned)
         {
-            // スタン中は歩かず、攻撃もしない
-        }
-        else if (BlockedBy == null)
-        {
-            Move(ApplyStat("speed", Data.speed) * dt);
-            walkTime += dt;
-            TryBeBlocked();
-            if (nextPoint >= path.Count)
-            {
-                battle.OnEnemyReachedBase(this);
-                return;
-            }
+            // スタン中は歩かず、攻撃も手下を呼ぶこともしない
         }
         else
         {
-            attackTimer -= dt;
-            if (attackTimer <= 0f)
+            TickSummon(dt);
+            if (BlockedBy == null)
             {
-                attackTimer = ApplyStat("attackInterval", Data.attackInterval);
-                AttackBlocker();
+                Move(ApplyStat("speed", Data.speed) * dt);
+                walkTime += dt;
+                TryBeBlocked();
+                if (nextPoint >= path.Count)
+                {
+                    battle.OnEnemyReachedBase(this);
+                    return;
+                }
+                if (Data.range > 0f) TickRanged(dt);
+            }
+            else
+            {
+                attackTimer -= dt;
+                if (attackTimer <= 0f)
+                {
+                    attackTimer = ApplyStat("attackInterval", Data.attackInterval);
+                    AttackBlocker();
+                }
             }
         }
 
@@ -221,6 +252,9 @@ public class Enemy : Unit
         SetMark(ref slowMark, PercentOf("speed") < 0f, "StatusSlow", "遅", Palette.Cyan, new Vector3(x, y, 0f));
         if (slowMark != null) x -= 0.3f;
         SetMark(ref defDownMark, PercentOf("def") < 0f, "StatusDefDown", "防", Palette.Crimson, new Vector3(x, y, 0f));
+        // まわりの敵に強くされているあいだは、体力バーの右に「強」
+        bool buffed = PercentOf("def") > 0f || PercentOf("atk") > 0f || PercentOf("speed") > 0f;
+        SetMark(ref buffMark, buffed, "StatusBuff", "強", Palette.Amber, new Vector3(Mathf.Max(0.5f, Data.size * 1.1f) * 0.5f + 0.18f, y, 0f));
     }
 
     private void SetMark(ref Transform mark, bool on, string artName, string letter, Color color, Vector3 position)
@@ -261,8 +295,114 @@ public class Enemy : Unit
         BlockedBy = null;
     }
 
+    // ================= 特別な性質 =================
+
+    /// <summary>遠距離の敵：歩きながら、射程内のいちばん近い部員を撃つ</summary>
+    private void TickRanged(float dt)
+    {
+        rangedTimer -= dt;
+        if (rangedTimer > 0f) return;
+        Character target = NearestCharacterInRange();
+        if (target == null)
+        {
+            rangedTimer = 0.2f;
+            return;
+        }
+        rangedTimer = ApplyStat("attackInterval", Data.attackInterval);
+        lunge = 0.6f;
+        lungeDir = target.transform.position - transform.position;
+        lungeDir.z = 0f;
+        lungeDir.Normalize();
+        Color color = Palette.Hex(Data.color, Palette.EnemyFallback);
+        Projectile.Launch(SpriteFactory.Glow, color, Center, target, 6f, 0.34f, false, at => HitCharacter(target));
+    }
+
+    private Character NearestCharacterInRange()
+    {
+        Vector2Int cell = battle.Map.WorldToCell(transform.position);
+        Character best = null;
+        float bestDistance = float.MaxValue;
+        foreach (Character c in battle.Characters)
+        {
+            if (!c.Alive || !Combat.InRange(cell, c.Cell, Data.range)) continue;
+            float d = Dist2(c.transform.position, transform.position);
+            if (d < bestDistance)
+            {
+                bestDistance = d;
+                best = c;
+            }
+        }
+        return best;
+    }
+
+    /// <summary>部員に攻撃を当てる（止められているときも、遠距離の弾も）。stunOnHit があれば眠らせる</summary>
+    private void HitCharacter(Character target)
+    {
+        if (target == null || !target.Alive || battle == null) return;
+        target.TakeDamage(Atk, Data.damageType);
+        if (Data.stunOnHit > 0f) target.Stun(Data.stunOnHit);
+        Fx.Hit(target.Center, Palette.Crimson);
+        AudioManager.PlaySE("hit");
+    }
+
+    /// <summary>手下を呼ぶ敵：interval 秒ごとに、自分の位置から同じ経路の続きへ出す</summary>
+    private void TickSummon(float dt)
+    {
+        EnemySummon s = Data.summon;
+        if (s == null || string.IsNullOrEmpty(s.enemy)) return;
+        summonTimer -= dt;
+        if (summonTimer > 0f) return;
+        summonTimer = Mathf.Max(1f, s.interval);
+        EnemyData minion = GameData.Enemy(s.enemy);
+        if (minion != null) battle.SpawnSummoned(minion, this, Mathf.Max(1, s.count));
+    }
+
+    /// <summary>まわりの敵の能力を上げる敵：0.25 秒ごとに、範囲に入った敵へ増減を付け、出た敵から外す</summary>
+    private void UpdateAura(float dt)
+    {
+        EnemyAura a = Data.aura;
+        if (a == null || string.IsNullOrEmpty(a.stat)) return;
+        auraTimer -= dt;
+        if (auraTimer > 0f) return;
+        auraTimer = 0.25f;
+        float r2 = a.radius * a.radius;
+        Vector3 p = transform.position;
+        var gone = new List<Enemy>();
+        foreach (var kv in auraTargets)
+            if (kv.Key == null || !kv.Key.Alive || Dist2(kv.Key.transform.position, p) > r2) gone.Add(kv.Key);
+        foreach (Enemy e in gone)
+        {
+            if (e != null) e.RemoveModifier(auraTargets[e]);
+            auraTargets.Remove(e);
+        }
+        foreach (Enemy e in battle.Enemies)
+        {
+            if (ReferenceEquals(e, this) || e == null || !e.Alive || auraTargets.ContainsKey(e)) continue;
+            if (Dist2(e.transform.position, p) <= r2) auraTargets[e] = e.AddModifier(a.stat, a.percent, 0f, 0f);
+        }
+    }
+
+    private void ClearAura()
+    {
+        foreach (var kv in auraTargets)
+            if (kv.Key != null) kv.Key.RemoveModifier(kv.Value);
+        auraTargets.Clear();
+    }
+
+    void OnDestroy()
+    {
+        ClearAura();
+    }
+
+    private static float Dist2(Vector3 a, Vector3 b)
+    {
+        float dx = a.x - b.x, dy = a.y - b.y;
+        return dx * dx + dy * dy;
+    }
+
     private void TryBeBlocked()
     {
+        if (Data.flying) return; // 飛ぶ敵は止められない
         Vector3 p = transform.position;
         foreach (Character c in battle.Characters)
         {
@@ -285,9 +425,7 @@ public class Enemy : Unit
         lungeDir = target.transform.position - transform.position;
         lungeDir.z = 0f;
         lungeDir.Normalize();
-        target.TakeDamage(Atk, DamageType.Physical);
-        Fx.Hit(target.Center, Palette.Crimson);
-        AudioManager.PlaySE("hit");
+        HitCharacter(target);
     }
 
     private void Move(float distance)
@@ -346,10 +484,12 @@ public class Enemy : Unit
         lunge = Mathf.Max(0f, lunge - dt * 5f);
         Vector3 lungeOffset = lungeDir * Mathf.Sin(lunge * Mathf.PI) * 0.16f;
 
-        visual.localPosition = jitter + new Vector3(0f, hop * 0.06f * Data.size, 0f) + lungeOffset;
+        // 飛ぶ敵は跳ねずに、宙に浮いてゆっくり上下する（影は地面に小さく残す）
+        float lift = Data.flying ? 0.42f + 0.05f * Mathf.Sin(age * 3f) : hop * 0.06f * Data.size;
+        visual.localPosition = jitter + new Vector3(0f, lift, 0f) + lungeOffset;
         visual.localScale = new Vector3(pop * (2f - squash), pop * squash, 1f);
-        visual.localRotation = Quaternion.Euler(0f, 0f, BlockedBy == null ? Mathf.Sin(step) * 5f : 0f);
-        shadow.localScale = shadowScale * Mathf.Clamp01(pop) * (1f - hop * 0.12f);
+        visual.localRotation = Quaternion.Euler(0f, 0f, BlockedBy == null ? Mathf.Sin(step) * (Data.flying ? 2f : 5f) : 0f);
+        shadow.localScale = shadowScale * Mathf.Clamp01(pop) * (Data.flying ? 0.65f : 1f - hop * 0.12f);
 
         flash = Mathf.Max(0f, flash - dt * 6f);
         bodyRenderer.color = Color.Lerp(bodyColor, flashColor, flash * 0.75f);
@@ -373,6 +513,17 @@ public class Enemy : Unit
 
     protected override void OnDeath()
     {
+        // 起き上がる敵（再履修など）：体力を戻して、少しのあいだ動けない
+        if (revivesLeft > 0)
+        {
+            revivesLeft--;
+            Revive(MaxHp * Data.reviveHpPercent / 100f);
+            Stun(1f);
+            FloatingText.Status(Center, "復活！");
+            Fx.EnemySpawn(transform.position, Palette.Hex(Data.color, Palette.EnemyFallback));
+            return;
+        }
+        ClearAura();
         battle.OnEnemyDefeated(this);
     }
 }

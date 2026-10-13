@@ -19,6 +19,9 @@ public class StageData
     /// <summary>敵の経路。マス座標 [列, 行] の配列（行は上から0）。出撃口から拠点まで順に書く</summary>
     public Dictionary<string, List<Vector2Int>> paths = new Dictionary<string, List<Vector2Int>>();
 
+    /// <summary>飛ぶ敵の経路（書き方は paths と同じ。壁や高台の上も通れる）。ウェーブの path にはどちらの名前も書ける</summary>
+    public Dictionary<string, List<Vector2Int>> airPaths = new Dictionary<string, List<Vector2Int>>();
+
     public List<WaveData> waves = new List<WaveData>();
 
     /// <summary>出撃中に画面の左下に出す操作のヒント（なくてよい）</summary>

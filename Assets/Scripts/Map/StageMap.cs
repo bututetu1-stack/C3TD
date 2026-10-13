@@ -79,7 +79,7 @@ public class StageMap
     /// 経路を確かめて、おかしなところを警告する（範囲外・歩けないマスを通る・出撃口や拠点で始まり終わらない）。
     /// 範囲外の点があれば false を返す。
     /// </summary>
-    public bool ValidatePath(string stageId, string pathId, List<Vector2Int> path)
+    public bool ValidatePath(string stageId, string pathId, List<Vector2Int> path, bool air = false)
     {
         string where = stageId + ": 経路 \"" + pathId + "\"";
         if (path == null || path.Count < 2)
@@ -100,7 +100,8 @@ public class StageMap
         if (Get(path[path.Count - 1]).Type != TileType.Base)
             Debug.LogWarning(where + " の終点 " + path[path.Count - 1] + " が拠点（B）ではありません");
 
-        // 点と点のあいだで、歩けないマスを通っていないか（斜めの線は細かく区切って調べる）
+        // 点と点のあいだで、歩けないマスを通っていないか（斜めの線は細かく区切って調べる）。飛ぶ敵の経路は調べない
+        if (air) return true;
         for (int i = 0; i + 1 < path.Count; i++)
         {
             Vector2 a = path[i];

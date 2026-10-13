@@ -21,7 +21,7 @@ public class GameState
 
     public GamePhase Phase { get; private set; }
 
-    public readonly int EnemiesTotal;
+    public int EnemiesTotal { get; private set; }
     public int EnemiesDefeated { get; private set; }
     public int EnemiesLeaked { get; private set; }
 
@@ -63,6 +63,12 @@ public class GameState
         EnemiesLeaked++;
         Life = Mathf.Max(0, Life - lifeDamage);
         if (Life <= 0) Phase = GamePhase.Lost;
+    }
+
+    /// <summary>敵が手下を呼んで、倒す敵が増えた</summary>
+    public void AddEnemies(int count)
+    {
+        EnemiesTotal += count;
     }
 
     public void OnEnemyDefeated()

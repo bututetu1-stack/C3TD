@@ -80,14 +80,8 @@ public class Battle : MonoBehaviour
         Highlight = new MapHighlight(Map, transform);
 
         var worldPaths = new Dictionary<string, List<Vector3>>();
-        foreach (var kv in data.paths)
-        {
-            if (!Map.ValidatePath(data.id, kv.Key, kv.Value)) continue;
-            var points = new List<Vector3>();
-            foreach (var cell in kv.Value) points.Add(Map.CellToWorld(cell));
-            worldPaths[kv.Key] = points;
-            MapBuilder.DrawPath(points, transform);
-        }
+        AddPaths(data, data.paths, false, worldPaths);
+        AddPaths(data, data.airPaths, true, worldPaths);
         BuildSchedule(data, worldPaths);
         BuildSquad(squadIds);
 
@@ -102,6 +96,21 @@ public class Battle : MonoBehaviour
         lastPhase = State.Phase;
         TimeController.ResetForStage(Rules.focusTimeScale);
         AudioManager.PlayBGM(data.bgm);
+    }
+
+    /// <summary>経路を検査してワールド座標にし、矢印を描く（飛ぶ敵の経路は水色）</summary>
+    private void AddPaths(StageData data, Dictionary<string, List<Vector2Int>> paths, bool air, Dictionary<string, List<Vector3>> worldPaths)
+    {
+        if (paths == null) return;
+        foreach (var kv in paths)
+        {
+            if (worldPaths.ContainsKey(kv.Key)) Debug.LogWarning(data.id + ": 経路の名前 \"" + kv.Key + "\" が paths と airPaths で重なっています");
+            if (!Map.ValidatePath(data.id, kv.Key, kv.Value, air)) continue;
+            var points = new List<Vector3>();
+            foreach (var cell in kv.Value) points.Add(Map.CellToWorld(cell));
+            worldPaths[kv.Key] = points;
+            MapBuilder.DrawPath(points, transform, air);
+        }
     }
 
     private void BuildSchedule(StageData data, Dictionary<string, List<Vector3>> worldPaths)
@@ -346,6 +355,16 @@ public class Battle : MonoBehaviour
         Fx.EnemyDefeat(enemy.Center, Palette.Hex(enemy.Data.color, Palette.EnemyFallback));
         AudioManager.PlaySE("enemy_defeat");
         Destroy(enemy.gameObject);
+    }
+
+    /// <summary>敵が手下を呼ぶ。呼んだ敵の位置から、同じ経路の続きを進む（倒す敵の数も増える）</summary>
+    public void SpawnSummoned(EnemyData data, Enemy summoner, int count)
+    {
+        for (int i = 0; i < count; i++)
+            Enemies.Add(Enemy.SpawnOnPath(data, summoner.Path, summoner.NextPoint, summoner.transform.position, this, enemyRoot));
+        State.AddEnemies(count);
+        Fx.Summon(summoner.transform.position);
+        AudioManager.PlaySE("summon");
     }
 
     public void OnEnemyReachedBase(Enemy enemy)

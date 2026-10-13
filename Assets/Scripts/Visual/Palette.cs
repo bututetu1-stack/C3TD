@@ -34,6 +34,7 @@ public static class Palette
     public static readonly Color BaseGlow = Hex("#66BEFF");
     public static readonly Color TileLabel = Color.white;
     public static readonly Color PathMark = new Color(1f, 0.38f, 0.42f, 0.8f);
+    public static readonly Color AirPathMark = new Color(0.4f, 0.85f, 1f, 0.85f);  // 飛ぶ敵の経路
 
     // ---------------- 敵 ----------------
     public static readonly Color EnemyOutline = new Color(0.06f, 0.05f, 0.08f, 0.95f);
