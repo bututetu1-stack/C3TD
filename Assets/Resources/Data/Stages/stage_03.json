@@ -1,5 +1,6 @@
 {
   // 蛇のように曲がった長い1本道。遅くて硬いレポートが多い
+  // 2026-10-13：オーナーに「難しすぎる」と言われ、課題（1回目）と小テストの間隔をあけた（固まって抜けてライフが一気に減っていた）
   "id": "stage_03",
   "name": "1-3 レポート地獄",
   "description": "分厚いレポートが列をなしてやってくる。道は長いので、火力を集めて削りきろう。",
@@ -20,10 +21,14 @@
   },
   "waves": [
     { "time": 3,  "enemy": "report",  "path": "p1", "count": 3, "interval": 5 },
-    { "time": 12, "enemy": "kadai",   "path": "p1", "count": 8, "interval": 1.2 },
+    { "time": 14, "enemy": "kadai",   "path": "p1", "count": 6, "interval": 2.2 },
     { "time": 28, "enemy": "report",  "path": "p1", "count": 4, "interval": 2.5 },
-    { "time": 36, "enemy": "shotest", "path": "p1", "count": 6, "interval": 0.7 },
+    { "time": 38, "enemy": "shotest", "path": "p1", "count": 5, "interval": 1.2 },
     { "time": 48, "enemy": "kadai",   "path": "p1", "count": 6, "interval": 1 },
     { "time": 54, "enemy": "report",  "path": "p1", "count": 4, "interval": 2 }
+  ],
+  "hints": [
+    { "time": 2.2, "duration": 9, "text": "レポートは防御が高く、狙撃や前衛の攻撃はあまり通らない。術師の攻撃は防御に関係なく効く。" },
+    { "time": 16,  "duration": 8, "text": "道が長くて曲がっている。曲がり角に面した高台に置くと、同じ敵を何度も攻撃できる。" }
   ]
 }
