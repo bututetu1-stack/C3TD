@@ -61,6 +61,7 @@ public class HudUI : MonoBehaviour
     private VisualElement resultFooter;
     private Label resultEnglish;
     private Label resultTitle;
+    private Label resultMilestone;
     private Label resultLife;
     private Label resultTime;
     private Label resultEnemy;
@@ -344,6 +345,9 @@ public class HudUI : MonoBehaviour
         }
         resultContent.Add(resultStars);
 
+        resultMilestone = UIFactory.Text("", UIFont.Body, "result-milestone");
+        resultContent.Add(resultMilestone);
+
         var stats = UIFactory.Box("result-stats");
         resultLife = AddResultStat(stats, "LIFE");
         resultTime = AddResultStat(stats, "TIME");
@@ -494,6 +498,17 @@ public class HudUI : MonoBehaviour
         }, () => UIFactory.SetVisible(introLayer, false));
     }
 
+    /// <summary>章の最後のステージなら章のクリアと次の章、全作戦の最後なら卒業のひとこと（それ以外は null）</summary>
+    private static string Milestone(string stageId)
+    {
+        ChapterData chapter = GameData.Campaign.ChapterOf(stageId);
+        if (chapter == null || chapter.stages[chapter.stages.Count - 1] != stageId) return null;
+        var chapters = GameData.Campaign.chapters;
+        int index = chapters.IndexOf(chapter);
+        if (index == chapters.Count - 1) return "全作戦クリア！　四年間おつかれさま。卒業おめでとう！";
+        return chapter.name + "　クリア！　次の章「" + chapters[index + 1].name + "」が開いた";
+    }
+
     /// <summary>勝敗の帯</summary>
     private void ShowResult(GameState state)
     {
@@ -507,6 +522,9 @@ public class HudUI : MonoBehaviour
         resultTime.text = UIFactory.FormatTime(state.ElapsedTime);
         resultEnemy.text = state.EnemiesFinished + "/" + state.EnemiesTotal;
         UIFactory.SetVisible(nextButton, won && bootstrap.NextStageId() != null);
+        string milestone = won && shownBattle != null ? Milestone(shownBattle.Stage.id) : null;
+        resultMilestone.text = milestone ?? "";
+        UIFactory.SetVisible(resultMilestone, milestone != null);
 
         // ★：ライフを減らさずにクリアで3、減らしてクリアで2（Progress と同じ決まり）
         int stars = !won ? 0 : state.Life >= state.MaxLife ? 3 : 2;
