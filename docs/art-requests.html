@@ -300,6 +300,7 @@
         <div class="status-list">
           <span class="chip gold">新：第2章の敵 6体（通知・論文・睡魔・再履修・グループワーク・期末試験）</span>
           <span class="chip gold">新：第3章の敵 6体（エントリーシート・下書き・面接官・お祈りメール・グループディスカッション・最終面接）</span>
+          <span class="chip gold">新：第4章の敵 5体（先行研究・実験データ・赤ペン・再提出・卒論審査）</span>
           <span class="chip gold">新：物理鉄人のカットイン立ち絵</span>
           <span class="chip gold">効果音 summon（艦娘の召喚。水しぶきと汽笛）</span>
         </div>
@@ -326,6 +327,7 @@
       <a href="#enemies">敵</a>
       <a href="#enemies2">第2章の敵</a>
       <a href="#enemies3">第3章の敵</a>
+      <a href="#enemies4">第4章の敵</a>
       <a href="#map">出撃口・拠点・背景</a>
       <a href="#m1fx">出現と突破</a>
       <a href="#m2">配置と攻撃（M2）</a>
@@ -394,6 +396,12 @@
     <h2>第3章の敵<span class="tag">ENEMIES 3</span></h2>
     <p class="section-note">第3章「就活」で出てくる6体です（下書きは、エントリーシートを倒すと出てくる小さな敵）。お祈りメールは空を飛ぶので、ゲーム側で少し持ち上げて描きます。</p>
     <div class="cards" data-group="enemies3"></div>
+  </section>
+
+  <section id="enemies4">
+    <h2>第4章の敵<span class="tag">ENEMIES 4</span></h2>
+    <p class="section-note">第4章「卒論」で出てくる5体です。先行研究の盾（水色のバー）や、実験データの回復の輪は、ゲーム側で付けます。</p>
+    <div class="cards" data-group="enemies4"></div>
   </section>
 
   <section id="map">
@@ -593,6 +601,18 @@
       prompt: "グループディスカッションをする就活生たちを表すモンスター。机を囲んだ3つの小さな頭（名札を付けたスーツ姿、顔は描き分ける）が、一斉に手を挙げて熱く議論している。真ん中から吹き出しの形をした熱気のオーラが立ちのぼる。読める文字は描かない。色は青緑と白、アクセントは琥珀色。" },
     { group: "enemies3", path: "Art/Enemies/saishu.png", title: "最終面接（ボス）", scene: "第3章のボス。16 秒ごとの「圧迫質問」でまわりの部員を動けなくする。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true, priority: true,
       prompt: "「最終面接」を擬人化した、大きなボスモンスター。重厚な面接の机と椅子が合体した巨人で、机の上に、腕を組んだ巨大な影のような面接官の上半身が乗っている。顔は影になっていて、赤く光る2つの目だけが見える。背後に高層ビルのシルエットと、圧をかけるような赤い光の波紋。威圧感があり、ほかの敵より大きく堂々と描く。読める文字や数字は描かない。色は濃紺と黒、アクセントは赤と金。" },
+
+    // ---------------- 第4章の敵（2026-10-14） ----------------
+    { group: "enemies4", path: "Art/Enemies/senkou.png", title: "先行研究", scene: "盾を持つ敵。盾を割るまで本体が削れない", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "積み上がった先行研究の論文の束が、重い盾を構えた騎士のようなモンスターになったもの。体は分厚い論文の束で、前に大きな本の形の盾を構えている（表紙に読める文字は描かない）。頭に古びた学帽、目つきは厳格。色は灰色がかった青と白、アクセントは水色に光る盾のふち。" },
+    { group: "enemies4", path: "Art/Enemies/jikken.png", title: "実験データ", scene: "まわりの敵の体力を回復する敵（緑の輪はゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "実験データを表す、フラスコとグラフが合体した小さなモンスター。体は緑の液体が入った丸底フラスコで、中で泡が立っている。頭からグラフの折れ線のような触角が伸び、手に注射器のような小さな杖を持って、仲間に緑の光を振りまいている。色は緑と白、アクセントは明るい黄緑。" },
+    { group: "enemies4", path: "Art/Enemies/akapen.png", title: "赤ペン", scene: "速くて脆い小さな敵。ボスが呼ぶ手下でもある", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "添削用の赤ペンが、小さなモンスターになって全速力で走っているもの。体は細い赤ペンで、キャップが帽子になっている。ペン先から赤いインクの軌跡を残しながら、意地悪そうな笑顔で前のめりに走る。色は赤と白、アクセントは黒。" },
+    { group: "enemies4", path: "Art/Enemies/saiteishutsu.png", title: "再提出", scene: "倒されても二度起き上がる敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "何度も突き返された卒論の原稿が、ふらふらになっても立ち上がるモンスターになったもの。体は赤ペンの書き込みとバツ印だらけの原稿の束で（読める文字は描かない）、付箋が何枚も貼られ、絆創膏をしている。目は涙目だが、しぶとく前を向いて歩く。色は淡いピンクと生成り色、アクセントは赤。" },
+    { group: "enemies4", path: "Art/Enemies/sotsuron.png", title: "卒論審査（ボス）", scene: "最後のボス。赤ペンを呼び、体力が半分を切ると「追い込み」で速く・強くなる。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true, priority: true,
+      prompt: "「卒論審査」を擬人化した、最後の大きなボスモンスター。審査員席の長机と、その上に並ぶ3人の巨大な影の審査員が一体になった怪物で、真ん中の審査員の目が赤く光っている。机の上には分厚い卒業論文が置かれ、まわりを赤ペンが何本も飛び回る。背後に大学の講堂のシルエットと、赤黒いオーラ。威圧感があり、これまでのどの敵よりも大きく堂々と描く。読める文字や数字は描かない。色は深い赤茶と黒、アクセントは金。" },
 
     // ---------------- 出撃口・拠点・背景 ----------------
     { group: "map", path: "Art/Map/Spawn.png", title: "出撃口の印", scene: "出撃口（S）のマスの上で、ゆっくり回る", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", now: true,
