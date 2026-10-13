@@ -546,6 +546,15 @@ public class HudUI : MonoBehaviour
         return picked != null && picked != root;
     }
 
+    /// <summary>ビルドしたゲームでは、ほかのウィンドウに切り替えたら出撃中を一時停止する（エディタでは止めない）</summary>
+    void OnApplicationFocus(bool focus)
+    {
+        if (Application.isEditor || focus) return;
+        Battle battle = Battle.Current;
+        if (battle != null && battle.State != null && battle.State.Phase == GamePhase.Playing)
+            TimeController.SetPaused(true);
+    }
+
     /// <summary>Space：一時停止、R：やり直し、N：次のステージ（テスト用）</summary>
     private void HandleKeys()
     {
