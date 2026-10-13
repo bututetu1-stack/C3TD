@@ -39,7 +39,9 @@ public class HudUI : MonoBehaviour
     private ChamferBox hintPlate;
     private Label hintText;
     private int hintIndex;
-    private float hintEnd = -1f;
+    // 消えるまでの残り秒。2倍速でも読めるよう実時間で数え、一時停止中は減らさない
+    private float hintRemaining;
+    private bool hintShown;
     private IVisualElementScheduledItem hintTween;
 
     // 全面の演出
@@ -211,9 +213,10 @@ public class HudUI : MonoBehaviour
     private void RefreshHint(Battle battle)
     {
         GameState state = battle.State;
-        if (hintEnd >= 0f && (state.ElapsedTime >= hintEnd || state.Phase != GamePhase.Playing))
+        if (hintShown && !TimeController.Paused) hintRemaining -= Time.unscaledDeltaTime;
+        if (hintShown && (hintRemaining <= 0f || state.Phase != GamePhase.Playing))
         {
-            hintEnd = -1f;
+            hintShown = false;
             UITween.Stop(ref hintTween);
             UIFactory.SetVisible(hintPlate, false);
         }
@@ -223,7 +226,8 @@ public class HudUI : MonoBehaviour
 
         HintData hint = hints[hintIndex++];
         hintText.text = hint.text;
-        hintEnd = state.ElapsedTime + Mathf.Max(1f, hint.duration);
+        hintRemaining = Mathf.Max(1f, hint.duration);
+        hintShown = true;
         UIFactory.SetVisible(hintPlate, true);
         UITween.Stop(ref hintTween);
         hintTween = UITween.Run(hintPlate, 0.35f, t =>
@@ -453,7 +457,7 @@ public class HudUI : MonoBehaviour
         shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = -1;
         shownPhase = GamePhase.Playing;
         hintIndex = 0;
-        hintEnd = -1f;
+        hintShown = false;
         UITween.Stop(ref hintTween);
         UIFactory.SetVisible(hintPlate, false);
         UITween.Stop(ref resultTween);
