@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 開発用：ステージを AutoPilot で何回も戦わせて、勝った回数と残ったライフをまとめる（バランスの確かめ用）。
 /// Novice なら AutoPilot の「初めて遊ぶ人のまね」で、Seed を 0 から Runs-1 まで変えて戦う。
-/// 負けた回は、拠点に着いた敵（何秒に・何が）も書く。
+/// 負けた回は、拠点に着いた敵（何秒に・何が）も書く。MaxTime 秒を過ぎても終わらない回は「時間切れ」にする。
 /// エディタから GameBootstrap の GameObject に AddComponent して使い、Done になったら Report を読む。
 /// </summary>
 public class BalanceRun : MonoBehaviour
@@ -18,6 +18,9 @@ public class BalanceRun : MonoBehaviour
     public bool UseSkills = true;
     public float TimeScale = 6f;
 
+    /// <summary>ステージの経過時間がこれを超えたら「時間切れ」で次へ（置き場所が悪くて敵がなかなか減らない回）</summary>
+    public float MaxTime = 300f;
+
     public bool Done { get; private set; }
     public string Report { get; private set; }
 
@@ -27,7 +30,7 @@ public class BalanceRun : MonoBehaviour
         var sb = new StringBuilder();
         foreach (string id in Stages)
         {
-            int wins = 0, perfect = 0;
+            int wins = 0, perfect = 0, timeouts = 0;
             var lives = new List<int>();
             var losses = new StringBuilder();
             for (int seed = 0; seed < Runs; seed++)
@@ -43,7 +46,7 @@ public class BalanceRun : MonoBehaviour
                 pilot.NoviceCut = NoviceCut;
                 pilot.UseSkills = UseSkills;
                 pilot.TimeScale = TimeScale;
-                while (battle != null && battle.State.Phase == GamePhase.Playing) yield return null;
+                while (battle != null && battle.State.Phase == GamePhase.Playing && battle.State.ElapsedTime < MaxTime) yield return null;
                 if (battle == null) break;
                 GameState s = battle.State;
                 if (s.Phase == GamePhase.Won)
@@ -51,13 +54,18 @@ public class BalanceRun : MonoBehaviour
                     wins++;
                     if (s.Life == s.MaxLife) perfect++;
                 }
+                else if (s.Phase == GamePhase.Playing)
+                {
+                    timeouts++;
+                    losses.Append("  seed " + seed + "：時間切れ（残りの敵 " + battle.Enemies.Count + "）\n");
+                }
                 else
                 {
                     losses.Append("  seed " + seed + "：" + string.Join("、", leaks) + "\n");
                 }
                 lives.Add(s.Life);
             }
-            sb.Append(id + ": 勝ち " + wins + "/" + Runs + "（★3 " + perfect + "） 残りライフ " + string.Join(",", lives) + "\n");
+            sb.Append(id + ": 勝ち " + wins + "/" + Runs + "（★3 " + perfect + (timeouts > 0 ? "、時間切れ " + timeouts : "") + "） 残りライフ " + string.Join(",", lives) + "\n");
             sb.Append(losses);
         }
         Time.timeScale = 1f;
