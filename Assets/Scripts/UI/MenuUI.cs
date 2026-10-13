@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// 出撃前の画面（タイトル・作戦選択・編成）。背景は戦闘画面の背景の絵を暗くして敷く。
+/// 出撃前の画面（タイトル・作戦選択・編成・敵図鑑）。背景は戦闘画面の背景の絵を暗くして敷く。
 /// Esc で1つ前の画面に戻る。
 /// </summary>
 public class MenuUI : MonoBehaviour
@@ -15,6 +15,7 @@ public class MenuUI : MonoBehaviour
     private TitleScreen title;
     private StageSelectScreen select;
     private SquadScreen squad;
+    private EnemyBookScreen book;
     private VisualElement current;
     private IVisualElementScheduledItem showTween;
 
@@ -27,6 +28,7 @@ public class MenuUI : MonoBehaviour
         title = new TitleScreen(root, bootstrap);
         select = new StageSelectScreen(root, bootstrap);
         squad = new SquadScreen(root, bootstrap);
+        book = new EnemyBookScreen(root, bootstrap);
         HideAll();
     }
 
@@ -64,6 +66,12 @@ public class MenuUI : MonoBehaviour
         Show(squad.Root);
     }
 
+    public void ShowEnemyBook()
+    {
+        book.Open();
+        Show(book.Root);
+    }
+
     public void HideAll()
     {
         root.style.display = DisplayStyle.None;
@@ -74,7 +82,7 @@ public class MenuUI : MonoBehaviour
     private void Show(VisualElement screen)
     {
         root.style.display = DisplayStyle.Flex;
-        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root }) UIFactory.SetVisible(s, s == screen);
+        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root }) UIFactory.SetVisible(s, s == screen);
         current = screen;
         AudioManager.PlayBGM("menu");
         UITween.Stop(ref showTween);
@@ -94,7 +102,7 @@ public class MenuUI : MonoBehaviour
         if (kb.escapeKey.wasPressedThisFrame)
         {
             if (current == squad.Root) bootstrap.ShowStageSelect(squad.StageId);
-            else if (current == select.Root) bootstrap.ShowTitle();
+            else if (current == select.Root || current == book.Root) bootstrap.ShowTitle();
         }
         if (current == title.Root && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
             bootstrap.ShowStageSelect();

@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-/// <summary>タイトル画面。「作戦開始」で作戦選択へ</summary>
+/// <summary>タイトル画面。「作戦開始」で作戦選択へ、「敵図鑑」で敵の一覧へ</summary>
 public class TitleScreen
 {
     public readonly VisualElement Root;
@@ -19,6 +19,10 @@ public class TitleScreen
         start.AddToClassList("title-button");
         start.Active = true;
         block.Add(start);
+        var book = new C3Button(IconKind.Next, 26f, "敵図鑑", () => bootstrap.ShowEnemyBook());
+        book.AddToClassList("title-button");
+        book.AddToClassList("title-button--sub");
+        block.Add(book);
         block.Add(UIFactory.Text("Space・Enter でも始められます", UIFont.Medium, "title-hint"));
         Root.Add(block);
 

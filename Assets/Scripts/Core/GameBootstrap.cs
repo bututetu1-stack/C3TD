@@ -61,6 +61,12 @@ public class GameBootstrap : MonoBehaviour
         menu.ShowStageSelect(focus ?? stageId);
     }
 
+    public void ShowEnemyBook()
+    {
+        EndBattle();
+        menu.ShowEnemyBook();
+    }
+
     public void ShowSquad(string id)
     {
         EndBattle();

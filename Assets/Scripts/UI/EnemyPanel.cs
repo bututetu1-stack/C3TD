@@ -111,6 +111,8 @@ public class EnemyPanel
         portrait.style.backgroundImage = art != null ? new StyleBackground(art) : new StyleBackground(StyleKeyword.None);
         portrait.style.backgroundColor = art != null ? new Color(1f, 1f, 1f, 0.06f) : color;
         portraitInitial.text = art != null ? "" : d.Label;
+        // 2文字以上（期末・ES など）は枠に収まるように小さく
+        portraitInitial.style.fontSize = d.Label.Length >= 2 ? 34f : 52f;
         Color frame = d.boss ? Palette.Amber : Palette.Crimson;
         portrait.style.borderLeftColor = portrait.style.borderRightColor = portrait.style.borderTopColor = portrait.style.borderBottomColor = frame;
 
@@ -127,7 +129,7 @@ public class EnemyPanel
     }
 
     /// <summary>特別な性質の説明（なければ空）</summary>
-    private static string Traits(EnemyData d)
+    public static string Traits(EnemyData d)
     {
         var lines = new System.Collections.Generic.List<string>();
         if (d.flying) lines.Add("飛行：止められず、前衛・重装は攻撃できない");
