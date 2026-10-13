@@ -9,6 +9,7 @@ public class StatModifier
     public float Value;
     public float Remaining;  // 残り秒（Timed のときだけ減る）
     public bool Timed;
+    public object Source;    // AddOrRefreshModifier で、同じ出どころの増減を重ねないために使う
 }
 
 /// <summary>
@@ -60,6 +61,23 @@ public abstract class Unit : MonoBehaviour
         var m = new StatModifier { Stat = stat, Percent = percent, Value = value, Remaining = duration, Timed = duration > 0f };
         modifiers.Add(m);
         return m;
+    }
+
+    /// <summary>
+    /// 同じ出どころ（source）・同じ能力の増減がもう付いていれば、残り時間を戻すだけにする（重ねない）。
+    /// 付けたときは true を返す（演出を出すかどうかに使う）
+    /// </summary>
+    public bool AddOrRefreshModifier(object source, string stat, float percent, float duration)
+    {
+        foreach (StatModifier m in modifiers)
+        {
+            if (m.Source != source || m.Stat != stat) continue;
+            m.Remaining = Mathf.Max(m.Remaining, duration);
+            return false;
+        }
+        StatModifier added = AddModifier(stat, percent, 0f, duration);
+        added.Source = source;
+        return true;
     }
 
     public void RemoveModifier(StatModifier m)

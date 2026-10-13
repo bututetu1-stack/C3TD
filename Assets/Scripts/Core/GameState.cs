@@ -47,7 +47,7 @@ public class GameState
 
     public void AddDp(float amount, int max)
     {
-        Dp = Mathf.Min(max, Dp + amount);
+        Dp = Mathf.Clamp(Dp + amount, 0f, max);
     }
 
     public bool SpendDp(int amount)

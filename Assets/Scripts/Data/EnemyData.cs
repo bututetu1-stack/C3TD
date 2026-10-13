@@ -75,6 +75,18 @@ public class EnemyData
     /// <summary>一定の間隔で手下を呼ぶ（なければ null）</summary>
     public EnemySummon summon;
 
+    /// <summary>倒されたとき、その場から enemy を count 体出す（同じ経路の続きを進む）。なければ null</summary>
+    public EnemySplit split;
+
+    /// <summary>攻撃が当たった部員の能力を、duration 秒だけ下げる（重ならず、当たるたびに長さを戻す）。なければ null</summary>
+    public EnemyHitModifier hitModifier;
+
+    /// <summary>場にいるあいだ、DP の回復を1秒あたりこれだけ減らす（何体いても足し算。DP は 0 より下がらない）</summary>
+    public float dpDrain;
+
+    /// <summary>interval 秒ごとに、まわり radius マスの部員を stun 秒動けなくする（ボスの大技）。なければ null</summary>
+    public EnemyPulse pulse;
+
     public string Label
     {
         get
@@ -100,4 +112,29 @@ public class EnemySummon
     public int count = 1;
     public float interval = 15f;
     public float firstDelay = 8f;
+}
+
+/// <summary>倒されたときに出す敵</summary>
+public class EnemySplit
+{
+    public string enemy;
+    public int count = 2;
+}
+
+/// <summary>攻撃が当たった部員の能力を下げる。stat は atk / def / attackInterval、percent（%）、duration（秒）</summary>
+public class EnemyHitModifier
+{
+    public string stat;
+    public float percent;
+    public float duration = 3f;
+}
+
+/// <summary>interval 秒ごと（1回目は firstDelay 秒後）に、まわり radius マスの部員を stun 秒動けなくする。name は技の名前</summary>
+public class EnemyPulse
+{
+    public float interval = 15f;
+    public float firstDelay = 8f;
+    public float radius = 2f;
+    public float stun = 2f;
+    public string name;
 }

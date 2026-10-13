@@ -13,6 +13,8 @@ public class DeployBar
 
     private readonly VisualElement cardRow;
     private readonly Label dpValue;
+    private readonly Label dpCaption;
+    private int shownDrained = -1;
     private readonly VisualElement dpFill;
     private readonly List<Card> cards = new List<Card>();
     private int shownDp = -1;
@@ -42,7 +44,8 @@ public class DeployBar
         dp.SetFill(Palette.UiPanel).SetStroke(Palette.UiPanelLine, 1f)
             .SetCut(14f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight)
             .SetAccent(Palette.Amber, 5f).SetStripes(Palette.UiStripe, 16f);
-        dp.Add(UIFactory.Text("DP", UIFont.Display, "dp-caption"));
+        dpCaption = UIFactory.Text("DP", UIFont.Display, "dp-caption");
+        dp.Add(dpCaption);
         dpValue = UIFactory.Text("0", UIFont.Display, "dp-value");
         dp.Add(dpValue);
         var track = UIFactory.Box("dp-track");
@@ -60,6 +63,7 @@ public class DeployBar
         cardRow.Clear();
         cards.Clear();
         shownDp = -1;
+        shownDrained = -1;
         foreach (SquadMember member in battle.Squad) cards.Add(CreateCard(member));
     }
 
@@ -97,6 +101,14 @@ public class DeployBar
         {
             shownDp = dp;
             dpValue.text = dp.ToString();
+        }
+        // 敵に DP の回復を減らされているあいだは、数字を赤くして「▼」を付ける
+        int drained = battle.DpDrain > 0f ? 1 : 0;
+        if (drained != shownDrained)
+        {
+            shownDrained = drained;
+            dpCaption.text = drained == 1 ? "DP ▼" : "DP";
+            dpValue.EnableInClassList("dp-value--drained", drained == 1);
         }
         float progress = dp >= battle.Rules.dpMax ? 1f : state.Dp - Mathf.Floor(state.Dp);
         dpFill.style.width = Length.Percent(Mathf.Clamp01(progress) * 100f);

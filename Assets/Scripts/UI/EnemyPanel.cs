@@ -149,6 +149,16 @@ public class EnemyPanel
             EnemyData minion = GameData.Enemy(d.summon.enemy);
             lines.Add(d.summon.interval.ToString("0") + " 秒ごとに" + (minion != null ? minion.name : d.summon.enemy) + "を " + d.summon.count + " 体呼ぶ");
         }
+        if (d.split != null && !string.IsNullOrEmpty(d.split.enemy))
+        {
+            EnemyData piece = GameData.Enemy(d.split.enemy);
+            lines.Add("倒すと" + (piece != null ? piece.name : d.split.enemy) + " " + d.split.count + " 体に分かれる");
+        }
+        if (d.hitModifier != null && !string.IsNullOrEmpty(d.hitModifier.stat))
+            lines.Add("攻撃した部員の" + StatName(d.hitModifier.stat) + "を " + d.hitModifier.duration.ToString("0.#") + " 秒 " + d.hitModifier.percent.ToString("+0;-0") + "%");
+        if (d.dpDrain > 0f) lines.Add("場にいるあいだ、DP の回復を 1 秒あたり " + d.dpDrain.ToString("0.0#") + " 減らす");
+        if (d.pulse != null)
+            lines.Add(d.pulse.interval.ToString("0") + " 秒ごとに「" + (string.IsNullOrEmpty(d.pulse.name) ? "大技" : d.pulse.name) + "」：まわり " + d.pulse.radius.ToString("0.#") + " マスの部員を " + d.pulse.stun.ToString("0.#") + " 秒動けなくする");
         return string.Join("\n", lines);
     }
 
@@ -159,6 +169,7 @@ public class EnemyPanel
             case "atk": return "攻撃力";
             case "def": return "防御力";
             case "speed": return "速さ";
+            case "attackInterval": return "攻撃間隔";
             default: return stat;
         }
     }

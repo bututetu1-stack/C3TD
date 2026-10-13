@@ -57,6 +57,8 @@ public class Enemy : Unit
     private float rangedTimer;
     private float summonTimer;
     private float auraTimer;
+    private float pulseTimer;
+    private bool pulseWarned;
     private readonly Dictionary<Enemy, StatModifier> auraTargets = new Dictionary<Enemy, StatModifier>();
     private Transform buffMark;
 
@@ -84,6 +86,7 @@ public class Enemy : Unit
         enemy.revivesLeft = data.revive;
         enemy.rangedTimer = data.attackInterval * 0.5f;
         enemy.summonTimer = data.summon != null ? data.summon.firstDelay : 0f;
+        enemy.pulseTimer = data.pulse != null ? data.pulse.firstDelay : 0f;
         enemy.remainingFrom = new float[path.Count];
         for (int i = path.Count - 2; i >= 0; i--)
             enemy.remainingFrom[i] = enemy.remainingFrom[i + 1] + Vector3.Distance(path[i], path[i + 1]);
@@ -184,6 +187,7 @@ public class Enemy : Unit
         else
         {
             TickSummon(dt);
+            TickPulse(dt);
             if (BlockedBy == null)
             {
                 Move(ApplyStat("speed", Data.speed) * dt);
@@ -341,8 +345,47 @@ public class Enemy : Unit
         if (target == null || !target.Alive || battle == null) return;
         target.TakeDamage(Atk, Data.damageType);
         if (Data.stunOnHit > 0f) target.Stun(Data.stunOnHit);
+        EnemyHitModifier hm = Data.hitModifier;
+        if (hm != null && !string.IsNullOrEmpty(hm.stat) && target.Alive
+            && target.AddOrRefreshModifier(Data, hm.stat, hm.percent, hm.duration))
+            FloatingText.Status(target.Center, StatLabel(hm.stat) + (hm.percent < 0f ? "ダウン" : "アップ"));
         Fx.Hit(target.Center, Palette.Crimson);
         AudioManager.PlaySE("hit");
+    }
+
+    private static string StatLabel(string stat)
+    {
+        switch (stat)
+        {
+            case "atk": return "攻撃";
+            case "def": return "防御";
+            case "attackInterval": return "攻撃速度";
+            default: return stat;
+        }
+    }
+
+    /// <summary>ボスの大技：interval 秒ごとに、まわり radius マスの部員を stun 秒動けなくする</summary>
+    private void TickPulse(float dt)
+    {
+        EnemyPulse pulse = Data.pulse;
+        if (pulse == null) return;
+        pulseTimer -= dt;
+        // 1 秒前から、届く範囲に赤い輪を出して知らせる
+        if (!pulseWarned && pulseTimer <= 1f)
+        {
+            pulseWarned = true;
+            FxSprite.Create(SpriteFactory.ThinRing, transform.position, Palette.WithAlpha(Palette.Crimson, 0.9f), 1f, pulse.radius * 2f, pulse.radius * 2f, 79);
+        }
+        if (pulseTimer > 0f) return;
+        pulseTimer = Mathf.Max(1f, pulse.interval);
+        pulseWarned = false;
+        Vector2Int cell = battle.Map.WorldToCell(transform.position);
+        foreach (Character c in battle.Characters)
+            if (c.Alive && Combat.InRange(cell, c.Cell, pulse.radius)) c.Stun(pulse.stun);
+        FxSprite.Create(SpriteFactory.Ring, transform.position, Palette.WithAlpha(Palette.Crimson, 0.9f), 0.5f, 0.4f, pulse.radius * 2.2f, 80);
+        FloatingText.Status(Center + new Vector3(0f, 0.4f, 0f), string.IsNullOrEmpty(pulse.name) ? "大技！" : pulse.name);
+        CameraFitter.Shake(0.1f, 0.3f);
+        AudioManager.PlaySE("boss_warning");
     }
 
     /// <summary>手下を呼ぶ敵：interval 秒ごとに、自分の位置から同じ経路の続きへ出す</summary>
@@ -524,6 +567,13 @@ public class Enemy : Unit
             return;
         }
         ClearAura();
+        // 分かれる敵（エントリーシートなど）：倒れた場所から、同じ経路の続きへ出す
+        EnemySplit split = Data.split;
+        if (split != null && !string.IsNullOrEmpty(split.enemy))
+        {
+            EnemyData piece = GameData.Enemy(split.enemy);
+            if (piece != null) battle.SpawnSummoned(piece, this, Mathf.Max(1, split.count), false);
+        }
         battle.OnEnemyDefeated(this);
     }
 }

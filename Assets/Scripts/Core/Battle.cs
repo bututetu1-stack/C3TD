@@ -18,6 +18,9 @@ public class Battle : MonoBehaviour
     public MapHighlight Highlight { get; private set; }
     public RulesData Rules { get; private set; }
 
+    /// <summary>場の敵が減らしている DP の回復（1秒あたり）</summary>
+    public float DpDrain { get; private set; }
+
     /// <summary>場に出ている敵</summary>
     public readonly List<Enemy> Enemies = new List<Enemy>();
 
@@ -167,7 +170,11 @@ public class Battle : MonoBehaviour
         {
             float dt = Time.deltaTime;
             State.Tick(dt);
-            State.AddDp(Rules.dpPerSecond * dt, Rules.dpMax);
+            // お祈りメールなどがいるあいだは、DP の回復が遅くなる（0 より下がらない）
+            DpDrain = 0f;
+            foreach (Enemy e in Enemies)
+                if (e.Alive) DpDrain += e.Data.dpDrain;
+            State.AddDp((Rules.dpPerSecond - DpDrain) * dt, Rules.dpMax);
             foreach (SquadMember m in Squad)
                 if (m.Cooldown > 0f) m.Cooldown = Mathf.Max(0f, m.Cooldown - dt);
 
@@ -358,11 +365,12 @@ public class Battle : MonoBehaviour
     }
 
     /// <summary>敵が手下を呼ぶ。呼んだ敵の位置から、同じ経路の続きを進む（倒す敵の数も増える）</summary>
-    public void SpawnSummoned(EnemyData data, Enemy summoner, int count)
+    public void SpawnSummoned(EnemyData data, Enemy summoner, int count, bool announce = true)
     {
         for (int i = 0; i < count; i++)
             Enemies.Add(Enemy.SpawnOnPath(data, summoner.Path, summoner.NextPoint, summoner.transform.position, this, enemyRoot));
         State.AddEnemies(count);
+        if (!announce) return;
         Fx.Summon(summoner.transform.position);
         AudioManager.PlaySE("summon");
     }
