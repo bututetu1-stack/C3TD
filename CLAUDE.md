@@ -181,6 +181,7 @@ Assets/
 - M2 完了（2026-10-13）。編成バーからのドラッグ配置・DP・攻撃（近接・弾・範囲・回復）・ブロック・撤退・ダウン・再配置待ち。部員は物理鉄人と、テスト用の `dummy_guard` `dummy_defender` `dummy_caster` `dummy_medic`。特性と必殺技は読み込んで表示するだけ（M3 で動かす）。
 - M3 完了（2026-10-13）。スキルの部品・特性・必殺技・SP・発動ボタン・カットイン・召喚。物理鉄人は仕様どおり（夜戦主義：30秒ごとに ATK+10%、5段まで／深夜出撃：SP 30・15秒、周りの空きマスに艦娘3体（召喚者の50%を引き継ぐ）、終わると3秒寝落ち）。セリフ（`line`・`endLine`）は Claude が仮に書いたもので、オーナーが JSON で直してよい。ダミー4人には部品を試すためのテスト技（名前が「テスト：」）を付けてある。
 - M4 完了（2026-10-13）。タイトル → 作戦選択 → 編成 → 出撃 → 結果（もう一度／次の作戦／作戦選択へ）。作戦選択は前のステージをクリアすると次が開き、★（ライフを減らさずクリアで3、減らしてクリアで2）を記録する。小さなマップ・出てくる敵・ライフ・DP を出す。編成は全部員から最大8人（`rules.squadMax`）、入れた順に編成バーへ並ぶ。前回の編成とクリア状況は PlayerPrefs（`Progress`、キー `c3td.progress.v1`）に保存。作戦選択の左下に「全作戦を開放（テスト用）」。一時停止はメニュー（再開／やり直す／作戦選択へ）で、マップは触れない。
+- 改良（2026-10-13 夕、オーナー不在のあいだ）：自動で戦う `Dev/AutoPilot` で5ステージを確かめ、簡単すぎた後半を強くした（敵の数値と 1-3〜1-5 のウェーブ。結果の表は `docs/snippets/README.md`）。敵が出る2秒前に出撃口で予告（白い輪、ボスは金色）、ボスが場にいるあいだ上にボスの体力バー、敵をクリックすると敵の札（`EnemyPanel`）、1-1 に操作のヒント、部員・敵の札は選んだものと反対の側に出す（左端の出撃口を隠さない）。
 - 素材依頼帳の画像は 2026-10-13 に全部受け取った。依頼中は艦娘の砲弾 `Shell.png`、タイトルの絵 `Art/Background/Title.png`（任意。なければ戦闘の背景を使う）、効果音・BGM。
 
 ### デザインの方針（オーナーと決めたこと）
@@ -193,7 +194,8 @@ Assets/
 - マス座標は `[列, 行]`、行は**上から0**（マップの文字列と同じ向き）。ワールド座標は1マス=1ユニットで、左下のマスの中心が (0, 0)（`StageMap.CellToWorld`）。
 - JSON は自前の `MiniJson` + `JsonMapper` で読む（JsonUtility では配列の配列や辞書が読めないため）。`//` コメントと末尾のカンマを書いてよい。知らないキーは警告を出して無視するので、綴りの間違いはコンソールで分かる。経路は読み込み時に検査する（範囲外・歩けないマスを通る・S で始まり B で終わらない）。
 - データ：`Data/rules.json`（DP の回復・上限、撤退で戻る割合、最低ダメージ、スローの速さ）、`Data/classes.json`（職業ごとの置ける地形・攻撃のしかた・ダメージの種類・標準ブロック数・範囲・弾の画像・色）、`Data/squad.json`（はじめの編成と、編成画面での部員の並び）、`Data/campaign.json`（章とステージの並び）、`Data/Characters/{id}.json`。ステージの `description` は作戦選択の説明。
-- 敵の JSON：`res`（術耐性%）、`artScale`（絵の大きさ）、`artFacing`（絵の向き。課題とレポートは `Left`）。
+- 敵の JSON：`res`（術耐性%）、`artScale`（絵の大きさ）、`artFacing`（絵の向き。課題とレポートは `Left`）、`lifeDamage`（拠点に着いたら減るライフ。ボスの締切は 2）。
+- ステージの JSON の `hints`：`{ "time": 秒, "duration": 秒, "text": "…" }` の配列。その時刻に画面の左下にヒントが出る（いまは 1-1 だけ）。
 - 部員の JSON の追加項目：`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る）・`endLine`（終わったときのセリフ。吹き出し）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
 - スキル（`Skills/SkillRunner`・`Skills/SkillEffects` の先頭に一覧あり）：
   - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）。
@@ -212,7 +214,7 @@ Assets/
   - 撤退は コスト×0.5（切り捨て）が戻る。倒されたら戻らない。どちらも `redeployTime` 秒の再配置待ち。
   - ドラッグ中・選択中は時間が 0.2 倍（`focusTimeScale`）。一時停止中はメニューが出て、配置はできない。
 - 実行時に作るもの：カメラの調整（`CameraFitter`、上の HUD 96px・下の編成バー 180px を空ける。揺れもここ）、PanelSettings（`UIFactory`、1920x1080 を高さ基準で拡縮）、図形スプライト（`SpriteFactory`、256px・ミップマップつき）、フォント（`GameFonts`）。
-- UI は UI Toolkit をコードで組む。配置・文字の大きさと色は `Resources/UI/Theme.uss`、フォントはコードで付ける。部品は `ChamferBox`、`C3Button`、`IconView`（Painter2D のアイコン）、`UITween`（実時間で動く小さなアニメ）、`DeployBar`（編成バーと DP）、`UnitPanel`（選択中の部員の札と撤退ボタン）。出撃前の画面は `MenuUI`（背景と画面の切り替え・Esc で戻る）の下に `TitleScreen`・`StageSelectScreen`・`SquadScreen`。部員のカードは `CharacterCard`（編成バーと編成画面で共通）、作戦選択の小さなマップは `MapPreview`。画面の流れは `GameBootstrap`、クリア状況と編成の保存は `Progress`。
+- UI は UI Toolkit をコードで組む。配置・文字の大きさと色は `Resources/UI/Theme.uss`、フォントはコードで付ける。部品は `ChamferBox`、`C3Button`、`IconView`（Painter2D のアイコン）、`UITween`（実時間で動く小さなアニメ）、`DeployBar`（編成バーと DP）、`UnitPanel`（選択中の部員の札と撤退ボタン）、`EnemyPanel`（クリックした敵の札。部員の札と同じ場所で、どちらか一方だけ出る）。出撃前の画面は `MenuUI`（背景と画面の切り替え・Esc で戻る）の下に `TitleScreen`・`StageSelectScreen`・`SquadScreen`。部員のカードは `CharacterCard`（編成バーと編成画面で共通）、作戦選択の小さなマップは `MapPreview`。画面の流れは `GameBootstrap`、クリア状況と編成の保存は `Progress`。
 - 描く順番：マス 0〜9、部員 24（敵より手前。大きな敵に止められていても駒が見える）、敵 20、弾 70、演出 80、数字 90、ドラッグ中の影 95。
 - 本素材の読み込みは `Art`（`ArtTexture` で縮小して読むので、インポート設定は触らなくてよい）。透過のない画像の背景は、光るもの（`Art/Effects`・出撃口）は明るさに応じて透明に、物の絵（敵・拠点）はふちから続く黒だけを透明にする。置き場所は `Resources/` の下：
   - `Art/Icons/{characterId}.png`（マップ上では丸く切り抜く）、`Art/Enemies/{enemyId}.png`
@@ -222,7 +224,9 @@ Assets/
 - エディタは「ドメインのリロードなし」で再生する設定なので、static な値は `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` で毎回リセットする。
 - SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down` `skill` `skill_ready` `summon` `buff`。BGM はステージの `bgm` に書いたキー（いまはどのステージも `battle`）と、メニューの `menu`。
 - テスト用のキー：出撃中は Space 一時停止、R やり直し、N 次のステージ（最後の次は最初・編成はそのまま）、Esc・右クリックで選択とドラッグの取り消し。メニューでは Esc で1つ前の画面、タイトルで Space・Enter。Boot シーンの GameBootstrap の `startStage` にステージ id を書くと、タイトルと編成を飛ばしてそこから始まる。
-- 確かめ方は `docs/snippets/README.md`（画面の撮影、部員を置く、マウスを流し込む）。
+- 確かめ方は `docs/snippets/README.md`（画面の撮影、部員を置く、マウスを流し込む、自動で戦わせてバランスを見る）。ステージや敵の数値を変えたら `AutoPilot` で「必殺技あり／なし」を回して、表を更新する。
+- テストで戦うとクリアの記録が PlayerPrefs に残るので、終わったら `Progress.ResetAll()` で消してオーナーに渡す。
+- テストの環境（エディタが背面）では、流し込んだマウスの「押した瞬間」「離した瞬間」を取りこぼすことがある。クリックの確かめは、当たり判定（`BattleInput` の `EnemyAt` など）と表示（`Inspect`・`Select`）を分けて呼んで確かめる。
 
 ### 気をつけること
 - C3 は「サークル」ではなく「部」。表記は「部」「部員」（2026-10-13 オーナー確認）。
