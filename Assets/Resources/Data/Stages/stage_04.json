@@ -1,6 +1,7 @@
 {
   // 出撃口が3つ。上下の道は中央の道に合流する。足の速い小テストが多い
   // 2026-10-13：小テストが固まって抜けてライフが一気に減っていたので、小テストの間隔をあけた
+  // 2026-10-14：初めて遊ぶ人のまねで6割だったので、下からの最初の小テストと、最後の課題・小テストを遅らせて重ならないようにした
   "id": "stage_04",
   "name": "1-4 小テスト週間",
   "description": "三方向から小テストが駆け抜ける。足が速いので、早めに道をふさごう。",
@@ -23,15 +24,15 @@
   },
   "waves": [
     { "time": 3,  "enemy": "shotest", "path": "top",    "count": 4, "interval": 1 },
-    { "time": 9,  "enemy": "shotest", "path": "bottom", "count": 4, "interval": 1 },
+    { "time": 11, "enemy": "shotest", "path": "bottom", "count": 4, "interval": 1.2 },
     { "time": 16, "enemy": "kadai",   "path": "middle", "count": 5, "interval": 1.6 },
     { "time": 26, "enemy": "shotest", "path": "middle", "count": 5, "interval": 1.3 },
     { "time": 34, "enemy": "shotest", "path": "top",    "count": 4, "interval": 1.2 },
     { "time": 37, "enemy": "shotest", "path": "bottom", "count": 4, "interval": 1.2 },
     { "time": 44, "enemy": "report",  "path": "middle", "count": 3, "interval": 3 },
     { "time": 50, "enemy": "kadai",   "path": "top",    "count": 3, "interval": 1.5 },
-    { "time": 51, "enemy": "kadai",   "path": "bottom", "count": 3, "interval": 1.5 },
-    { "time": 58, "enemy": "shotest", "path": "middle", "count": 5, "interval": 1.1 }
+    { "time": 55, "enemy": "kadai",   "path": "bottom", "count": 3, "interval": 1.5 },
+    { "time": 63, "enemy": "shotest", "path": "middle", "count": 5, "interval": 1.4 }
   ],
   "hints": [
     { "time": 2.2, "duration": 8, "text": "小テストは足が速い。早めに道をふさごう。敵をクリックすると、体力や速さが見られる。" }
