@@ -21,6 +21,9 @@ public class StageData
 
     public List<WaveData> waves = new List<WaveData>();
 
+    /// <summary>出撃中に画面の左下に出す操作のヒント（なくてよい）</summary>
+    public List<HintData> hints = new List<HintData>();
+
     /// <summary>name の先頭の「1-1」のような番号（なければ空）</summary>
     public string Code
     {
@@ -68,4 +71,12 @@ public class WaveData
     public string path;
     public int count = 1;
     public float interval;
+}
+
+/// <summary>出撃中に出すヒント。time 秒（ステージの経過時間）に出て、duration 秒で消える</summary>
+public class HintData
+{
+    public float time;
+    public string text;
+    public float duration = 8f;
 }

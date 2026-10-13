@@ -17,6 +17,18 @@ public static class Fx
         FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(color, 0.9f), 0.45f, 0.2f, 1.2f, Order);
     }
 
+    /// <summary>敵が出てくる直前の予告：出撃口に白い輪が3回すぼまる（出撃口の絵が赤いので白）。ボスは大きく金色</summary>
+    public static void SpawnWarning(Vector3 position, bool boss)
+    {
+        Color color = boss ? Palette.Amber : Color.white;
+        float size = boss ? 1.6f : 1.3f;
+        for (int i = 0; i < 3; i++)
+        {
+            FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(color, 0.95f), 0.55f, size, 0.35f, Order).Delay(i * 0.5f);
+            FxSprite.Create(SpriteFactory.Glow, position, Palette.WithAlpha(color, 0.45f), 0.55f, 0.6f, 1.1f, Order).Delay(i * 0.5f);
+        }
+    }
+
     /// <summary>敵が拠点にたどり着いた</summary>
     public static void EnemyLeak(Vector3 position)
     {

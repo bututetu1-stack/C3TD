@@ -43,6 +43,12 @@ public class Battle : MonoBehaviour
 
     private readonly List<SpawnEntry> schedule = new List<SpawnEntry>();
     private int nextSpawn;
+    private int nextWarn;
+    // 出撃口ごとの、最後に予告した（予告なしで続いた）敵の出る時刻
+    private readonly Dictionary<Vector3, float> lastWarn = new Dictionary<Vector3, float>();
+
+    /// <summary>敵が出てくる何秒前に出撃口で予告するか</summary>
+    private const float WarnLead = 2f;
     private Transform enemyRoot;
     private Transform characterRoot;
     private GamePhase lastPhase;
@@ -161,6 +167,7 @@ public class Battle : MonoBehaviour
                 SpawnEntry entry = schedule[nextSpawn++];
                 Enemies.Add(Enemy.Spawn(entry.enemy, entry.path, this, enemyRoot));
             }
+            WarnUpcoming();
             State.CheckVictory(nextSpawn >= schedule.Count, Enemies.Count);
         }
 
@@ -173,6 +180,22 @@ public class Battle : MonoBehaviour
                 Progress.RecordClear(Stage.id, State.Life, State.MaxLife);
             }
             if (State.Phase == GamePhase.Lost) AudioManager.PlaySE("defeat");
+        }
+    }
+
+    /// <summary>
+    /// もうすぐ敵が出る出撃口で予告する。同じ出撃口から続けて出るあいだは最初の1回だけ（ボスは必ず）
+    /// </summary>
+    private void WarnUpcoming()
+    {
+        while (nextWarn < schedule.Count && schedule[nextWarn].time - State.ElapsedTime <= WarnLead)
+        {
+            SpawnEntry entry = schedule[nextWarn++];
+            Vector3 at = entry.path[0];
+            float last;
+            bool quiet = !lastWarn.TryGetValue(at, out last) || entry.time - last > 4f;
+            lastWarn[at] = entry.time;
+            if (quiet || entry.enemy.boss) Fx.SpawnWarning(at, entry.enemy.boss);
         }
     }
 

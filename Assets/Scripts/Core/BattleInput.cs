@@ -18,6 +18,10 @@ public class BattleInput : MonoBehaviour
     /// <summary>ドラッグ中の編成メンバー（いなければ null）</summary>
     public SquadMember Dragging { get; private set; }
 
+    /// <summary>クリックして情報を見ている敵（いなければ null）</summary>
+    public Enemy Inspected { get; private set; }
+    private PulseRing inspectRing;
+
     private HudUI hud;
     private Transform ghost;
     private readonly List<SpriteRenderer> ghostRenderers = new List<SpriteRenderer>();
@@ -42,6 +46,7 @@ public class BattleInput : MonoBehaviour
         if (battle == null || battle.State.Phase != GamePhase.Playing) return;
         if (!member.Ready || !battle.CanAfford(member)) return;
         Select(null);
+        Inspect(null);
         Dragging = member;
         CreateGhost(member);
         TimeController.SetFocus(true);
@@ -55,6 +60,37 @@ public class BattleInput : MonoBehaviour
         TimeController.SetFocus(Selected != null || Dragging != null);
     }
 
+
+    /// <summary>敵の情報を出す（null で閉じる）。見ている敵には白い輪を出す</summary>
+    public void Inspect(Enemy e)
+    {
+        if (e != null && !e.Alive) e = null;
+        if (ReferenceEquals(e, Inspected)) return;
+        Inspected = e;
+        if (inspectRing != null) Destroy(inspectRing.gameObject);
+        inspectRing = null;
+        if (e != null) inspectRing = PulseRing.Create(e.transform, SpriteFactory.ThinRing, Color.white, 1.1f, 0.9f, 1.25f, 0f, 19);
+    }
+
+    /// <summary>クリックした場所にいる敵（いちばん近いもの）</summary>
+    private static Enemy EnemyAt(Battle battle, Vector3 world)
+    {
+        Enemy best = null;
+        float bestDist = float.MaxValue;
+        foreach (Enemy e in battle.Enemies)
+        {
+            if (e == null || !e.Alive) continue;
+            Vector3 d = e.Center - world;
+            d.z = 0f;
+            float dist = d.magnitude;
+            if (dist <= Mathf.Max(0.45f, e.Data.size * 0.6f) && dist < bestDist)
+            {
+                best = e;
+                bestDist = dist;
+            }
+        }
+        return best;
+    }
     /// <summary>選択中の部員の必殺技を使う（必殺技ボタン）</summary>
     public void ActivateSelected()
     {
@@ -80,6 +116,8 @@ public class BattleInput : MonoBehaviour
             shownBattle = battle;
             CancelDrag();
             Selected = null;
+            Inspected = null;
+            inspectRing = null;
             TimeController.SetFocus(false);
         }
         if (battle == null) return;
@@ -88,11 +126,13 @@ public class BattleInput : MonoBehaviour
         {
             CancelDrag();
             if (Selected != null) Select(null);
+            Inspect(null);
             battle.Highlight.Clear();
             return;
         }
         // 倒された部員は破棄されて Unity では null と等しくなるので、参照が残っていれば外す
         if (!ReferenceEquals(Selected, null) && (Selected == null || !Selected.Alive)) Select(null);
+        if (!ReferenceEquals(Inspected, null) && (Inspected == null || !Inspected.Alive)) Inspect(null);
 
         Mouse mouse = Mouse.current;
         Keyboard kb = Keyboard.current;
@@ -132,9 +172,18 @@ public class BattleInput : MonoBehaviour
             return;
         }
 
-        if (cancel) Select(null);
+        if (cancel)
+        {
+            Select(null);
+            Inspect(null);
+        }
         if (mouse.leftButton.wasPressedThisFrame && (hud == null || !hud.IsOverUI(screen)))
-            Select(battle.CharacterAt(cell));
+        {
+            // 部員がいればその部員を、いなければ敵を選ぶ（どちらか一方の札だけが出る）
+            Character c = battle.CharacterAt(cell);
+            Inspect(c == null ? EnemyAt(battle, world) : null);
+            Select(c);
+        }
 
         if (Selected != null) battle.Highlight.Show(null, Combat.CellsInRange(battle.Map, Selected.Cell, Selected.Range), null, true);
         else battle.Highlight.Clear();

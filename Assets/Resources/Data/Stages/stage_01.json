@@ -18,5 +18,12 @@
     { "time": 20, "enemy": "shotest",  "path": "p1", "count": 3, "interval": 1 },
     { "time": 34, "enemy": "kadai",    "path": "p1", "count": 4, "interval": 2.5 },
     { "time": 48, "enemy": "report",   "path": "p1", "count": 2, "interval": 4 }
+  ],
+  // 操作のヒント（time 秒に画面の左下に出て、duration 秒で消える）
+  "hints": [
+    { "time": 2.2, "duration": 9, "text": "下のカードをマスまでドラッグして配置しよう。前衛・重装は道（暗いマス）に、狙撃・術師・医療は高台（明るいマス）に置ける。" },
+    { "time": 13,  "duration": 8, "text": "配置には DP を使う。DP は時間で溜まる。前衛・重装は敵の前に立って足止め（ブロック）できる。" },
+    { "time": 24,  "duration": 9, "text": "配置した部員をクリックすると、必殺技と撤退のボタンが出る。必殺技は SP が溜まると使える。選んでいるあいだは時間がゆっくり進む。" },
+    { "time": 38,  "duration": 8, "text": "右上のボタンで2倍速・一時停止（Space）。敵が拠点に着くとライフが減り、0 になると作戦失敗。" }
   ]
 }

@@ -27,6 +27,21 @@ public class HudUI : MonoBehaviour
     private C3Button speedButton;
     private C3Button pauseButton;
 
+    // ボスの体力（ボスが場にいるあいだだけ出す）
+    private VisualElement bossLayer;
+    private Label bossName;
+    private Label bossHp;
+    private VisualElement bossFill;
+    private Enemy shownBoss;
+    private IVisualElementScheduledItem bossTween;
+
+    // 操作のヒント（ステージに hints があるときだけ）
+    private ChamferBox hintPlate;
+    private Label hintText;
+    private int hintIndex;
+    private float hintEnd = -1f;
+    private IVisualElementScheduledItem hintTween;
+
     // 全面の演出
     private VisualElement damageFlash;
     private VisualElement pauseLayer;
@@ -50,6 +65,7 @@ public class HudUI : MonoBehaviour
     // 編成バーと選択中の部員
     private DeployBar deployBar;
     private UnitPanel unitPanel;
+    private EnemyPanel enemyPanel;
     private CutIn cutIn;
 
     private IVisualElementScheduledItem flashTween;
@@ -79,8 +95,11 @@ public class HudUI : MonoBehaviour
         root.Add(damageFlash);
 
         BuildTopBar();
+        BuildBossBar();
+        BuildHint();
         deployBar = new DeployBar(root);
         unitPanel = new UnitPanel(root);
+        enemyPanel = new EnemyPanel(root);
         cutIn = new CutIn(root);
         BuildIntro();
         BuildPause();
@@ -123,6 +142,96 @@ public class HudUI : MonoBehaviour
         pauseButton = new C3Button(IconKind.Pause, 26f, null, TimeController.TogglePause);
         pauseButton.AddToClassList("hud-button");
         bar.Add(pauseButton);
+    }
+
+    private void BuildBossBar()
+    {
+        bossLayer = UIFactory.Box("boss-layer");
+        var plate = new ChamferBox();
+        plate.AddToClassList("boss-plate");
+        plate.SetFill(Palette.UiPanel).SetCut(14f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetAccent(Palette.Crimson, 5f);
+        var head = UIFactory.Box("boss-head");
+        head.Add(UIFactory.Text("BOSS", UIFont.Display, "boss-caption"));
+        bossName = UIFactory.Text("", UIFont.Title, "boss-name");
+        head.Add(bossName);
+        head.Add(UIFactory.Box("top-spacer"));
+        bossHp = UIFactory.Text("", UIFont.Display, "boss-hp");
+        head.Add(bossHp);
+        plate.Add(head);
+        var track = UIFactory.Box("boss-track");
+        bossFill = UIFactory.Box("boss-fill");
+        track.Add(bossFill);
+        plate.Add(track);
+        bossLayer.Add(plate);
+        UIFactory.SetVisible(bossLayer, false);
+        root.Add(bossLayer);
+    }
+
+    /// <summary>場にいる最初のボスの体力を出す</summary>
+    private void RefreshBoss(Battle battle)
+    {
+        Enemy boss = null;
+        foreach (Enemy e in battle.Enemies)
+            if (e != null && e.Alive && e.Data.boss) { boss = e; break; }
+        if (!ReferenceEquals(boss, shownBoss))
+        {
+            shownBoss = boss;
+            UIFactory.SetVisible(bossLayer, boss != null);
+            UITween.Stop(ref bossTween);
+            if (boss != null)
+            {
+                bossName.text = boss.Data.name;
+                bossTween = UITween.Run(bossLayer, 0.4f, t =>
+                {
+                    float e = Ease.OutCubic(t);
+                    bossLayer.style.opacity = e;
+                    bossLayer.style.translate = new Translate(0f, (1f - e) * -24f);
+                });
+            }
+        }
+        if (boss == null) return;
+        float rate = Mathf.Clamp01(boss.Hp / boss.MaxHp);
+        bossFill.style.width = Length.Percent(rate * 100f);
+        bossHp.text = Mathf.CeilToInt(boss.Hp).ToString("N0") + " / " + Mathf.CeilToInt(boss.MaxHp).ToString("N0");
+    }
+
+    private void BuildHint()
+    {
+        hintPlate = new ChamferBox();
+        hintPlate.AddToClassList("hint-plate");
+        hintPlate.SetFill(Palette.UiPanel).SetCut(14f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetAccent(Palette.Amber, 5f);
+        hintPlate.Add(UIFactory.Text("HINT", UIFont.Display, "hint-caption"));
+        hintText = UIFactory.Text("", UIFont.Body, "hint-text");
+        hintPlate.Add(hintText);
+        UIFactory.SetVisible(hintPlate, false);
+        root.Add(hintPlate);
+    }
+
+    /// <summary>ステージの hints を時刻どおりに1つずつ出す</summary>
+    private void RefreshHint(Battle battle)
+    {
+        GameState state = battle.State;
+        if (hintEnd >= 0f && (state.ElapsedTime >= hintEnd || state.Phase != GamePhase.Playing))
+        {
+            hintEnd = -1f;
+            UITween.Stop(ref hintTween);
+            UIFactory.SetVisible(hintPlate, false);
+        }
+        var hints = battle.Stage.hints;
+        if (state.Phase != GamePhase.Playing || hints == null || hintIndex >= hints.Count) return;
+        if (hints[hintIndex].time > state.ElapsedTime) return;
+
+        HintData hint = hints[hintIndex++];
+        hintText.text = hint.text;
+        hintEnd = state.ElapsedTime + Mathf.Max(1f, hint.duration);
+        UIFactory.SetVisible(hintPlate, true);
+        UITween.Stop(ref hintTween);
+        hintTween = UITween.Run(hintPlate, 0.35f, t =>
+        {
+            float e = Ease.OutCubic(t);
+            hintPlate.style.opacity = e;
+            hintPlate.style.translate = new Translate((1f - e) * -30f, 0f);
+        });
     }
 
     private ChamferBox AddStat(VisualElement bar, IconKind icon, Color iconColor, string caption, out Label value, out Label sub)
@@ -279,6 +388,9 @@ public class HudUI : MonoBehaviour
         if (battle != shownBattle) OnBattleChanged(battle);
         deployBar.Refresh(battle);
         unitPanel.Refresh(BattleInput.Instance != null ? BattleInput.Instance.Selected : null);
+        enemyPanel.Refresh(BattleInput.Instance != null ? BattleInput.Instance.Inspected : null);
+        RefreshBoss(battle);
+        RefreshHint(battle);
 
         int seconds = Mathf.FloorToInt(state.ElapsedTime);
         if (seconds != shownSeconds)
@@ -340,6 +452,10 @@ public class HudUI : MonoBehaviour
 
         shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = -1;
         shownPhase = GamePhase.Playing;
+        hintIndex = 0;
+        hintEnd = -1f;
+        UITween.Stop(ref hintTween);
+        UIFactory.SetVisible(hintPlate, false);
         UITween.Stop(ref resultTween);
         UIFactory.SetVisible(resultLayer, false);
         deployBar.Rebuild(battle);
