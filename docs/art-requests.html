@@ -299,8 +299,7 @@
         <strong>いま依頼中（2026-10-14 に更新）</strong>
         <div class="status-list">
           <span class="chip gold">新：物理鉄人のカットイン立ち絵</span>
-          <span class="chip gold">BGM menu・boss（Gemini で作れる）</span>
-          <span class="chip gold">効果音（下の表。フリー素材サイトで）</span>
+          <span class="chip gold">効果音 summon（艦娘の召喚。水しぶきと汽笛）</span>
         </div>
       </div>
       <div class="status-row done">
@@ -314,7 +313,7 @@
           <span class="got">配置・撤退・攻撃・回復・撃破（M2 で使用中）</span>
           <span class="got">必殺技・寝落ち・召喚・艦娘（M3 で使う）</span>
           <span class="got">艦娘の砲弾・砲弾の爆発・状態の印・DP 獲得・タイトルの絵（10/14）</span>
-          <span class="got">戦闘の BGM battle（Gemini・10/14）</span>
+          <span class="got">BGM 3曲（battle・menu・boss）と効果音14種（10/14）</span>
         </div>
         <p class="note" style="margin:4px 0 0">拠点の印は黒背景で届きましたが、ゲーム側でふちから続く黒だけを抜いているので、そのまま使えます。課題とレポートは左向きでしたが、敵のデータに向きを書いて反転させているので、描き直しは要りません。</p>
       </div>
@@ -433,7 +432,7 @@
           <tr><td><code>retreat</code></td><td><code>Audio/SE/</code></td><td>部員を撤退させた</td><td>ふわっと消える音</td><td class="len">約0.5秒</td></tr>
           <tr><td><code>skill</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>必殺技の発動（カットイン）</td><td>力強い決め音（シャキーン）</td><td class="len">約1.2秒</td></tr>
           <tr><td><code>skill_ready</code></td><td><code>Audio/SE/</code></td><td>必殺技が使えるようになった</td><td>軽いきらめき（ピロン）</td><td class="len">約0.5秒</td></tr>
-          <tr><td><code>summon</code></td><td><code>Audio/SE/</code></td><td>艦娘の召喚</td><td>水しぶきと汽笛</td><td class="len">約1秒</td></tr>
+          <tr><td><code>summon</code> <span class="chip gold">まだ</span></td><td><code>Audio/SE/</code></td><td>艦娘の召喚</td><td>水しぶきと汽笛</td><td class="len">約1秒</td></tr>
           <tr><td><code>buff</code></td><td><code>Audio/SE/</code></td><td>能力が上がった（夜戦主義が重なった）</td><td>上がっていく短い音</td><td class="len">約0.5秒</td></tr>
           <tr><td><code>unit_down</code></td><td><code>Audio/SE/</code></td><td>部員が倒された</td><td>低く沈む打撃音</td><td class="len">約0.8秒</td></tr>
         </tbody>
@@ -464,10 +463,10 @@
 ・長さは2分くらい。</pre>
         <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/battle.mp3</code></span><button class="copy" type="button" data-target="g-battle" data-plain="1">コピー</button></div>
       </article>
-      <article class="card now">
+      <article class="card">
         <div class="card-head"><h3>メニュー BGM</h3><span class="file">menu.mp3</span></div>
         <div class="scene">タイトル・作戦選択・編成の画面で流れる。</div>
-        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">BGM・約2分</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">BGM・約2分</span></div>
         <pre class="prompt" id="g-menu">2Dタワーディフェンスゲームの、作戦選択と編成の画面で流すBGMを作ってください。
 ・夜の作戦室で、次の作戦の準備をしている雰囲気。落ち着いていて、少しだけわくわくする。
 ・ボーカルなしのインストゥルメンタル。
@@ -477,10 +476,10 @@
 ・長さは2分くらい。</pre>
         <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/menu.mp3</code></span><button class="copy" type="button" data-target="g-menu" data-plain="1">コピー</button></div>
       </article>
-      <article class="card now">
+      <article class="card">
         <div class="card-head"><h3>ボス BGM（任意）</h3><span class="file">boss.mp3</span></div>
         <div class="scene">1-5 でボス「締切」が出たら切り替わる。なければ戦闘 BGM のまま。</div>
-        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">BGM・約2分</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">BGM・約2分</span></div>
         <pre class="prompt" id="g-boss">2Dタワーディフェンスゲームのボス戦のBGMを作ってください。
 ・ボスは「締切」という名前の、巨大な目覚まし時計の悪魔。締切が迫ってくる切迫感を出す。
 ・ボーカルなしのインストゥルメンタル。
@@ -492,7 +491,7 @@
       <article class="card">
         <div class="card-head"><h3>勝利のジングル</h3><span class="file">victory.mp3</span></div>
         <div class="scene">防衛に成功したとき。後ろの無音はゲーム側で切ります。ジングルのあとも曲が続いてしまったら、何秒まで使うかを教えてください。</div>
-        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">SE・5秒くらい</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">SE・5秒くらい</span></div>
         <pre class="prompt" id="g-victory">ゲームで作戦に成功したときに流す、短い勝利のジングルを作ってください。
 ・ボーカルなしのインストゥルメンタル。
 ・明るく堂々としたブラスとストリングスのファンファーレ。最後はティンパニとともに大きな和音でしっかり終わる。
@@ -502,7 +501,7 @@
       <article class="card">
         <div class="card-head"><h3>敗北のジングル</h3><span class="file">defeat.mp3</span></div>
         <div class="scene">防衛に失敗したとき。</div>
-        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">SE・4秒くらい</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">SE・4秒くらい</span></div>
         <pre class="prompt" id="g-defeat">ゲームで作戦に失敗したときに流す、短い敗北のジングルを作ってください。
 ・ボーカルなしのインストゥルメンタル。
 ・低いストリングスとピアノで、沈んでいくように下がっていくフレーズ。重すぎず、少しほろ苦い感じ。
@@ -512,7 +511,7 @@
       <article class="card">
         <div class="card-head"><h3>作戦開始のジングル</h3><span class="file">start.mp3</span></div>
         <div class="scene">出撃して「作戦開始」の帯が出たとき。</div>
-        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">SE・2秒くらい</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">SE・2秒くらい</span></div>
         <pre class="prompt" id="g-start">ゲームで作戦が始まる合図に流す、短いジングルを作ってください。
 ・ボーカルなしのインストゥルメンタル。
 ・無線のノイズのような短い電子音のあとに、力強いブラスとドラムが一発「ジャーン」と鳴って締まる。
