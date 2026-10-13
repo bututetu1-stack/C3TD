@@ -69,7 +69,7 @@
 }
 
 .op-caption {
-    font-size: 15px;
+    font-size: 18px;
     letter-spacing: 7px;
     color: rgb(244, 182, 63);
     margin-bottom: -6px;
@@ -122,7 +122,7 @@
 }
 
 .stat-caption {
-    font-size: 13px;
+    font-size: 16px;
     letter-spacing: 5px;
     color: rgb(142, 152, 172);
     margin-bottom: -6px;
@@ -139,7 +139,7 @@
 }
 
 .stat-sub {
-    font-size: 20px;
+    font-size: 22px;
     color: rgb(142, 152, 172);
     margin-left: 3px;
     margin-bottom: 6px;
@@ -157,7 +157,7 @@
 }
 
 .c3-button-text {
-    font-size: 18px;
+    font-size: 21px;
     margin-left: 6px;
 }
 
@@ -213,7 +213,7 @@
 }
 
 .intro-start {
-    font-size: 22px;
+    font-size: 26px;
     letter-spacing: 10px;
     margin-left: 16px;
     margin-right: 6px;
@@ -236,7 +236,7 @@
 }
 
 .pause-sub {
-    font-size: 24px;
+    font-size: 27px;
     color: rgb(200, 206, 222);
     margin-top: 2px;
     -unity-text-align: middle-center;
@@ -281,7 +281,7 @@
 }
 
 .result-stat-caption {
-    font-size: 16px;
+    font-size: 19px;
     letter-spacing: 5px;
     color: rgb(142, 152, 172);
     margin-right: 12px;
@@ -329,7 +329,7 @@
 }
 
 .dp-caption {
-    font-size: 15px;
+    font-size: 18px;
     letter-spacing: 7px;
     color: rgb(244, 182, 63);
     margin-bottom: -10px;
@@ -400,7 +400,7 @@
     right: 3px;
     bottom: 3px;
     height: 26px;
-    font-size: 16px;
+    font-size: 19px;
     color: rgb(20, 17, 10);
     -unity-text-align: middle-center;
 }
@@ -445,9 +445,11 @@
 }
 
 .card-state {
-    font-size: 15px;
-    color: rgb(200, 206, 222);
+    font-size: 20px;
+    color: rgb(255, 255, 255);
     -unity-text-align: middle-center;
+    padding: 2px 8px 2px 8px;
+    background-color: rgba(4, 6, 12, 0.85);
 }
 
 /* ---------- 選択中の部員 ---------- */
@@ -455,7 +457,7 @@
     position: absolute;
     left: 20px;
     top: 112px;
-    width: 440px;
+    width: 480px;
     padding: 22px 26px 22px 26px;
 }
 
@@ -486,7 +488,7 @@
 
 .unit-class {
     align-self: flex-start;
-    font-size: 15px;
+    font-size: 18px;
     padding: 1px 12px 1px 12px;
     color: rgb(20, 17, 10);
 }
@@ -513,7 +515,7 @@
 }
 
 .unit-stat-caption {
-    font-size: 12px;
+    font-size: 16px;
     letter-spacing: 4px;
     color: rgb(142, 152, 172);
     margin-bottom: -4px;
@@ -537,7 +539,7 @@
 }
 
 .unit-skill-kind {
-    font-size: 13px;
+    font-size: 16px;
     padding: 1px 8px 1px 8px;
     margin-right: 10px;
     color: rgb(244, 182, 63);
@@ -546,18 +548,18 @@
 }
 
 .unit-skill-name {
-    font-size: 21px;
+    font-size: 25px;
     color: rgb(255, 255, 255);
 }
 
 .unit-skill-meta {
-    font-size: 13px;
+    font-size: 17px;
     color: rgb(142, 152, 172);
     margin-top: 4px;
 }
 
 .unit-skill-desc {
-    font-size: 16px;
+    font-size: 20px;
     color: rgb(214, 219, 232);
     margin-top: 4px;
     white-space: normal;
@@ -574,7 +576,7 @@
 }
 
 .retreat-button .c3-button-text {
-    font-size: 20px;
+    font-size: 22px;
 }
 
 /* ---------- 必殺技 ---------- */
@@ -585,7 +587,7 @@
 }
 
 .skill-button .c3-button-text {
-    font-size: 19px;
+    font-size: 22px;
 }
 
 .unit-stat-value--up {
@@ -612,7 +614,7 @@
 }
 
 .cutin-caption {
-    font-size: 24px;
+    font-size: 28px;
     letter-spacing: 12px;
     color: rgb(244, 182, 63);
 }
@@ -694,7 +696,7 @@
 }
 
 .menu-caption {
-    font-size: 16px;
+    font-size: 19px;
     letter-spacing: 9px;
     color: rgb(244, 182, 63);
     margin-bottom: -6px;
@@ -707,7 +709,7 @@
 }
 
 .menu-sub {
-    font-size: 22px;
+    font-size: 25px;
     color: rgb(200, 206, 222);
 }
 
@@ -722,7 +724,7 @@
 }
 
 .title-caption {
-    font-size: 22px;
+    font-size: 25px;
     letter-spacing: 14px;
     color: rgb(244, 182, 63);
 }
@@ -761,7 +763,7 @@
 }
 
 .title-hint {
-    font-size: 18px;
+    font-size: 21px;
     color: rgb(142, 152, 172);
     margin-top: 14px;
 }
@@ -783,7 +785,7 @@
 }
 
 .chapter-english {
-    font-size: 20px;
+    font-size: 22px;
     letter-spacing: 10px;
     color: rgb(244, 182, 63);
 }
@@ -826,7 +828,7 @@
 }
 
 .node-name {
-    font-size: 17px;
+    font-size: 21px;
     color: rgb(214, 219, 232);
     white-space: normal;
 }
@@ -854,7 +856,7 @@
     position: absolute;
     left: 0;
     bottom: 0;
-    font-size: 15px;
+    font-size: 18px;
     color: rgb(110, 120, 140);
 }
 
@@ -885,7 +887,7 @@
 }
 
 .detail-desc {
-    font-size: 18px;
+    font-size: 22px;
     color: rgb(214, 219, 232);
     white-space: normal;
     margin-top: 6px;
@@ -923,7 +925,7 @@
 }
 
 .detail-fact-caption {
-    font-size: 14px;
+    font-size: 17px;
     letter-spacing: 4px;
     color: rgb(142, 152, 172);
     margin-right: 10px;
@@ -936,7 +938,7 @@
 }
 
 .detail-section {
-    font-size: 15px;
+    font-size: 19px;
     color: rgb(244, 182, 63);
     margin-bottom: 6px;
 }
@@ -970,23 +972,23 @@
 }
 
 .enemy-icon-label {
-    font-size: 18px;
+    font-size: 20px;
     color: rgb(255, 255, 255);
 }
 
 .enemy-name {
-    font-size: 17px;
+    font-size: 21px;
     color: rgb(238, 241, 246);
 }
 
 .enemy-count {
-    font-size: 22px;
+    font-size: 25px;
     color: rgb(142, 152, 172);
     margin-top: -4px;
 }
 
 .detail-lock {
-    font-size: 18px;
+    font-size: 22px;
     color: rgb(255, 98, 108);
     margin-bottom: 8px;
     -unity-text-align: middle-center;
@@ -1014,7 +1016,7 @@
 }
 
 .squad-help {
-    font-size: 17px;
+    font-size: 21px;
     color: rgb(142, 152, 172);
     margin-bottom: 14px;
 }
@@ -1042,7 +1044,7 @@
 
 .squad-card .card-class {
     height: 30px;
-    font-size: 18px;
+    font-size: 21px;
 }
 
 .squad-badge {
@@ -1059,7 +1061,7 @@
 }
 
 .squad-detail {
-    width: 520px;
+    width: 560px;
     padding: 24px 30px 26px 30px;
 }
 
@@ -1072,7 +1074,7 @@
 }
 
 .squad-footer-caption {
-    font-size: 16px;
+    font-size: 19px;
     letter-spacing: 8px;
     color: rgb(244, 182, 63);
     margin-right: 18px;
@@ -1140,7 +1142,7 @@
 }
 
 .boss-caption {
-    font-size: 18px;
+    font-size: 21px;
     letter-spacing: 6px;
     color: rgb(239, 74, 85);
     margin-right: 12px;
@@ -1153,7 +1155,7 @@
 }
 
 .boss-hp {
-    font-size: 20px;
+    font-size: 23px;
     color: rgb(200, 206, 222);
     margin-bottom: 4px;
 }
@@ -1180,14 +1182,14 @@
 }
 
 .hint-caption {
-    font-size: 16px;
+    font-size: 19px;
     letter-spacing: 6px;
     color: rgb(244, 182, 63);
     margin-bottom: 2px;
 }
 
 .hint-text {
-    font-size: 24px;
+    font-size: 26px;
     color: rgb(238, 241, 246);
     white-space: normal;
 }
@@ -1198,7 +1200,7 @@
 }
 
 .enemy-state {
-    font-size: 20px;
+    font-size: 22px;
     color: rgb(244, 182, 63);
     margin-top: 12px;
 }

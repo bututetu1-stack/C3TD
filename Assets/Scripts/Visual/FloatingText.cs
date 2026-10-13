@@ -14,18 +14,18 @@ public class FloatingText : MonoBehaviour
 
     public static void Damage(Vector3 position, float amount, Color color)
     {
-        Spawn(position, Mathf.RoundToInt(amount).ToString(), color, 2.4f);
+        Spawn(position, Mathf.RoundToInt(amount).ToString(), color, 2.9f);
     }
 
     public static void Heal(Vector3 position, float amount)
     {
-        Spawn(position, "+" + Mathf.RoundToInt(amount), Palette.HealText, 2.4f);
+        Spawn(position, "+" + Mathf.RoundToInt(amount), Palette.HealText, 2.9f);
     }
 
     /// <summary>状態の変化（「夜戦主義 ×2」など）</summary>
     public static void Status(Vector3 position, string value)
     {
-        Spawn(position + new Vector3(0f, 0.25f, 0f), value, Palette.StatusText, 2.2f);
+        Spawn(position + new Vector3(0f, 0.25f, 0f), value, Palette.StatusText, 2.7f);
     }
 
     private static void Spawn(Vector3 position, string value, Color color, float size)

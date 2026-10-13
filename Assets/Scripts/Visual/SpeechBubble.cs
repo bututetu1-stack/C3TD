@@ -21,7 +21,7 @@ public class SpeechBubble : MonoBehaviour
         var bubble = obj.AddComponent<SpeechBubble>();
         bubble.follow = target;
 
-        bubble.text = WorldText.Create(obj.transform, line, 2.4f, Palette.Ink, Order + 1, false);
+        bubble.text = WorldText.Create(obj.transform, line, 2.8f, Palette.Ink, Order + 1, false);
         bubble.text.ForceMeshUpdate();
         Vector2 size = bubble.text.GetRenderedValues(false);
         float w = Mathf.Max(0.6f, size.x + 0.3f), h = Mathf.Max(0.3f, size.y + 0.18f);
