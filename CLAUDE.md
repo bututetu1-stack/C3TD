@@ -185,6 +185,8 @@ Assets/
 - M4 完了（2026-10-13）。タイトル → 作戦選択 → 編成 → 出撃 → 結果（もう一度／次の作戦／作戦選択へ）。作戦選択は前のステージをクリアすると次が開き、★（ライフを減らさずクリアで3、減らしてクリアで2）を記録する。小さなマップ・出てくる敵・ライフ・DP を出す。編成は全部員から最大8人（`rules.squadMax`）、入れた順に編成バーへ並ぶ。前回の編成とクリア状況は PlayerPrefs（`Progress`、キー `c3td.progress.v1`）に保存。作戦選択の左下に「全作戦を開放（テスト用）」。一時停止はメニュー（再開／やり直す／作戦選択へ）で、マップは触れない。
 - 改良（2026-10-13 夕、オーナー不在のあいだ）：自動で戦う `Dev/AutoPilot` で5ステージを確かめ、簡単すぎた後半を強くした（敵の数値と 1-3〜1-5 のウェーブ。結果の表は `docs/snippets/README.md`）。敵が出る2秒前に出撃口で予告（白い輪、ボスは金色）、ボスが場にいるあいだ上にボスの体力バー、敵をクリックすると敵の札（`EnemyPanel`）、1-1 に操作のヒント、部員・敵の札は選んだものと反対の側に出す（左端の出撃口を隠さない）、ビルドしたゲームではほかのウィンドウに切り替えると一時停止（エディタでは止めない）。
 - 素材依頼帳の画像は 2026-10-13 に全部受け取った。依頼中は艦娘の砲弾 `Shell.png`、タイトルの絵 `Art/Background/Title.png`（任意。なければ戦闘の背景を使う）、効果音・BGM。
+- デスクトップに移った（2026-10-13 夜）。オーナーに「1-3 が難しすぎる」と言われた。上手に置く `AutoPilot` では簡単だったので、初めて遊ぶ人のまね（`AutoPilot.Novice`）と、何回も戦わせて勝った割合を出す `Dev/BalanceRun` を作って測った。1-3・1-4 は同じ敵が固まって来て数秒でライフが全部なくなっていたので、課題・小テストの間隔をあけた（1-3 は 31→28 体、1-4 は 42→40 体）。1-3 にヒントを2つ足した。1-5 はボスで減るライフ（2）のままで、オーナーの返事待ち（結果は `docs/snippets/README.md`）。
+- オーナーに「適当にキャラを増やして」と言われ、テスト用のダミーを6人足した（実在の部員ではない。名前と技は「ダミー」「テスト：」）：先鋒（安い前衛・必殺技で DP +10）、剣豪（1体だけ止める重い前衛・周りに範囲攻撃）、速射（速く弱い狙撃）、徹甲（遅く重い狙撃・当てた敵の防御を下げる）、足止め（敵を遅くする術師）、癒し（射程内をまとめて回復する医療）。全部で11人、編成は最大8人。
 
 ### デザインの方針（オーナーと決めたこと）
 - 雰囲気はアークナイツ寄りの「作戦盤」：暗い紺の盤面、角を斜めに落とした板（`ChamferBox`）、琥珀色の差し色、英字の小見出し（OPERATION / TIME / ENEMY / LIFE / DP）。演出は凝ってよい。
@@ -197,10 +199,11 @@ Assets/
 - JSON は自前の `MiniJson` + `JsonMapper` で読む（JsonUtility では配列の配列や辞書が読めないため）。`//` コメントと末尾のカンマを書いてよい。知らないキーは警告を出して無視するので、綴りの間違いはコンソールで分かる。経路は読み込み時に検査する（範囲外・歩けないマスを通る・S で始まり B で終わらない）。
 - データ：`Data/rules.json`（DP の回復・上限、撤退で戻る割合、最低ダメージ、スローの速さ）、`Data/classes.json`（職業ごとの置ける地形・攻撃のしかた・ダメージの種類・標準ブロック数・範囲・弾の画像・色）、`Data/squad.json`（はじめの編成と、編成画面での部員の並び）、`Data/campaign.json`（章とステージの並び）、`Data/Characters/{id}.json`。ステージの `description` は作戦選択の説明。
 - 敵の JSON：`res`（術耐性%）、`artScale`（絵の大きさ）、`artFacing`（絵の向き。課題とレポートは `Left`）、`lifeDamage`（拠点に着いたら減るライフ。ボスの締切は 2）。
-- ステージの JSON の `hints`：`{ "time": 秒, "duration": 秒, "text": "…" }` の配列。その時刻に画面の左下にヒントが出る（1-1 は操作の説明を4つ、1-2・1-4・1-5 は1つずつ。1-3 はなし）。
+- ステージの JSON の `hints`：`{ "time": 秒, "duration": 秒, "text": "…" }` の配列。その時刻に画面の左下にヒントが出る（1-1 は操作の説明を4つ、1-3 は2つ、1-2・1-4・1-5 は1つずつ）。ヒントの札は編成バーの左の空いたところに収める（幅は最大 960px。部員が多いと編成バーが長くなるので狭くなる）。
 - 部員の JSON の追加項目：`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る）・`endLine`（終わったときのセリフ。吹き出し）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
 - スキル（`Skills/SkillRunner`・`Skills/SkillEffects` の先頭に一覧あり）：
-  - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）。
+  - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）、Dp（DP を value 増やす）。
+  - 能力の増減は足し算で重なり、上限はない。特性の OnAttack で敵を下げるときは、効果の長さを攻撃間隔以下にする（長いと自分の分が重なる）。
   - 対象：Self / Target / AreaAroundSelf / AlliesInRange / EnemiesInRange。Target と AreaAroundSelf は、Damage・Stun・下げる StatModifier なら敵、Heal・上げる StatModifier なら味方。
   - 効果の長さ：effect.duration があればそれ、なければ必殺技の効果時間（特性なら外すまでずっと）。必殺技で付けた増減は終わりに外す。撤退・ダウンでも外す。
   - 特性の ElapsedTime は「ステージの経過時間」で重なる（遅れて置いても、その時点の重ね数から始まる）。
@@ -226,7 +229,7 @@ Assets/
 - エディタは再生のたびにドメインをリロードする設定（C3_shogi と同じ。2026-10-13 に変えた）。「ドメインのリロードなし」にすると、同じエディタで2回目に再生したときから UI の文字が全部消える。実行時に作ったフォント（`GameFonts`）は再生が終わると壊されるのに、UI Toolkit の文字のキャッシュは前の再生のマテリアルを持ったままになるため（`MeshGenerator.DrawText` で NullReference）。static な値を `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` でリセットするのは、そのまま残す。
 - SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down` `skill` `skill_ready` `summon` `buff`。BGM はステージの `bgm` に書いたキー（いまはどのステージも `battle`）と、メニューの `menu`。
 - テスト用のキー：出撃中は Space 一時停止、R やり直し、N 次のステージ（最後の次は最初・編成はそのまま）、Esc・右クリックで選択とドラッグの取り消し。メニューでは Esc で1つ前の画面、タイトルで Space・Enter。Boot シーンの GameBootstrap の `startStage` にステージ id を書くと、タイトルと編成を飛ばしてそこから始まる。
-- 確かめ方は `docs/snippets/README.md`（画面の撮影、部員を置く、マウスを流し込む、自動で戦わせてバランスを見る）。ステージや敵の数値を変えたら `AutoPilot` で「必殺技あり／なし」を回して、表を更新する。
+- 確かめ方は `docs/snippets/README.md`（画面の撮影、部員を置く、マウスを流し込む、自動で戦わせてバランスを見る）。ステージや敵の数値を変えたら、`BalanceRun` で「初めて遊ぶ人のまね」を30回と、上手な置き方の「必殺技あり／なし」を回して、表を更新する。初めて遊ぶ人のまねの勝ちの割合は、いまの目安で 1-1・1-2 がほぼ全勝、1-3 が9割、1-4 が7割くらい。
 - テストで戦うとクリアの記録が PlayerPrefs に残るので、終わったら `Progress.ResetAll()` で消してオーナーに渡す。
 - テストの環境（エディタが背面）では、流し込んだマウスの「押した瞬間」「離した瞬間」を取りこぼすことがある。クリックの確かめは、当たり判定（`BattleInput` の `EnemyAt` など）と表示（`Inspect`・`Select`）を分けて呼んで確かめる。
 
@@ -241,4 +244,4 @@ Assets/
 - 実行時に作った Oswald のフォントアセットは字詰めが強く掛かりすぎる（「PAUS E」）ので、`getFontFeatures = false` にしている。
 - オーナーの PC は表示倍率 150% で、Game ビューは小さい（734x361 ポイント）。Game ビューは 16:9・Low Resolution オフ（実ピクセルで描く）・Play Maximized にした。
 - スクリプトの改行は LF（`core.autocrlf=false`、`core.eol=lf`）。
-- GitHub CLI（`gh`）がこの PC にはない。リポジトリ（https://github.com/bututetu1-stack/C3TD ）は公開リポジトリ。
+- GitHub CLI（`gh`）はノート PC にはなく、デスクトップにはある。リポジトリ（https://github.com/bututetu1-stack/C3TD ）は公開リポジトリ。
