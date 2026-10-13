@@ -1,0 +1,15 @@
+{
+  // エントリーシートが分かれたもの。速いが脆い
+  "id": "shitagaki",
+  "name": "下書き",
+  "label": "下",
+  "shape": "Diamond",
+  "color": "#B8C7DD",
+  "size": 0.4,
+  "hp": 450,
+  "atk": 120,
+  "def": 0,
+  "attackInterval": 1.5,
+  "speed": 1.5,
+  "lifeDamage": 1
+}

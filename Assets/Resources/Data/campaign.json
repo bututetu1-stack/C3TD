@@ -12,6 +12,12 @@
       "name": "第2章　後期",
       "english": "CHAPTER 2",
       "stages": ["stage_06", "stage_07", "stage_08", "stage_09", "stage_10"]
+    },
+    {
+      "id": "ch3",
+      "name": "第3章　就活",
+      "english": "CHAPTER 3",
+      "stages": ["stage_11", "stage_12", "stage_13", "stage_14", "stage_15"]
     }
   ]
 }

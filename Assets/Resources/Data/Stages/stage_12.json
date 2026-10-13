@@ -1,0 +1,45 @@
+{
+  // 上下の道が右で合流。まん中の大きな高台の上を「お祈りメール」が飛ぶ
+  "id": "stage_12",
+  "name": "3-2 合同説明会",
+  "description": "説明会をはしごする日々。お祈りメールが届くと DP の回復が遅くなる。早めに撃ち落とそう。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S..........HX",
+    "XHHHHHHHHH.HX",
+    "SHHHHHHHHH..B",
+    "XHHHHHHHHH.HX",
+    "S..........HX",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[10,1],[10,3],[12,3]],
+    "p2": [[0,5],[10,5],[10,3],[12,3]]
+  },
+  "airPaths": {
+    "a1": [[0,3],[12,3]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",   "path": "p1", "count": 2, "interval": 3 },
+    { "time": 8,  "enemy": "kadai",   "path": "p2", "count": 2, "interval": 3 },
+    { "time": 18, "enemy": "oinori",  "path": "a1", "count": 1, "interval": 0 },
+    { "time": 20, "enemy": "es",      "path": "p1", "count": 2, "interval": 3 },
+    { "time": 24, "enemy": "es",      "path": "p2", "count": 2, "interval": 3 },
+    { "time": 32, "enemy": "oinori",  "path": "a1", "count": 2, "interval": 4 },
+    { "time": 38, "enemy": "shotest", "path": "p1", "count": 4, "interval": 1 },
+    { "time": 42, "enemy": "shotest", "path": "p2", "count": 4, "interval": 1 },
+    { "time": 50, "enemy": "report",  "path": "p2", "count": 1, "interval": 0 },
+    { "time": 56, "enemy": "oinori",  "path": "a1", "count": 2, "interval": 3 },
+    { "time": 60, "enemy": "es",      "path": "p1", "count": 3, "interval": 2 },
+    { "time": 64, "enemy": "es",      "path": "p2", "count": 3, "interval": 2 },
+    { "time": 74, "enemy": "tsuuchi", "path": "a1", "count": 3, "interval": 2 },
+    { "time": 80, "enemy": "kadai",   "path": "p1", "count": 4, "interval": 1.2 },
+    { "time": 84, "enemy": "kadai",   "path": "p2", "count": 4, "interval": 1.2 }
+  ],
+  "hints": [
+    { "time": 16, "duration": 10, "text": "お祈りメールが場にいるあいだ、DP の回復が遅くなる（DP の数字が赤くなる）。まん中の高台に狙撃・術師を置いて、早めに撃ち落とそう。" }
+  ]
+}

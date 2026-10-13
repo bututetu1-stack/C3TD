@@ -1,0 +1,16 @@
+{
+  // 倒すと「下書き」2 体に分かれる
+  "id": "es",
+  "name": "エントリーシート",
+  "label": "ES",
+  "shape": "Square",
+  "color": "#7FA7D9",
+  "size": 0.55,
+  "hp": 1500,
+  "atk": 240,
+  "def": 60,
+  "attackInterval": 2.0,
+  "speed": 1.0,
+  "lifeDamage": 1,
+  "split": { "enemy": "shitagaki", "count": 2 }
+}

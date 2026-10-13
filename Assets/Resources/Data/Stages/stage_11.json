@@ -1,0 +1,35 @@
+{
+  // 第3章のはじめ。Z 字の一本道。倒すと分かれる「エントリーシート」
+  "id": "stage_11",
+  "name": "3-1 インターン",
+  "description": "就活が始まった。エントリーシートは倒しても「下書き」に分かれて走ってくる。止める部員を厚めに置こう。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S.......HHHHX",
+    "XHHHHHH.HHHHX",
+    "XHHHHHH.HHHHX",
+    "XHHHHHH.HHHHX",
+    "XHHHHHH.....B",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[7,1],[7,5],[12,5]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",   "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 12, "enemy": "es",      "path": "p1", "count": 2, "interval": 4 },
+    { "time": 22, "enemy": "shotest", "path": "p1", "count": 4, "interval": 1 },
+    { "time": 30, "enemy": "es",      "path": "p1", "count": 3, "interval": 3 },
+    { "time": 42, "enemy": "kadai",   "path": "p1", "count": 4, "interval": 1.5 },
+    { "time": 50, "enemy": "report",  "path": "p1", "count": 1, "interval": 0 },
+    { "time": 56, "enemy": "es",      "path": "p1", "count": 4, "interval": 2.5 },
+    { "time": 70, "enemy": "kadai",   "path": "p1", "count": 3, "interval": 1.5 },
+    { "time": 76, "enemy": "es",      "path": "p1", "count": 3, "interval": 2 }
+  ],
+  "hints": [
+    { "time": 10, "duration": 10, "text": "エントリーシートは倒すと「下書き」2 体に分かれる。分かれたあとも止められるよう、前衛や重装を道に並べよう。" }
+  ]
+}

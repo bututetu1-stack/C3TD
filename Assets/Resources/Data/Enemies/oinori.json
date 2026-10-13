@@ -1,0 +1,18 @@
+{
+  // 空を飛ぶ敵。場にいるあいだ、DP の回復を 1 秒あたり 0.35 減らす
+  "id": "oinori",
+  "name": "お祈りメール",
+  "label": "祈",
+  "shape": "Diamond",
+  "color": "#9E6BD4",
+  "size": 0.45,
+  "hp": 1100,
+  "atk": 80,
+  "def": 40,
+  "res": 40,
+  "attackInterval": 2.0,
+  "speed": 1.0,
+  "lifeDamage": 1,
+  "flying": true,
+  "dpDrain": 0.35
+}

@@ -1,0 +1,46 @@
+{
+  // 上下の道が左で合流して、長い廊下で拠点へ。廊下の上を飛ぶ道も通る。まわりの攻撃力を上げる「グループディスカッション」
+  "id": "stage_14",
+  "name": "3-4 グループディスカッション",
+  "description": "議論は白熱し、まわりの就活生の勢いも増していく。グループディスカッションを先に崩そう。",
+  "life": 3,
+  "initialDp": 14,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S...HHHHHHHHX",
+    "XHH.HHHHHHHHX",
+    "SHH.........B",
+    "XHH.HHHHHHHHX",
+    "S...HHHHHHHHX",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[3,1],[3,3],[12,3]],
+    "p2": [[0,5],[3,5],[3,3],[12,3]]
+  },
+  "airPaths": {
+    "a1": [[0,3],[12,3]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",       "path": "p1", "count": 2, "interval": 3 },
+    { "time": 8,  "enemy": "kadai",       "path": "p2", "count": 2, "interval": 3 },
+    { "time": 20, "enemy": "gd",          "path": "p1", "count": 1, "interval": 0 },
+    { "time": 23, "enemy": "kadai",       "path": "p1", "count": 3, "interval": 1.5 },
+    { "time": 24, "enemy": "suima",       "path": "p2", "count": 2, "interval": 4 },
+    { "time": 32, "enemy": "tsuuchi",     "path": "a1", "count": 2, "interval": 3.5 },
+    { "time": 36, "enemy": "gd",          "path": "p2", "count": 1, "interval": 0 },
+    { "time": 38, "enemy": "rerishuu",    "path": "p2", "count": 2, "interval": 3 },
+    { "time": 46, "enemy": "mensetsukan", "path": "p1", "count": 2, "interval": 3 },
+    { "time": 54, "enemy": "es",          "path": "p1", "count": 3, "interval": 2 },
+    { "time": 58, "enemy": "es",          "path": "p2", "count": 3, "interval": 2 },
+    { "time": 66, "enemy": "oinori",      "path": "a1", "count": 2, "interval": 3 },
+    { "time": 72, "enemy": "gd",          "path": "p1", "count": 1, "interval": 0 },
+    { "time": 74, "enemy": "report",      "path": "p1", "count": 2, "interval": 3 },
+    { "time": 84, "enemy": "shotest",     "path": "p2", "count": 6, "interval": 0.8 },
+    { "time": 90, "enemy": "kadai",       "path": "p1", "count": 4, "interval": 1.2 }
+  ],
+  "hints": [
+    { "time": 18, "duration": 10, "text": "グループディスカッションの琥珀色の輪の中の敵は、攻撃力が上がる。止めている部員が倒れないよう、先に倒そう。" }
+  ]
+}

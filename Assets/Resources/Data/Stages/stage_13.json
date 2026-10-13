@@ -1,0 +1,38 @@
+{
+  // U 字の長い一本道。離れたところから部員の防御を下げる「面接官」
+  "id": "stage_13",
+  "name": "3-3 圧迫面接",
+  "description": "面接官の鋭い質問が飛んでくる。撃たれた部員は防御が下がり、倒れやすくなる。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXXX",
+    "S....HHHH....B",
+    "XHHH.HHHH.HHHX",
+    "XHHH.HHHH.HHHX",
+    "XHHH.HHHH.HHHX",
+    "XHHH......HHHX",
+    "XXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[4,1],[4,5],[9,5],[9,1],[13,1]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",       "path": "p1", "count": 4, "interval": 2 },
+    { "time": 12, "enemy": "mensetsukan", "path": "p1", "count": 1, "interval": 0 },
+    { "time": 20, "enemy": "es",          "path": "p1", "count": 2, "interval": 3 },
+    { "time": 28, "enemy": "mensetsukan", "path": "p1", "count": 2, "interval": 5 },
+    { "time": 36, "enemy": "ronbun",      "path": "p1", "count": 2, "interval": 3 },
+    { "time": 44, "enemy": "shotest",     "path": "p1", "count": 5, "interval": 1 },
+    { "time": 52, "enemy": "mensetsukan", "path": "p1", "count": 2, "interval": 3 },
+    { "time": 58, "enemy": "rerishuu",    "path": "p1", "count": 2, "interval": 3 },
+    { "time": 66, "enemy": "report",      "path": "p1", "count": 1, "interval": 0 },
+    { "time": 72, "enemy": "kadai",       "path": "p1", "count": 4, "interval": 1.5 },
+    { "time": 80, "enemy": "mensetsukan", "path": "p1", "count": 3, "interval": 3 },
+    { "time": 90, "enemy": "es",          "path": "p1", "count": 3, "interval": 2 }
+  ],
+  "hints": [
+    { "time": 11, "duration": 10, "text": "面接官は 2.5 マス先の部員を撃ち、防御を下げる（圧迫面接）。止めている部員が倒れやすくなるので、医療で支えるか、先に狙撃で倒そう。" }
+  ]
+}

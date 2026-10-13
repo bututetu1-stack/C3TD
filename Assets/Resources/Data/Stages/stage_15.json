@@ -1,0 +1,47 @@
+{
+  // 第3章の最後。曲がりくねった上の道と、まっすぐな下の道、まん中を飛ぶ道。最後に最終面接（ボス）
+  "id": "stage_15",
+  "name": "3-5 最終面接",
+  "description": "ついに最終面接。これまでの就活の敵が押し寄せ、最後に「最終面接」が圧迫質問で部員を黙らせにくる。",
+  "life": 3,
+  "initialDp": 18,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXXX",
+    "S......HHHHHHX",
+    "XHHHHH.H....HX",
+    "SHHHHH...HH..B",
+    "XHHHHHHHHHH.HX",
+    "S...........HX",
+    "XXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[6,1],[6,3],[8,3],[8,2],[11,2],[11,3],[13,3]],
+    "p2": [[0,5],[11,5],[11,3],[13,3]]
+  },
+  "airPaths": {
+    "a1": [[0,3],[13,3]]
+  },
+  "waves": [
+    { "time": 3,   "enemy": "kadai",       "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 10,  "enemy": "kadai",       "path": "p2", "count": 3, "interval": 2.5 },
+    { "time": 20,  "enemy": "es",          "path": "p2", "count": 2, "interval": 3 },
+    { "time": 32,  "enemy": "oinori",      "path": "a1", "count": 1, "interval": 0 },
+    { "time": 30,  "enemy": "mensetsukan", "path": "p1", "count": 2, "interval": 4 },
+    { "time": 36,  "enemy": "gd",          "path": "p2", "count": 1, "interval": 0 },
+    { "time": 38,  "enemy": "kadai",       "path": "p2", "count": 4, "interval": 1.5 },
+    { "time": 46,  "enemy": "rerishuu",    "path": "p1", "count": 2, "interval": 3 },
+    { "time": 52,  "enemy": "shotest",     "path": "p2", "count": 5, "interval": 1 },
+    { "time": 58,  "enemy": "tsuuchi",     "path": "a1", "count": 3, "interval": 3 },
+    { "time": 66,  "enemy": "ronbun",      "path": "p2", "count": 2, "interval": 3 },
+    { "time": 72,  "enemy": "saishu",      "path": "p1", "count": 1, "interval": 0 },
+    { "time": 78,  "enemy": "es",          "path": "p2", "count": 3, "interval": 2.5 },
+    { "time": 88,  "enemy": "oinori",      "path": "a1", "count": 2, "interval": 4 },
+    { "time": 96,  "enemy": "mensetsukan", "path": "p2", "count": 2, "interval": 4 },
+    { "time": 106, "enemy": "kadai",       "path": "p2", "count": 4, "interval": 1.5 },
+    { "time": 115, "enemy": "shotest",     "path": "p2", "count": 4, "interval": 1.2 }
+  ],
+  "hints": [
+    { "time": 66, "duration": 10, "text": "最終面接（ボス）が来る！ 16 秒ごとの「圧迫質問」で、まわり 2.5 マスの部員が動けなくなる。赤い輪が出たら気をつけよう。拠点に着かれるとライフが 2 減る。" }
+  ]
+}

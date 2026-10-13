@@ -1,0 +1,19 @@
+{
+  // 遠距離の敵。2.5 マス先の部員を術で撃ち、防御を 2.5 秒 40% 下げる（圧迫面接。重ならない）
+  "id": "mensetsukan",
+  "name": "面接官",
+  "label": "面",
+  "shape": "Circle",
+  "color": "#3D4A63",
+  "size": 0.58,
+  "hp": 1700,
+  "atk": 230,
+  "def": 100,
+  "res": 20,
+  "attackInterval": 2.6,
+  "speed": 0.75,
+  "lifeDamage": 1,
+  "range": 2.5,
+  "damageType": "Arts",
+  "hitModifier": { "stat": "def", "percent": -40, "duration": 2.5 }
+}

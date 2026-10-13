@@ -1282,3 +1282,8 @@
 .detail-enemies--many .enemy-count {
     font-size: 20px;
 }
+
+/* 敵に DP の回復を減らされているあいだ */
+.dp-value--drained {
+    color: rgb(255, 120, 130);
+}

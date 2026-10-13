@@ -1,0 +1,17 @@
+{
+  // まわり 1.6 マスの敵の攻撃力を 35% 上げる（琥珀色の輪）
+  "id": "gd",
+  "name": "グループディスカッション",
+  "label": "GD",
+  "shape": "Square",
+  "color": "#2F8F8A",
+  "size": 0.62,
+  "hp": 2600,
+  "atk": 240,
+  "def": 200,
+  "res": 20,
+  "attackInterval": 2.2,
+  "speed": 0.75,
+  "lifeDamage": 1,
+  "aura": { "stat": "atk", "percent": 35, "radius": 1.6 }
+}
