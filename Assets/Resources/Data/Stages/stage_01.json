@@ -14,6 +14,8 @@
   "paths": { "p1": [[0,2],[9,2]] },
   "waves": [
     { "time": 3,  "enemy": "kadai",    "path": "p1", "count": 5, "interval": 2 },
-    { "time": 20, "enemy": "shotest",  "path": "p1", "count": 3, "interval": 1 }
+    { "time": 20, "enemy": "shotest",  "path": "p1", "count": 3, "interval": 1 },
+    { "time": 34, "enemy": "kadai",    "path": "p1", "count": 4, "interval": 2.5 },
+    { "time": 48, "enemy": "report",   "path": "p1", "count": 2, "interval": 4 }
   ]
 }

@@ -21,7 +21,7 @@ isuzu-unity-cli call play_mode_stop
 
 - エディタが背面にあると時間が進まないので、プレイ中は `play_mode_step` で進める。`--seconds` は `Time.time` で数えるので、2倍速ならゲーム内でも同じ秒数進む。
 - 再生直後の1回目の `play_mode_step --seconds` は、待っていたあいだの実時間で `Time.time` が先に進んでいて、ほとんど進まないことがある。状態は `Battle.Current.State` で確かめる。
-- ステージを変えるには `UnityEngine.Object.FindAnyObjectByType<GameBootstrap>().StartStage("test_route");`。
+- ステージを変えるには `UnityEngine.Object.FindAnyObjectByType<GameBootstrap>().StartStage("stage_02");`。
 - コンパイルの確認は `isuzu-unity-cli verify`。
 
 ## 戦闘の確かめ（M2）
