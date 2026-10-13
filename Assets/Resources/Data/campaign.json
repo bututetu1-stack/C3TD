@@ -1,0 +1,11 @@
+{
+  // 章とステージの並び。ここに書いた順に作戦選択に並び、前をクリアすると次が開く
+  "chapters": [
+    {
+      "id": "ch1",
+      "name": "第1章　前期",
+      "english": "CHAPTER 1",
+      "stages": ["stage_01", "stage_02", "stage_03", "stage_04", "stage_05"]
+    }
+  ]
+}

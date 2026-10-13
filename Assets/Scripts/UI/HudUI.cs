@@ -44,6 +44,7 @@ public class HudUI : MonoBehaviour
     private Label resultLife;
     private Label resultTime;
     private Label resultEnemy;
+    private VisualElement resultStars;
     private C3Button nextButton;
 
     // 編成バーと選択中の部員
@@ -180,6 +181,21 @@ public class HudUI : MonoBehaviour
         band.Add(UIFactory.Text("PAUSE", UIFont.Display, "pause-title"));
         band.Add(UIFactory.Text("一時停止中　Space で再開", UIFont.Body, "pause-sub"));
         pauseLayer.Add(band);
+
+        // 一時停止中はメニュー（後ろのマップは触れない）
+        pauseLayer.pickingMode = PickingMode.Position;
+        var buttons = UIFactory.Box("result-buttons");
+        var resume = new C3Button(IconKind.Play, 26f, "再開", () => TimeController.SetPaused(false));
+        resume.AddToClassList("result-button");
+        resume.Active = true;
+        buttons.Add(resume);
+        var retry = new C3Button(IconKind.Retry, 28f, "やり直す", () => bootstrap.Retry());
+        retry.AddToClassList("result-button");
+        buttons.Add(retry);
+        var quit = new C3Button(IconKind.Back, 28f, "作戦選択へ", () => bootstrap.ShowStageSelect());
+        quit.AddToClassList("result-button");
+        buttons.Add(quit);
+        pauseLayer.Add(buttons);
         root.Add(pauseLayer);
         UIFactory.SetVisible(pauseLayer, false);
     }
@@ -200,6 +216,15 @@ public class HudUI : MonoBehaviour
         resultTitle = UIFactory.Text("", UIFont.Title, "result-title");
         resultContent.Add(resultTitle);
 
+        resultStars = UIFactory.Box("result-stars");
+        for (int i = 0; i < 3; i++)
+        {
+            var star = new IconView(IconKind.Star, 46f, Palette.Amber);
+            star.AddToClassList("result-star");
+            resultStars.Add(star);
+        }
+        resultContent.Add(resultStars);
+
         var stats = UIFactory.Box("result-stats");
         resultLife = AddResultStat(stats, "LIFE");
         resultTime = AddResultStat(stats, "TIME");
@@ -212,9 +237,13 @@ public class HudUI : MonoBehaviour
         var retry = new C3Button(IconKind.Retry, 30f, "もう一度", () => bootstrap.Retry());
         retry.AddToClassList("result-button");
         resultFooter.Add(retry);
-        nextButton = new C3Button(IconKind.Next, 30f, "次のステージ", () => bootstrap.StartStage(bootstrap.NextStageId()));
+        nextButton = new C3Button(IconKind.Next, 30f, "次の作戦", () => bootstrap.GoToNext());
         nextButton.AddToClassList("result-button");
+        nextButton.Active = true;
         resultFooter.Add(nextButton);
+        var select = new C3Button(IconKind.Back, 30f, "作戦選択へ", () => bootstrap.ShowStageSelect());
+        select.AddToClassList("result-button");
+        resultFooter.Add(select);
         resultLayer.Add(resultFooter);
 
         root.Add(resultLayer);
@@ -235,10 +264,16 @@ public class HudUI : MonoBehaviour
 
     void Update()
     {
-        HandleKeys();
-
+        // 出撃中だけ HUD を出す（タイトル・作戦選択・編成では隠す）
         Battle battle = Battle.Current;
-        if (battle == null || battle.State == null) return;
+        bool inBattle = battle != null && battle.State != null;
+        root.style.display = inBattle ? DisplayStyle.Flex : DisplayStyle.None;
+        if (!inBattle)
+        {
+            shownBattle = null;
+            return;
+        }
+        HandleKeys();
         GameState state = battle.State;
 
         if (battle != shownBattle) OnBattleChanged(battle);
@@ -276,6 +311,12 @@ public class HudUI : MonoBehaviour
             pauseButton.Active = TimeController.Paused;
         }
         UIFactory.SetVisible(pauseLayer, TimeController.Paused && state.Phase == GamePhase.Playing);
+        if (TimeController.Paused && introTween != null)
+        {
+            // 一時停止メニューの後ろに作戦開始の帯が透けないように消す
+            UITween.Stop(ref introTween);
+            UIFactory.SetVisible(introLayer, false);
+        }
 
         if (state.Phase != shownPhase)
         {
@@ -338,7 +379,13 @@ public class HudUI : MonoBehaviour
         resultLife.text = state.Life + "/" + state.MaxLife;
         resultTime.text = UIFactory.FormatTime(state.ElapsedTime);
         resultEnemy.text = state.EnemiesFinished + "/" + state.EnemiesTotal;
-        UIFactory.SetVisible(nextButton, bootstrap.NextStageId() != null);
+        UIFactory.SetVisible(nextButton, won && bootstrap.NextStageId() != null);
+
+        // ★：ライフを減らさずにクリアで3、減らしてクリアで2（Progress と同じ決まり）
+        int stars = !won ? 0 : state.Life >= state.MaxLife ? 3 : 2;
+        UIFactory.SetVisible(resultStars, won);
+        for (int i = 0; i < resultStars.childCount; i++)
+            ((IconView)resultStars[i]).SetColor(i < stars ? Palette.AmberBright : new Color(1f, 1f, 1f, 0.15f));
 
         UITween.Stop(ref introTween);
         UIFactory.SetVisible(introLayer, false);
@@ -390,6 +437,6 @@ public class HudUI : MonoBehaviour
         if (kb == null) return;
         if (kb.spaceKey.wasPressedThisFrame) TimeController.TogglePause();
         if (kb.rKey.wasPressedThisFrame) bootstrap.Retry();
-        if (kb.nKey.wasPressedThisFrame) bootstrap.StartStage(bootstrap.NextStageId(true));
+        if (kb.nKey.wasPressedThisFrame) bootstrap.StartBattle(bootstrap.NextStageId(true));
     }
 }

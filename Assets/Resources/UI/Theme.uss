@@ -647,3 +647,474 @@
     color: rgb(255, 255, 255);
     -unity-text-align: middle-center;
 }
+
+/* ---------- 結果の★・一時停止メニュー ---------- */
+.result-stars {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: -6px;
+    margin-bottom: 4px;
+}
+
+.result-star {
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+/* ---------- メニュー共通 ---------- */
+.menu-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(8, 11, 19);
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.menu-screen {
+    padding: 0 48px 36px 48px;
+}
+
+.menu-header {
+    flex-direction: row;
+    align-items: center;
+    height: 112px;
+    flex-shrink: 0;
+}
+
+.menu-back {
+    width: 128px;
+    height: 56px;
+    margin-right: 28px;
+}
+
+.menu-titles {
+    justify-content: center;
+}
+
+.menu-caption {
+    font-size: 16px;
+    letter-spacing: 9px;
+    color: rgb(244, 182, 63);
+    margin-bottom: -6px;
+}
+
+.menu-title {
+    font-size: 48px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+
+.menu-sub {
+    font-size: 22px;
+    color: rgb(200, 206, 222);
+}
+
+/* ---------- タイトル ---------- */
+.title-screen {
+    justify-content: center;
+    padding-left: 180px;
+}
+
+.title-block {
+    align-items: flex-start;
+}
+
+.title-caption {
+    font-size: 22px;
+    letter-spacing: 14px;
+    color: rgb(244, 182, 63);
+}
+
+.title-logo {
+    font-size: 260px;
+    letter-spacing: 24px;
+    color: rgb(255, 255, 255);
+    margin-top: -40px;
+    margin-bottom: -50px;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.title-sub {
+    font-size: 54px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+}
+
+.title-bar {
+    width: 520px;
+    height: 4px;
+    margin-top: 22px;
+    margin-bottom: 36px;
+    background-color: rgb(244, 182, 63);
+}
+
+.title-button {
+    width: 320px;
+    height: 84px;
+}
+
+.title-button .c3-button-text {
+    font-size: 32px;
+    margin-left: 14px;
+}
+
+.title-hint {
+    font-size: 18px;
+    color: rgb(142, 152, 172);
+    margin-top: 14px;
+}
+
+/* ---------- 作戦選択 ---------- */
+.select-body {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.select-left {
+    flex-grow: 1;
+    padding-top: 30px;
+    padding-right: 30px;
+}
+
+.chapter-label {
+    margin-bottom: 70px;
+}
+
+.chapter-english {
+    font-size: 20px;
+    letter-spacing: 10px;
+    color: rgb(244, 182, 63);
+}
+
+.chapter-name {
+    font-size: 56px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+
+.node-row {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.stage-node {
+    width: 196px;
+    height: 136px;
+    padding: 14px 18px 12px 22px;
+    transition-property: translate;
+    transition-duration: 0.12s;
+}
+
+.stage-node:hover {
+    translate: 0 -6px;
+}
+
+.stage-node--low {
+    margin-top: 110px;
+}
+
+.stage-node--locked {
+    opacity: 0.6;
+}
+
+.node-code {
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    margin-bottom: -4px;
+}
+
+.node-name {
+    font-size: 17px;
+    color: rgb(214, 219, 232);
+    white-space: normal;
+}
+
+.node-stars {
+    margin-top: 6px;
+}
+
+.node-lock {
+    margin-top: 8px;
+}
+
+.node-link {
+    width: 26px;
+    height: 3px;
+    margin-top: 120px;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.node-link--open {
+    background-color: rgba(244, 182, 63, 0.6);
+}
+
+.unlock-toggle {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 15px;
+    color: rgb(110, 120, 140);
+}
+
+.unlock-toggle:hover {
+    color: rgb(200, 206, 222);
+}
+
+.select-detail {
+    width: 640px;
+    padding: 28px 36px 30px 36px;
+}
+
+.detail-head {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.detail-code {
+    font-size: 56px;
+    color: rgb(244, 182, 63);
+}
+
+.detail-name {
+    font-size: 46px;
+    color: rgb(255, 255, 255);
+    margin-top: -6px;
+}
+
+.detail-desc {
+    font-size: 18px;
+    color: rgb(214, 219, 232);
+    white-space: normal;
+    margin-top: 6px;
+    margin-bottom: 14px;
+}
+
+.detail-map {
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.map-preview {
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.map-preview-row {
+    flex-direction: row;
+}
+
+.map-preview-cell {
+    border-width: 1px;
+    border-color: rgba(8, 11, 19, 0.9);
+}
+
+.detail-facts {
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.detail-fact {
+    flex-direction: row;
+    align-items: flex-end;
+    margin-right: 34px;
+}
+
+.detail-fact-caption {
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: rgb(142, 152, 172);
+    margin-right: 10px;
+    margin-bottom: 6px;
+}
+
+.detail-fact-value {
+    font-size: 34px;
+    color: rgb(255, 255, 255);
+}
+
+.detail-section {
+    font-size: 15px;
+    color: rgb(244, 182, 63);
+    margin-bottom: 6px;
+}
+
+.detail-enemies {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.enemy-chip {
+    flex-direction: row;
+    align-items: center;
+    width: 50%;
+    margin-bottom: 8px;
+}
+
+.enemy-icon {
+    width: 56px;
+    height: 56px;
+    margin-right: 12px;
+    border-radius: 28px;
+    background-color: rgba(255, 255, 255, 0.06);
+    -unity-background-scale-mode: scale-to-fit;
+    align-items: center;
+    justify-content: center;
+}
+
+.enemy-icon--boss {
+    border-width: 2px;
+    border-color: rgb(255, 201, 77);
+}
+
+.enemy-icon-label {
+    font-size: 18px;
+    color: rgb(255, 255, 255);
+}
+
+.enemy-name {
+    font-size: 17px;
+    color: rgb(238, 241, 246);
+}
+
+.enemy-count {
+    font-size: 22px;
+    color: rgb(142, 152, 172);
+    margin-top: -4px;
+}
+
+.detail-lock {
+    font-size: 18px;
+    color: rgb(255, 98, 108);
+    margin-bottom: 8px;
+    -unity-text-align: middle-center;
+}
+
+.detail-go {
+    height: 76px;
+}
+
+.detail-go .c3-button-text {
+    font-size: 30px;
+    margin-left: 12px;
+}
+
+/* ---------- 編成 ---------- */
+.squad-body {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.squad-left {
+    flex-grow: 1;
+    padding-top: 10px;
+    padding-right: 30px;
+}
+
+.squad-help {
+    font-size: 17px;
+    color: rgb(142, 152, 172);
+    margin-bottom: 14px;
+}
+
+.squad-roster {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.squad-card {
+    width: 168px;
+    height: 216px;
+    margin: 0 16px 16px 0;
+    transition-property: translate;
+    transition-duration: 0.12s;
+}
+
+.squad-card:hover {
+    translate: 0 -6px;
+}
+
+.squad-card .card-portrait {
+    bottom: 34px;
+}
+
+.squad-card .card-class {
+    height: 30px;
+    font-size: 18px;
+}
+
+.squad-badge {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 24px;
+    color: rgb(20, 17, 10);
+    background-color: rgb(244, 182, 63);
+    -unity-text-align: middle-center;
+}
+
+.squad-detail {
+    width: 520px;
+    padding: 24px 30px 26px 30px;
+}
+
+.squad-footer {
+    flex-direction: row;
+    align-items: center;
+    height: 112px;
+    flex-shrink: 0;
+    padding-top: 14px;
+}
+
+.squad-footer-caption {
+    font-size: 16px;
+    letter-spacing: 8px;
+    color: rgb(244, 182, 63);
+    margin-right: 18px;
+}
+
+.squad-slots {
+    flex-direction: row;
+}
+
+.squad-slot {
+    width: 78px;
+    height: 78px;
+    margin-right: 8px;
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.04);
+    -unity-background-scale-mode: scale-and-crop;
+    align-items: center;
+    justify-content: center;
+}
+
+.squad-slot--on {
+    border-color: rgb(244, 182, 63);
+}
+
+.squad-slot-initial {
+    font-size: 36px;
+    color: rgb(255, 255, 255);
+}
+
+.squad-count {
+    font-size: 34px;
+    color: rgb(255, 255, 255);
+    margin-left: 14px;
+}
+
+.squad-go {
+    width: 300px;
+    height: 84px;
+}
+
+.squad-go .c3-button-text {
+    font-size: 34px;
+    margin-left: 14px;
+}

@@ -62,34 +62,10 @@ public class DeployBar
     private Card CreateCard(SquadMember member)
     {
         var card = new Card { Member = member };
-        Color classColor = Palette.Hex(member.Class.color, Palette.Amber);
 
-        var box = new ChamferBox();
+        var box = new CharacterCard(member.Data, member.Class);
         box.AddToClassList("deploy-card");
-        box.SetFill(Palette.UiPanel).SetStroke(Palette.WithAlpha(classColor, 0.75f), 1.5f)
-            .SetCut(14f, ChamferBox.Corners.TopRight | ChamferBox.Corners.BottomLeft);
-        box.pickingMode = PickingMode.Position;
-
-        var portrait = UIFactory.Box("card-portrait");
-        Sprite icon = Art.Icon(member.Data.id);
-        if (icon != null)
-        {
-            portrait.style.backgroundImage = new StyleBackground(icon);
-        }
-        else
-        {
-            portrait.AddToClassList("card-fallback");
-            portrait.style.backgroundColor = Palette.Hex(member.Data.color, classColor);
-            portrait.Add(UIFactory.Text(member.Data.Initial, UIFont.Title, "card-initial"));
-        }
-        box.Add(portrait);
-
-        var cls = UIFactory.Text(member.Class.name, UIFont.Body, "card-class");
-        cls.style.backgroundColor = Palette.WithAlpha(classColor, 0.92f);
-        box.Add(cls);
-
-        card.Cost = UIFactory.Text(member.Cost.ToString(), UIFont.Display, "card-cost");
-        box.Add(card.Cost);
+        card.Cost = box.Cost;
 
         card.Shade = UIFactory.Box("card-shade");
         card.Timer = UIFactory.Text("", UIFont.Display, "card-timer");

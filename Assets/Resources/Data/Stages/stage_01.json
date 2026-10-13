@@ -1,6 +1,7 @@
 {
   "id": "stage_01",
   "name": "1-1 前期の始まり",
+  "description": "新学期。まずは一本道で課題を迎え撃つ。前衛で止めて、高台から狙撃しよう。",
   "life": 3,
   "initialDp": 10,
   "bgm": "battle",

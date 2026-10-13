@@ -1,0 +1,30 @@
+{
+  // 第1章の最後。曲がった経路と出撃口が2つ。最後に締切（ボス）が来る
+  "id": "stage_05",
+  "name": "1-5 締切前夜",
+  "description": "前期最後の山場。2つの出撃口から押し寄せる課題を捌き、最後に現れる「締切」を止めろ。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXX",
+    "S....HHHHHHX",
+    "XHHH.HH....X",
+    "XHHH.HH.HH.X",
+    "XHHH....HH.X",
+    "S....HHHHH.B",
+    "XXXXXXXXXXXX"
+  ],
+  "paths": {
+    "north": [[0,1],[4,1],[4,4],[7,4],[7,2],[10,2],[10,5],[11,5]],
+    "south": [[0,5],[4,5],[4,4],[7,4],[7,2],[10,2],[10,5],[11,5]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",     "path": "north", "count": 4, "interval": 3 },
+    { "time": 10, "enemy": "shotest",   "path": "south", "count": 3, "interval": 1.5 },
+    { "time": 20, "enemy": "kadai",     "path": "south", "count": 4, "interval": 2.5 },
+    { "time": 28, "enemy": "report",    "path": "north", "count": 2, "interval": 5 },
+    { "time": 40, "enemy": "shotest",   "path": "north", "count": 4, "interval": 1 },
+    { "time": 50, "enemy": "shimekiri", "path": "south", "count": 1, "interval": 0 }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  // 蛇のように曲がった長い1本道。遅くて硬いレポートが多い
+  "id": "stage_03",
+  "name": "1-3 レポート地獄",
+  "description": "分厚いレポートが列をなしてやってくる。道は長いので、火力を集めて削りきろう。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S.........HHX",
+    "XHHHHHHHH.HHX",
+    "XH........HHX",
+    "XH.HHHHHHHHHX",
+    "XH..........B",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[9,1],[9,3],[2,3],[2,5],[12,5]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "report",  "path": "p1", "count": 3, "interval": 6 },
+    { "time": 12, "enemy": "kadai",   "path": "p1", "count": 5, "interval": 2 },
+    { "time": 32, "enemy": "report",  "path": "p1", "count": 3, "interval": 5 },
+    { "time": 46, "enemy": "shotest", "path": "p1", "count": 4, "interval": 1 }
+  ]
+}

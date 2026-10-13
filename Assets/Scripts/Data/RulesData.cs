@@ -49,6 +49,9 @@ public class RulesData
 
     /// <summary>キャラをドラッグ中・選択中の時間の速さ（アークナイツのスロー）</summary>
     public float focusTimeScale = 0.2f;
+
+    /// <summary>編成に入れられる人数</summary>
+    public int squadMax = 8;
 }
 
 /// <summary>出撃する部員（Resources/Data/squad.json）。M4 で編成画面に置き換える</summary>

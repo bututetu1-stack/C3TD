@@ -53,17 +53,18 @@ public class Battle : MonoBehaviour
         Current = null;
     }
 
-    public static Battle Create(string stageId)
+    /// <summary>ステージを始める。squadIds は編成バーに並べる部員（null なら squad.json）</summary>
+    public static Battle Create(string stageId, List<string> squadIds)
     {
         StageData data = GameData.Stage(stageId);
         if (data == null) return null;
         var obj = new GameObject("Battle_" + stageId);
         var battle = obj.AddComponent<Battle>();
-        battle.Init(data);
+        battle.Init(data, squadIds ?? GameData.Squad.members);
         return battle;
     }
 
-    private void Init(StageData data)
+    private void Init(StageData data, List<string> squadIds)
     {
         Current = this;
         Stage = data;
@@ -82,7 +83,7 @@ public class Battle : MonoBehaviour
             MapBuilder.DrawPath(points, transform);
         }
         BuildSchedule(data, worldPaths);
-        BuildSquad();
+        BuildSquad(squadIds);
 
         characterRoot = new GameObject("Characters").transform;
         characterRoot.SetParent(transform, false);
@@ -126,14 +127,14 @@ public class Battle : MonoBehaviour
         });
     }
 
-    private void BuildSquad()
+    private void BuildSquad(List<string> squadIds)
     {
-        foreach (string id in GameData.Squad.members)
+        foreach (string id in squadIds)
         {
             CharacterData data = GameData.Character(id);
             if (data == null)
             {
-                Debug.LogError("squad.json の部員 \"" + id + "\" が読めないので編成から外します");
+                Debug.LogError("編成の部員 \"" + id + "\" が読めないので外します");
                 continue;
             }
             Squad.Add(new SquadMember(data, GameData.Class(data.unitClass)));
@@ -166,7 +167,11 @@ public class Battle : MonoBehaviour
         if (State.Phase != lastPhase)
         {
             lastPhase = State.Phase;
-            if (State.Phase == GamePhase.Won) AudioManager.PlaySE("victory");
+            if (State.Phase == GamePhase.Won)
+            {
+                AudioManager.PlaySE("victory");
+                Progress.RecordClear(Stage.id, State.Life, State.MaxLife);
+            }
             if (State.Phase == GamePhase.Lost) AudioManager.PlaySE("defeat");
         }
     }

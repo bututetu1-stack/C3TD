@@ -13,6 +13,9 @@ public enum IconKind
     Next,
     Cross,   // 撤退
     Bolt,    // 必殺技
+    Back,    // 戻る
+    Lock,    // 未開放
+    Star,    // ★
 }
 
 /// <summary>Painter2D で描く小さなアイコン（フォントに頼らないので、どの環境でも同じ形）</summary>
@@ -126,6 +129,36 @@ public class IconView : VisualElement
                     Poly(p, tip + new Vector2(s * 0.16f, s * 0.02f), tip + new Vector2(-s * 0.1f, -s * 0.12f), tip + new Vector2(-s * 0.02f, s * 0.16f));
                 }
                 break;
+
+            case IconKind.Back:
+                p.lineWidth = s * 0.12f;
+                p.BeginPath();
+                p.MoveTo(new Vector2(c.x + s * 0.3f, c.y));
+                p.LineTo(new Vector2(c.x - s * 0.24f, c.y));
+                p.Stroke();
+                Poly(p, new Vector2(c.x - s * 0.02f, c.y - s * 0.24f), new Vector2(c.x - s * 0.34f, c.y), new Vector2(c.x - s * 0.02f, c.y + s * 0.24f));
+                break;
+
+            case IconKind.Lock:
+                p.lineWidth = s * 0.1f;
+                p.BeginPath();
+                p.Arc(new Vector2(c.x, c.y - s * 0.06f), s * 0.18f, Angle.Degrees(180f), Angle.Degrees(360f));
+                p.Stroke();
+                Rect(p, c.x - s * 0.28f, c.y - s * 0.04f, s * 0.56f, s * 0.4f);
+                break;
+
+            case IconKind.Star:
+            {
+                var pts = new Vector2[10];
+                for (int i = 0; i < 10; i++)
+                {
+                    float r = i % 2 == 0 ? s * 0.46f : s * 0.19f;
+                    float a = (-90f + i * 36f) * Mathf.Deg2Rad;
+                    pts[i] = new Vector2(c.x + Mathf.Cos(a) * r, c.y + Mathf.Sin(a) * r + s * 0.03f);
+                }
+                Poly(p, pts);
+                break;
+            }
 
             case IconKind.Bolt:
                 Poly(p,

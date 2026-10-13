@@ -15,6 +15,7 @@ public static class GameData
     private const string ClassesPath = "Data/classes";
     private const string RulesPath = "Data/rules";
     private const string SquadPath = "Data/squad";
+    private const string CampaignPath = "Data/campaign";
 
     private static readonly Dictionary<string, StageData> stages = new Dictionary<string, StageData>();
     private static readonly Dictionary<string, EnemyData> enemies = new Dictionary<string, EnemyData>();
@@ -23,6 +24,7 @@ public static class GameData
     private static Dictionary<string, ClassData> classes;
     private static RulesData rules;
     private static SquadData squad;
+    private static CampaignData campaign;
 
     // ドメインのリロードなしでプレイしても、JSON の変更が反映されるようにする
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -35,6 +37,7 @@ public static class GameData
         classes = null;
         rules = null;
         squad = null;
+        campaign = null;
     }
 
     public static StageData Stage(string id) { return Load(StageDir, id, stages); }
@@ -73,6 +76,28 @@ public static class GameData
             classes[unitClass.ToString()] = data;
         }
         return data;
+    }
+
+    public static CampaignData Campaign
+    {
+        get
+        {
+            if (campaign == null) campaign = Parse<CampaignData>(CampaignPath) ?? new CampaignData();
+            return campaign;
+        }
+    }
+
+    /// <summary>Data/Characters にある部員の id。squad.json に書いた順を先に、残りは名前順</summary>
+    public static List<string> CharacterIds()
+    {
+        var rest = new List<string>();
+        foreach (var asset in Resources.LoadAll<TextAsset>(CharacterDir.TrimEnd('/'))) rest.Add(asset.name);
+        rest.Sort(StringComparer.Ordinal);
+        var ids = new List<string>();
+        foreach (string id in Squad.members)
+            if (rest.Remove(id)) ids.Add(id);
+        ids.AddRange(rest);
+        return ids;
     }
 
     /// <summary>Data/Stages にあるステージの id を名前順に返す</summary>

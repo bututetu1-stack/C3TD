@@ -298,6 +298,7 @@
       <div class="status-row">
         <strong>いま依頼中（2026-10-13）</strong>
         <div class="status-list">
+          <span class="chip gold">タイトル画面の絵 Title.png（M4・任意）</span>
           <span class="chip gold">艦娘の砲弾 Shell.png（M3）</span>
           <span class="chip gold">効果音・BGM（下の表）</span>
         </div>
@@ -408,6 +409,7 @@
         <thead><tr><th>ファイル名</th><th>置き場所</th><th>鳴る場面</th><th>どんな音</th><th>長さ</th></tr></thead>
         <tbody>
           <tr><td><code>battle</code> <span class="chip gold">優先</span></td><td><code>Audio/BGM/</code></td><td>出撃中</td><td>緊張感のある作戦BGM（ループ）。電子音とストリングス</td><td class="len">1〜3分</td></tr>
+          <tr><td><code>menu</code></td><td><code>Audio/BGM/</code></td><td>タイトル・作戦選択・編成</td><td>落ち着いた作戦室のBGM（ループ）</td><td class="len">1〜3分</td></tr>
           <tr><td><code>life_lost</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>敵に拠点を突破された</td><td>低い警告音（ブーッ）とガラスが割れる音</td><td class="len">約1秒</td></tr>
           <tr><td><code>victory</code></td><td><code>Audio/SE/</code></td><td>防衛成功</td><td>短いファンファーレ</td><td class="len">2〜3秒</td></tr>
           <tr><td><code>defeat</code></td><td><code>Audio/SE/</code></td><td>防衛失敗</td><td>沈んでいく低い音</td><td class="len">約2秒</td></tr>
@@ -461,6 +463,8 @@
       prompt: "真上から見下ろした、赤く渦巻くゲートの穴。中心は暗く、そのまわりを赤とオレンジの光がうずを巻き、プリントの切れ端のような白い紙片が数枚、吸い出されるように舞っている。円形にまとまった形。" },
     { group: "map", path: "Art/Map/Base.png", title: "拠点の印", scene: "拠点（B）のマスの上に浮かぶ。守るべき「部室」の紋章", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）", now: true,
       prompt: "タワーディフェンスゲームの「守るべき拠点」を表す紋章。正面から見た、上に小さな窓のある木の扉（大学の部室の扉）を、青く光る六角形の盾の枠が囲んでいる。扉の上に小さな星が1つ。すっきりした形で、小さく表示しても分かるように線は太め。文字・数字・ロゴは描かない。" },
+    { group: "map", path: "Art/Background/Title.png", title: "タイトル・作戦選択の背景（任意）", scene: "タイトル・作戦選択・編成の画面に暗くして敷く。なければ戦闘画面の背景を使う（左半分にタイトルの文字が重なる）", bg: null, shape: "wide", style: "none", arrow: "upright", dir: "横長・上下あり", pending: true,
+      prompt: "タワーディフェンスゲームのタイトル画面の背景イラスト。夜の大学のキャンパスを少し高い位置から見下ろした風景で、校舎の窓にいくつか明かりが灯り、遠くに部室棟が見える。空は深い紺色で、星が少し出ている。画面の左半分はタイトルの文字を重ねるので暗くすっきりさせ、見どころは右半分に寄せる。人物・キャラクター・文字・ロゴは描かない。落ち着いた紺と琥珀色の色調。横長 1536×1024。" },
     { group: "map", path: "Art/Background/Battle.png", title: "戦闘画面の背景", scene: "盤の後ろに暗く敷く（ゲーム側でさらに暗くする）", bg: null, shape: "wide", style: "none", arrow: "upright", dir: "横長・上下あり", now: true,
       prompt: "タワーディフェンスゲームの戦闘画面の背景画像。夜の大学のキャンパスを真上から見下ろした、暗い紺色の設計図（ブループリント）風の図。建物の輪郭や道や木が、細い水色の線で薄く描かれ、方眼の線がうっすら重なる。全体はとても暗く、中央はゲームの盤を重ねるので、特に暗く模様を少なくする。人物・文字・数字・ロゴは描かない。横長 1536×1024。" },
 

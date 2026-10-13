@@ -10,6 +10,9 @@ public class StageData
     public int initialDp;
     public string bgm;
 
+    /// <summary>作戦選択に出す説明</summary>
+    public string description;
+
     /// <summary>マップの文字列。1行目が画面のいちばん上</summary>
     public List<string> map = new List<string>();
 

@@ -3,15 +3,19 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 /// <summary>
-/// ゲームの入口。Boot シーンに1つだけ置く（どのシーンで再生しても、なければ自動で作る）。
-/// カメラ・ライト・HUD を用意して、ステージを始める。
+/// ゲームの入口と画面の流れ。Boot シーンに1つだけ置く（どのシーンで再生しても、なければ自動で作る）。
+/// タイトル → 作戦選択 → 編成 → 出撃 → 結果（もう一度／次の作戦／作戦選択へ）。
 /// </summary>
 public class GameBootstrap : MonoBehaviour
 {
-    [SerializeField] private string stageId = "stage_01";
+    [Tooltip("空でなければ、タイトルと編成を飛ばしてこのステージから始める（テスト用）")]
+    [SerializeField] private string startStage = "";
 
     private Battle battle;
     private HudUI hud;
+    private MenuUI menu;
+    private string stageId;
+    private List<string> squad;
 
     public string StageId { get { return stageId; } }
 
@@ -27,35 +31,86 @@ public class GameBootstrap : MonoBehaviour
         CameraFitter.Ensure();
         EnsureGlobalLight();
 
-        hud = new GameObject("UI").AddComponent<HudUI>();
+        var ui = new GameObject("UI");
+        hud = ui.AddComponent<HudUI>();
         hud.Init(this);
+        menu = ui.AddComponent<MenuUI>();
+        menu.Init(this);
         gameObject.AddComponent<BattleInput>().Init(hud);
     }
 
     void Start()
     {
-        StartStage(stageId);
+        squad = Progress.Squad;
+        if (!string.IsNullOrEmpty(startStage)) StartBattle(startStage);
+        else ShowTitle();
     }
 
-    public void StartStage(string id)
+    // ================= 画面 =================
+
+    public void ShowTitle()
+    {
+        EndBattle();
+        menu.ShowTitle();
+    }
+
+    /// <summary>作戦選択。focus のステージを選んだ状態で開く（null なら続きのステージ）</summary>
+    public void ShowStageSelect(string focus = null)
+    {
+        EndBattle();
+        menu.ShowStageSelect(focus ?? stageId);
+    }
+
+    public void ShowSquad(string id)
+    {
+        EndBattle();
+        stageId = id;
+        menu.ShowSquad(id, squad);
+    }
+
+    /// <summary>編成画面で決めた編成を覚える</summary>
+    public void SetSquad(List<string> ids)
+    {
+        squad = new List<string>(ids);
+        Progress.Squad = squad;
+    }
+
+    public void StartBattle(string id)
     {
         if (string.IsNullOrEmpty(id)) return;
         if (battle != null) Destroy(battle.gameObject);
-        battle = Battle.Create(id);
+        battle = Battle.Create(id, squad);
         if (battle == null) return;
         stageId = id;
+        menu.HideAll();
         CameraFitter.Ensure().Fit(battle.Map.WorldRect);
     }
 
     public void Retry()
     {
-        StartStage(stageId);
+        StartBattle(stageId);
     }
 
-    /// <summary>Data/Stages の名前順で次のステージ。wrap なら最後の次は最初に戻る</summary>
+    /// <summary>次の作戦の編成へ（最後なら作戦選択へ）</summary>
+    public void GoToNext()
+    {
+        string next = NextStageId();
+        if (next != null && Progress.IsUnlocked(next)) ShowSquad(next);
+        else ShowStageSelect();
+    }
+
+    private void EndBattle()
+    {
+        if (battle != null) Destroy(battle.gameObject);
+        battle = null;
+        TimeController.ResetForStage(GameData.Rules.focusTimeScale);
+    }
+
+    /// <summary>campaign.json の順で次のステージ。wrap なら最後の次は最初に戻る</summary>
     public string NextStageId(bool wrap = false)
     {
-        List<string> ids = GameData.StageIds();
+        List<string> ids = GameData.Campaign.AllStages();
+        if (ids.Count == 0) ids = GameData.StageIds();
         if (ids.Count == 0) return null;
         int index = ids.IndexOf(stageId);
         if (index + 1 < ids.Count) return ids[index + 1];

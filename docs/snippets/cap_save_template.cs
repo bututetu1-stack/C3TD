@@ -6,7 +6,7 @@ RenderTexture.active = rt;
 var tex = new Texture2D(rt.width, rt.height, TextureFormat.RGB24, false);
 tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
 tex.Apply();
-RenderTexture.active = prev;
+RenderTexture.active = prev == rt ? null : prev;
 System.IO.File.WriteAllBytes(@"OUTPATH", tex.EncodeToPNG());
 ps.targetTexture = null;
 Camera.main.targetTexture = null;
