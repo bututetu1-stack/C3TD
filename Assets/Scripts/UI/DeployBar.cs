@@ -8,6 +8,9 @@ using UnityEngine.UIElements;
 /// </summary>
 public class DeployBar
 {
+    /// <summary>DP の札とカードの並び全体（部員が多いほど左へ伸びる）</summary>
+    public readonly VisualElement Root;
+
     private readonly VisualElement cardRow;
     private readonly Label dpValue;
     private readonly VisualElement dpFill;
@@ -32,6 +35,7 @@ public class DeployBar
     {
         var bar = UIFactory.Box("deploy-bar");
         root.Add(bar);
+        Root = bar;
 
         var dp = new ChamferBox();
         dp.AddToClassList("dp-plate");

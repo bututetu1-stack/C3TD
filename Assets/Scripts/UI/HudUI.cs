@@ -11,6 +11,9 @@ public class HudUI : MonoBehaviour
 {
     private const float IntroDuration = 2.0f;
 
+    /// <summary>ヒントの札と編成バーのあいだ</summary>
+    private const float HintGap = 24f;
+
     private GameBootstrap bootstrap;
     private VisualElement root;
 
@@ -100,6 +103,9 @@ public class HudUI : MonoBehaviour
         BuildBossBar();
         BuildHint();
         deployBar = new DeployBar(root);
+        // ヒントの札は編成バーの左の空いたところに収める（幅の上限は USS の max-width）
+        deployBar.Root.RegisterCallback<GeometryChangedEvent>(e =>
+            hintPlate.style.right = root.layout.width - deployBar.Root.layout.xMin + HintGap);
         unitPanel = new UnitPanel(root);
         enemyPanel = new EnemyPanel(root);
         cutIn = new CutIn(root);
