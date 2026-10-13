@@ -220,7 +220,54 @@
     color: rgb(200, 206, 222);
 }
 
-/* ---------- 一時停止 ---------- */
+/* ---------- 一時停止（止めたまま配置できる。マップを少し暗くして、ふちを琥珀色に） ---------- */
+.pause-frame {
+    background-color: rgba(3, 5, 10, 0.22);
+    border-width: 6px;
+    border-color: rgba(244, 182, 63, 0.7);
+}
+
+.pause-plate {
+    height: 68px;
+    padding-left: 18px;
+    padding-right: 28px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.pause-plate-icon {
+    margin-right: 14px;
+}
+
+.pause-plate-text {
+    justify-content: center;
+}
+
+.pause-plate-head {
+    flex-direction: row;
+    align-items: flex-end;
+    margin-bottom: -2px;
+}
+
+.pause-plate-title {
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: rgb(244, 182, 63);
+}
+
+.pause-plate-key {
+    font-size: 16px;
+    color: rgb(200, 206, 222);
+    margin-left: 8px;
+    margin-bottom: 5px;
+}
+
+.pause-plate-sub {
+    font-size: 18px;
+    color: rgb(238, 241, 246);
+}
+
+/* ---------- メニュー（開くと止まる。後ろは触れない） ---------- */
 .pause-band {
     height: 220px;
     align-items: center;

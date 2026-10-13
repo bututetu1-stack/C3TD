@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// 出撃中の HUD。上のバー（作戦名・経過時間・敵の数・ライフ・速度・一時停止）、
-/// 作戦開始の帯、一時停止の帯、勝敗の帯、拠点に着かれたときの赤い光。
+/// 出撃中の HUD。上のバー（作戦名・経過時間・敵の数・ライフ・速度・一時停止・メニュー）、
+/// 作戦開始の帯、一時停止の印、メニュー、勝敗の帯、拠点に着かれたときの赤い光。
+/// 一時停止中もマップと編成バーは触れる（アークナイツと同じく、止めたまま配置・撤退・必殺技ができる）。
+/// メニューを開くと止まり、閉じると開く前の状態に戻る。
 /// 値は毎フレーム Battle.Current から読む。
 /// </summary>
 public class HudUI : MonoBehaviour
@@ -26,6 +28,7 @@ public class HudUI : MonoBehaviour
     private ChamferBox lifePlate;
     private C3Button speedButton;
     private C3Button pauseButton;
+    private ChamferBox pausePlate;
 
     // ボスの体力（ボスが場にいるあいだだけ出す）
     private VisualElement bossLayer;
@@ -46,7 +49,10 @@ public class HudUI : MonoBehaviour
 
     // 全面の演出
     private VisualElement damageFlash;
-    private VisualElement pauseLayer;
+    private VisualElement pauseFrame;
+    private VisualElement menuLayer;
+    private bool menuOpen;
+    private bool pausedBeforeMenu;
     private VisualElement introLayer;
     private ChamferBox introBand;
     private VisualElement introContent;
@@ -95,6 +101,10 @@ public class HudUI : MonoBehaviour
         damageFlash = UIFactory.Image(UIFactory.Vignette, Palette.Crimson, "full");
         damageFlash.style.opacity = 0f;
         root.Add(damageFlash);
+        // 一時停止中の枠（マップを少し暗くして、ふちを琥珀色に。クリックは通す）
+        pauseFrame = UIFactory.Box("full", "pause-frame");
+        root.Add(pauseFrame);
+        UIFactory.SetVisible(pauseFrame, false);
 
         BuildTopBar();
         BuildBossBar();
@@ -104,9 +114,12 @@ public class HudUI : MonoBehaviour
         enemyPanel = new EnemyPanel(root);
         cutIn = new CutIn(root);
         BuildIntro();
-        BuildPause();
+        BuildMenu();
         BuildResult();
     }
+
+    /// <summary>メニューを開いているか（開いているあいだは止まり、マップは触れない）</summary>
+    public bool MenuOpen { get { return menuOpen; } }
 
     // ================= 組み立て =================
 
@@ -129,6 +142,10 @@ public class HudUI : MonoBehaviour
         op.Add(row);
         bar.Add(op);
 
+        // 一時停止の印は、作戦名と数字の札のあいだに出す（ボスの体力・部員の札・ヒントと重ならない）
+        bar.Add(UIFactory.Box("top-spacer"));
+        BuildPausePlate();
+        bar.Add(pausePlate);
         bar.Add(UIFactory.Box("top-spacer"));
 
         Label unused;
@@ -144,6 +161,28 @@ public class HudUI : MonoBehaviour
         pauseButton = new C3Button(IconKind.Pause, 26f, null, TimeController.TogglePause);
         pauseButton.AddToClassList("hud-button");
         bar.Add(pauseButton);
+        var menuButton = new C3Button(IconKind.Menu, 26f, null, OpenMenu);
+        menuButton.AddToClassList("hud-button");
+        bar.Add(menuButton);
+    }
+
+    private void BuildPausePlate()
+    {
+        pausePlate = new ChamferBox();
+        pausePlate.AddToClassList("pause-plate");
+        pausePlate.SetFill(Palette.UiPanel).SetStroke(Palette.Amber, 1.5f)
+            .SetCut(12f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetStripes(Palette.UiStripe, 16f);
+        var icon = new IconView(IconKind.Pause, 30f, Palette.Amber);
+        icon.AddToClassList("pause-plate-icon");
+        pausePlate.Add(icon);
+        var text = UIFactory.Box("pause-plate-text");
+        var head = UIFactory.Box("pause-plate-head");
+        head.Add(UIFactory.Text("PAUSE", UIFont.Display, "pause-plate-title"));
+        head.Add(UIFactory.Text("Space で再開", UIFont.Body, "pause-plate-key"));
+        text.Add(head);
+        text.Add(UIFactory.Text("止めたまま 配置・撤退・必殺技ができます", UIFont.Body, "pause-plate-sub"));
+        pausePlate.Add(text);
+        UIFactory.SetVisible(pausePlate, false);
     }
 
     private void BuildBossBar()
@@ -284,33 +323,59 @@ public class HudUI : MonoBehaviour
         UIFactory.SetVisible(introLayer, false);
     }
 
-    private void BuildPause()
+    private void BuildMenu()
     {
-        pauseLayer = UIFactory.Box("full", "dim", "center-column");
+        menuLayer = UIFactory.Box("full", "dim", "center-column");
         var band = new ChamferBox();
         band.AddToClassList("pause-band");
         band.SetFill(Palette.UiBand).SetCut(0f, ChamferBox.Corners.None).SetStripes(Palette.UiStripe, 22f);
         band.pickingMode = PickingMode.Ignore;
-        band.Add(UIFactory.Text("PAUSE", UIFont.Display, "pause-title"));
-        band.Add(UIFactory.Text("一時停止中　Space で再開", UIFont.Body, "pause-sub"));
-        pauseLayer.Add(band);
+        band.Add(UIFactory.Text("MENU", UIFont.Display, "pause-title"));
+        band.Add(UIFactory.Text("一時停止中　Esc で戦闘に戻る", UIFont.Body, "pause-sub"));
+        menuLayer.Add(band);
 
-        // 一時停止中はメニュー（後ろのマップは触れない）
-        pauseLayer.pickingMode = PickingMode.Position;
+        // メニューを開いているあいだは、後ろのマップと編成バーを触れない
+        menuLayer.pickingMode = PickingMode.Position;
         var buttons = UIFactory.Box("result-buttons");
-        var resume = new C3Button(IconKind.Play, 26f, "再開", () => TimeController.SetPaused(false));
+        var resume = new C3Button(IconKind.Play, 26f, "戦闘に戻る", CloseMenu);
         resume.AddToClassList("result-button");
         resume.Active = true;
         buttons.Add(resume);
-        var retry = new C3Button(IconKind.Retry, 28f, "やり直す", () => bootstrap.Retry());
+        var retry = new C3Button(IconKind.Retry, 28f, "やり直す", () =>
+        {
+            menuOpen = false;
+            bootstrap.Retry();
+        });
         retry.AddToClassList("result-button");
         buttons.Add(retry);
-        var quit = new C3Button(IconKind.Back, 28f, "作戦選択へ", () => bootstrap.ShowStageSelect());
+        var quit = new C3Button(IconKind.Back, 28f, "作戦選択へ", () =>
+        {
+            menuOpen = false;
+            bootstrap.ShowStageSelect();
+        });
         quit.AddToClassList("result-button");
         buttons.Add(quit);
-        pauseLayer.Add(buttons);
-        root.Add(pauseLayer);
-        UIFactory.SetVisible(pauseLayer, false);
+        menuLayer.Add(buttons);
+        root.Add(menuLayer);
+        UIFactory.SetVisible(menuLayer, false);
+    }
+
+    /// <summary>メニューを開いて止める（メニューのボタン・Esc）</summary>
+    public void OpenMenu()
+    {
+        Battle battle = Battle.Current;
+        if (menuOpen || battle == null || battle.State == null || battle.State.Phase != GamePhase.Playing) return;
+        menuOpen = true;
+        pausedBeforeMenu = TimeController.Paused;
+        TimeController.SetPaused(true);
+    }
+
+    /// <summary>メニューを閉じて、開く前の状態（動いていた／止めていた）に戻す</summary>
+    public void CloseMenu()
+    {
+        if (!menuOpen) return;
+        menuOpen = false;
+        TimeController.SetPaused(pausedBeforeMenu);
     }
 
     private void BuildResult()
@@ -384,6 +449,7 @@ public class HudUI : MonoBehaviour
         if (!inBattle)
         {
             shownBattle = null;
+            menuOpen = false;
             return;
         }
         HandleKeys();
@@ -426,10 +492,16 @@ public class HudUI : MonoBehaviour
             pauseButton.Icon.SetKind(TimeController.Paused ? IconKind.Play : IconKind.Pause);
             pauseButton.Active = TimeController.Paused;
         }
-        UIFactory.SetVisible(pauseLayer, TimeController.Paused && state.Phase == GamePhase.Playing);
-        if (TimeController.Paused && introTween != null)
+        // 止めたまま必殺技で最後の敵を倒すと、止まったまま決着がつく。決着したらメニューも一時停止の印も消す
+        bool playing = state.Phase == GamePhase.Playing;
+        if (!playing) menuOpen = false;
+        UIFactory.SetVisible(menuLayer, menuOpen);
+        bool pauseShown = TimeController.Paused && playing && !menuOpen;
+        UIFactory.SetVisible(pauseFrame, pauseShown);
+        UIFactory.SetVisible(pausePlate, pauseShown);
+        if (menuOpen && introTween != null)
         {
-            // 一時停止メニューの後ろに作戦開始の帯が透けないように消す
+            // メニューの後ろに作戦開始の帯が透けないように消す
             UITween.Stop(ref introTween);
             UIFactory.SetVisible(introLayer, false);
         }
@@ -456,6 +528,7 @@ public class HudUI : MonoBehaviour
 
         shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = -1;
         shownPhase = GamePhase.Playing;
+        menuOpen = false;
         hintIndex = 0;
         hintShown = false;
         UITween.Stop(ref hintTween);
@@ -559,12 +632,13 @@ public class HudUI : MonoBehaviour
             TimeController.SetPaused(true);
     }
 
-    /// <summary>Space：一時停止、R：やり直し、N：次のステージ（テスト用）</summary>
+    /// <summary>Space：一時停止。R：やり直し、N：次のステージ（テスト用なので、エディタで遊ぶときだけ効く）</summary>
     private void HandleKeys()
     {
         Keyboard kb = Keyboard.current;
         if (kb == null) return;
-        if (kb.spaceKey.wasPressedThisFrame) TimeController.TogglePause();
+        if (!menuOpen && kb.spaceKey.wasPressedThisFrame) TimeController.TogglePause();
+        if (!Application.isEditor) return;
         if (kb.rKey.wasPressedThisFrame) bootstrap.Retry();
         if (kb.nKey.wasPressedThisFrame) bootstrap.StartBattle(bootstrap.NextStageId(true));
     }
