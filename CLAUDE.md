@@ -187,11 +187,12 @@ Assets/
 - 素材依頼帳の画像は 2026-10-13 に全部受け取った。依頼中は艦娘の砲弾 `Shell.png`、タイトルの絵 `Art/Background/Title.png`（任意。なければ戦闘の背景を使う）、効果音・BGM。
 - デスクトップに移った（2026-10-13 夜）。オーナーに「1-3 が難しすぎる」と言われた。上手に置く `AutoPilot` では簡単だったので、初めて遊ぶ人のまね（`AutoPilot.Novice`）と、何回も戦わせて勝った割合を出す `Dev/BalanceRun` を作って測った。1-3・1-4 は同じ敵が固まって来て数秒でライフが全部なくなっていたので、課題・小テストの間隔をあけた（1-3 は 31→28 体、1-4 は 42→40 体）。1-3 にヒントを2つ足した。1-5 はボスで減るライフ（2）のままで、オーナーの返事待ち（結果は `docs/snippets/README.md`）。
 - オーナーに「適当にキャラを増やして」と言われ、テスト用のダミーを6人足した（実在の部員ではない。名前と技は「ダミー」「テスト：」）：先鋒（安い前衛・必殺技で DP +10）、剣豪（1体だけ止める重い前衛・周りに範囲攻撃）、速射（速く弱い狙撃）、徹甲（遅く重い狙撃・当てた敵の防御を下げる）、足止め（敵を遅くする術師）、癒し（射程内をまとめて回復する医療）。全部で11人、編成は最大8人。
+- 2026-10-13 夜（オーナー：「文字が小さくて見づらい」「物鉄をもう少し改良できないか」「SE・BGM・イラストは何を用意すればいい」）：UI の小さい文字を全体に大きくした（本文 20px 前後、英字の小見出し 16px 以上。部員の札 480px・編成の詳しい札 560px に広げた）。物理鉄人を強くした：夜戦主義を 20 秒ごと、深夜出撃に一斉射撃（射程内の敵に攻撃力の250%）を足し、最初の SP 10、艦娘は引き継ぎ 60%・砲撃が範囲攻撃（半径 0.6）。初めて遊ぶ人のまねで 1-4 は 23/30・1-5 は 20/30 になった。素材依頼帳に、物理鉄人のカットイン立ち絵・砲弾の爆発・状態の印（鈍足・防御ダウン）・DP 獲得の絵と、BGM `boss`・SE `start` `boss_warning` を足した（どれも置けば使われるようにコードを入れた）。
 
 ### デザインの方針（オーナーと決めたこと）
 - 雰囲気はアークナイツ寄りの「作戦盤」：暗い紺の盤面、角を斜めに落とした板（`ChamferBox`）、琥珀色の差し色、英字の小見出し（OPERATION / TIME / ENEMY / LIFE / DP）。演出は凝ってよい。
 - 書体の役割（`GameFonts` の `UIFont`）：Body＝Zen角ゴシック New Bold（日本語の本文・ボタン）、Display＝Oswald Bold（数字と英字）、Title＝しっぽり明朝 B1 ExtraBold（作戦名・勝敗・部員名などの日本語の大見出し）。どれも OFL で、`Resources/Fonts/Licenses` にライセンスがある。
-- 文字は UI もマップ上も SDF のフォントアセットを実行時に作って描く（縮小しても荒れない）。
+- 文字は UI もマップ上も SDF のフォントアセットを実行時に作って描く（縮小しても荒れない）。大きさは 1920x1080 基準で、日本語の本文は 20px 前後、英字の小見出しも 16px 以上にする（オーナーに「小さくて見づらい」と言われた）。
 - 画像はオーナーが ChatGPT で作る。頼むときは素材依頼帳（https://claude.ai/artifact/GQmWJRGEXxumur5f64Mfoo 、元は `docs/art-requests.html`）にカードを足して文言を用意する。光るものは黒背景（ゲーム側で黒を透明にする）、物体とキャラは透過PNG、敵は右向き。素材は `Assets/Resources/Art` に直接置かれるので、作業前に `git status` で新しいファイルを確かめる。
 
 ### 決めたこと・実装の約束
@@ -200,7 +201,7 @@ Assets/
 - データ：`Data/rules.json`（DP の回復・上限、撤退で戻る割合、最低ダメージ、スローの速さ）、`Data/classes.json`（職業ごとの置ける地形・攻撃のしかた・ダメージの種類・標準ブロック数・範囲・弾の画像・色）、`Data/squad.json`（はじめの編成と、編成画面での部員の並び）、`Data/campaign.json`（章とステージの並び）、`Data/Characters/{id}.json`。ステージの `description` は作戦選択の説明。
 - 敵の JSON：`res`（術耐性%）、`artScale`（絵の大きさ）、`artFacing`（絵の向き。課題とレポートは `Left`）、`lifeDamage`（拠点に着いたら減るライフ。ボスの締切は 2）。
 - ステージの JSON の `hints`：`{ "time": 秒, "duration": 秒, "text": "…" }` の配列。その時刻に画面の左下にヒントが出る（1-1 は操作の説明を4つ、1-3 は2つ、1-2・1-4・1-5 は1つずつ）。ヒントの札は編成バーの左の空いたところに収める（幅は最大 960px。部員が多いと編成バーが長くなるので狭くなる）。
-- 部員の JSON の追加項目：`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る）・`endLine`（終わったときのセリフ。吹き出し）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
+- 部員の JSON の追加項目：`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る）・`endLine`（終わったときのセリフ。吹き出し）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）、`splash`（範囲攻撃の半径。職業の決まりを上書き。艦娘は 0.6）。物理の範囲攻撃の着弾は `Fx.Explosion`、術は `Fx.ArtsBurst`。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
 - スキル（`Skills/SkillRunner`・`Skills/SkillEffects` の先頭に一覧あり）：
   - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）、Dp（DP を value 増やす）。
   - 能力の増減は足し算で重なり、上限はない。特性の OnAttack で敵を下げるときは、効果の長さを攻撃間隔以下にする（長いと自分の分が重なる）。
@@ -224,10 +225,11 @@ Assets/
 - 本素材の読み込みは `Art`（`ArtTexture` で縮小して読むので、インポート設定は触らなくてよい）。透過のない画像の背景は、光るもの（`Art/Effects`・出撃口）は明るさに応じて透明に、物の絵（敵・拠点）はふちから続く黒だけを透明にする。置き場所は `Resources/` の下：
   - `Art/Icons/{characterId}.png`（マップ上では丸く切り抜く）、`Art/Enemies/{enemyId}.png`
   - `Art/Map/Spawn.png`・`Base.png`、`Art/Background/Battle.png`
-  - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst` `LeakBurst` `Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat`。M3 用に届いている名前：`SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）
+  - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst` `LeakBurst` `Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat`。M3 用に届いている名前：`SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）。依頼中：`Shell` `Explosion` `DpGain` `StatusSlow` `StatusDefDown`（状態の印。なければ色付きの丸に「遅」「防」）
+  - `Art/CutIn/{characterId}.png`：必殺技のカットインに大きく出す立ち絵（透過・縦長。なければアイコンを四角く出す）
 - 演出の部品：`Fx`（場面ごとの演出）、`FxSprite`（一度だけ再生して消える）、`PulseRing`、`Spinner`、`PathFlow`（経路の矢印。拠点からの距離で並べるので、終わりが同じ経路は矢印が重なる）、`FloatingText`（ダメージ・回復の数字）、`HealthBar`。ワールドの演出はゲーム時間（一時停止で止まる）、UI のアニメは実時間。
 - エディタは再生のたびにドメインをリロードする設定（C3_shogi と同じ。2026-10-13 に変えた）。「ドメインのリロードなし」にすると、同じエディタで2回目に再生したときから UI の文字が全部消える。実行時に作ったフォント（`GameFonts`）は再生が終わると壊されるのに、UI Toolkit の文字のキャッシュは前の再生のマテリアルを持ったままになるため（`MeshGenerator.DrawText` で NullReference）。static な値を `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` でリセットするのは、そのまま残す。
-- SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down` `skill` `skill_ready` `summon` `buff`。BGM はステージの `bgm` に書いたキー（いまはどのステージも `battle`）と、メニューの `menu`。
+- SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down` `skill` `skill_ready` `summon` `buff` `start`（作戦開始の帯）`boss_warning`（ボスが出る2秒前）。同じ SE は 0.05 秒に1回まで。BGM はステージの `bgm` に書いたキー（いまはどのステージも `battle`）と、メニューの `menu`、ボスが出たら `boss`（ファイルがあるときだけ切り替える）。拡張子は見ないので wav・ogg・mp3 のどれでも鳴る。
 - テスト用のキー：出撃中は Space 一時停止、R やり直し、N 次のステージ（最後の次は最初・編成はそのまま）、Esc・右クリックで選択とドラッグの取り消し。メニューでは Esc で1つ前の画面、タイトルで Space・Enter。Boot シーンの GameBootstrap の `startStage` にステージ id を書くと、タイトルと編成を飛ばしてそこから始まる。
 - 確かめ方は `docs/snippets/README.md`（画面の撮影、部員を置く、マウスを流し込む、自動で戦わせてバランスを見る）。ステージや敵の数値を変えたら、`BalanceRun` で「初めて遊ぶ人のまね」を30回と、上手な置き方の「必殺技あり／なし」を回して、表を更新する。初めて遊ぶ人のまねの勝ちの割合は、いまの目安で 1-1・1-2 がほぼ全勝、1-3 が9割、1-4 が7割くらい。
 - テストで戦うとクリアの記録と編成が PlayerPrefs に残る。オーナーがもう遊んでいるときは、テストの前に `PlayerPrefs.GetString("c3td.progress.v1")` を取っておき、終わったら `SetString` で書き戻して `PlayerPrefs.Save()` する（`Progress` は再生のたびに読み直す）。オーナーがまだ遊んでいなければ `Progress.ResetAll()` で消してよい。2026-10-13 にデスクトップで、オーナーのクリアの記録を消してしまった。

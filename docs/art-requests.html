@@ -296,10 +296,14 @@
     <p class="lead">ChatGPT に貼り付けて使う、画像の生成文言の一覧です。画像は決まった場所に置くだけで、次に再生したときからゲームに反映されます。置いていない画像は、いまの図形と光の演出のまま動きます。</p>
     <div class="status">
       <div class="status-row">
-        <strong>いま依頼中（2026-10-13）</strong>
+        <strong>いま依頼中（2026-10-13 夜に更新）</strong>
         <div class="status-list">
-          <span class="chip gold">タイトル画面の絵 Title.png（M4・任意）</span>
+          <span class="chip gold">新：物理鉄人のカットイン立ち絵</span>
+          <span class="chip gold">新：砲弾の爆発 Explosion.png</span>
+          <span class="chip gold">新：状態の印（鈍足・防御ダウン）</span>
+          <span class="chip gold">新：DP 獲得</span>
           <span class="chip gold">艦娘の砲弾 Shell.png（M3）</span>
+          <span class="chip gold">タイトル画面の絵 Title.png（任意）</span>
           <span class="chip gold">効果音・BGM（下の表）</span>
         </div>
       </div>
@@ -325,6 +329,7 @@
       <a href="#m1fx">出現と突破</a>
       <a href="#m2">配置と攻撃（M2）</a>
       <a href="#m3">必殺技と召喚（M3）</a>
+      <a href="#new">追加の依頼（10/13 夜）</a>
       <a href="#sounds">効果音・BGM</a>
     </nav>
   </header>
@@ -391,7 +396,7 @@
 
   <section id="m2">
     <h2>配置と攻撃<span class="tag">M2</span></h2>
-    <p class="section-note">次のマイルストーン（M2：部員の配置・攻撃・撤退）で使います。いま置いても使われませんが、先に用意しておくと、M2 の最初から本素材で見られます。</p>
+    <p class="section-note">部員の配置・攻撃・撤退・回復・敵の撃破で使っています。</p>
     <div class="cards" data-group="m2"></div>
   </section>
 
@@ -399,6 +404,12 @@
     <h2>必殺技と召喚<span class="tag">M3</span></h2>
     <p class="section-note">M3（スキル・必殺技・召喚）で使います。物理鉄人の「深夜出撃」（艦娘を召喚して、終わると寝落ち）の演出もここに入っています。</p>
     <div class="cards" data-group="m3"></div>
+  </section>
+
+  <section id="new">
+    <h2>追加の依頼<span class="tag">2026-10-13 夜</span></h2>
+    <p class="section-note">物理鉄人の強化（必殺技に一斉射撃、艦娘の砲撃が範囲攻撃に）と、新しい技の部品（敵を遅くする・防御を下げる・DP を増やす）のぶんです。どれも置かなければ、いまの図形と文字のまま動きます。上から順におすすめです。</p>
+    <div class="cards" data-group="new"></div>
   </section>
 
   <section id="sounds">
@@ -410,6 +421,9 @@
         <tbody>
           <tr><td><code>battle</code> <span class="chip gold">優先</span></td><td><code>Audio/BGM/</code></td><td>出撃中</td><td>緊張感のある作戦BGM（ループ）。電子音とストリングス</td><td class="len">1〜3分</td></tr>
           <tr><td><code>menu</code></td><td><code>Audio/BGM/</code></td><td>タイトル・作戦選択・編成</td><td>落ち着いた作戦室のBGM（ループ）</td><td class="len">1〜3分</td></tr>
+          <tr><td><code>boss</code> <span class="chip">新・任意</span></td><td><code>Audio/BGM/</code></td><td>ボス（締切）が出てから。なければ battle のまま</td><td>激しく切迫したボス戦のBGM（ループ）</td><td class="len">1〜3分</td></tr>
+          <tr><td><code>start</code> <span class="chip">新</span></td><td><code>Audio/SE/</code></td><td>出撃して「作戦開始」の帯が出る</td><td>作戦開始の合図。短いファンファーレや、無線の「ザッ」</td><td class="len">1〜2秒</td></tr>
+          <tr><td><code>boss_warning</code> <span class="chip">新</span></td><td><code>Audio/SE/</code></td><td>ボスが出る2秒前（出撃口に金色の輪が出る）</td><td>警報（サイレン）や重い鐘の音</td><td class="len">約2秒</td></tr>
           <tr><td><code>life_lost</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>敵に拠点を突破された</td><td>低い警告音（ブーッ）とガラスが割れる音</td><td class="len">約1秒</td></tr>
           <tr><td><code>victory</code></td><td><code>Audio/SE/</code></td><td>防衛成功</td><td>短いファンファーレ</td><td class="len">2〜3秒</td></tr>
           <tr><td><code>defeat</code></td><td><code>Audio/SE/</code></td><td>防衛失敗</td><td>沈んでいく低い音</td><td class="len">約2秒</td></tr>
@@ -426,7 +440,8 @@
         </tbody>
       </table>
     </div>
-    <p class="note" style="margin-top:12px">置き場所はどれも <code>Assets/Resources/</code> の下です（例：<code>Assets/Resources/Audio/SE/life_lost.wav</code>）。M2 以降の音（配置・攻撃・撤退など）は、そのときに追加します。</p>
+    <p class="note" style="margin-top:12px">置き場所はどれも <code>Assets/Resources/</code> の下です（例：<code>Assets/Resources/Audio/SE/life_lost.wav</code>）。表の音は全部、置けばすぐに鳴ります。</p>
+    <p class="note">BGM は最後まで行くと最初に戻ってくり返すので、「ループ」と書かれた曲がつなぎ目が自然です。<code>hit</code> は攻撃のたびに鳴るので（同じ音は0.05秒に1回までに絞っています）、短く小さめの音を選んでください。音量はだいたいそろえておいてもらえると助かります（あとからゲーム側でも調整できます）。</p>
     <p class="note">探しやすいサイトの例：<a href="https://soundeffect-lab.info/" target="_blank" rel="noopener">効果音ラボ</a>、<a href="https://otologic.jp/" target="_blank" rel="noopener">OtoLogic</a>、<a href="https://maou.audio/" target="_blank" rel="noopener">魔王魂</a>。クレジット表記などの利用規約は各サイトで確認してください。</p>
   </section>
 </div>
@@ -508,7 +523,19 @@
     { group: "m3", path: "Art/Effects/Shell.png", title: "艦娘の砲弾", scene: "召喚された艦娘の攻撃。艦娘から敵へ、進む方向に回して飛ばす（いまは光の筋で代わりにしている）", bg: "alpha", shape: "wide", style: "none", arrow: "right", dir: "先端を右に", pending: true,
       prompt: "ゲームのエフェクト素材。飛んでいく主砲の砲弾を真横から見た姿。先端を画像の右に向けた横向き。真鍮色の砲弾で、後ろ（左）へ短くたなびくオレンジ色の炎と光の尾。人物や文字は描かない。背景は完全に透過した透過PNG。横長 1536×1024。" },
     { group: "m3", path: "Art/Icons/kanmusu_token.png", title: "艦娘（召喚されるユニット）", scene: "物理鉄人の必殺技で召喚される艦娘のアイコン。マスの上と、召喚中の表示に使う", bg: null, shape: "sq", style: "none", arrow: "upright", dir: "正方形のアイコン",
-      prompt: "オリジナルの艦娘（軍艦を擬人化した女の子）のSD（ちびキャラ）イラストのアイコン。セーラー服を着て、背中に小さな艤装（主砲と煙突）を背負い、元気に敬礼している。特定の既存キャラクターには似せない。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗り。正方形のアイコンで、背景は明るい水色のグラデーション。文字は描かない。正方形 1024×1024。" }
+      prompt: "オリジナルの艦娘（軍艦を擬人化した女の子）のSD（ちびキャラ）イラストのアイコン。セーラー服を着て、背中に小さな艤装（主砲と煙突）を背負い、元気に敬礼している。特定の既存キャラクターには似せない。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗り。正方形のアイコンで、背景は明るい水色のグラデーション。文字は描かない。正方形 1024×1024。" },
+
+    // ---------------- 2026-10-13 夜の追加 ----------------
+    { group: "new", path: "Art/CutIn/butsuri_tetsujin.png", title: "物理鉄人のカットイン（立ち絵）", scene: "必殺技「深夜出撃」のカットインで、帯からはみ出すように大きく出す（いまはアイコンを四角く出している）。ChatGPT に物理鉄人のアイコン（Assets/Resources/Art/Icons/butsuri_tetsujin.png）を添付して頼む。CutIn フォルダは新しく作る", bg: "alpha", shape: "tall", style: "none", arrow: "upright", dir: "縦長・体はやや左向き", pending: true,
+      prompt: "添付した画像と同じキャラクター・同じ服装・同じ画風で、ゲームの必殺技カットインに使う全身の立ち絵を1枚描いてください。弓を大きく引き絞った決めポーズで、体と顔はやや左を向く（画面の中央側を見る）。頭から足元まで全身を入れ、上下左右に少し余白を残す。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗りは添付の画像と同じにする。文字・ロゴ・サインは描かない。背景は完全に透過した透過PNG。縦長 1024×1536。" },
+    { group: "new", path: "Art/Effects/Explosion.png", title: "砲弾の爆発", scene: "艦娘の砲弾が当たったところで、まわりの敵ごと巻き込んで爆発する（物理の範囲攻撃に使う）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", pending: true,
+      prompt: "砲弾が着弾して爆発する瞬間を真上から見たもの。中心が白くまぶしく光り、オレンジと赤の炎の球が丸く広がり、外側に灰色の煙の輪と、四方へ飛び散る火の粉。円形にまとまった形。" },
+    { group: "new", path: "Art/Effects/StatusSlow.png", title: "状態の印：鈍足", scene: "敵が遅くなっているあいだ、体力バーの左に小さく出る（いまは水色の丸に「遅」）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）", pending: true,
+      prompt: "ゲームのアイコン素材。動きが遅くなっていることを表す小さな印。水色の砂時計に、白い氷の結晶がひとつ重なっている。小さく表示しても分かるように、太い線のシンプルな形と、はっきりした色にする。人物や文字は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
+    { group: "new", path: "Art/Effects/StatusDefDown.png", title: "状態の印：防御ダウン", scene: "敵の防御が下がっているあいだ、体力バーの左に小さく出る（いまは赤い丸に「防」）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）", pending: true,
+      prompt: "ゲームのアイコン素材。防御力が下がっていることを表す小さな印。ひびの入った銀色の盾に、赤い下向きの矢印が重なっている。小さく表示しても分かるように、太い線のシンプルな形と、はっきりした色にする。人物や文字は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
+    { group: "new", path: "Art/Effects/DpGain.png", title: "DP 獲得", scene: "必殺技などで DP が増えたとき、部員の位置からきらきらと立ちのぼる（いまは先鋒ダミーの「補給」で使う）", bg: "black", shape: "sq", style: "fx", arrow: "upright", dir: "上下あり（回さない）", pending: true,
+      prompt: "配置コストを手に入れたときの光。金色に光る小さなひし形の結晶がいくつも、下から上へきらきらと舞い上がり、中央にやわらかな金色の光の柱が立つ。" }
   ];
 
   const NS = "http://www.w3.org/2000/svg";
