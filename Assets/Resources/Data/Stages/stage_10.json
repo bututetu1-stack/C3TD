@@ -32,7 +32,7 @@
     { "time": 36,  "enemy": "kadai",     "path": "p2", "count": 4, "interval": 1.5 },
     { "time": 44,  "enemy": "rerishuu",  "path": "p1", "count": 2, "interval": 3 },
     { "time": 50,  "enemy": "shotest",   "path": "p2", "count": 6, "interval": 0.9 },
-    { "time": 56,  "enemy": "tsuuchi",   "path": "a1", "count": 3, "interval": 3 },
+    { "time": 56,  "enemy": "tsuuchi",   "path": "a1", "count": 2, "interval": 3.5 },
     { "time": 64,  "enemy": "report",    "path": "p2", "count": 2, "interval": 4 },
     { "time": 70,  "enemy": "kimatsu",   "path": "p1", "count": 1, "interval": 0 },
     { "time": 76,  "enemy": "kadai",     "path": "p2", "count": 4, "interval": 2 },
@@ -41,6 +41,6 @@
     { "time": 105, "enemy": "rerishuu",  "path": "p2", "count": 2, "interval": 3 }
   ],
   "hints": [
-    { "time": 64, "duration": 10, "text": "期末試験（ボス）が来る！ 14 秒ごとに小テストを呼び、拠点に着かれるとライフが 2 減る。重装で止めて、必殺技を集中させよう。" }
+    { "time": 64, "duration": 10, "text": "期末試験（ボス）が来る！ 16 秒ごとに小テストを呼び、拠点に着かれるとライフが 2 減る。重装で止めて、必殺技を集中させよう。" }
   ]
 }

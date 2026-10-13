@@ -1,5 +1,6 @@
 {
-  // 第2章のボス。14 秒ごとに小テストを 2 体呼ぶ。拠点に着かれるとライフが 2 減る
+  // 第2章のボス。16 秒ごとに小テストを 2 体呼ぶ。拠点に着かれるとライフが 2 減る
+  // 2026-10-14：2-5 が初めて遊ぶ人のまねで7割を切っていた（ボスと呼んだ小テストが一緒に抜ける）ので、HP 42000→38000、呼ぶ間隔 14→16 秒
   "id": "kimatsu",
   "name": "期末試験",
   "label": "期末",
@@ -8,12 +9,12 @@
   "color": "#5E1F8E",
   "size": 0.88,
   "artScale": 1.3,
-  "hp": 42000,
+  "hp": 38000,
   "atk": 1300,
   "def": 380,
   "res": 30,
   "attackInterval": 2.6,
   "speed": 0.4,
   "lifeDamage": 2,
-  "summon": { "enemy": "shotest", "count": 2, "interval": 14, "firstDelay": 6 }
+  "summon": { "enemy": "shotest", "count": 2, "interval": 16, "firstDelay": 6 }
 }
