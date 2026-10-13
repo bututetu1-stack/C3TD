@@ -28,6 +28,17 @@ public class AudioManager : MonoBehaviour
     private readonly Dictionary<string, AudioClip> seClips = new Dictionary<string, AudioClip>();
     private readonly Dictionary<AudioClip, float> bgmEnds = new Dictionary<AudioClip, float>();
     private readonly Dictionary<string, float> lastPlayed = new Dictionary<string, float>();
+    // 読み込んだときに使う部分を切り出せた SE（ブラウザ版では切り出せないので、PlayPart で鳴らす）
+    private readonly HashSet<string> cut = new HashSet<string>();
+    private const int MaxParts = 4;
+    private const float PartFade = 0.05f;
+    private class Part
+    {
+        public AudioSource Source;
+        public float StopAt;
+        public float Volume;
+    }
+    private readonly List<Part> parts = new List<Part>();
     private AudioSource seSource;
     private readonly AudioSource[] bgm = new AudioSource[2];
     private int bgmIndex;
@@ -37,6 +48,8 @@ public class AudioManager : MonoBehaviour
     private float bgmEnd;
     private float fadeElapsed = -1f;
     private float fadeLength;
+    private AudioEntry bgmEntry;
+    private bool boundsPending;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
@@ -79,7 +92,48 @@ public class AudioManager : MonoBehaviour
         if (self.lastPlayed.TryGetValue(key, out last) && now - last < MinInterval) return;
         self.lastPlayed[key] = now;
         AudioEntry entry = GameData.Audio.Se(key);
-        self.seSource.PlayOneShot(clip, entry != null ? entry.volume : 1f);
+        float volume = entry != null ? entry.volume : 1f;
+        // 切り出せなかった（ブラウザ版）のに使う部分が決まっているときは、その部分だけ鳴らす
+        if (!self.cut.Contains(key) && entry != null && (entry.start > 0f || entry.end > 0f))
+            self.PlayPart(clip, entry.start, entry.end, volume);
+        else
+            self.seSource.PlayOneShot(clip, volume);
+    }
+
+    /// <summary>ファイルの start〜end 秒だけ鳴らす（音の中身を読めず、切り出せないブラウザ版で使う）</summary>
+    private void PlayPart(AudioClip clip, float start, float end, float volume)
+    {
+        Part part = parts.Find(p => !p.Source.isPlaying);
+        if (part == null)
+        {
+            if (parts.Count >= MaxParts) return;
+            part = new Part { Source = gameObject.AddComponent<AudioSource>() };
+            part.Source.playOnAwake = false;
+            parts.Add(part);
+        }
+        // まだ読み込み中なら長さが 0 になるので、書いた秒をそのまま使う
+        float length = clip.loadState == AudioDataLoadState.Loaded ? clip.length : float.MaxValue;
+        start = Mathf.Clamp(start, 0f, length);
+        float to = end > start ? Mathf.Min(end, length) : length;
+        if (to >= float.MaxValue) return;
+        part.Volume = volume;
+        part.Source.clip = clip;
+        part.Source.volume = volume;
+        part.Source.time = start;
+        part.Source.Play();
+        part.StopAt = Time.unscaledTime + (to - start);
+    }
+
+    /// <summary>PlayPart で鳴らしている音を、終わりの PartFade 秒で小さくして止める</summary>
+    private void UpdateParts()
+    {
+        foreach (Part p in parts)
+        {
+            if (!p.Source.isPlaying) continue;
+            float left = p.StopAt - Time.unscaledTime;
+            if (left <= 0f) p.Source.Stop();
+            else if (left < PartFade) p.Source.volume = p.Volume * left / PartFade;
+        }
     }
 
     /// <summary>SE のファイルから、使う部分（audio.json の start・end）を前後の無音を除いて切り出す</summary>
@@ -92,6 +146,7 @@ public class AudioManager : MonoBehaviour
         float[] data = raw != null ? ReadAll(raw) : null;
         if (data != null)
         {
+            cut.Add(key);
             int ch = raw.channels;
             AudioEntry entry = GameData.Audio.Se(key);
             int first = entry != null ? Mathf.Clamp(Mathf.RoundToInt(entry.start * raw.frequency), 0, raw.samples) : 0;
@@ -147,21 +202,43 @@ public class AudioManager : MonoBehaviour
         if (clip == null) return;
 
         AudioEntry entry = GameData.Audio.Bgm(key);
+        self.bgmEntry = entry;
         self.bgmVolume = entry != null ? entry.volume : 1f;
-        self.bgmStart = entry != null ? Mathf.Clamp(entry.start, 0f, clip.length) : 0f;
-        self.bgmEnd = entry != null && entry.end > 0f ? Mathf.Min(entry.end, clip.length) : self.LoudEnd(clip);
-        if (self.bgmEnd - self.bgmStart < 1f) self.bgmEnd = clip.length;
-
         current.clip = clip;
         current.volume = self.bgmVolume;
-        current.time = entry != null && entry.skipIntro ? self.bgmStart : 0f;
+        // 読み込み済みなら使う部分を決めてから鳴らす。ブラウザ版の BGM は鳴らし始めてから読み込まれるので、決めるのは Update で
+        self.boundsPending = true;
+        if (clip.loadState == AudioDataLoadState.Loaded) self.ResolveBounds(current);
         current.Play();
+    }
+
+    /// <summary>曲の長さが分かってから、使う部分（bgmStart〜bgmEnd）を決める。イントロを飛ばすならそこへ移る</summary>
+    private void ResolveBounds(AudioSource source)
+    {
+        AudioClip clip = source.clip;
+        if (clip.loadState != AudioDataLoadState.Loaded)
+        {
+            if (clip.loadState == AudioDataLoadState.Unloaded) clip.LoadAudioData();
+            return;
+        }
+        AudioEntry entry = bgmEntry;
+        bgmStart = entry != null ? Mathf.Clamp(entry.start, 0f, clip.length) : 0f;
+        bgmEnd = entry != null && entry.end > 0f ? Mathf.Min(entry.end, clip.length) : LoudEnd(clip);
+        if (bgmEnd - bgmStart < 1f) bgmEnd = clip.length;
+        if (entry != null && entry.skipIntro) source.time = bgmStart;
+        boundsPending = false;
     }
 
     void Update()
     {
+        UpdateParts();
         AudioSource current = bgm[bgmIndex];
         if (current == null || current.clip == null) return;
+        if (boundsPending)
+        {
+            ResolveBounds(current);
+            if (boundsPending) return;
+        }
         AudioSource next = bgm[1 - bgmIndex];
 
         if (fadeElapsed < 0f)
@@ -226,10 +303,15 @@ public class AudioManager : MonoBehaviour
     /// <summary>音の中身を読む（読めない読み込み方のときは null）</summary>
     private static float[] ReadAll(AudioClip clip)
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // ブラウザ版では音の中身を読めない（C3_shogi で確かめた）。BGM と SE の使う部分は audio.json に秒で書く
+        return null;
+#else
         if (clip.loadType == AudioClipLoadType.Streaming) return null;
         if (clip.loadState != AudioDataLoadState.Loaded) clip.LoadAudioData();
         var data = new float[clip.samples * clip.channels];
         return clip.GetData(data, 0) ? data : null;
+#endif
     }
 
     private AudioClip Load(string path)
