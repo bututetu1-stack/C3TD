@@ -1,0 +1,17 @@
+{
+  // 3.5 秒ごとに、まわり 1.8 マスの敵（自分も）の体力を 10%（400 まで）回復する。先に倒したい
+  "id": "jikken",
+  "name": "実験データ",
+  "label": "実",
+  "shape": "Circle",
+  "color": "#3DBF8F",
+  "size": 0.52,
+  "hp": 1400,
+  "atk": 160,
+  "def": 60,
+  "res": 30,
+  "attackInterval": 2.4,
+  "speed": 0.85,
+  "lifeDamage": 1,
+  "heal": { "interval": 3.5, "radius": 1.8, "percent": 10 }
+}

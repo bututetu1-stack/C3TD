@@ -1,0 +1,46 @@
+{
+  // 上の道は折れ曲がり、下の道はまっすぐ。左上から拠点へ斜めに飛ぶ道。これまでの敵が入り混じる
+  "id": "stage_19",
+  "name": "4-4 徹夜の追い込み",
+  "description": "締切までの徹夜続き。眠気も通知も、これまでの敵がまとめて押し寄せる。",
+  "life": 3,
+  "initialDp": 14,
+  "bgm": "battle",
+  "map": [
+    "SXXXXXXXXXXXXX",
+    "XHHHH.....HHHX",
+    "S.....HHH.HHHX",
+    "XHHHHHHHH....B",
+    "XHHHHHHHH.HHHX",
+    "S.........HHHX",
+    "XXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,2],[5,2],[5,1],[9,1],[9,3],[13,3]],
+    "p2": [[0,5],[9,5],[9,3],[13,3]]
+  },
+  "airPaths": {
+    "a1": [[0,0],[13,3]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",        "path": "p1", "count": 2, "interval": 3 },
+    { "time": 8,  "enemy": "kadai",        "path": "p2", "count": 2, "interval": 3 },
+    { "time": 18, "enemy": "senkou",       "path": "p1", "count": 2, "interval": 3 },
+    { "time": 22, "enemy": "suima",        "path": "p2", "count": 3, "interval": 4 },
+    { "time": 30, "enemy": "tsuuchi",      "path": "a1", "count": 3, "interval": 3 },
+    { "time": 36, "enemy": "jikken",       "path": "p2", "count": 2, "interval": 3 },
+    { "time": 38, "enemy": "saiteishutsu", "path": "p2", "count": 3, "interval": 3 },
+    { "time": 46, "enemy": "akapen",       "path": "p1", "count": 6, "interval": 1.2 },
+    { "time": 54, "enemy": "groupwork",    "path": "p1", "count": 2, "interval": 3 },
+    { "time": 56, "enemy": "kadai",        "path": "p1", "count": 6, "interval": 1.5 },
+    { "time": 64, "enemy": "oinori",       "path": "a1", "count": 3, "interval": 3 },
+    { "time": 70, "enemy": "senkou",       "path": "p2", "count": 3, "interval": 3 },
+    { "time": 78, "enemy": "es",           "path": "p1", "count": 5, "interval": 2 },
+    { "time": 86, "enemy": "jikken",       "path": "p2", "count": 2, "interval": 3 },
+    { "time": 88, "enemy": "report",       "path": "p2", "count": 3, "interval": 3 },
+    { "time": 96, "enemy": "akapen",       "path": "p1", "count": 7, "interval": 1 }
+  ],
+  "hints": [
+    { "time": 28, "duration": 9, "text": "左上から拠点へ、通知やお祈りメールが斜めに飛んでくる。拠点のまわりの高台に、狙撃か術師を置いておこう。" }
+  ]
+}

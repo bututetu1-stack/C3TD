@@ -1,0 +1,15 @@
+{
+  // 速くて脆い。卒論審査（ボス）が呼ぶ手下でもある
+  "id": "akapen",
+  "name": "赤ペン",
+  "label": "赤",
+  "shape": "Diamond",
+  "color": "#D94040",
+  "size": 0.4,
+  "hp": 520,
+  "atk": 140,
+  "def": 30,
+  "attackInterval": 1.4,
+  "speed": 1.7,
+  "lifeDamage": 1
+}

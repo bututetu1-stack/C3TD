@@ -1,0 +1,42 @@
+{
+  // 出撃口が3つ。上下の道はまん中の道に合流し、長い廊下で拠点へ。二度起き上がる「再提出」と、速い「赤ペン」
+  "id": "stage_18",
+  "name": "4-3 中間発表",
+  "description": "中間発表で指摘の嵐。赤ペンが駆け抜け、再提出は何度でも突き返されてくる。",
+  "life": 3,
+  "initialDp": 14,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXXX",
+    "S......HHHHHHX",
+    "XHHHHH.HHHHHHX",
+    "S............B",
+    "XHHHHH.HHHHHHX",
+    "S......HHHHHHX",
+    "XXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[6,1],[6,3],[13,3]],
+    "p2": [[0,3],[13,3]],
+    "p3": [[0,5],[6,5],[6,3],[13,3]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",        "path": "p2", "count": 3, "interval": 2.5 },
+    { "time": 10, "enemy": "akapen",       "path": "p1", "count": 3, "interval": 1.5 },
+    { "time": 18, "enemy": "saiteishutsu", "path": "p2", "count": 3, "interval": 3 },
+    { "time": 24, "enemy": "akapen",       "path": "p3", "count": 7, "interval": 1.2 },
+    { "time": 32, "enemy": "kadai",        "path": "p1", "count": 6, "interval": 2 },
+    { "time": 38, "enemy": "saiteishutsu", "path": "p3", "count": 4, "interval": 4 },
+    { "time": 46, "enemy": "mensetsukan",  "path": "p2", "count": 4, "interval": 4 },
+    { "time": 54, "enemy": "akapen",       "path": "p1", "count": 7, "interval": 1 },
+    { "time": 58, "enemy": "akapen",       "path": "p3", "count": 7, "interval": 1 },
+    { "time": 66, "enemy": "saiteishutsu", "path": "p2", "count": 4, "interval": 3 },
+    { "time": 74, "enemy": "jikken",       "path": "p1", "count": 3, "interval": 3 },
+    { "time": 76, "enemy": "report",       "path": "p1", "count": 4, "interval": 3 },
+    { "time": 86, "enemy": "saiteishutsu", "path": "p3", "count": 4, "interval": 3 },
+    { "time": 92, "enemy": "akapen",       "path": "p2", "count": 9, "interval": 1 }
+  ],
+  "hints": [
+    { "time": 16, "duration": 10, "text": "再提出は、倒しても二度、体力 40% で起き上がる。止める部員を長く持たせよう。赤ペンは速いので、道のまん中の廊下で止めよう。" }
+  ]
+}

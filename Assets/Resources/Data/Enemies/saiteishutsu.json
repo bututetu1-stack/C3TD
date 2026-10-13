@@ -1,0 +1,18 @@
+{
+  // 倒されても二度、体力 40% で起き上がる（何度でも突き返される）
+  "id": "saiteishutsu",
+  "name": "再提出",
+  "label": "再提",
+  "shape": "Circle",
+  "color": "#C85A8A",
+  "size": 0.58,
+  "hp": 1800,
+  "atk": 280,
+  "def": 120,
+  "res": 10,
+  "attackInterval": 2.0,
+  "speed": 0.85,
+  "lifeDamage": 1,
+  "revive": 2,
+  "reviveHpPercent": 40
+}

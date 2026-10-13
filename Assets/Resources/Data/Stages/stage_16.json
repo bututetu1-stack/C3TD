@@ -1,0 +1,35 @@
+{
+  // 第4章のはじめ。W 字に折れ曲がる一本道。盾を持つ「先行研究」
+  "id": "stage_16",
+  "name": "4-1 研究室配属",
+  "description": "研究室に入ったとたん、先行研究の山が立ちはだかる。盾（水色のバー）を割ってから、本体を削ろう。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "XH.....HHHHHX",
+    "XH.HHH.HHHHHX",
+    "S..HHH.HHH..B",
+    "XHHHHH.HHH.HX",
+    "XHHHHH.....HX",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,3],[2,3],[2,1],[6,1],[6,5],[10,5],[10,3],[12,3]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",   "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 12, "enemy": "senkou",  "path": "p1", "count": 2, "interval": 4 },
+    { "time": 22, "enemy": "shotest", "path": "p1", "count": 4, "interval": 1 },
+    { "time": 30, "enemy": "senkou",  "path": "p1", "count": 2, "interval": 3 },
+    { "time": 40, "enemy": "kadai",   "path": "p1", "count": 4, "interval": 1.5 },
+    { "time": 50, "enemy": "report",  "path": "p1", "count": 1, "interval": 0 },
+    { "time": 56, "enemy": "senkou",  "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 68, "enemy": "es",      "path": "p1", "count": 2, "interval": 3 },
+    { "time": 76, "enemy": "senkou",  "path": "p1", "count": 3, "interval": 2 }
+  ],
+  "hints": [
+    { "time": 10, "duration": 10, "text": "先行研究は、体力の上に水色の盾がある。盾を割るまで本体は削れない。攻撃を集めて一気に割ろう。" }
+  ]
+}

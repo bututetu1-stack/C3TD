@@ -1,0 +1,42 @@
+{
+  // 上下の道が合流。まわりの敵を回復する「実験データ」
+  "id": "stage_17",
+  "name": "4-2 実験の日々",
+  "description": "実験データがまわりの敵を回復し続ける。緑の輪が見えたら、まず実験データから倒そう。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S....HHHHHHHX",
+    "XHHH.HHHHHHHX",
+    "XHHH........B",
+    "XHHHHHHH.HHHX",
+    "S........HHHX",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[4,1],[4,3],[12,3]],
+    "p2": [[0,5],[8,5],[8,3],[12,3]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",   "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 8,  "enemy": "kadai",   "path": "p2", "count": 3, "interval": 2.5 },
+    { "time": 18, "enemy": "jikken",  "path": "p1", "count": 3, "interval": 3 },
+    { "time": 20, "enemy": "kadai",   "path": "p1", "count": 5, "interval": 1.5 },
+    { "time": 30, "enemy": "senkou",  "path": "p2", "count": 4, "interval": 3 },
+    { "time": 32, "enemy": "jikken",  "path": "p2", "count": 3, "interval": 3 },
+    { "time": 42, "enemy": "report",  "path": "p1", "count": 3, "interval": 3 },
+    { "time": 44, "enemy": "jikken",  "path": "p1", "count": 3, "interval": 3 },
+    { "time": 50, "enemy": "shotest", "path": "p2", "count": 9, "interval": 1 },
+    { "time": 60, "enemy": "senkou",  "path": "p1", "count": 4, "interval": 3 },
+    { "time": 62, "enemy": "jikken",  "path": "p1", "count": 3, "interval": 3 },
+    { "time": 72, "enemy": "kadai",   "path": "p2", "count": 8, "interval": 1.5 },
+    { "time": 74, "enemy": "jikken",  "path": "p2", "count": 3, "interval": 3 },
+    { "time": 66, "enemy": "report",  "path": "p2", "count": 2, "interval": 3 },
+    { "time": 82, "enemy": "ronbun",  "path": "p1", "count": 4, "interval": 3 }
+  ],
+  "hints": [
+    { "time": 16, "duration": 10, "text": "実験データは、3.5 秒ごとにまわりの敵の体力を回復する（緑の輪）。後ろに隠れていても、狙撃・術師で先に倒そう。" }
+  ]
+}

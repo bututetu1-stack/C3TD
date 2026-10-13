@@ -1,0 +1,46 @@
+{
+  // 最後のステージ。曲がりくねった上の道と、まっすぐな下の道が合流し、まん中を飛ぶ道。最後に卒論審査（ボス）
+  "id": "stage_20",
+  "name": "4-5 卒論審査",
+  "description": "四年間の集大成。最後に立ちはだかる「卒論審査」は、追い込まれるほど本気を出す。部員の力を合わせて乗り越えろ。",
+  "life": 3,
+  "initialDp": 18,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXXXX",
+    "S.......HHHHHHX",
+    "XHHHHHH.H....HX",
+    "SHHHHHH...HH..B",
+    "XHHHHHHHH.HHHHX",
+    "S.........HHHHX",
+    "XXXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[7,1],[7,3],[9,3],[9,2],[12,2],[12,3],[14,3]],
+    "p2": [[0,5],[9,5],[9,2],[12,2],[12,3],[14,3]]
+  },
+  "airPaths": {
+    "a1": [[0,3],[14,3]]
+  },
+  "waves": [
+    { "time": 3,   "enemy": "kadai",        "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 10,  "enemy": "kadai",        "path": "p2", "count": 3, "interval": 2.5 },
+    { "time": 20,  "enemy": "senkou",       "path": "p2", "count": 3, "interval": 3 },
+    { "time": 28,  "enemy": "jikken",       "path": "p1", "count": 2, "interval": 3 },
+    { "time": 30,  "enemy": "rerishuu",     "path": "p1", "count": 3, "interval": 3 },
+    { "time": 36,  "enemy": "tsuuchi",      "path": "a1", "count": 2, "interval": 3.5 },
+    { "time": 42,  "enemy": "akapen",       "path": "p2", "count": 6, "interval": 1.2 },
+    { "time": 50,  "enemy": "saiteishutsu", "path": "p1", "count": 3, "interval": 3 },
+    { "time": 56,  "enemy": "mensetsukan",  "path": "p2", "count": 3, "interval": 4 },
+    { "time": 64,  "enemy": "ronbun",       "path": "p1", "count": 3, "interval": 3 },
+    { "time": 72,  "enemy": "sotsuron",     "path": "p1", "count": 1, "interval": 0 },
+    { "time": 78,  "enemy": "kadai",        "path": "p2", "count": 6, "interval": 2 },
+    { "time": 88,  "enemy": "oinori",       "path": "a1", "count": 3, "interval": 4 },
+    { "time": 96,  "enemy": "jikken",       "path": "p2", "count": 2, "interval": 3 },
+    { "time": 98,  "enemy": "senkou",       "path": "p2", "count": 3, "interval": 3 },
+    { "time": 110, "enemy": "akapen",       "path": "p2", "count": 4, "interval": 1.2 }
+  ],
+  "hints": [
+    { "time": 66, "duration": 10, "text": "卒論審査（ボス）が来る！ 18 秒ごとに赤ペンを呼び、体力が半分を切ると「追い込み」で速く・強くなる。拠点に着かれるとライフが 2 減る。" }
+  ]
+}

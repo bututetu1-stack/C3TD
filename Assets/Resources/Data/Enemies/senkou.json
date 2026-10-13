@@ -1,0 +1,17 @@
+{
+  // 体力より先に減る盾（2400）を持つ。盾が割れるまでは本体が削れない
+  "id": "senkou",
+  "name": "先行研究",
+  "label": "先",
+  "shape": "Square",
+  "color": "#5C7FA3",
+  "size": 0.58,
+  "hp": 1800,
+  "shield": 2400,
+  "atk": 280,
+  "def": 120,
+  "res": 20,
+  "attackInterval": 2.2,
+  "speed": 0.8,
+  "lifeDamage": 1
+}
