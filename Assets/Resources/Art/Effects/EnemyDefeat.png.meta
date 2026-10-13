@@ -1,0 +1,1443 @@
+fileFormatVersion: 2
+guid: ffa912bf2170447419c27c0d407b745c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2241533397146464785
+    second: EnemyDefeat_0
+  - first:
+      213: -9167135281434845782
+    second: EnemyDefeat_1
+  - first:
+      213: -9019089648995585078
+    second: EnemyDefeat_2
+  - first:
+      213: 5867295620227014366
+    second: EnemyDefeat_3
+  - first:
+      213: 4064051570698857453
+    second: EnemyDefeat_4
+  - first:
+      213: -821424266592698597
+    second: EnemyDefeat_5
+  - first:
+      213: -3248264454873977022
+    second: EnemyDefeat_6
+  - first:
+      213: -736464148936734998
+    second: EnemyDefeat_7
+  - first:
+      213: -6347050429035396521
+    second: EnemyDefeat_8
+  - first:
+      213: 78183135640809257
+    second: EnemyDefeat_9
+  - first:
+      213: 7761619447651954427
+    second: EnemyDefeat_10
+  - first:
+      213: -6326449208529409872
+    second: EnemyDefeat_11
+  - first:
+      213: -6090539724250052767
+    second: EnemyDefeat_12
+  - first:
+      213: 3454014480785327613
+    second: EnemyDefeat_13
+  - first:
+      213: 6599394564011257208
+    second: EnemyDefeat_14
+  - first:
+      213: 773233860877847298
+    second: EnemyDefeat_15
+  - first:
+      213: 6665087291496512356
+    second: EnemyDefeat_16
+  - first:
+      213: -4162531949428162275
+    second: EnemyDefeat_17
+  - first:
+      213: -998350091649731304
+    second: EnemyDefeat_18
+  - first:
+      213: -2815213696203731879
+    second: EnemyDefeat_19
+  - first:
+      213: -1973006531295776327
+    second: EnemyDefeat_20
+  - first:
+      213: 85289117450842782
+    second: EnemyDefeat_21
+  - first:
+      213: -2752481553725892319
+    second: EnemyDefeat_22
+  - first:
+      213: -3240906890264282735
+    second: EnemyDefeat_23
+  - first:
+      213: -2765100006320657722
+    second: EnemyDefeat_24
+  - first:
+      213: -7344613385567436665
+    second: EnemyDefeat_25
+  - first:
+      213: -6429317975611005203
+    second: EnemyDefeat_26
+  - first:
+      213: -6111748690781525838
+    second: EnemyDefeat_27
+  - first:
+      213: 6875198666148479438
+    second: EnemyDefeat_28
+  - first:
+      213: -148195546841198235
+    second: EnemyDefeat_29
+  - first:
+      213: -2453050798748426169
+    second: EnemyDefeat_30
+  - first:
+      213: 8829155598716249373
+    second: EnemyDefeat_31
+  - first:
+      213: 7604204808980299533
+    second: EnemyDefeat_32
+  - first:
+      213: -3731739186837358212
+    second: EnemyDefeat_33
+  - first:
+      213: -5878391495843813518
+    second: EnemyDefeat_34
+  - first:
+      213: 8010985491973521684
+    second: EnemyDefeat_35
+  - first:
+      213: 5499215743368656552
+    second: EnemyDefeat_36
+  - first:
+      213: 4859682215203653593
+    second: EnemyDefeat_37
+  - first:
+      213: 4603857024379860778
+    second: EnemyDefeat_38
+  - first:
+      213: 2536079280279098956
+    second: EnemyDefeat_39
+  - first:
+      213: 7781246019613246895
+    second: EnemyDefeat_40
+  - first:
+      213: -2182672169124487543
+    second: EnemyDefeat_41
+  - first:
+      213: -1665741943452260227
+    second: EnemyDefeat_42
+  - first:
+      213: -837516803269004461
+    second: EnemyDefeat_43
+  - first:
+      213: -2889183774119304115
+    second: EnemyDefeat_44
+  - first:
+      213: -8695258148177464140
+    second: EnemyDefeat_45
+  - first:
+      213: 7671175364959447255
+    second: EnemyDefeat_46
+  - first:
+      213: 3543488480177455599
+    second: EnemyDefeat_47
+  - first:
+      213: 980020910834504730
+    second: EnemyDefeat_48
+  - first:
+      213: -4345995272022821542
+    second: EnemyDefeat_49
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EnemyDefeat_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 112f611afb68b1f10800000000000000
+      internalID: 2241533397146464785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_1
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 1229
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aad1026f70bc7c080800000000000000
+      internalID: -9167135281434845782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_2
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 1219
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac3373adfb1c5d280800000000000000
+      internalID: -9019089648995585078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_3
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 1217
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ede16d3c742dc6150800000000000000
+      internalID: 5867295620227014366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_4
+      rect:
+        serializedVersion: 2
+        x: 987
+        y: 1228
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: debaf5c0f59666830800000000000000
+      internalID: 4064051570698857453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_5
+      rect:
+        serializedVersion: 2
+        x: 1015
+        y: 1217
+        width: 21
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1f3bdb4bf6b994f0800000000000000
+      internalID: -821424266592698597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_6
+      rect:
+        serializedVersion: 2
+        x: 1085
+        y: 1223
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24f65b630b8dbe2d0800000000000000
+      internalID: -3248264454873977022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_7
+      rect:
+        serializedVersion: 2
+        x: 1095
+        y: 1134
+        width: 94
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae6c0dc22cd87c5f0800000000000000
+      internalID: -736464148936734998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_8
+      rect:
+        serializedVersion: 2
+        x: 1069
+        y: 1214
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 752cadd434fbae7a0800000000000000
+      internalID: -6347050429035396521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1166
+        width: 5
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92feb4bc523c51100800000000000000
+      internalID: 78183135640809257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_10
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 1117
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfeee0bc3cfc6bb60800000000000000
+      internalID: 7761619447651954427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 915
+        width: 43
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b8ad0cb6ffe338a0800000000000000
+      internalID: -6326449208529409872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_12
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 966
+        width: 49
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1678badc36e0a7ba0800000000000000
+      internalID: -6090539724250052767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_13
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 833
+        width: 7
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df5c340cedf1fef20800000000000000
+      internalID: 3454014480785327613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_14
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 841
+        width: 57
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87de8801462c59b50800000000000000
+      internalID: 6599394564011257208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_15
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 839
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20b8de589141bba00800000000000000
+      internalID: 773233860877847298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_16
+      rect:
+        serializedVersion: 2
+        x: 1204
+        y: 845
+        width: 50
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46bbe9614952f7c50800000000000000
+      internalID: 6665087291496512356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_17
+      rect:
+        serializedVersion: 2
+        x: 1238
+        y: 722
+        width: 16
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d11ce1cfe37bb36c0800000000000000
+      internalID: -4162531949428162275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_18
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 626
+        width: 65
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8153db191e52522f0800000000000000
+      internalID: -998350091649731304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_19
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 548
+        width: 6
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95c46f61f0a5ee8d0800000000000000
+      internalID: -2815213696203731879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_20
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 571
+        width: 7
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b1f69263097e94e0800000000000000
+      internalID: -1973006531295776327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 383
+        width: 5
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e923ddc10020f2100800000000000000
+      internalID: 85289117450842782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_22
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 388
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1295a533c983dc9d0800000000000000
+      internalID: -2752481553725892319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_23
+      rect:
+        serializedVersion: 2
+        x: 1246
+        y: 361
+        width: 8
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1997ea7ba5cf503d0800000000000000
+      internalID: -3240906890264282735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_24
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 23
+        width: 19
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6caa3d2c13460a9d0800000000000000
+      internalID: -2765100006320657722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_25
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 33
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7808cac0a01b21a90800000000000000
+      internalID: -7344613385567436665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_26
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 31
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de62cab7d5976c6a0800000000000000
+      internalID: -6429317975611005203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_27
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 29
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b8228972f4be2ba0800000000000000
+      internalID: -6111748690781525838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_28
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 39
+        width: 26
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec10500b2cc996f50800000000000000
+      internalID: 6875198666148479438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_29
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 37
+        width: 29
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5615c317fe081fdf0800000000000000
+      internalID: -148195546841198235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_30
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 39
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 740ac9c9b4305fdd0800000000000000
+      internalID: -2453050798748426169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_31
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 25
+        width: 25
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d152228fc36778a70800000000000000
+      internalID: 8829155598716249373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_32
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 19
+        width: 25
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0f76962cff878960800000000000000
+      internalID: 7604204808980299533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_33
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 17
+        width: 40
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c79772e2bf2363cc0800000000000000
+      internalID: -3731739186837358212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_34
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 17
+        width: 16
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2776d8f5412cb6ea0800000000000000
+      internalID: -5878391495843813518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_35
+      rect:
+        serializedVersion: 2
+        x: 838
+        y: 33
+        width: 13
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 411c3e56cdcbc2f60800000000000000
+      internalID: 8010985491973521684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_36
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 0
+        width: 191
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a679be1593215c40800000000000000
+      internalID: 5499215743368656552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_37
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 18
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d74f7e1a3f017340800000000000000
+      internalID: 4859682215203653593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_38
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 9
+        width: 19
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2739d6429f24ef30800000000000000
+      internalID: 4603857024379860778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_39
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 11
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c46934f2ba6f13320800000000000000
+      internalID: 2536079280279098956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_40
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 17
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa548fc270a8cfb60800000000000000
+      internalID: 7781246019613246895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_41
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 11
+        width: 38
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98e143af93795b1e0800000000000000
+      internalID: -2182672169124487543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_42
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 12
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d782f05278812e8e0800000000000000
+      internalID: -1665741943452260227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_43
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 15
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 353fabf97ea8064f0800000000000000
+      internalID: -837516803269004461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_44
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 17
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d44ebcc3aae87e7d0800000000000000
+      internalID: -2889183774119304115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_45
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 17
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b4bf8f98cc345780800000000000000
+      internalID: -8695258148177464140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_46
+      rect:
+        serializedVersion: 2
+        x: 914
+        y: 15
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d8a22ec95d757a60800000000000000
+      internalID: 7671175364959447255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_47
+      rect:
+        serializedVersion: 2
+        x: 1135
+        y: 11
+        width: 18
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe18aae9ffffc2130800000000000000
+      internalID: 3543488480177455599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_48
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 0
+        width: 41
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a14deb673dbb99d00800000000000000
+      internalID: 980020910834504730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDefeat_49
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 0
+        width: 24
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a557d8f735cefa3c0800000000000000
+      internalID: -4345995272022821542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EnemyDefeat_0: 2241533397146464785
+      EnemyDefeat_1: -9167135281434845782
+      EnemyDefeat_10: 7761619447651954427
+      EnemyDefeat_11: -6326449208529409872
+      EnemyDefeat_12: -6090539724250052767
+      EnemyDefeat_13: 3454014480785327613
+      EnemyDefeat_14: 6599394564011257208
+      EnemyDefeat_15: 773233860877847298
+      EnemyDefeat_16: 6665087291496512356
+      EnemyDefeat_17: -4162531949428162275
+      EnemyDefeat_18: -998350091649731304
+      EnemyDefeat_19: -2815213696203731879
+      EnemyDefeat_2: -9019089648995585078
+      EnemyDefeat_20: -1973006531295776327
+      EnemyDefeat_21: 85289117450842782
+      EnemyDefeat_22: -2752481553725892319
+      EnemyDefeat_23: -3240906890264282735
+      EnemyDefeat_24: -2765100006320657722
+      EnemyDefeat_25: -7344613385567436665
+      EnemyDefeat_26: -6429317975611005203
+      EnemyDefeat_27: -6111748690781525838
+      EnemyDefeat_28: 6875198666148479438
+      EnemyDefeat_29: -148195546841198235
+      EnemyDefeat_3: 5867295620227014366
+      EnemyDefeat_30: -2453050798748426169
+      EnemyDefeat_31: 8829155598716249373
+      EnemyDefeat_32: 7604204808980299533
+      EnemyDefeat_33: -3731739186837358212
+      EnemyDefeat_34: -5878391495843813518
+      EnemyDefeat_35: 8010985491973521684
+      EnemyDefeat_36: 5499215743368656552
+      EnemyDefeat_37: 4859682215203653593
+      EnemyDefeat_38: 4603857024379860778
+      EnemyDefeat_39: 2536079280279098956
+      EnemyDefeat_4: 4064051570698857453
+      EnemyDefeat_40: 7781246019613246895
+      EnemyDefeat_41: -2182672169124487543
+      EnemyDefeat_42: -1665741943452260227
+      EnemyDefeat_43: -837516803269004461
+      EnemyDefeat_44: -2889183774119304115
+      EnemyDefeat_45: -8695258148177464140
+      EnemyDefeat_46: 7671175364959447255
+      EnemyDefeat_47: 3543488480177455599
+      EnemyDefeat_48: 980020910834504730
+      EnemyDefeat_49: -4345995272022821542
+      EnemyDefeat_5: -821424266592698597
+      EnemyDefeat_6: -3248264454873977022
+      EnemyDefeat_7: -736464148936734998
+      EnemyDefeat_8: -6347050429035396521
+      EnemyDefeat_9: 78183135640809257
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
