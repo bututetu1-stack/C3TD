@@ -1,5 +1,6 @@
 {
   // 上下の道が合流して拠点へ。真ん中を「通知」が飛ぶ。倒しても起き上がる「再履修」
+  // 2026-10-14：必殺技を使わないと、24 秒の通知 3 体が狙撃・術師を置く前に抜けていたので、28 秒・2 体にした
   "id": "stage_09",
   "name": "2-4 再履修の悪夢",
   "description": "去年落とした単位が、何度でもよみがえる。再履修は一度倒しても起き上がるので、止める部員を長く持たせよう。",
@@ -26,7 +27,7 @@
     { "time": 3,  "enemy": "kadai",     "path": "p1", "count": 3, "interval": 2 },
     { "time": 6,  "enemy": "kadai",     "path": "p2", "count": 3, "interval": 2 },
     { "time": 15, "enemy": "rerishuu",  "path": "p1", "count": 2, "interval": 4 },
-    { "time": 24, "enemy": "tsuuchi",   "path": "a1", "count": 3, "interval": 2 },
+    { "time": 28, "enemy": "tsuuchi",   "path": "a1", "count": 2, "interval": 2.5 },
     { "time": 30, "enemy": "rerishuu",  "path": "p2", "count": 2, "interval": 3 },
     { "time": 38, "enemy": "shotest",   "path": "p1", "count": 5, "interval": 1 },
     { "time": 44, "enemy": "suima",     "path": "p2", "count": 2, "interval": 4 },
