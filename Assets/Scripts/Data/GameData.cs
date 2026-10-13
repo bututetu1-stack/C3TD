@@ -16,6 +16,7 @@ public static class GameData
     private const string RulesPath = "Data/rules";
     private const string SquadPath = "Data/squad";
     private const string CampaignPath = "Data/campaign";
+    private const string AudioPath = "Data/audio";
 
     private static readonly Dictionary<string, StageData> stages = new Dictionary<string, StageData>();
     private static readonly Dictionary<string, EnemyData> enemies = new Dictionary<string, EnemyData>();
@@ -25,6 +26,7 @@ public static class GameData
     private static RulesData rules;
     private static SquadData squad;
     private static CampaignData campaign;
+    private static AudioData audio;
 
     // ドメインのリロードなしでプレイしても、JSON の変更が反映されるようにする
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -38,6 +40,7 @@ public static class GameData
         rules = null;
         squad = null;
         campaign = null;
+        audio = null;
     }
 
     public static StageData Stage(string id) { return Load(StageDir, id, stages); }
@@ -46,6 +49,16 @@ public static class GameData
 
     /// <summary>召喚されるユニット（Resources/Data/Summons/{id}.json。部員と同じ書き方）</summary>
     public static CharacterData Summon(string id) { return Load(SummonDir, id, summons); }
+
+    /// <summary>音ごとの音量と使う部分（Data/audio.json）</summary>
+    public static AudioData Audio
+    {
+        get
+        {
+            if (audio == null) audio = Parse<AudioData>(AudioPath) ?? new AudioData();
+            return audio;
+        }
+    }
 
     public static RulesData Rules
     {

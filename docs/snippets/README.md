@@ -93,3 +93,15 @@ br.UseSkills = true;
 | 1-3 | 勝ち ★3 | 勝ち ★3 |
 | 1-4 | 勝ち ★3 | 勝ち（ライフ残り2） |
 | 1-5 | 勝ち ★3 | 勝ち（ライフ残り2） |
+
+## 音の変換（m4a → mp3）
+
+Unity は m4a（AAC）を読めない（インポートしても音にならない）。Gemini などから m4a で届いたら、`to_mp3.ps1` で mp3 にしてから `Assets/Resources/Audio/` に置く。Windows の Media Foundation を使うので、ffmpeg などは要らない。
+
+```bash
+powershell -NoProfile -ExecutionPolicy Bypass -File docs/snippets/to_mp3.ps1 -src 'C:\path\Battle.m4a' -dstDir 'C:\path\out' -dstName battle.mp3
+```
+
+- 元の長さとビットレートを表示してから変換する。
+- 元の m4a は `Assets` の外（`C:\Users\Kokik\unity\C3TD-audio-originals`）に移して残している。
+- BGM のくり返しと、SE の前後の無音を切るのは `AudioManager` がやる。音量や使う部分を変えるときは `Data/audio.json`。
