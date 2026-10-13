@@ -19,9 +19,11 @@
     "p1": [[0,1],[9,1],[9,3],[2,3],[2,5],[12,5]]
   },
   "waves": [
-    { "time": 3,  "enemy": "report",  "path": "p1", "count": 3, "interval": 6 },
-    { "time": 12, "enemy": "kadai",   "path": "p1", "count": 5, "interval": 2 },
-    { "time": 32, "enemy": "report",  "path": "p1", "count": 3, "interval": 5 },
-    { "time": 46, "enemy": "shotest", "path": "p1", "count": 4, "interval": 1 }
+    { "time": 3,  "enemy": "report",  "path": "p1", "count": 3, "interval": 5 },
+    { "time": 12, "enemy": "kadai",   "path": "p1", "count": 8, "interval": 1.2 },
+    { "time": 28, "enemy": "report",  "path": "p1", "count": 4, "interval": 2.5 },
+    { "time": 36, "enemy": "shotest", "path": "p1", "count": 6, "interval": 0.7 },
+    { "time": 48, "enemy": "kadai",   "path": "p1", "count": 6, "interval": 1 },
+    { "time": 54, "enemy": "report",  "path": "p1", "count": 4, "interval": 2 }
   ]
 }

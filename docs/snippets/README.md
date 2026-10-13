@@ -35,3 +35,28 @@ isuzu-unity-cli call play_mode_stop
 - エディタが前面にないと UI Toolkit はクリックを受け付けない（アプリにフォーカスがないため）。カードを押す部分は `BattleInput.Instance.BeginDrag(Battle.Current.Squad[1])` で代わりに呼び、マスへの移動と離すのは `mouse.cs` で流す。
 - `input_pointer` の合成イベントは Input System に届かない（マウスの位置が変わらない）。
 - 部員を倒すのを確かめるときは `c.TakeDamage(999999, DamageType.Physical)`。
+
+## バランスの確かめ（自動で戦う）
+
+`Assets/Scripts/Dev/AutoPilot.cs` は出撃中の戦闘を自動で戦う開発用の部品。近接職を経路の合流点に、遠距離職を経路を多く射程に入れられる高台に置き、必殺技は溜まったらすぐ使う。
+
+```csharp
+var boot = UnityEngine.Object.FindAnyObjectByType<GameBootstrap>();
+boot.StartBattle("stage_05");
+var ap = Battle.Current.gameObject.AddComponent<AutoPilot>();
+ap.UseSkills = false;   // 必殺技を使わない
+ap.TimeScale = 6f;      // 6倍速で回す
+```
+
+- 人が上手に遊ぶよりは下手なので「必殺技なしでも無傷で勝てる」なら簡単すぎる目安。
+- 戦うとクリアの記録が残るので、確かめ終わったら `Progress.ResetAll()` で消す。
+
+2026-10-13 の調整後の結果（編成：物理鉄人＋ダミー4人）:
+
+| ステージ | 必殺技あり | 必殺技なし |
+|---|---|---|
+| 1-1 | 勝ち ★3 | 勝ち（1体抜け） |
+| 1-2 | 勝ち ★3 | 勝ち（1体抜け） |
+| 1-3 | 勝ち ★3 | 勝ち ★3 |
+| 1-4 | 勝ち ★3 | 負け |
+| 1-5 | 勝ち ★3 | 勝ち（ボスに抜かれてライフ残り1） |

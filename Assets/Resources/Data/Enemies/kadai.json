@@ -7,7 +7,7 @@
   "color": "#C9524A",
   "size": 0.55,
   "hp": 1650,
-  "atk": 200,
+  "atk": 260,
   "def": 100,
   "attackInterval": 2.0,
   "speed": 1.0,

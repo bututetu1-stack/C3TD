@@ -23,10 +23,13 @@
   "waves": [
     { "time": 3,  "enemy": "shotest", "path": "top",    "count": 4, "interval": 1 },
     { "time": 9,  "enemy": "shotest", "path": "bottom", "count": 4, "interval": 1 },
-    { "time": 16, "enemy": "kadai",   "path": "middle", "count": 4, "interval": 2 },
-    { "time": 27, "enemy": "shotest", "path": "middle", "count": 5, "interval": 0.8 },
-    { "time": 36, "enemy": "shotest", "path": "top",    "count": 3, "interval": 1 },
-    { "time": 40, "enemy": "shotest", "path": "bottom", "count": 3, "interval": 1 },
-    { "time": 48, "enemy": "report",  "path": "middle", "count": 2, "interval": 4 }
+    { "time": 16, "enemy": "kadai",   "path": "middle", "count": 5, "interval": 1.6 },
+    { "time": 26, "enemy": "shotest", "path": "middle", "count": 6, "interval": 0.7 },
+    { "time": 34, "enemy": "shotest", "path": "top",    "count": 4, "interval": 0.8 },
+    { "time": 36, "enemy": "shotest", "path": "bottom", "count": 4, "interval": 0.8 },
+    { "time": 44, "enemy": "report",  "path": "middle", "count": 3, "interval": 3 },
+    { "time": 50, "enemy": "kadai",   "path": "top",    "count": 3, "interval": 1.5 },
+    { "time": 51, "enemy": "kadai",   "path": "bottom", "count": 3, "interval": 1.5 },
+    { "time": 58, "enemy": "shotest", "path": "middle", "count": 6, "interval": 0.6 }
   ]
 }
