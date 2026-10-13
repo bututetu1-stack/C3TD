@@ -11,6 +11,7 @@ public enum IconKind
     Heart,
     Retry,
     Next,
+    Cross,   // 撤退
 }
 
 /// <summary>Painter2D で描く小さなアイコン（フォントに頼らないので、どの環境でも同じ形）</summary>
@@ -123,6 +124,16 @@ public class IconView : VisualElement
                     var tip = c + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * s * 0.3f;
                     Poly(p, tip + new Vector2(s * 0.16f, s * 0.02f), tip + new Vector2(-s * 0.1f, -s * 0.12f), tip + new Vector2(-s * 0.02f, s * 0.16f));
                 }
+                break;
+
+            case IconKind.Cross:
+                p.lineWidth = s * 0.14f;
+                p.BeginPath();
+                p.MoveTo(new Vector2(c.x - s * 0.26f, c.y - s * 0.26f));
+                p.LineTo(new Vector2(c.x + s * 0.26f, c.y + s * 0.26f));
+                p.MoveTo(new Vector2(c.x + s * 0.26f, c.y - s * 0.26f));
+                p.LineTo(new Vector2(c.x - s * 0.26f, c.y + s * 0.26f));
+                p.Stroke();
                 break;
 
             case IconKind.Next:

@@ -54,6 +54,24 @@ public static class Palette
     public static readonly Color UiVignette = new Color(0f, 0f, 0.01f, 0.75f);
     public static readonly Color UiDim = new Color(0.01f, 0.02f, 0.04f, 0.62f);
 
+    // ---------------- 戦闘 ----------------
+    public static readonly Color EnemyHp = Hex("#FF4D5A");
+    public static readonly Color AllyHp = Hex("#5BE08F");
+    public static readonly Color PhysicalDamage = Hex("#FFF3D6");
+    public static readonly Color ArtsDamage = Hex("#D9A8FF");
+    public static readonly Color AllyDamage = Hex("#FF7A7A");
+    public static readonly Color HealText = Hex("#7CFFB0");
+    public static readonly Color HealGlow = Hex("#6CF2A8");
+    public static readonly Color ArtsGlow = Hex("#B98CFF");
+    public static readonly Color DeployGlow = Hex("#FFE3A3");
+    public static readonly Color RetreatGlow = Hex("#8FD8FF");
+
+    // ---------------- マスの強調 ----------------
+    public static readonly Color HighlightPlaceable = new Color(0.27f, 0.82f, 0.9f, 0.3f);
+    public static readonly Color HighlightRange = new Color(0.96f, 0.71f, 0.25f, 0.24f);
+    public static readonly Color HighlightHover = new Color(1f, 1f, 1f, 0.5f);
+    public static readonly Color HighlightInvalid = new Color(0.94f, 0.29f, 0.33f, 0.45f);
+
     /// <summary>"#RRGGBB" か "#RRGGBBAA" を色にする。読めなければ fallback</summary>
     public static Color Hex(string hex, Color fallback)
     {

@@ -1,0 +1,10 @@
+{
+  // 職業ごとの決まり。placement：置ける地形、attack：Melee（近接）/ Ranged（弾を飛ばす）/ Heal（回復）
+  // damageType：Physical（防御で減る）/ Arts（術耐性で減る）、block：標準のブロック数（部員の stats.block で上書きできる）
+  // splash：範囲攻撃の半径（マス）、projectile：飛ばす弾の画像（Art/Effects/{名前}.png。なければ光の弾）
+  "Guard":    { "name": "前衛", "placement": "Ground",     "attack": "Melee",  "damageType": "Physical", "block": 2, "color": "#E8734A" },
+  "Defender": { "name": "重装", "placement": "Ground",     "attack": "Melee",  "damageType": "Physical", "block": 3, "color": "#4E8FE0" },
+  "Sniper":   { "name": "狙撃", "placement": "HighGround", "attack": "Ranged", "damageType": "Physical", "block": 0, "projectile": "Arrow",    "color": "#F0C04A" },
+  "Caster":   { "name": "術師", "placement": "HighGround", "attack": "Ranged", "damageType": "Arts",     "block": 0, "projectile": "MagicOrb", "splash": 0.9, "color": "#A774E8" },
+  "Medic":    { "name": "医療", "placement": "HighGround", "attack": "Heal",   "damageType": "Physical", "block": 0, "color": "#4CC9A4" }
+}

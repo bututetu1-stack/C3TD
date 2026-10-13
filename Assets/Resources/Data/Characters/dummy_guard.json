@@ -1,0 +1,10 @@
+{
+  // テスト用のダミー（実在の部員ではない）
+  "id": "dummy_guard",
+  "name": "前衛ダミー",
+  "class": "Guard",
+  "cost": 10,
+  "redeployTime": 70,
+  "color": "#B85A3A",
+  "stats": { "hp": 1800, "atk": 520, "def": 250, "attackInterval": 1.2, "range": 1 }
+}

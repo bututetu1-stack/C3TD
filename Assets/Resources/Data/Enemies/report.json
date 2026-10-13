@@ -2,6 +2,7 @@
   "id": "report",
   "name": "レポート",
   "label": "レ",
+  "artFacing": "Left",
   "shape": "Square",
   "color": "#7A5BBF",
   "size": 0.62,

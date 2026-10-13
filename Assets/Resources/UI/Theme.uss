@@ -309,3 +309,270 @@
     font-size: 26px;
     margin-left: 14px;
 }
+
+/* ---------- 編成バー ---------- */
+.deploy-bar {
+    position: absolute;
+    right: 22px;
+    bottom: 16px;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.dp-plate {
+    width: 176px;
+    height: 118px;
+    margin-right: 16px;
+    padding-left: 24px;
+    padding-right: 18px;
+    justify-content: center;
+}
+
+.dp-caption {
+    font-size: 15px;
+    letter-spacing: 7px;
+    color: rgb(244, 182, 63);
+    margin-bottom: -10px;
+}
+
+.dp-value {
+    font-size: 60px;
+    color: rgb(255, 255, 255);
+}
+
+.dp-track {
+    height: 6px;
+    margin-top: -2px;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.dp-fill {
+    height: 6px;
+    width: 0;
+    background-color: rgb(244, 182, 63);
+}
+
+.card-row {
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.deploy-card {
+    width: 120px;
+    height: 152px;
+    margin-left: 10px;
+    transition-property: translate;
+    transition-duration: 0.12s;
+}
+
+.deploy-card:hover {
+    translate: 0 -8px;
+}
+
+.deploy-card--dragging {
+    translate: 0 -16px;
+}
+
+.card-portrait {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    right: 3px;
+    bottom: 30px;
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.card-fallback {
+    align-items: center;
+    justify-content: center;
+}
+
+.card-initial {
+    font-size: 58px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.card-class {
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    height: 26px;
+    font-size: 16px;
+    color: rgb(20, 17, 10);
+    -unity-text-align: middle-center;
+}
+
+.card-cost {
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 40px;
+    height: 34px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 26px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(6, 9, 16, 0.92);
+    -unity-text-align: middle-center;
+}
+
+.deploy-card--short .card-cost {
+    color: rgb(255, 98, 108);
+}
+
+.deploy-card--short .card-portrait {
+    opacity: 0.35;
+}
+
+.card-shade {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    right: 3px;
+    bottom: 3px;
+    background-color: rgba(4, 6, 12, 0.7);
+    align-items: center;
+    justify-content: center;
+}
+
+.card-timer {
+    font-size: 46px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.card-state {
+    font-size: 15px;
+    color: rgb(200, 206, 222);
+    -unity-text-align: middle-center;
+}
+
+/* ---------- 選択中の部員 ---------- */
+.unit-info {
+    position: absolute;
+    left: 20px;
+    top: 112px;
+    width: 440px;
+    padding: 22px 26px 22px 26px;
+}
+
+.unit-head {
+    flex-direction: row;
+    align-items: center;
+}
+
+.unit-portrait {
+    width: 92px;
+    height: 92px;
+    margin-right: 18px;
+    border-width: 3px;
+    -unity-background-scale-mode: scale-and-crop;
+    align-items: center;
+    justify-content: center;
+}
+
+.unit-portrait-initial {
+    font-size: 52px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.unit-names {
+    flex-shrink: 1;
+}
+
+.unit-class {
+    align-self: flex-start;
+    font-size: 15px;
+    padding: 1px 12px 1px 12px;
+    color: rgb(20, 17, 10);
+}
+
+.unit-name {
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    margin-top: 2px;
+}
+
+.unit-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    padding-top: 10px;
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.unit-stat {
+    width: 33%;
+    flex-direction: column;
+    margin-bottom: 6px;
+}
+
+.unit-stat-caption {
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: rgb(142, 152, 172);
+    margin-bottom: -4px;
+}
+
+.unit-stat-value {
+    font-size: 26px;
+    color: rgb(255, 255, 255);
+}
+
+.unit-skill {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.unit-skill-head {
+    flex-direction: row;
+    align-items: center;
+}
+
+.unit-skill-kind {
+    font-size: 13px;
+    padding: 1px 8px 1px 8px;
+    margin-right: 10px;
+    color: rgb(244, 182, 63);
+    border-width: 1px;
+    border-color: rgba(244, 182, 63, 0.6);
+}
+
+.unit-skill-name {
+    font-size: 21px;
+    color: rgb(255, 255, 255);
+}
+
+.unit-skill-meta {
+    font-size: 13px;
+    color: rgb(142, 152, 172);
+    margin-top: 4px;
+}
+
+.unit-skill-desc {
+    font-size: 16px;
+    color: rgb(214, 219, 232);
+    margin-top: 4px;
+    white-space: normal;
+}
+
+.unit-actions {
+    position: absolute;
+    flex-direction: row;
+}
+
+.retreat-button {
+    width: 150px;
+    height: 56px;
+}
+
+.retreat-button .c3-button-text {
+    font-size: 20px;
+}

@@ -1,0 +1,10 @@
+{
+  // テスト用のダミー（実在の部員ではない）
+  "id": "dummy_caster",
+  "name": "術師ダミー",
+  "class": "Caster",
+  "cost": 18,
+  "redeployTime": 70,
+  "color": "#7E52B8",
+  "stats": { "hp": 1050, "atk": 560, "def": 70, "attackInterval": 1.6, "range": 2.5 }
+}

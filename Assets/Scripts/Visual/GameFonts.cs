@@ -34,6 +34,7 @@ public static class GameFonts
     private static TMP_FontAsset worldTMP;
     private static TMP_FontAsset worldDisplayTMP;
     private static Material outlineMaterial;
+    private static Material displayOutlineMaterial;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetCache()
@@ -42,6 +43,7 @@ public static class GameFonts
         worldTMP = null;
         worldDisplayTMP = null;
         outlineMaterial = null;
+        displayOutlineMaterial = null;
     }
 
     public static Font Bold { get { return bold != null ? bold : (bold = Resources.Load<Font>(BoldPath)); } }
@@ -125,17 +127,30 @@ public static class GameFonts
     {
         get
         {
-            if (outlineMaterial == null && WorldTMP != null)
-            {
-                outlineMaterial = new Material(WorldTMP.material);
-                outlineMaterial.name = "WorldOutline (shared)";
-                outlineMaterial.EnableKeyword("OUTLINE_ON");
-                outlineMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.25f);
-                outlineMaterial.SetColor(ShaderUtilities.ID_OutlineColor, new Color(0f, 0f, 0f, 0.85f));
-                outlineMaterial.SetFloat(ShaderUtilities.ID_FaceDilate, 0.12f);
-            }
+            if (outlineMaterial == null && WorldTMP != null) outlineMaterial = CreateOutline(WorldTMP, "WorldOutline (shared)");
             return outlineMaterial;
         }
+    }
+
+    /// <summary>英字・数字（Oswald）の縁取りつきマテリアル（ダメージの数字など）</summary>
+    public static Material DisplayOutlineMaterial
+    {
+        get
+        {
+            if (displayOutlineMaterial == null && WorldDisplayTMP != null) displayOutlineMaterial = CreateOutline(WorldDisplayTMP, "DisplayOutline (shared)");
+            return displayOutlineMaterial;
+        }
+    }
+
+    private static Material CreateOutline(TMP_FontAsset font, string name)
+    {
+        var material = new Material(font.material);
+        material.name = name;
+        material.EnableKeyword("OUTLINE_ON");
+        material.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.25f);
+        material.SetColor(ShaderUtilities.ID_OutlineColor, new Color(0f, 0f, 0f, 0.85f));
+        material.SetFloat(ShaderUtilities.ID_FaceDilate, 0.12f);
+        return material;
     }
 
     private static TMP_FontAsset CreateTMP(Font font, string name)

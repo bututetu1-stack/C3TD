@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 1つのステージの出撃。マップを作り、ウェーブの予定どおりに敵を出し、勝敗を決める。
+/// 1つのステージの出撃。マップを作り、ウェーブの予定どおりに敵を出し、
+/// 部員の配置・撤退と DP を管理し、勝敗を決める。
 /// ステージ内のものはすべてこの GameObject の子に作るので、壊せばきれいに片付く。
 /// </summary>
 public class Battle : MonoBehaviour
@@ -14,9 +15,17 @@ public class Battle : MonoBehaviour
     public StageData Stage { get; private set; }
     public StageMap Map { get; private set; }
     public GameState State { get; private set; }
+    public MapHighlight Highlight { get; private set; }
+    public RulesData Rules { get; private set; }
 
     /// <summary>場に出ている敵</summary>
     public readonly List<Enemy> Enemies = new List<Enemy>();
+
+    /// <summary>配置中の部員</summary>
+    public readonly List<Character> Characters = new List<Character>();
+
+    /// <summary>編成（編成バーに並ぶ順）</summary>
+    public readonly List<SquadMember> Squad = new List<SquadMember>();
 
     /// <summary>敵が拠点に着いた（HUD の演出用）</summary>
     public event Action<Enemy> EnemyLeaked;
@@ -32,6 +41,7 @@ public class Battle : MonoBehaviour
     private readonly List<SpawnEntry> schedule = new List<SpawnEntry>();
     private int nextSpawn;
     private Transform enemyRoot;
+    private Transform characterRoot;
     private GamePhase lastPhase;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -54,8 +64,10 @@ public class Battle : MonoBehaviour
     {
         Current = this;
         Stage = data;
+        Rules = GameData.Rules;
         Map = StageMap.FromText(data.map, data.id);
         MapBuilder.Build(Map, transform);
+        Highlight = new MapHighlight(Map, transform);
 
         var worldPaths = new Dictionary<string, List<Vector3>>();
         foreach (var kv in data.paths)
@@ -67,13 +79,16 @@ public class Battle : MonoBehaviour
             MapBuilder.DrawPath(points, transform);
         }
         BuildSchedule(data, worldPaths);
+        BuildSquad();
 
+        characterRoot = new GameObject("Characters").transform;
+        characterRoot.SetParent(transform, false);
         enemyRoot = new GameObject("Enemies").transform;
         enemyRoot.SetParent(transform, false);
 
-        State = new GameState(data.life, schedule.Count);
+        State = new GameState(data.life, schedule.Count, data.initialDp);
         lastPhase = State.Phase;
-        TimeController.ResetForStage();
+        TimeController.ResetForStage(Rules.focusTimeScale);
         AudioManager.PlayBGM(data.bgm);
     }
 
@@ -106,6 +121,20 @@ public class Battle : MonoBehaviour
         });
     }
 
+    private void BuildSquad()
+    {
+        foreach (string id in GameData.Squad.members)
+        {
+            CharacterData data = GameData.Character(id);
+            if (data == null)
+            {
+                Debug.LogError("squad.json の部員 \"" + id + "\" が読めないので編成から外します");
+                continue;
+            }
+            Squad.Add(new SquadMember(data, GameData.Class(data.unitClass)));
+        }
+    }
+
     void OnDestroy()
     {
         if (Current == this) Current = null;
@@ -115,7 +144,12 @@ public class Battle : MonoBehaviour
     {
         if (State.Phase == GamePhase.Playing)
         {
-            State.Tick(Time.deltaTime);
+            float dt = Time.deltaTime;
+            State.Tick(dt);
+            State.AddDp(Rules.dpPerSecond * dt, Rules.dpMax);
+            foreach (SquadMember m in Squad)
+                if (m.Cooldown > 0f) m.Cooldown = Mathf.Max(0f, m.Cooldown - dt);
+
             while (nextSpawn < schedule.Count && schedule[nextSpawn].time <= State.ElapsedTime)
             {
                 SpawnEntry entry = schedule[nextSpawn++];
@@ -132,6 +166,99 @@ public class Battle : MonoBehaviour
         }
     }
 
+    // ================= 配置・撤退 =================
+
+    public bool CanAfford(SquadMember member)
+    {
+        return State.DpInt >= member.Cost;
+    }
+
+    /// <summary>そのマスに置けるか（職業に合った地形で、空いている）</summary>
+    public bool CanPlace(SquadMember member, Vector2Int cell)
+    {
+        Tile tile = Map.Get(cell);
+        if (tile == null || tile.Occupant != null) return false;
+        return member.Class.placement == Placement.Ground ? tile.Type == TileType.Ground : tile.Type == TileType.HighGround;
+    }
+
+    public IEnumerable<Vector2Int> PlaceableCells(SquadMember member)
+    {
+        foreach (Tile tile in Map.AllTiles())
+            if (CanPlace(member, tile.Cell)) yield return tile.Cell;
+    }
+
+    public Character CharacterAt(Vector2Int cell)
+    {
+        Tile tile = Map.Get(cell);
+        return tile != null ? tile.Occupant : null;
+    }
+
+    public Vector3 UnitPosition(Vector2Int cell)
+    {
+        Tile tile = Map.Get(cell);
+        return Map.CellToWorld(cell) + new Vector3(0f, tile != null ? tile.Lift : 0f, 0f);
+    }
+
+    public Character Deploy(SquadMember member, Vector2Int cell)
+    {
+        if (State.Phase != GamePhase.Playing || !member.Ready || !CanAfford(member) || !CanPlace(member, cell)) return null;
+        State.SpendDp(member.Cost);
+        Vector3 pos = UnitPosition(cell);
+        Character c = Character.Create(member, cell, pos, this, characterRoot);
+        member.Deployed = c;
+        Map.Get(cell).Occupant = c;
+        Characters.Add(c);
+        Fx.Deploy(pos, c.ClassColor);
+        AudioManager.PlaySE("deploy");
+        return c;
+    }
+
+    /// <summary>撤退時に戻る DP</summary>
+    public int RefundOf(SquadMember member)
+    {
+        return Mathf.FloorToInt(member.Cost * Rules.retreatRefundRate);
+    }
+
+    public void Retreat(Character c)
+    {
+        if (c == null || !c.Alive) return;
+        State.AddDp(RefundOf(c.Member), Rules.dpMax);
+        Fx.Retreat(c.Center);
+        AudioManager.PlaySE("retreat");
+        Remove(c);
+    }
+
+    /// <summary>部員が倒された（DP は戻らない）</summary>
+    public void OnCharacterDown(Character c)
+    {
+        Fx.UnitDown(c.Center);
+        AudioManager.PlaySE("unit_down");
+        Remove(c);
+    }
+
+    private void Remove(Character c)
+    {
+        c.ReleaseAll();
+        Characters.Remove(c);
+        Tile tile = Map.Get(c.Cell);
+        if (tile != null && tile.Occupant == c) tile.Occupant = null;
+        c.Member.Deployed = null;
+        c.Member.Cooldown = c.Data.redeployTime;
+        c.Despawn();
+    }
+
+    // ================= 敵 =================
+
+    public void OnEnemyDefeated(Enemy enemy)
+    {
+        Enemies.Remove(enemy);
+        if (enemy.BlockedBy != null) enemy.BlockedBy.Blocked.Remove(enemy);
+        State.OnEnemyDefeated();
+        Fx.EnemyDefeat(enemy.Center, Palette.Hex(enemy.Data.color, Palette.EnemyFallback));
+        AudioManager.PlaySE("enemy_defeat");
+        Destroy(enemy.gameObject);
+    }
+
     public void OnEnemyReachedBase(Enemy enemy)
     {
         Enemies.Remove(enemy);
@@ -144,7 +271,7 @@ public class Battle : MonoBehaviour
         Fx.EnemyLeak(at);
         CameraFitter.Shake(0.14f, 0.35f);
         if (EnemyLeaked != null) EnemyLeaked(enemy);
-        Destroy(enemy.gameObject);
+        enemy.Despawn();
     }
 
     /// <summary>拠点が赤く光る</summary>

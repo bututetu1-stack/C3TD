@@ -298,15 +298,21 @@
       <div class="status-row">
         <strong>いま依頼中（2026-10-13）</strong>
         <div class="status-list">
-          <span class="chip gold">敵 4体</span>
-          <span class="chip gold">出撃口・拠点の印</span>
-          <span class="chip gold">戦闘画面の背景</span>
-          <span class="chip gold">敵の出現・拠点突破のエフェクト</span>
+          <span class="chip gold">効果音・BGM（下の表）</span>
         </div>
       </div>
       <div class="status-row done">
-        <strong>受け取って組み込み済み</strong>
-        <div class="status-list"><span class="got">物理鉄人のアイコン butsuri_tetsujin.png</span></div>
+        <strong>受け取って組み込み済み（画像はこのページの全部）</strong>
+        <div class="status-list">
+          <span class="got">物理鉄人のアイコン</span>
+          <span class="got">敵 4体</span>
+          <span class="got">出撃口・拠点の印</span>
+          <span class="got">背景</span>
+          <span class="got">出現・突破</span>
+          <span class="got">配置・撤退・攻撃・回復・撃破（M2 で使用中）</span>
+          <span class="got">必殺技・寝落ち・召喚・艦娘（M3 で使う）</span>
+        </div>
+        <p class="note" style="margin:4px 0 0">拠点の印は黒背景で届きましたが、ゲーム側でふちから続く黒だけを抜いているので、そのまま使えます。課題とレポートは左向きでしたが、敵のデータに向きを書いて反転させているので、描き直しは要りません。</p>
       </div>
     </div>
     <nav class="toc" aria-label="目次">
@@ -405,6 +411,11 @@
           <tr><td><code>victory</code></td><td><code>Audio/SE/</code></td><td>防衛成功</td><td>短いファンファーレ</td><td class="len">2〜3秒</td></tr>
           <tr><td><code>defeat</code></td><td><code>Audio/SE/</code></td><td>防衛失敗</td><td>沈んでいく低い音</td><td class="len">約2秒</td></tr>
           <tr><td><code>click</code></td><td><code>Audio/SE/</code></td><td>ボタンを押す</td><td>短い電子音（ピッ）</td><td class="len">0.2秒</td></tr>
+          <tr><td><code>deploy</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>部員を配置した</td><td>着地の「ドン」と、きらっと光る音</td><td class="len">約0.6秒</td></tr>
+          <tr><td><code>hit</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>攻撃が当たった（何度も鳴る）</td><td>短く軽い打撃音。うるさくないもの</td><td class="len">0.2秒以内</td></tr>
+          <tr><td><code>enemy_defeat</code></td><td><code>Audio/SE/</code></td><td>敵を倒した</td><td>紙が破れる「ビリッ」</td><td class="len">約0.4秒</td></tr>
+          <tr><td><code>retreat</code></td><td><code>Audio/SE/</code></td><td>部員を撤退させた</td><td>ふわっと消える音</td><td class="len">約0.5秒</td></tr>
+          <tr><td><code>unit_down</code></td><td><code>Audio/SE/</code></td><td>部員が倒された</td><td>低く沈む打撃音</td><td class="len">約0.8秒</td></tr>
         </tbody>
       </table>
     </div>
@@ -565,7 +576,7 @@
 
   let idCounter = 0;
   function card(it) {
-    const c = el("article", "card fx" + (it.now ? " now" : ""));
+    const c = el("article", "card fx");
     const fig = el("div", "fx-figure");
     fig.appendChild(figure(it));
     fig.appendChild(el("div", "dir", it.dir));
@@ -579,9 +590,8 @@
     body.appendChild(el("div", "scene", it.scene));
 
     const chips = el("div", "chips");
-    if (it.now) chips.appendChild(el("span", "chip gold", "依頼中"));
-    else chips.appendChild(el("span", "chip", "あとで使う"));
-    if (it.priority) chips.appendChild(el("span", "chip red", "優先"));
+    // 2026-10-13 に全部受け取った（作り直すとき用に文言を残している）
+    chips.appendChild(el("span", "got", "受取済"));
     if (it.bg === "black") chips.appendChild(el("span", "chip red", "黒背景"));
     if (it.bg === "alpha") chips.appendChild(el("span", "chip blue", "透過PNG"));
     chips.appendChild(el("span", "chip", SIZE_LABEL[it.shape]));

@@ -51,12 +51,12 @@ public static class MapBuilder
                 case TileType.Spawn:
                     tile.Renderer = Add(t, "Body", SpriteFactory.BevelTile, Palette.Spawn, Vector3.zero, Vector2.one * TileScale, OrderTile);
                     Add(t, "Hatch", SpriteFactory.HatchTile, Palette.SpawnStripe, Vector3.zero, Vector2.one * TileScale, OrderTileOverlay);
-                    BuildMarker(t, "Spawn", "出撃", "SPAWN", Palette.SpawnGlow, 90f);
+                    BuildMarker(t, "Spawn", "出撃", "SPAWN", Palette.SpawnGlow, 90f, true);
                     break;
 
                 case TileType.Base:
                     tile.Renderer = Add(t, "Body", SpriteFactory.BevelTile, Palette.Base, Vector3.zero, Vector2.one * TileScale, OrderTile);
-                    BuildMarker(t, "Base", "拠点", "BASE", Palette.BaseGlow, 0f);
+                    BuildMarker(t, "Base", "拠点", "BASE", Palette.BaseGlow, 0f, false);
                     break;
 
                 default:
@@ -75,13 +75,13 @@ public static class MapBuilder
     }
 
     /// <summary>出撃口・拠点の印。Art/Map/{name}.png があればその絵を、なければ光の輪を出す</summary>
-    private static void BuildMarker(Transform tile, string name, string label, string english, Color glow, float spin)
+    private static void BuildMarker(Transform tile, string name, string label, string english, Color glow, float spin, bool glowArt)
     {
         Add(tile, "Glow", SpriteFactory.Glow, Palette.WithAlpha(glow, 0.45f), Vector3.zero, Vector2.one * 1.1f, OrderMarkerGlow);
         PulseRing.Create(tile, SpriteFactory.Ring, glow, 1.8f, 0.35f, 1.05f, 0f, OrderMarker);
         PulseRing.Create(tile, SpriteFactory.ThinRing, glow, 1.8f, 0.35f, 1.05f, 0.5f, OrderMarker);
 
-        Sprite art = Art.Map(name);
+        Sprite art = Art.Map(name, glowArt);
         if (art != null)
         {
             var sr = Add(tile, "Art", art, Color.white, Vector3.zero, Vector2.one * 0.92f, OrderMarker);

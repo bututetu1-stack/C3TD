@@ -1,0 +1,10 @@
+{
+  // テスト用のダミー（実在の部員ではない）
+  "id": "dummy_medic",
+  "name": "医療ダミー",
+  "class": "Medic",
+  "cost": 15,
+  "redeployTime": 70,
+  "color": "#2E9C7E",
+  "stats": { "hp": 1150, "atk": 400, "def": 90, "attackInterval": 2.85, "range": 2.5 }
+}

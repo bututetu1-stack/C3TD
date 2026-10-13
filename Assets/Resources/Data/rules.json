@@ -1,0 +1,8 @@
+{
+  // 全体のルール。数値はここで調整する
+  "dpPerSecond": 1,          // DP の回復（1秒あたり）
+  "dpMax": 99,               // DP の上限
+  "retreatRefundRate": 0.5,  // 撤退で戻るコストの割合（切り捨て）
+  "minDamageRate": 0.05,     // どんなに硬くても、攻撃力のこの割合は通る
+  "focusTimeScale": 0.2      // ドラッグ中・選択中の時間の速さ
+}

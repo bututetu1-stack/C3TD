@@ -108,6 +108,23 @@ public static class UIFactory
         element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
+    /// <summary>
+    /// 画面のピクセル座標（左下が原点）を、root の座標（UI の参照解像度、左上が原点）にする。
+    /// RuntimePanelUtils.ScreenToPanel は拡大縮小を反映しないことがあるので、比率で計算する。
+    /// </summary>
+    public static Vector2 ScreenToPanel(VisualElement root, Vector2 screen, float screenWidth, float screenHeight)
+    {
+        if (screenWidth <= 0f || screenHeight <= 0f) return Vector2.zero;
+        return new Vector2(screen.x / screenWidth * root.layout.width, (1f - screen.y / screenHeight) * root.layout.height);
+    }
+
+    /// <summary>ワールド座標を、root の座標にする（カメラの描画先の大きさで割るので、撮影用の RenderTexture でも合う）</summary>
+    public static Vector2 WorldToPanel(VisualElement root, Camera cam, Vector3 world)
+    {
+        Vector3 sp = cam.WorldToScreenPoint(world);
+        return ScreenToPanel(root, sp, cam.pixelWidth, cam.pixelHeight);
+    }
+
     /// <summary>秒を「分:秒」にする</summary>
     public static string FormatTime(float seconds)
     {

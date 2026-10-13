@@ -19,6 +19,15 @@ public class Tile
     /// <summary>マスの見た目（MapBuilder が設定する）</summary>
     public SpriteRenderer Renderer;
 
+    /// <summary>このマスに配置されている部員（いなければ null）</summary>
+    public Character Occupant;
+
+    /// <summary>見た目の上面の高さ（高台は少し持ち上がっている）</summary>
+    public float Lift
+    {
+        get { return Type == TileType.HighGround ? 0.045f : 0f; }
+    }
+
     public Tile(Vector2Int cell, TileType type)
     {
         Cell = cell;

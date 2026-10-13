@@ -9,7 +9,8 @@ using UnityEngine;
 /// </summary>
 public static class SpriteFactory
 {
-    private const int Resolution = 128;
+    private const int Resolution = 256;   // 主な図形（マス・敵）
+    private const int Small = 128;        // 光・粒など
 
     private static readonly Dictionary<string, Sprite> cache = new Dictionary<string, Sprite>();
 
@@ -61,7 +62,7 @@ public static class SpriteFactory
     {
         get
         {
-            return Make("highlight", 64, (p, px) =>
+            return Make("highlight", Small, (p, px) =>
             {
                 float e = (p.x / 0.95f) * (p.x / 0.95f) + (p.y / 0.6f) * (p.y / 0.6f);
                 float a = Mathf.Clamp01(1f - e);
@@ -77,7 +78,7 @@ public static class SpriteFactory
     {
         get
         {
-            return Make("softcircle", 64, (p, px) =>
+            return Make("softcircle", Small, (p, px) =>
             {
                 float a = Mathf.Clamp01(1f - p.magnitude);
                 return White(a * a);
@@ -90,7 +91,7 @@ public static class SpriteFactory
     {
         get
         {
-            return Make("glow", 64, (p, px) =>
+            return Make("glow", Small, (p, px) =>
             {
                 float r = p.magnitude;
                 return White(Mathf.Exp(-r * r * 6f) * Mathf.Clamp01((1f - r) * 5f));
@@ -111,7 +112,7 @@ public static class SpriteFactory
     /// <summary>横に長いひし形（飛び散る破片）</summary>
     public static Sprite Shard
     {
-        get { return Make("shard", 64, (p, px) => White(Cover((Mathf.Abs(p.x) + Mathf.Abs(p.y) * 3.2f - 0.95f) * 0.3f, px))); }
+        get { return Make("shard", Small, (p, px) => White(Cover((Mathf.Abs(p.x) + Mathf.Abs(p.y) * 3.2f - 0.95f) * 0.3f, px))); }
     }
 
     /// <summary>右向きの「く」の字（経路の矢印）</summary>
@@ -119,7 +120,7 @@ public static class SpriteFactory
     {
         get
         {
-            return Make("chevron", 64, (p, px) =>
+            return Make("chevron", Small, (p, px) =>
             {
                 float d = Mathf.Min(
                     Segment(p, new Vector2(-0.42f, 0.55f), new Vector2(0.3f, 0f)),
@@ -174,7 +175,7 @@ public static class SpriteFactory
     /// <summary>ぼけた四角い影</summary>
     public static Sprite SoftShadow
     {
-        get { return Make("softshadow", 64, (p, px) => White(1f - Smooth(-0.22f, 0.2f, Box(p, 0.76f, 0.25f)))); }
+        get { return Make("softshadow", Small, (p, px) => White(1f - Smooth(-0.22f, 0.2f, Box(p, 0.76f, 0.25f)))); }
     }
 
     /// <summary>方眼の1マス（Tiled で敷き詰める）</summary>
@@ -182,7 +183,7 @@ public static class SpriteFactory
     {
         get
         {
-            return Make("gridcell", 64, (p, px) =>
+            return Make("gridcell", Small, (p, px) =>
             {
                 float edge = 1f - Mathf.Max(Mathf.Abs(p.x), Mathf.Abs(p.y));
                 return White(Mathf.Clamp01(1f - edge / (px * 0.9f)));
@@ -194,15 +195,15 @@ public static class SpriteFactory
 
     public static Sprite PanelFill
     {
-        get { return Make("panelfill", 64, (p, px) => White(Cover(Box(p, 0.98f, 0.5f), px)), new Vector4(20, 20, 20, 20)); }
+        get { return Make("panelfill", Small, (p, px) => White(Cover(Box(p, 0.98f, 0.5f), px)), new Vector4(40, 40, 40, 40)); }
     }
 
     public static Sprite PanelLine
     {
         get
         {
-            return Make("panelline", 64, (p, px) =>
-                White(Cover(Mathf.Abs(Box(p, 0.95f, 0.47f)) - px * 0.8f, px)), new Vector4(20, 20, 20, 20));
+            return Make("panelline", Small, (p, px) =>
+                White(Cover(Mathf.Abs(Box(p, 0.95f, 0.47f)) - px * 1.4f, px)), new Vector4(40, 40, 40, 40));
         }
     }
 
@@ -213,10 +214,11 @@ public static class SpriteFactory
         Sprite sprite;
         if (cache.TryGetValue(key, out sprite) && sprite != null) return sprite;
 
-        var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        var tex = new Texture2D(size, size, TextureFormat.RGBA32, true); // ミップマップつき：縮んで表示されても縁がガタつかない
         tex.name = "Generated_" + key;
         tex.wrapMode = TextureWrapMode.Clamp;
-        tex.filterMode = FilterMode.Bilinear;
+        tex.filterMode = FilterMode.Trilinear;
+        tex.anisoLevel = 4;
         var pixels = new Color32[size * size];
         float px = 2f / size; // 1ピクセルの幅（正規化座標）
         for (int y = 0; y < size; y++)
@@ -228,7 +230,7 @@ public static class SpriteFactory
             }
         }
         tex.SetPixels32(pixels);
-        tex.Apply(false, true);
+        tex.Apply(true, true);
 
         sprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size, 0, SpriteMeshType.FullRect, border);
         sprite.name = key;

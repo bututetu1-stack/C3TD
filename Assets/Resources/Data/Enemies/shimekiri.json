@@ -6,6 +6,7 @@
   "shape": "Hexagon",
   "color": "#8E1F2B",
   "size": 0.85,
+  "artScale": 1.3,
   "hp": 15000,
   "atk": 600,
   "def": 400,

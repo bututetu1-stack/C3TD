@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 /// </summary>
 public class HudUI : MonoBehaviour
 {
-    private const float IntroDuration = 2.6f;
+    private const float IntroDuration = 2.0f;
 
     private GameBootstrap bootstrap;
     private VisualElement root;
@@ -46,6 +46,10 @@ public class HudUI : MonoBehaviour
     private Label resultEnemy;
     private C3Button nextButton;
 
+    // 編成バーと選択中の部員
+    private DeployBar deployBar;
+    private UnitPanel unitPanel;
+
     private IVisualElementScheduledItem flashTween;
     private IVisualElementScheduledItem shakeTween;
     private IVisualElementScheduledItem introTween;
@@ -73,6 +77,8 @@ public class HudUI : MonoBehaviour
         root.Add(damageFlash);
 
         BuildTopBar();
+        deployBar = new DeployBar(root);
+        unitPanel = new UnitPanel(root);
         BuildIntro();
         BuildPause();
         BuildResult();
@@ -234,6 +240,8 @@ public class HudUI : MonoBehaviour
         GameState state = battle.State;
 
         if (battle != shownBattle) OnBattleChanged(battle);
+        deployBar.Refresh(battle);
+        unitPanel.Refresh(BattleInput.Instance != null ? BattleInput.Instance.Selected : null);
 
         int seconds = Mathf.FloorToInt(state.ElapsedTime);
         if (seconds != shownSeconds)
@@ -290,6 +298,7 @@ public class HudUI : MonoBehaviour
         shownPhase = GamePhase.Playing;
         UITween.Stop(ref resultTween);
         UIFactory.SetVisible(resultLayer, false);
+        deployBar.Rebuild(battle);
         PlayIntro(stage);
     }
 
@@ -359,6 +368,16 @@ public class HudUI : MonoBehaviour
             float pop = 1f + 0.35f * k * k;
             lifeValue.style.scale = new Scale(new Vector3(pop, pop, 1f));
         });
+    }
+
+    /// <summary>画面のこの位置（Input System の座標：左下が原点）に、クリックを受ける UI があるか</summary>
+    public bool IsOverUI(Vector2 screenPosition)
+    {
+        IPanel panel = root != null ? root.panel : null;
+        if (panel == null) return false;
+        Vector2 panelPos = UIFactory.ScreenToPanel(root, screenPosition, Screen.width, Screen.height);
+        VisualElement picked = panel.Pick(panelPos);
+        return picked != null && picked != root;
     }
 
     /// <summary>Space：一時停止、R：やり直し、N：次のステージ（テスト用）</summary>

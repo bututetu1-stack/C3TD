@@ -29,6 +29,7 @@ public class GameBootstrap : MonoBehaviour
 
         hud = new GameObject("UI").AddComponent<HudUI>();
         hud.Init(this);
+        gameObject.AddComponent<BattleInput>().Init(hud);
     }
 
     void Start()

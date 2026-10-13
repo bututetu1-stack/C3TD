@@ -175,36 +175,50 @@ Assets/
 ## 作業メモ（Claude Code が更新する）
 
 ### 進み具合
-- M1 完了（2026-10-13）。ステージは `stage_01`（CLAUDE.md の例のまま）と `test_route`（M1 確認用：曲がり道・出撃口2つ・敵4種、ライフ20）。
-- 見た目を作り直した（2026-10-13、オーナーの「デザインがダサい、もっと凝ってよい」「文字が荒い」から）。物理鉄人のアイコン `Art/Icons/butsuri_tetsujin.png` を受け取った（M2 の編成バーで使う）。
+- M1 完了（2026-10-13）。ステージは `stage_01`（CLAUDE.md の例のまま）と `test_route`（確認用：曲がり道・出撃口2つ・敵4種、ライフ20）。
+- 見た目を作り直した（2026-10-13、オーナーの「もっと凝ってよい」「文字が荒い」から）。
+- M2 完了（2026-10-13）。編成バーからのドラッグ配置・DP・攻撃（近接・弾・範囲・回復）・ブロック・撤退・ダウン・再配置待ち。部員は物理鉄人と、テスト用の `dummy_guard` `dummy_defender` `dummy_caster` `dummy_medic`。特性と必殺技は読み込んで表示するだけ（M3 で動かす）。
+- 素材依頼帳の画像は 2026-10-13 に全部受け取った（M3 用の SkillReady・SkillActivate・BuffAtk・Sleep・SummonSplash・艦娘のアイコンも届いている）。効果音・BGM はまだ。
 
 ### デザインの方針（オーナーと決めたこと）
-- 雰囲気はアークナイツ寄りの「作戦盤」：暗い紺の盤面、角を斜めに落とした板（`ChamferBox`）、琥珀色の差し色、英字の小見出し（OPERATION / TIME / ENEMY / LIFE）。演出は凝ってよい。
-- 書体の役割（`GameFonts` の `UIFont`）：Body＝Zen角ゴシック New Bold（日本語の本文・ボタン）、Display＝Oswald Bold（数字と英字）、Title＝しっぽり明朝 B1 ExtraBold（作戦名・勝敗などの日本語の大見出し）。どれも OFL で、`Resources/Fonts/Licenses` にライセンスがある。
+- 雰囲気はアークナイツ寄りの「作戦盤」：暗い紺の盤面、角を斜めに落とした板（`ChamferBox`）、琥珀色の差し色、英字の小見出し（OPERATION / TIME / ENEMY / LIFE / DP）。演出は凝ってよい。
+- 書体の役割（`GameFonts` の `UIFont`）：Body＝Zen角ゴシック New Bold（日本語の本文・ボタン）、Display＝Oswald Bold（数字と英字）、Title＝しっぽり明朝 B1 ExtraBold（作戦名・勝敗・部員名などの日本語の大見出し）。どれも OFL で、`Resources/Fonts/Licenses` にライセンスがある。
 - 文字は UI もマップ上も SDF のフォントアセットを実行時に作って描く（縮小しても荒れない）。
-- 画像はオーナーが ChatGPT で作る。頼むときは素材依頼帳（https://claude.ai/artifact/GQmWJRGEXxumur5f64Mfoo 、元は `docs/art-requests.html`）にカードを足して文言を用意する。光るものは黒背景（ゲーム側で黒を透明にする）、物体とキャラは透過PNG、敵は右向き。
+- 画像はオーナーが ChatGPT で作る。頼むときは素材依頼帳（https://claude.ai/artifact/GQmWJRGEXxumur5f64Mfoo 、元は `docs/art-requests.html`）にカードを足して文言を用意する。光るものは黒背景（ゲーム側で黒を透明にする）、物体とキャラは透過PNG、敵は右向き。素材は `Assets/Resources/Art` に直接置かれるので、作業前に `git status` で新しいファイルを確かめる。
 
 ### 決めたこと・実装の約束
 - マス座標は `[列, 行]`、行は**上から0**（マップの文字列と同じ向き）。ワールド座標は1マス=1ユニットで、左下のマスの中心が (0, 0)（`StageMap.CellToWorld`）。
 - JSON は自前の `MiniJson` + `JsonMapper` で読む（JsonUtility では配列の配列や辞書が読めないため）。`//` コメントと末尾のカンマを書いてよい。知らないキーは警告を出して無視するので、綴りの間違いはコンソールで分かる。経路は読み込み時に検査する（範囲外・歩けないマスを通る・S で始まり B で終わらない）。
+- データ：`Data/rules.json`（DP の回復・上限、撤退で戻る割合、最低ダメージ、スローの速さ）、`Data/classes.json`（職業ごとの置ける地形・攻撃のしかた・ダメージの種類・標準ブロック数・範囲・弾の画像・色）、`Data/squad.json`（編成。M4 で編成画面に置き換える）、`Data/Characters/{id}.json`。
+- 敵の JSON：`res`（術耐性%）、`artScale`（絵の大きさ）、`artFacing`（絵の向き。課題とレポートは `Left`）。
 - ステージの `name` は「1-1 前期の始まり」のように番号と題名を空白で区切る（HUD と作戦開始の帯で分けて出す）。
-- 勝敗：ライフが0で敗北。敵がすべて出終わって場に残っていなければ、ライフが残っている限り勝利（拠点に着いた敵がいてもよい）。
-- 実行時に作るもの：カメラの調整（`CameraFitter`、上の HUD 96px・下の編成バー 180px を空ける。揺れもここ）、PanelSettings（`UIFactory`、1920x1080 を高さ基準で拡縮）、図形スプライト（`SpriteFactory`）、フォント（`GameFonts`）。
-- UI は UI Toolkit をコードで組む。配置・文字の大きさと色は `Resources/UI/Theme.uss`、フォントはコードで付ける。部品は `ChamferBox`（角を落とした板・縞・差し色）、`C3Button`、`IconView`（Painter2D のアイコン）、`UITween`（実時間で動く小さなアニメ）。
-- 本素材の読み込みは `Art`（`ArtTexture` で縮小して読むので、インポート設定は触らなくてよい）。置き場所は `Resources/` の下：
-  - `Art/Icons/{characterId}.png`、`Art/Enemies/{enemyId}.png`（透過・右向き。大きさは敵 JSON の `artScale` で調整）
+- 戦闘の決まり（アークナイツに合わせた）：
+  - 射程は「マスの中心どうしの距離 ≤ range」のマス（Phase 2 で向きを入れるまでは全方向）。敵はいまいるマスで判定する。
+  - 狙う順：自分が止めている敵 → 射程内でいちばん拠点に近い敵（経路に沿った残りの距離）。医療は射程内で HP の割合がいちばん低い味方。
+  - ダメージ：物理は 攻撃−防御、術は 攻撃×(1−術耐性%)。どちらも攻撃の 5%（`minDamageRate`）より下がらない。
+  - ブロック：地上に置いた部員だけ。敵は部員の中心から 0.6 マスで止まり、止めた部員を攻撃する。部員が撤退・ダウンしたら歩き出す。
+  - 撤退は コスト×0.5（切り捨て）が戻る。倒されたら戻らない。どちらも `redeployTime` 秒の再配置待ち。
+  - ドラッグ中・選択中は時間が 0.2 倍（`focusTimeScale`）。一時停止中も配置できる。
+- 実行時に作るもの：カメラの調整（`CameraFitter`、上の HUD 96px・下の編成バー 180px を空ける。揺れもここ）、PanelSettings（`UIFactory`、1920x1080 を高さ基準で拡縮）、図形スプライト（`SpriteFactory`、256px・ミップマップつき）、フォント（`GameFonts`）。
+- UI は UI Toolkit をコードで組む。配置・文字の大きさと色は `Resources/UI/Theme.uss`、フォントはコードで付ける。部品は `ChamferBox`、`C3Button`、`IconView`（Painter2D のアイコン）、`UITween`（実時間で動く小さなアニメ）、`DeployBar`（編成バーと DP）、`UnitPanel`（選択中の部員の札と撤退ボタン）。
+- 描く順番：マス 0〜9、部員 24（敵より手前。大きな敵に止められていても駒が見える）、敵 20、弾 70、演出 80、数字 90、ドラッグ中の影 95。
+- 本素材の読み込みは `Art`（`ArtTexture` で縮小して読むので、インポート設定は触らなくてよい）。透過のない画像の背景は、光るもの（`Art/Effects`・出撃口）は明るさに応じて透明に、物の絵（敵・拠点）はふちから続く黒だけを透明にする。置き場所は `Resources/` の下：
+  - `Art/Icons/{characterId}.png`（マップ上では丸く切り抜く）、`Art/Enemies/{enemyId}.png`
   - `Art/Map/Spawn.png`・`Base.png`、`Art/Background/Battle.png`
-  - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst`・`LeakBurst`。M2/M3 用に依頼帳で予約した名前：`Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat` `SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）
-- 演出の部品：`Fx`（場面ごとの演出）、`FxSprite`（一度だけ再生して消える）、`PulseRing`、`Spinner`、`PathFlow`（経路の矢印。拠点からの距離で並べるので、終わりが同じ経路は矢印が重なる）。ワールドの演出はゲーム時間（一時停止で止まる）、UI のアニメは実時間。
+  - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst` `LeakBurst` `Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat`。M3 用に届いている名前：`SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）
+- 演出の部品：`Fx`（場面ごとの演出）、`FxSprite`（一度だけ再生して消える）、`PulseRing`、`Spinner`、`PathFlow`（経路の矢印。拠点からの距離で並べるので、終わりが同じ経路は矢印が重なる）、`FloatingText`（ダメージ・回復の数字）、`HealthBar`。ワールドの演出はゲーム時間（一時停止で止まる）、UI のアニメは実時間。
 - エディタは「ドメインのリロードなし」で再生する設定なので、static な値は `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` で毎回リセットする。
-- SE のキー（ファイルがなければ無音）：`click`（ボタン）、`life_lost`（拠点に着かれた）、`victory`、`defeat`。BGM はステージの `bgm` に書いたキー（いまは両ステージとも `battle`）。
-- テスト用のキー：Space 一時停止、R やり直し、N 次のステージ（最後の次は最初）。
+- SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down`。BGM はステージの `bgm` に書いたキー（いまは両ステージとも `battle`）。
+- テスト用のキー：Space 一時停止、R やり直し、N 次のステージ（最後の次は最初）、Esc・右クリックで選択とドラッグの取り消し。
+- 確かめ方は `docs/snippets/README.md`（画面の撮影、部員を置く、マウスを流し込む）。
 
 ### 気をつけること
 - C3 は「サークル」ではなく「部」。表記は「部」「部員」（2026-10-13 オーナー確認）。
 - 新しいスクリプトを書いている途中でエディタがコンパイルすると、そのファイルがコンパイル対象から漏れることがある（`The name 'X' does not exist` が消えない）。そのときは `AssetDatabase.DeleteAsset` で消して作り直す。新しいファイルが多いときは、作業用フォルダで全部書いてから一度にコピーする。
 - コンパイルの前に再生を止める（`play_mode_stop`）。再生中に再コンパイルすると状態が壊れて NullReference が出る。オーナーが再生したままのこともある。
+- 破棄された Unity のオブジェクトは `== null` が true になる。「前のフレームの値」と比べるとき（選択中の部員など）は `ReferenceEquals` で比べる。
+- `RuntimePanelUtils.ScreenToPanel` / `CameraTransformWorldToPanel` は UI の拡大縮小を反映しないことがあるので、`UIFactory.ScreenToPanel` / `WorldToPanel`（比率で計算）を使う。
 - 実行時に作った Oswald のフォントアセットは字詰めが強く掛かりすぎる（「PAUS E」）ので、`getFontFeatures = false` にしている。
-- オーナーの Game ビューは小さい（734x340 程度）ので、解像度を 1920x1080 固定にした（縮小表示になる）。
+- オーナーの PC は表示倍率 150% で、Game ビューは小さい（734x361 ポイント）。Game ビューは 16:9・Low Resolution オフ（実ピクセルで描く）・Play Maximized にした。
 - スクリプトの改行は LF（`core.autocrlf=false`、`core.eol=lf`）。
 - GitHub CLI（`gh`）がこの PC にはない。リポジトリ（https://github.com/bututetu1-stack/C3TD ）は公開リポジトリ。

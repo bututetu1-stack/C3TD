@@ -1,0 +1,28 @@
+{
+  "id": "butsuri_tetsujin",
+  "name": "物理鉄人",
+  "class": "Sniper",
+  "cost": 12,
+  "redeployTime": 60,
+  "stats": { "hp": 1200, "atk": 400, "def": 80, "attackInterval": 1.0, "block": 1, "range": 3 },
+  "trait": {
+    "name": "夜戦主義",
+    "description": "時間が経つほど攻撃力が上がる",
+    "trigger": "ElapsedTime",
+    "params": { "interval": 30 },
+    "effects": [ { "type": "StatModifier", "stat": "atk", "percentPerStack": 10, "maxStacks": 5, "target": "Self" } ]
+  },
+  "ultimate": {
+    "name": "深夜出撃",
+    "description": "周りの空きマスに艦娘を召喚する。終了後に寝落ちしてスタンする",
+    "spCost": 30,
+    "spCharge": "PerSecond",
+    "duration": 15,
+    "effects": [
+      { "type": "Summon", "unitId": "kanmusu_token", "count": 3, "target": "AreaAroundSelf", "inheritStatsPercent": 50 }
+    ],
+    "onEnd": [
+      { "type": "Stun", "duration": 3, "target": "Self" }
+    ]
+  }
+}

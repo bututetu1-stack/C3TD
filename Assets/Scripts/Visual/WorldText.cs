@@ -12,7 +12,8 @@ public static class WorldText
         var tmp = obj.AddComponent<TextMeshPro>();
         TMP_FontAsset font = display ? GameFonts.WorldDisplayTMP : GameFonts.WorldTMP;
         if (font != null) tmp.font = font;
-        if (outline && !display && GameFonts.OutlineMaterial != null) tmp.fontSharedMaterial = GameFonts.OutlineMaterial;
+        Material outlineMaterial = display ? GameFonts.DisplayOutlineMaterial : GameFonts.OutlineMaterial;
+        if (outline && outlineMaterial != null) tmp.fontSharedMaterial = outlineMaterial;
         tmp.text = text;
         tmp.fontSize = fontSize;
         tmp.color = color;

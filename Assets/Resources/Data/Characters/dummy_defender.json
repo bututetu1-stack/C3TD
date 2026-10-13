@@ -1,0 +1,10 @@
+{
+  // テスト用のダミー（実在の部員ではない）
+  "id": "dummy_defender",
+  "name": "重装ダミー",
+  "class": "Defender",
+  "cost": 16,
+  "redeployTime": 70,
+  "color": "#3E6FB8",
+  "stats": { "hp": 3200, "atk": 320, "def": 560, "attackInterval": 1.2, "range": 1 }
+}
