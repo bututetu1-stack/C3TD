@@ -1,0 +1,16 @@
+{
+  // 空を飛ぶ敵。止められず、前衛・重装は攻撃できない。ステージの airPaths（水色の矢印）を飛ぶ
+  "id": "tsuuchi",
+  "name": "通知",
+  "label": "通",
+  "shape": "Diamond",
+  "color": "#3FC46B",
+  "size": 0.45,
+  "hp": 900,
+  "atk": 100,
+  "def": 50,
+  "attackInterval": 2.0,
+  "speed": 1.4,
+  "lifeDamage": 1,
+  "flying": true
+}

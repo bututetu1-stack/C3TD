@@ -1,0 +1,18 @@
+{
+  // 倒されても一度だけ、体力 60% で起き上がる
+  "id": "rerishuu",
+  "name": "再履修",
+  "label": "再",
+  "shape": "Circle",
+  "color": "#D9733B",
+  "size": 0.58,
+  "hp": 2000,
+  "atk": 300,
+  "def": 150,
+  "res": 10,
+  "attackInterval": 2.0,
+  "speed": 0.85,
+  "lifeDamage": 1,
+  "revive": 1,
+  "reviveHpPercent": 60
+}

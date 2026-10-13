@@ -1,0 +1,19 @@
+{
+  // 遠距離の敵。歩きながら 2 マス先の部員を術で撃ち、2 秒眠らせる
+  "id": "suima",
+  "name": "睡魔",
+  "label": "睡",
+  "shape": "Circle",
+  "color": "#6B5BD6",
+  "size": 0.55,
+  "hp": 1500,
+  "atk": 220,
+  "def": 60,
+  "res": 30,
+  "attackInterval": 3.2,
+  "speed": 0.75,
+  "lifeDamage": 1,
+  "range": 2,
+  "damageType": "Arts",
+  "stunOnHit": 2
+}

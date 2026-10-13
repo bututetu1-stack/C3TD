@@ -1,0 +1,40 @@
+{
+  // 長い蛇行路と、下の一本道。離れたところから部員を眠らせる「睡魔」
+  "id": "stage_08",
+  "name": "2-3 睡眠不足",
+  "description": "夜ふかしのつけが回ってきた。睡魔は離れたところから部員を眠らせる。眠っている部員は戦えない。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S.........HHX",
+    "XHHHHHHHH.HHX",
+    "X.........HHX",
+    "X.HHHHHHHHHHX",
+    "S...........B",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[9,1],[9,3],[1,3],[1,5],[12,5]],
+    "p2": [[0,5],[12,5]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",   "path": "p1", "count": 4, "interval": 2 },
+    { "time": 12, "enemy": "suima",   "path": "p1", "count": 1, "interval": 0 },
+    { "time": 18, "enemy": "shotest", "path": "p2", "count": 4, "interval": 1 },
+    { "time": 26, "enemy": "kadai",   "path": "p2", "count": 3, "interval": 2 },
+    { "time": 34, "enemy": "suima",   "path": "p1", "count": 2, "interval": 5 },
+    { "time": 40, "enemy": "report",  "path": "p1", "count": 1, "interval": 0 },
+    { "time": 50, "enemy": "kadai",   "path": "p1", "count": 5, "interval": 1.2 },
+    { "time": 62, "enemy": "report",  "path": "p2", "count": 1, "interval": 0 },
+    { "time": 58, "enemy": "suima",   "path": "p2", "count": 3, "interval": 3 },
+    { "time": 66, "enemy": "ronbun",  "path": "p1", "count": 2, "interval": 3 },
+    { "time": 74, "enemy": "shotest", "path": "p2", "count": 5, "interval": 0.9 },
+    { "time": 82, "enemy": "suima",   "path": "p1", "count": 2, "interval": 3 },
+    { "time": 90, "enemy": "kadai",   "path": "p2", "count": 5, "interval": 1.2 }
+  ],
+  "hints": [
+    { "time": 10, "duration": 10, "text": "睡魔は 2 マス先の部員を撃って、しばらく眠らせる。医療で支えるか、近づかれる前に狙撃で倒そう。" }
+  ]
+}

@@ -17,7 +17,8 @@ public static class MapPreview
         grid.style.width = cell * w;
         grid.style.height = cell * h;
 
-        HashSet<Vector2Int> pathCells = PathCells(stage);
+        HashSet<Vector2Int> pathCells = PathCells(stage.paths);
+        HashSet<Vector2Int> airCells = PathCells(stage.airPaths);
         for (int y = 0; y < h; y++)
         {
             var rowBox = UIFactory.Box("map-preview-row");
@@ -31,6 +32,8 @@ public static class MapPreview
                 tile.style.height = cell;
                 Color c = ColorOf(type);
                 if (type == TileType.Ground && pathCells.Contains(new Vector2Int(x, y))) c = Color.Lerp(c, Palette.Crimson, 0.35f);
+                // 飛ぶ敵の経路は水色（壁や高台の上も通る）
+                if (type != TileType.Spawn && type != TileType.Base && airCells.Contains(new Vector2Int(x, y))) c = Color.Lerp(c, Palette.Cyan, 0.45f);
                 tile.style.backgroundColor = c;
                 rowBox.Add(tile);
             }
@@ -52,10 +55,11 @@ public static class MapPreview
     }
 
     /// <summary>経路の点と点のあいだのマス</summary>
-    private static HashSet<Vector2Int> PathCells(StageData stage)
+    private static HashSet<Vector2Int> PathCells(Dictionary<string, List<Vector2Int>> paths)
     {
         var cells = new HashSet<Vector2Int>();
-        foreach (var kv in stage.paths)
+        if (paths == null) return cells;
+        foreach (var kv in paths)
         {
             List<Vector2Int> points = kv.Value;
             for (int i = 0; i + 1 < points.Count; i++)

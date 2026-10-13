@@ -1,0 +1,19 @@
+{
+  // 第2章のボス。14 秒ごとに小テストを 2 体呼ぶ。拠点に着かれるとライフが 2 減る
+  "id": "kimatsu",
+  "name": "期末試験",
+  "label": "期末",
+  "boss": true,
+  "shape": "Hexagon",
+  "color": "#5E1F8E",
+  "size": 0.88,
+  "artScale": 1.3,
+  "hp": 42000,
+  "atk": 1300,
+  "def": 380,
+  "res": 30,
+  "attackInterval": 2.6,
+  "speed": 0.4,
+  "lifeDamage": 2,
+  "summon": { "enemy": "shotest", "count": 2, "interval": 14, "firstDelay": 6 }
+}

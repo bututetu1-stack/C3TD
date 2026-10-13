@@ -1,0 +1,37 @@
+{
+  // 第2章のはじめ。U 字の道と、空を飛ぶ「通知」の道（水色）
+  "id": "stage_06",
+  "name": "2-1 後期ガイダンス",
+  "description": "後期が始まった。空から届く「通知」は前衛では止められない。狙撃と術師で撃ち落とそう。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S...HHHHH...B",
+    "XHH.HHHHH.HHX",
+    "XHH.HHHHH.HHX",
+    "SHH.......HHX",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[3,1],[3,4],[9,4],[9,1],[12,1]]
+  },
+  "airPaths": {
+    "a1": [[0,4],[12,1]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",   "path": "p1", "count": 4, "interval": 2.5 },
+    { "time": 20, "enemy": "tsuuchi", "path": "a1", "count": 2, "interval": 4 },
+    { "time": 20, "enemy": "kadai",   "path": "p1", "count": 4, "interval": 2 },
+    { "time": 30, "enemy": "shotest", "path": "p1", "count": 4, "interval": 1.2 },
+    { "time": 38, "enemy": "tsuuchi", "path": "a1", "count": 3, "interval": 3 },
+    { "time": 48, "enemy": "report",  "path": "p1", "count": 2, "interval": 4 },
+    { "time": 55, "enemy": "kadai",   "path": "p1", "count": 4, "interval": 1.5 },
+    { "time": 62, "enemy": "tsuuchi", "path": "a1", "count": 4, "interval": 2 },
+    { "time": 72, "enemy": "kadai",   "path": "p1", "count": 3, "interval": 2 }
+  ],
+  "hints": [
+    { "time": 12, "duration": 10, "text": "水色の矢印は、空を飛ぶ「通知」の道。前衛・重装では止められず、攻撃もできない。狙撃・術師を拠点の近くに置こう。" }
+  ]
+}

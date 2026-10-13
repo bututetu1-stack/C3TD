@@ -11,6 +11,7 @@ public class StageSelectScreen
     public readonly VisualElement Root;
 
     private readonly GameBootstrap bootstrap;
+    private readonly VisualElement chapterTabs;
     private readonly Label chapterEnglish;
     private readonly Label chapterName;
     private readonly VisualElement nodeRow;
@@ -43,6 +44,8 @@ public class StageSelectScreen
 
         var body = UIFactory.Box("select-body");
         var left = UIFactory.Box("select-left");
+        chapterTabs = UIFactory.Box("chapter-tabs");
+        left.Add(chapterTabs);
         var chapter = UIFactory.Box("chapter-label");
         chapterEnglish = UIFactory.Text("", UIFont.Display, "chapter-english");
         chapter.Add(chapterEnglish);
@@ -109,6 +112,10 @@ public class StageSelectScreen
     public void Open(string focus)
     {
         CampaignData campaign = GameData.Campaign;
+        // 指定がなければ、開いている中でいちばん先のステージ（の章）
+        if (focus == null)
+            foreach (string id in campaign.AllStages())
+                if (Progress.IsUnlocked(id)) focus = id;
         ChapterData chapter = focus != null ? campaign.ChapterOf(focus) : null;
         if (chapter == null && campaign.chapters.Count > 0) chapter = campaign.chapters[0];
 
@@ -117,6 +124,7 @@ public class StageSelectScreen
         if (chapter == null) return;
         chapterEnglish.text = chapter.english;
         chapterName.text = chapter.name;
+        BuildChapterTabs(campaign, chapter);
 
         string latest = null;
         int cleared = 0;
@@ -140,8 +148,41 @@ public class StageSelectScreen
         progressLabel.text = "クリア " + cleared + "/" + chapter.stages.Count;
         unlockToggle.text = "全作戦を開放（テスト用）：" + (Progress.UnlockAll ? "ON" : "OFF");
 
-        string pick = focus != null && Progress.IsUnlocked(focus) && chapter.stages.Contains(focus) ? focus : latest;
+        // 開いていないステージを指定されたら、その章で開いている中のいちばん先（章ごと閉じていれば、そのステージを見せる）
+        bool focusInChapter = focus != null && chapter.stages.Contains(focus);
+        string pick = focusInChapter && (Progress.IsUnlocked(focus) || latest == null) ? focus : latest;
+        if (pick == null && chapter.stages.Count > 0) pick = chapter.stages[0];
         Select(pick);
+    }
+
+    /// <summary>章を切り替えるタブ（章が2つ以上のときだけ）。まだ開いていない章も中を見られる</summary>
+    private void BuildChapterTabs(CampaignData campaign, ChapterData current)
+    {
+        chapterTabs.Clear();
+        UIFactory.SetVisible(chapterTabs, campaign.chapters.Count > 1);
+        foreach (ChapterData c in campaign.chapters)
+        {
+            ChapterData captured = c;
+            var tab = UIFactory.Text(c.name, UIFont.Body, "chapter-tab");
+            tab.pickingMode = PickingMode.Position;
+            tab.EnableInClassList("chapter-tab--on", c == current);
+            tab.EnableInClassList("chapter-tab--locked", c.stages.Count == 0 || !Progress.IsUnlocked(c.stages[0]));
+            tab.AddManipulator(new Clickable(() =>
+            {
+                AudioManager.PlaySE("click");
+                OpenChapter(captured);
+            }));
+            chapterTabs.Add(tab);
+        }
+    }
+
+    private void OpenChapter(ChapterData chapter)
+    {
+        if (chapter == null || chapter.stages.Count == 0) return;
+        string pick = null;
+        foreach (string id in chapter.stages)
+            if (Progress.IsUnlocked(id)) pick = id;
+        Open(pick ?? chapter.stages[0]);
     }
 
     private ChamferBox CreateNode(string id, StageData stage, int index)
@@ -213,6 +254,8 @@ public class StageSelectScreen
         detailEnemyTotal.text = total.ToString();
 
         detailEnemies.Clear();
+        // 敵の種類が多いときは3列にして、小さく並べる（下の「編成へ」に隠れないように）
+        detailEnemies.EnableInClassList("detail-enemies--many", counts.Count > 6);
         foreach (var kv in counts)
         {
             EnemyData enemy = GameData.Enemy(kv.Key);

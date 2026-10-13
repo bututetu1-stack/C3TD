@@ -1,0 +1,44 @@
+{
+  // 上下の道が合流して拠点へ。真ん中を「通知」が飛ぶ。倒しても起き上がる「再履修」
+  "id": "stage_09",
+  "name": "2-4 再履修の悪夢",
+  "description": "去年落とした単位が、何度でもよみがえる。再履修は一度倒しても起き上がるので、止める部員を長く持たせよう。",
+  "life": 3,
+  "initialDp": 12,
+  "bgm": "battle",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S........HHHX",
+    "XHHHHHHH.HHHX",
+    "SHHH........B",
+    "XHHH.HHHHHHHX",
+    "S....HHHHHHHX",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[8,1],[8,3],[12,3]],
+    "p2": [[0,5],[4,5],[4,3],[12,3]]
+  },
+  "airPaths": {
+    "a1": [[0,3],[12,3]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",     "path": "p1", "count": 3, "interval": 2 },
+    { "time": 6,  "enemy": "kadai",     "path": "p2", "count": 3, "interval": 2 },
+    { "time": 15, "enemy": "rerishuu",  "path": "p1", "count": 2, "interval": 4 },
+    { "time": 24, "enemy": "tsuuchi",   "path": "a1", "count": 3, "interval": 2 },
+    { "time": 30, "enemy": "rerishuu",  "path": "p2", "count": 2, "interval": 3 },
+    { "time": 38, "enemy": "shotest",   "path": "p1", "count": 5, "interval": 1 },
+    { "time": 44, "enemy": "suima",     "path": "p2", "count": 2, "interval": 4 },
+    { "time": 50, "enemy": "groupwork", "path": "p1", "count": 1, "interval": 0 },
+    { "time": 52, "enemy": "rerishuu",  "path": "p1", "count": 2, "interval": 3 },
+    { "time": 60, "enemy": "report",    "path": "p2", "count": 2, "interval": 4 },
+    { "time": 68, "enemy": "tsuuchi",   "path": "a1", "count": 4, "interval": 1.5 },
+    { "time": 75, "enemy": "rerishuu",  "path": "p2", "count": 3, "interval": 2.5 },
+    { "time": 84, "enemy": "kadai",     "path": "p1", "count": 4, "interval": 1.2 },
+    { "time": 86, "enemy": "ronbun",    "path": "p2", "count": 2, "interval": 3 }
+  ],
+  "hints": [
+    { "time": 12, "duration": 9, "text": "再履修は一度倒しても、体力 60% で起き上がる。止めている部員が倒されないよう、医療で支えよう。" }
+  ]
+}

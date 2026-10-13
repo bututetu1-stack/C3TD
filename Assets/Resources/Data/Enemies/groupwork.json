@@ -1,0 +1,17 @@
+{
+  // まわり 1.6 マスの敵の防御力を 40% 上げる（琥珀色の輪）。先に倒したい
+  "id": "groupwork",
+  "name": "グループワーク",
+  "label": "班",
+  "shape": "Square",
+  "color": "#C9A23B",
+  "size": 0.62,
+  "hp": 2400,
+  "atk": 220,
+  "def": 180,
+  "res": 20,
+  "attackInterval": 2.2,
+  "speed": 0.75,
+  "lifeDamage": 1,
+  "aura": { "stat": "def", "percent": 40, "radius": 1.6 }
+}

@@ -1,0 +1,16 @@
+{
+  // 術が効きにくい敵（術耐性 60%）。狙撃・前衛の物理攻撃で削る
+  "id": "ronbun",
+  "name": "論文",
+  "label": "論",
+  "shape": "Square",
+  "color": "#4C8C9A",
+  "size": 0.6,
+  "hp": 2800,
+  "atk": 330,
+  "def": 80,
+  "res": 60,
+  "attackInterval": 2.2,
+  "speed": 0.7,
+  "lifeDamage": 1
+}
