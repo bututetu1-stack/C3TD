@@ -57,7 +57,16 @@ public class BalanceRun : MonoBehaviour
                 else if (s.Phase == GamePhase.Playing)
                 {
                     timeouts++;
-                    losses.Append("  seed " + seed + "：時間切れ（残りの敵 " + battle.Enemies.Count + "）\n");
+                    // 残った敵（何が・どこで・体力・止めている部員）を書く。敵が動かなくなる不具合と見分けるため
+                    var rest = new List<string>();
+                    foreach (Enemy e in battle.Enemies)
+                    {
+                        if (e == null) continue;
+                        Vector3 p = e.transform.position;
+                        rest.Add(e.Data.id + " (" + p.x.ToString("0.0") + "," + p.y.ToString("0.0") + ") HP " + Mathf.RoundToInt(e.Hp) + "/" + Mathf.RoundToInt(e.MaxHp)
+                            + " 残り " + e.RemainingDistance.ToString("0.0") + (e.BlockedBy != null ? " 止め:" + e.BlockedBy.Data.id : "") + (e.Stunned ? " 気絶" : ""));
+                    }
+                    losses.Append("  seed " + seed + "：時間切れ（残りの敵 " + battle.Enemies.Count + "：" + string.Join("／", rest) + "）\n");
                 }
                 else
                 {
