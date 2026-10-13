@@ -59,6 +59,10 @@ public class Enemy : Unit
     private float auraTimer;
     private float pulseTimer;
     private bool pulseWarned;
+    private float shieldHp;
+    private HealthBar shieldBar;
+    private float healTimer;
+    private bool enraged;
     private readonly Dictionary<Enemy, StatModifier> auraTargets = new Dictionary<Enemy, StatModifier>();
     private Transform buffMark;
 
@@ -87,6 +91,8 @@ public class Enemy : Unit
         enemy.rangedTimer = data.attackInterval * 0.5f;
         enemy.summonTimer = data.summon != null ? data.summon.firstDelay : 0f;
         enemy.pulseTimer = data.pulse != null ? data.pulse.firstDelay : 0f;
+        enemy.shieldHp = data.shield;
+        enemy.healTimer = data.heal != null ? data.heal.interval : 0f;
         enemy.remainingFrom = new float[path.Count];
         for (int i = path.Count - 2; i >= 0; i--)
             enemy.remainingFrom[i] = enemy.remainingFrom[i + 1] + Vector3.Distance(path[i], path[i + 1]);
@@ -153,6 +159,12 @@ public class Enemy : Unit
 
         // 足元に出す（上の段の部員の HP バーと重ならないように）
         healthBar = HealthBar.Create(transform, new Vector3(0f, -size * 0.66f - 0.03f, 0f), Mathf.Max(0.5f, size * 1.1f), 0.07f, Palette.EnemyHp, true, 6);
+        // 盾のある敵は、体力バーのすぐ上に水色のバー
+        if (Data.shield > 0f)
+        {
+            shieldBar = HealthBar.Create(transform, new Vector3(0f, -size * 0.66f + 0.07f, 0f), Mathf.Max(0.5f, size * 1.1f), 0.06f, Palette.Cyan, false, 6);
+            shieldBar.Set(1f);
+        }
         Animate(0f);
     }
 
@@ -177,6 +189,7 @@ public class Enemy : Unit
         TickStatus(dt);
         UpdateStunMark();
         UpdateDebuffMarks();
+        CheckEnrage();
 
         if (BlockedBy != null && !BlockedBy.Alive) BlockedBy = null;
         UpdateAura(dt);
@@ -188,6 +201,7 @@ public class Enemy : Unit
         {
             TickSummon(dt);
             TickPulse(dt);
+            TickHeal(dt);
             if (BlockedBy == null)
             {
                 Move(ApplyStat("speed", Data.speed) * dt);
@@ -386,6 +400,56 @@ public class Enemy : Unit
         FloatingText.Status(Center + new Vector3(0f, 0.4f, 0f), string.IsNullOrEmpty(pulse.name) ? "大技！" : pulse.name);
         CameraFitter.Shake(0.1f, 0.3f);
         AudioManager.PlaySE("boss_warning");
+    }
+
+    /// <summary>盾のある敵：体力より先に盾が受け止める。割れたら盾のバーを消す</summary>
+    protected override float Absorb(float damage)
+    {
+        if (shieldHp <= 0f) return damage;
+        float taken = Mathf.Min(shieldHp, damage);
+        shieldHp -= taken;
+        FloatingText.Damage(Center, taken, Palette.Cyan);
+        if (shieldBar != null) shieldBar.Set(shieldHp / Mathf.Max(1f, Data.shield));
+        if (shieldHp <= 0f)
+        {
+            if (shieldBar != null) Destroy(shieldBar.gameObject);
+            shieldBar = null;
+            FloatingText.Status(Center, "盾が割れた");
+        }
+        return damage - taken;
+    }
+
+    /// <summary>回復する敵：interval 秒ごとに、まわりの敵（自分も）の体力を回復し、届く範囲に緑の輪を出す</summary>
+    private void TickHeal(float dt)
+    {
+        EnemyHeal h = Data.heal;
+        if (h == null || h.percent <= 0f) return;
+        healTimer -= dt;
+        if (healTimer > 0f) return;
+        healTimer = Mathf.Max(0.5f, h.interval);
+        float r2 = h.radius * h.radius;
+        foreach (Enemy e in battle.Enemies)
+        {
+            if (e == null || !e.Alive || e.Hp >= e.MaxHp || Dist2(e.transform.position, transform.position) > r2) continue;
+            e.Heal(Mathf.Min(e.MaxHp * h.percent / 100f, h.maxAmount));
+            Fx.Heal(e.Center);
+        }
+        FxSprite.Create(SpriteFactory.ThinRing, transform.position, Palette.WithAlpha(Palette.HealGlow, 0.8f), 0.6f, 0.4f, h.radius * 2f, 79);
+    }
+
+    /// <summary>本気になる敵（ボス）：体力が hpPercent% 以下になったら、一度だけ能力が上がり、体が赤みを帯びる</summary>
+    private void CheckEnrage()
+    {
+        EnemyEnrage en = Data.enrage;
+        if (en == null || enraged || Hp > MaxHp * en.hpPercent / 100f) return;
+        enraged = true;
+        if (en.atk != 0f) AddModifier("atk", en.atk, 0f, 0f);
+        if (en.speed != 0f) AddModifier("speed", en.speed, 0f, 0f);
+        if (en.def != 0f) AddModifier("def", en.def, 0f, 0f);
+        FloatingText.Status(Center + new Vector3(0f, 0.4f, 0f), string.IsNullOrEmpty(en.name) ? "本気！" : en.name);
+        Fx.Buff(Center);
+        bodyColor = Color.Lerp(bodyColor, new Color(1f, 0.4f, 0.4f), 0.5f);
+        CameraFitter.Shake(0.08f, 0.25f);
     }
 
     /// <summary>手下を呼ぶ敵：interval 秒ごとに、自分の位置から同じ経路の続きへ出す</summary>

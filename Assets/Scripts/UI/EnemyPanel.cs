@@ -157,6 +157,17 @@ public class EnemyPanel
         if (d.hitModifier != null && !string.IsNullOrEmpty(d.hitModifier.stat))
             lines.Add("攻撃した部員の" + StatName(d.hitModifier.stat) + "を " + d.hitModifier.duration.ToString("0.#") + " 秒 " + d.hitModifier.percent.ToString("+0;-0") + "%");
         if (d.dpDrain > 0f) lines.Add("場にいるあいだ、DP の回復を 1 秒あたり " + d.dpDrain.ToString("0.0#") + " 減らす");
+        if (d.shield > 0f) lines.Add("体力より先に減る盾 " + d.shield.ToString("0"));
+        if (d.heal != null && d.heal.percent > 0f)
+            lines.Add(d.heal.interval.ToString("0.#") + " 秒ごとに、まわり " + d.heal.radius.ToString("0.#") + " マスの敵の体力を " + d.heal.percent.ToString("0") + "%（" + d.heal.maxAmount.ToString("0") + " まで）回復");
+        if (d.enrage != null)
+        {
+            var ups = new System.Collections.Generic.List<string>();
+            if (d.enrage.atk != 0f) ups.Add("攻撃力 " + d.enrage.atk.ToString("+0;-0") + "%");
+            if (d.enrage.speed != 0f) ups.Add("速さ " + d.enrage.speed.ToString("+0;-0") + "%");
+            if (d.enrage.def != 0f) ups.Add("防御力 " + d.enrage.def.ToString("+0;-0") + "%");
+            lines.Add("体力が " + d.enrage.hpPercent.ToString("0") + "% を切ると「" + (string.IsNullOrEmpty(d.enrage.name) ? "本気" : d.enrage.name) + "」：" + string.Join("・", ups));
+        }
         if (d.pulse != null)
             lines.Add(d.pulse.interval.ToString("0") + " 秒ごとに「" + (string.IsNullOrEmpty(d.pulse.name) ? "大技" : d.pulse.name) + "」：まわり " + d.pulse.radius.ToString("0.#") + " マスの部員を " + d.pulse.stun.ToString("0.#") + " 秒動けなくする");
         return string.Join("\n", lines);

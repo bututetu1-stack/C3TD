@@ -131,7 +131,12 @@ public abstract class Unit : MonoBehaviour
     public float TakeDamage(float atk, DamageType type)
     {
         if (!Alive) return 0f;
-        float damage = Combat.Mitigate(atk, type, Def, Res);
+        float damage = Absorb(Combat.Mitigate(atk, type, Def, Res));
+        if (damage <= 0f)
+        {
+            OnDamaged();
+            return 0f;
+        }
         Hp = Mathf.Max(0f, Hp - damage);
         if (healthBar != null) healthBar.Set(Hp / MaxHp);
         FloatingText.Damage(Center, damage, DamageColor(type));
@@ -169,6 +174,12 @@ public abstract class Unit : MonoBehaviour
     {
         Alive = false;
         Destroy(gameObject);
+    }
+
+    /// <summary>体力が減る前に受け止める（敵の盾など）。体力から減らす残りを返す</summary>
+    protected virtual float Absorb(float damage)
+    {
+        return damage;
     }
 
     protected abstract Color DamageColor(DamageType type);

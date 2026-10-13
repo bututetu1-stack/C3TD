@@ -87,6 +87,15 @@ public class EnemyData
     /// <summary>interval 秒ごとに、まわり radius マスの部員を stun 秒動けなくする（ボスの大技）。なければ null</summary>
     public EnemyPulse pulse;
 
+    /// <summary>体力より先に減る盾（0 なら盾なし）。体力バーの上に水色のバーで出す</summary>
+    public float shield;
+
+    /// <summary>interval 秒ごとに、まわり radius マスの敵（自分も）の体力を最大の percent% 回復する。なければ null</summary>
+    public EnemyHeal heal;
+
+    /// <summary>体力が hpPercent% 以下になったら、一度だけ能力が上がる（ボスの本気）。なければ null</summary>
+    public EnemyEnrage enrage;
+
     public string Label
     {
         get
@@ -136,5 +145,26 @@ public class EnemyPulse
     public float firstDelay = 8f;
     public float radius = 2f;
     public float stun = 2f;
+    public string name;
+}
+
+/// <summary>interval 秒ごと（1回目は interval 秒後）に、まわり radius マスの敵（自分も）の体力を最大の percent% 回復する</summary>
+public class EnemyHeal
+{
+    public float interval = 5f;
+    public float radius = 1.8f;
+    public float percent = 8f;
+
+    /// <summary>1回に回復する量の上限（ボスのように体力の多い敵が回復しすぎないように）</summary>
+    public float maxAmount = 400f;
+}
+
+/// <summary>体力が hpPercent% 以下になったら、一度だけ atk・speed・def を、それぞれの %だけ上げる。name は出す言葉</summary>
+public class EnemyEnrage
+{
+    public float hpPercent = 50f;
+    public float atk;
+    public float speed;
+    public float def;
     public string name;
 }
