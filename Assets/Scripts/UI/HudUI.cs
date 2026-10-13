@@ -477,6 +477,7 @@ public class HudUI : MonoBehaviour
     /// <summary>作戦開始の帯：開いて、名前が滑り込み、閉じる</summary>
     private void PlayIntro(StageData stage)
     {
+        AudioManager.PlaySE("start");
         introCaption.text = string.IsNullOrEmpty(stage.Code) ? "OPERATION" : "OPERATION  " + stage.Code;
         introName.text = stage.Title;
         UIFactory.SetVisible(introLayer, true);

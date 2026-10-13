@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// 必殺技のカットイン。斜めの帯が開き、アイコンが右から、技の名前とセリフが左から滑り込んで、閉じる。
+/// 必殺技のカットイン。斜めの帯が開き、絵が右から、技の名前とセリフが左から滑り込んで、閉じる。
+/// 絵は立ち絵（Art/CutIn/{id}.png）があれば大きく、なければアイコンを四角く出す。
 /// 実時間で動き、クリックは受けない（ゲームは止めない）。
 /// </summary>
 public class CutIn
@@ -13,6 +14,7 @@ public class CutIn
     private readonly ChamferBox band;
     private readonly VisualElement portrait;
     private readonly Label portraitInitial;
+    private readonly VisualElement figure;
     private readonly VisualElement textBox;
     private readonly Label caption;
     private readonly Label skillName;
@@ -41,6 +43,9 @@ public class CutIn
         portrait.Add(portraitInitial);
         band.Add(portrait);
 
+        figure = UIFactory.Box("cutin-figure");
+        band.Add(figure);
+
         layer.Add(band);
         root.Add(layer);
         UIFactory.SetVisible(layer, false);
@@ -58,11 +63,21 @@ public class CutIn
         UIFactory.SetVisible(line, !string.IsNullOrEmpty(ult.line));
         band.SetAccent(classColor, 14f);
 
-        Sprite icon = Art.Icon(c.Data.id);
-        portrait.style.backgroundImage = icon != null ? new StyleBackground(icon) : new StyleBackground(StyleKeyword.None);
-        portrait.style.backgroundColor = icon != null ? Color.clear : Palette.Hex(c.Data.color, classColor);
-        portraitInitial.text = icon != null ? "" : c.Data.Initial;
-        portrait.style.borderLeftColor = portrait.style.borderRightColor = portrait.style.borderTopColor = portrait.style.borderBottomColor = classColor;
+        Sprite art = Art.CutIn(c.Data.id);
+        UIFactory.SetVisible(figure, art != null);
+        UIFactory.SetVisible(portrait, art == null);
+        if (art != null)
+        {
+            figure.style.backgroundImage = new StyleBackground(art);
+        }
+        else
+        {
+            Sprite icon = Art.Icon(c.Data.id);
+            portrait.style.backgroundImage = icon != null ? new StyleBackground(icon) : new StyleBackground(StyleKeyword.None);
+            portrait.style.backgroundColor = icon != null ? Color.clear : Palette.Hex(c.Data.color, classColor);
+            portraitInitial.text = icon != null ? "" : c.Data.Initial;
+            portrait.style.borderLeftColor = portrait.style.borderRightColor = portrait.style.borderTopColor = portrait.style.borderBottomColor = classColor;
+        }
 
         UIFactory.SetVisible(layer, true);
         UITween.Stop(ref tween);
@@ -75,7 +90,9 @@ public class CutIn
             layer.style.opacity = 1f - close;
 
             float slide = Ease.OutCubic((time - 0.05f) / 0.35f);
-            portrait.style.translate = new Translate((1f - slide) * 420f - time * 18f, 0f);
+            var move = new Translate((1f - slide) * 420f - time * 18f, 0f);
+            portrait.style.translate = move;
+            figure.style.translate = move;
             float text = Ease.OutCubic((time - 0.12f) / 0.4f);
             textBox.style.translate = new Translate((1f - text) * -160f + time * 14f, 0f);
             textBox.style.opacity = text;

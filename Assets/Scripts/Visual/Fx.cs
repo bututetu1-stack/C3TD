@@ -110,6 +110,16 @@ public static class Fx
         Shards(position, Palette.ArtsGlow, Color.white, 6, 1.5f, 3f, 0.16f);
     }
 
+    /// <summary>物理の範囲攻撃の着弾（艦娘の砲弾など）</summary>
+    public static void Explosion(Vector3 position, float radius)
+    {
+        Sprite art = Art.Effect("Explosion");
+        if (art != null) FxSprite.Create(art, position, Color.white, 0.4f, radius * 1.4f, radius * 2.4f, Order + 1).Rotate(Random.value * 360f);
+        FxSprite.Create(SpriteFactory.Glow, position, new Color(1f, 0.62f, 0.25f, 0.9f), 0.3f, radius * 2.4f, radius * 1.2f, Order);
+        FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(Palette.AmberBright, 0.9f), 0.35f, radius * 0.5f, radius * 2.2f, Order);
+        Shards(position, Palette.AmberBright, new Color(0.35f, 0.3f, 0.28f), 7, 2f, 4f, 0.16f);
+    }
+
     /// <summary>回復した</summary>
     public static void Heal(Vector3 position)
     {
@@ -160,6 +170,20 @@ public static class Fx
     {
         FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(Palette.AmberBright, 0.9f), 0.5f, 1.6f, 0.9f, Order);
         FxSprite.Create(SpriteFactory.Glow, position, Palette.WithAlpha(Palette.AmberBright, 0.6f), 0.4f, 1.2f, 0.6f, Order);
+    }
+
+    /// <summary>DP を得た（先鋒の補給など）</summary>
+    public static void DpGain(Vector3 position)
+    {
+        Sprite art = Art.Effect("DpGain");
+        if (art != null) FxSprite.Create(art, position + new Vector3(0f, 0.25f, 0f), Color.white, 0.8f, 0.8f, 1.1f, Order);
+        FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(Palette.Amber, 0.9f), 0.5f, 0.4f, 1.5f, Order);
+        for (int i = 0; i < 6; i++)
+        {
+            Vector3 p = position + new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.2f, 0.1f), 0f);
+            FxSprite.Create(SpriteFactory.Shard, p, Palette.AmberBright, Random.Range(0.5f, 0.8f), 0.16f, 0.06f, Order)
+                .Move(new Vector3(0f, Random.Range(1.4f, 2.2f), 0f), 1.5f);
+        }
     }
 
     /// <summary>能力が上がった（特性の重ね数が増えたなど）</summary>

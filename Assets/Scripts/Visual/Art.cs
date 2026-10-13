@@ -64,6 +64,8 @@ public static class Art
         return sprite;
     }
     public static Sprite Enemy(string enemyId) { return Load("Art/Enemies/" + enemyId, 512, KeyMode.Object); }
+    /// <summary>必殺技のカットインに出す立ち絵（なければアイコンを四角く出す）</summary>
+    public static Sprite CutIn(string characterId) { return Load("Art/CutIn/" + characterId, 1536, KeyMode.Object); }
     public static Sprite Effect(string name) { return Load("Art/Effects/" + name, 512, KeyMode.Glow); }
     /// <summary>glow なら光る絵（黒を明るさに応じて透明に）、そうでなければ物の絵（縁から続く黒い背景だけ透明に）</summary>
     public static Sprite Map(string name, bool glow) { return Load("Art/Map/" + name, 512, glow ? KeyMode.Glow : KeyMode.Object); }

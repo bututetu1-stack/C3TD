@@ -1,10 +1,11 @@
 {
   // 物理鉄人の「深夜出撃」で召喚される艦娘。召喚者の能力を引き継ぐときは、HP・攻撃・防御は召喚者の inheritStatsPercent%（下の値は引き継がないときに使う）
-  // 地上のマスに出たら敵を1体止める。高台では止めない
+  // 地上のマスに出たら敵を1体止める。高台では止めない。砲撃は半径0.6マスの範囲攻撃
   "id": "kanmusu_token",
   "name": "艦娘",
   "class": "Sniper",
   "color": "#3E8ED0",
   "projectile": "Shell",
+  "splash": 0.6,
   "stats": { "hp": 600, "atk": 200, "def": 40, "attackInterval": 0.8, "block": 1, "range": 2.5 }
 }

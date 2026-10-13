@@ -92,6 +92,7 @@ public static class SkillEffects
                 int amount = Mathf.RoundToInt(e.value);
                 if (amount <= 0) break;
                 ctx.Battle.State.AddDp(amount, ctx.Battle.Rules.dpMax);
+                Fx.DpGain(caster.Center);
                 FloatingText.Status(caster.Center, "DP +" + amount);
                 break;
             }

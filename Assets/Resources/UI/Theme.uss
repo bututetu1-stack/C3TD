@@ -644,6 +644,16 @@
     justify-content: center;
 }
 
+/* 立ち絵（Art/CutIn/{id}.png）。帯からはみ出して大きく出す */
+.cutin-figure {
+    position: absolute;
+    right: 250px;
+    top: -230px;
+    width: 600px;
+    height: 720px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
 .cutin-initial {
     font-size: 200px;
     color: rgb(255, 255, 255);

@@ -2,17 +2,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// SE と BGM を鳴らす。ファイルは Resources/Audio/SE/{key}.wav と Resources/Audio/BGM/{key}.ogg に置く。
-/// ファイルがなければ何も鳴らさない（エラーにしない）。
+/// SE と BGM を鳴らす。ファイルは Resources/Audio/SE/{key}.wav と Resources/Audio/BGM/{key}.ogg に置く
+/// （拡張子は見ないので mp3 なども鳴る）。ファイルがなければ何も鳴らさない（エラーにしない）。
+/// 同じ SE は MinInterval 秒に1回まで（攻撃の音が重なって大きくなりすぎないように）。
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
     private const string SEDir = "Audio/SE/";
     private const string BGMDir = "Audio/BGM/";
+    private const float MinInterval = 0.05f;
 
     private static AudioManager instance;
 
     private readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
+    private readonly Dictionary<string, float> lastPlayed = new Dictionary<string, float>();
     private AudioSource seSource;
     private AudioSource bgmSource;
     private string currentBgm;
@@ -45,8 +48,20 @@ public class AudioManager : MonoBehaviour
     public static void PlaySE(string key)
     {
         if (string.IsNullOrEmpty(key)) return;
-        AudioClip clip = Instance.Load(SEDir + key);
-        if (clip != null) Instance.seSource.PlayOneShot(clip);
+        var self = Instance;
+        AudioClip clip = self.Load(SEDir + key);
+        if (clip == null) return;
+        float now = Time.unscaledTime;
+        float last;
+        if (self.lastPlayed.TryGetValue(key, out last) && now - last < MinInterval) return;
+        self.lastPlayed[key] = now;
+        self.seSource.PlayOneShot(clip);
+    }
+
+    /// <summary>BGM のファイルがあるか</summary>
+    public static bool HasBGM(string key)
+    {
+        return !string.IsNullOrEmpty(key) && Instance.Load(BGMDir + key) != null;
     }
 
     /// <summary>BGM を切り替える。key が空かファイルがなければ止める</summary>

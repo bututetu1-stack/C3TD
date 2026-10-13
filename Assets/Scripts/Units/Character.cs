@@ -309,12 +309,14 @@ public class Character : Unit
         if (battle == null) return;
         float atk = Atk;
         int hits = 1 + Mathf.RoundToInt(ApplyStat("hits", 0f));
+        float splash = Data.splash >= 0f ? Data.splash : Class.splash;
         for (int h = 0; h < hits; h++)
         {
-            if (Class.splash > 0f)
+            if (splash > 0f)
             {
-                Fx.ArtsBurst(at, Class.splash, ClassColor);
-                float r2 = Class.splash * Class.splash;
+                if (Class.damageType == DamageType.Arts) Fx.ArtsBurst(at, splash, ClassColor);
+                else Fx.Explosion(at, splash);
+                float r2 = splash * splash;
                 foreach (Enemy e in new List<Enemy>(battle.Enemies))
                 {
                     if (!e.Alive) continue;

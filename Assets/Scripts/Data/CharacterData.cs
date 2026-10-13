@@ -65,6 +65,9 @@ public class CharacterData
     /// <summary>飛ばす弾の画像名（省略時は職業の決まり）</summary>
     public string projectile;
 
+    /// <summary>範囲攻撃の半径（マス）。0 なら単体。省略時（-1）は職業の決まり</summary>
+    public float splash = -1f;
+
     public CharacterStats stats = new CharacterStats();
     public SkillData trait;
     public SkillData ultimate;

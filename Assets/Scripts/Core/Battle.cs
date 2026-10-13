@@ -166,6 +166,8 @@ public class Battle : MonoBehaviour
             {
                 SpawnEntry entry = schedule[nextSpawn++];
                 Enemies.Add(Enemy.Spawn(entry.enemy, entry.path, this, enemyRoot));
+                // ボスが出たら BGM を boss に（ファイルがなければそのまま）
+                if (entry.enemy.boss && AudioManager.HasBGM("boss")) AudioManager.PlayBGM("boss");
             }
             WarnUpcoming();
             State.CheckVictory(nextSpawn >= schedule.Count, Enemies.Count);
@@ -196,6 +198,7 @@ public class Battle : MonoBehaviour
             bool quiet = !lastWarn.TryGetValue(at, out last) || entry.time - last > 4f;
             lastWarn[at] = entry.time;
             if (quiet || entry.enemy.boss) Fx.SpawnWarning(at, entry.enemy.boss);
+            if (entry.enemy.boss) AudioManager.PlaySE("boss_warning");
         }
     }
 

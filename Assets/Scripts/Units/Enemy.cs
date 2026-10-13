@@ -49,6 +49,8 @@ public class Enemy : Unit
     private float lunge;
     private Vector3 lungeDir;
     private Transform stunMark;
+    private Transform slowMark;
+    private Transform defDownMark;
 
     public static Enemy Spawn(EnemyData data, List<Vector3> path, Battle battle, Transform parent)
     {
@@ -146,6 +148,7 @@ public class Enemy : Unit
         age += dt;
         TickStatus(dt);
         UpdateStunMark();
+        UpdateDebuffMarks();
 
         if (BlockedBy != null && !BlockedBy.Alive) BlockedBy = null;
         if (Stunned)
@@ -205,6 +208,51 @@ public class Enemy : Unit
             Destroy(stunMark.gameObject);
             stunMark = null;
         }
+    }
+
+    /// <summary>
+    /// 遅くなっている・防御が下がっているあいだは、体力バーの左に小さな印を出す。
+    /// 絵（Art/Effects/StatusSlow.png・StatusDefDown.png）がなければ、色付きの丸に「遅」「防」
+    /// </summary>
+    private void UpdateDebuffMarks()
+    {
+        float y = -Data.size * 0.66f - 0.03f;
+        float x = -Mathf.Max(0.5f, Data.size * 1.1f) * 0.5f - 0.18f;
+        SetMark(ref slowMark, PercentOf("speed") < 0f, "StatusSlow", "遅", Palette.Cyan, new Vector3(x, y, 0f));
+        if (slowMark != null) x -= 0.3f;
+        SetMark(ref defDownMark, PercentOf("def") < 0f, "StatusDefDown", "防", Palette.Crimson, new Vector3(x, y, 0f));
+    }
+
+    private void SetMark(ref Transform mark, bool on, string artName, string letter, Color color, Vector3 position)
+    {
+        if (on && mark == null)
+        {
+            mark = new GameObject(artName).transform;
+            mark.SetParent(transform, false);
+            var body = new GameObject("Body");
+            body.transform.SetParent(mark, false);
+            var sr = body.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 9;
+            Sprite art = Art.Effect(artName);
+            if (art != null)
+            {
+                sr.sprite = art;
+                body.transform.localScale = Vector3.one * 0.34f;
+            }
+            else
+            {
+                sr.sprite = SpriteFactory.Circle;
+                sr.color = color;
+                body.transform.localScale = Vector3.one * 0.27f;
+                WorldText.Create(mark, letter, 2.0f, Color.white, 10, true);
+            }
+        }
+        else if (!on && mark != null)
+        {
+            Destroy(mark.gameObject);
+            mark = null;
+        }
+        if (mark != null) mark.localPosition = position;
     }
 
     /// <summary>止めている部員が撤退・ダウンしたので、また歩き出す</summary>
