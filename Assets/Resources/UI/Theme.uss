@@ -576,3 +576,74 @@
 .retreat-button .c3-button-text {
     font-size: 20px;
 }
+
+/* ---------- 必殺技 ---------- */
+.skill-button {
+    width: 168px;
+    height: 56px;
+    margin-right: 10px;
+}
+
+.skill-button .c3-button-text {
+    font-size: 19px;
+}
+
+.unit-stat-value--up {
+    color: rgb(255, 179, 107);
+}
+
+/* ---------- カットイン ---------- */
+.cutin-layer {
+    justify-content: center;
+    padding-bottom: 80px;
+}
+
+.cutin-band {
+    height: 250px;
+    margin-left: -140px;
+    margin-right: -140px;
+    rotate: -4deg;
+    justify-content: center;
+    padding-left: 340px;
+}
+
+.cutin-text {
+    align-items: flex-start;
+}
+
+.cutin-caption {
+    font-size: 24px;
+    letter-spacing: 12px;
+    color: rgb(244, 182, 63);
+}
+
+.cutin-name {
+    font-size: 96px;
+    color: rgb(255, 255, 255);
+    margin-top: -6px;
+    text-shadow: 0 5px 16px rgba(0, 0, 0, 0.75);
+}
+
+.cutin-line {
+    font-size: 30px;
+    color: rgb(230, 234, 244);
+    margin-top: 2px;
+}
+
+.cutin-portrait {
+    position: absolute;
+    right: 360px;
+    top: -70px;
+    width: 390px;
+    height: 390px;
+    border-width: 6px;
+    -unity-background-scale-mode: scale-and-crop;
+    align-items: center;
+    justify-content: center;
+}
+
+.cutin-initial {
+    font-size: 200px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}

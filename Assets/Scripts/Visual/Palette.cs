@@ -65,6 +65,10 @@ public static class Palette
     public static readonly Color ArtsGlow = Hex("#B98CFF");
     public static readonly Color DeployGlow = Hex("#FFE3A3");
     public static readonly Color RetreatGlow = Hex("#8FD8FF");
+    public static readonly Color SpBar = Hex("#4FB8FF");
+    public static readonly Color SpBarFull = Hex("#FFD27A");
+    public static readonly Color SummonTime = Hex("#7FE3F0");
+    public static readonly Color StatusText = Hex("#FFB36B");
 
     // ---------------- マスの強調 ----------------
     public static readonly Color HighlightPlaceable = new Color(0.27f, 0.82f, 0.9f, 0.3f);

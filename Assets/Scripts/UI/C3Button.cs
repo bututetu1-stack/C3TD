@@ -54,16 +54,31 @@ public class C3Button : ChamferBox
         }
     }
 
+    /// <summary>押せるか（押せないときは暗くなり、クリックも受けない）</summary>
+    public bool Interactable
+    {
+        get { return enabledSelf; }
+        set
+        {
+            if (enabledSelf == value) return;
+            SetEnabled(value);
+            if (!value) hover = pressed = false;
+            Restyle();
+        }
+    }
+
     private void Restyle()
     {
+        bool usable = enabledSelf;
         Color fill;
-        if (active) fill = hover ? Palette.AmberBright : Palette.Amber;
+        if (!usable) fill = Palette.WithAlpha(Palette.UiButton, 0.75f);
+        else if (active) fill = hover ? Palette.AmberBright : Palette.Amber;
         else fill = hover ? Palette.UiButtonHover : Palette.UiButton;
         if (pressed) fill = Color.Lerp(fill, Color.white, 0.18f);
         SetFill(fill);
-        SetStroke(active ? Palette.AmberBright : Palette.UiButtonLine, 1.5f);
+        SetStroke(usable && active ? Palette.AmberBright : Palette.UiButtonLine, 1.5f);
 
-        Color fg = active ? Palette.Ink : Palette.Text;
+        Color fg = !usable ? Palette.TextSub : active ? Palette.Ink : Palette.Text;
         if (Icon != null) Icon.SetColor(fg);
         if (Text != null) Text.style.color = fg;
         style.scale = new Scale(pressed ? new Vector3(0.95f, 0.95f, 1f) : Vector3.one);

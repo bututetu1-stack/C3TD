@@ -28,8 +28,12 @@ public class UnitPanel
     private readonly Label ultDesc;
     private readonly VisualElement actions;
     private readonly C3Button retreatButton;
+    private readonly C3Button skillButton;
     private Character shown;
     private int shownHp = -1;
+    private int shownAtk = -1;
+    private string shownTrait;
+    private string shownSkill;
 
     public UnitPanel(VisualElement root)
     {
@@ -72,6 +76,12 @@ public class UnitPanel
         root.Add(info);
 
         actions = UIFactory.Box("unit-actions");
+        skillButton = new C3Button(IconKind.Bolt, 24f, "必殺技", () =>
+        {
+            if (BattleInput.Instance != null) BattleInput.Instance.ActivateSelected();
+        });
+        skillButton.AddToClassList("skill-button");
+        actions.Add(skillButton);
         retreatButton = new C3Button(IconKind.Cross, 22f, "撤退", () =>
         {
             if (BattleInput.Instance != null) BattleInput.Instance.RetreatSelected();
@@ -117,7 +127,8 @@ public class UnitPanel
         if (!ReferenceEquals(c, shown))
         {
             shown = c;
-            shownHp = -1;
+            shownHp = shownAtk = -1;
+            shownTrait = shownSkill = null;
             if (c != null) Fill(c);
             UIFactory.SetVisible(info, c != null);
             UIFactory.SetVisible(actions, c != null);
@@ -130,8 +141,43 @@ public class UnitPanel
             shownHp = hp;
             hpValue.text = hp + "/" + Mathf.CeilToInt(c.MaxHp);
         }
+        int atk = Mathf.RoundToInt(c.Atk);
+        if (atk != shownAtk)
+        {
+            shownAtk = atk;
+            atkValue.text = atk.ToString();
+            atkValue.EnableInClassList("unit-stat-value--up", c.PercentOf("atk") > 0.01f);
+        }
 
-        // 撤退ボタンを駒の右上に置く
+        // 特性の重ね数
+        string trait = c.Skills.Trait != null ? c.Skills.Trait.name + (c.Skills.TraitStatus.Length > 0 ? "　" + c.Skills.TraitStatus : "") : "";
+        if (trait != shownTrait)
+        {
+            shownTrait = trait;
+            traitName.text = trait;
+        }
+
+        // 必殺技のボタン：SP が溜まるまでは押せない。発動中は残り時間
+        string skill;
+        if (c.IsSummon) skill = "召喚　残り " + Mathf.CeilToInt(c.LifeRemaining) + "秒";
+        else if (!c.Skills.HasUltimate) skill = "";
+        else if (c.Skills.Active) skill = "発動中 " + Mathf.CeilToInt(c.Skills.ActiveRemaining) + "秒";
+        else if (c.Skills.Ready) skill = "必殺技";
+        else if (c.Stunned) skill = "スタン中";
+        else skill = "SP " + Mathf.FloorToInt(c.Skills.Sp) + "/" + Mathf.RoundToInt(c.Skills.SpCost);
+        if (skill != shownSkill)
+        {
+            shownSkill = skill;
+            UIFactory.SetVisible(skillButton, skill.Length > 0);
+            skillButton.Text.text = skill;
+            skillButton.Interactable = c.Skills.Ready || c.IsSummon; // 召喚ユニットは残り時間の表示なので暗くしない（押しても何もしない）
+            skillButton.Active = c.Skills.Ready || c.Skills.Active;
+            if (c.Skills.HasUltimate)
+                ultMeta.text = (c.Skills.Active ? "発動中" : c.Skills.Ready ? "使えます" : "SP " + Mathf.FloorToInt(c.Skills.Sp) + "/" + Mathf.RoundToInt(c.Skills.SpCost))
+                    + "　効果 " + c.Skills.Ultimate.duration.ToString("0.#") + "秒";
+        }
+
+        // ボタンを駒の右上に置く
         Camera cam = Camera.main;
         if (cam != null && root.panel != null)
         {
@@ -153,31 +199,26 @@ public class UnitPanel
         portrait.style.borderLeftColor = portrait.style.borderRightColor = portrait.style.borderTopColor = portrait.style.borderBottomColor = classColor;
 
         nameLabel.text = d.name;
-        classLabel.text = c.Class.name;
+        classLabel.text = c.IsSummon ? c.Class.name + "・召喚" : c.Class.name;
         classLabel.style.backgroundColor = classColor;
-        atkValue.text = Mathf.RoundToInt(c.Atk).ToString();
         defValue.text = Mathf.RoundToInt(c.Def).ToString();
-        blockValue.text = c.Class.placement == Placement.Ground ? c.BlockCapacity.ToString() : "-";
+        blockValue.text = c.HasBlockRoom || c.Blocked.Count > 0 ? c.BlockCapacity.ToString() : "-";
         rangeValue.text = c.Range.ToString("0.#");
-        costValue.text = d.cost.ToString();
+        costValue.text = c.IsSummon ? "-" : d.cost.ToString();
+        UIFactory.SetVisible(retreatButton, !c.IsSummon);
 
-        bool hasTrait = d.trait != null && !string.IsNullOrEmpty(d.trait.name);
+        bool hasTrait = c.Skills.Trait != null;
         UIFactory.SetVisible(traitBox, hasTrait);
-        if (hasTrait)
-        {
-            traitName.text = d.trait.name;
-            traitDesc.text = d.trait.description;
-        }
+        if (hasTrait) traitDesc.text = c.Skills.Trait.description;
 
-        bool hasUlt = d.ultimate != null && !string.IsNullOrEmpty(d.ultimate.name);
+        bool hasUlt = c.Skills.HasUltimate;
         UIFactory.SetVisible(ultBox, hasUlt);
         if (hasUlt)
         {
-            ultName.text = d.ultimate.name;
-            ultMeta.text = "SP " + d.ultimate.spCost.ToString("0") + "　効果 " + d.ultimate.duration.ToString("0.#") + "秒　（M3 で使えるようになります）";
-            ultDesc.text = d.ultimate.description;
+            ultName.text = c.Skills.Ultimate.name;
+            ultDesc.text = c.Skills.Ultimate.description;
         }
 
-        retreatButton.Text.text = "撤退 +" + Battle.Current.RefundOf(c.Member);
+        if (c.Member != null) retreatButton.Text.text = "撤退 +" + Battle.Current.RefundOf(c.Member);
     }
 }

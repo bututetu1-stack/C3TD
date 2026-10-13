@@ -61,6 +61,9 @@ public class CharacterData
     /// <summary>アイコンがないときの丸の色（省略時は職業の色）</summary>
     public string color;
 
+    /// <summary>飛ばす弾の画像名（省略時は職業の決まり）</summary>
+    public string projectile;
+
     public CharacterStats stats = new CharacterStats();
     public SkillData trait;
     public SkillData ultimate;
@@ -99,6 +102,20 @@ public class SkillData
     public float duration;
     public List<EffectData> effects = new List<EffectData>();
     public List<EffectData> onEnd = new List<EffectData>();
+
+    /// <summary>必殺技を発動したときのセリフ（カットインに出す）</summary>
+    public string line;
+
+    /// <summary>必殺技が終わったときのセリフ（駒の上に吹き出しで出す）</summary>
+    public string endLine;
+
+    /// <summary>params の数値を読む（なければ fallback）</summary>
+    public float Param(string key, float fallback)
+    {
+        object v;
+        if (parameters == null || !parameters.TryGetValue(key, out v)) return fallback;
+        return v is double ? (float)(double)v : fallback;
+    }
 }
 
 /// <summary>効果の部品1つ。type によって使う項目が違う</summary>
@@ -117,4 +134,7 @@ public class EffectData
     public float inheritStatsPercent;
     public float multiplier;
     public int hits;
+
+    /// <summary>AreaAroundSelf の半径（マス）。0 なら 1.5</summary>
+    public float radius;
 }

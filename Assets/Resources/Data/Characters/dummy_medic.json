@@ -1,10 +1,27 @@
 {
-  // テスト用のダミー（実在の部員ではない）
+  // テスト用のダミー（実在の部員ではない）。技はスキルの部品を試すためのもの
   "id": "dummy_medic",
   "name": "医療ダミー",
   "class": "Medic",
   "cost": 15,
   "redeployTime": 70,
   "color": "#2E9C7E",
-  "stats": { "hp": 1150, "atk": 400, "def": 90, "attackInterval": 2.85, "range": 2.5 }
+  "stats": { "hp": 1150, "atk": 400, "def": 90, "attackInterval": 2.85, "range": 2.5 },
+  "trait": {
+    "name": "テスト：応急手当",
+    "description": "置いたとき、射程内の味方のHPを300回復する",
+    "trigger": "OnDeploy",
+    "effects": [ { "type": "Heal", "value": 300, "target": "AlliesInRange" } ]
+  },
+  "ultimate": {
+    "name": "テスト：集中治療",
+    "description": "10秒間、射程内の味方の攻撃間隔が40%短くなり、発動時に最大HPの20%を回復する",
+    "spCost": 25,
+    "spCharge": "PerSecond",
+    "duration": 10,
+    "effects": [
+      { "type": "Heal", "percent": 20, "target": "AlliesInRange" },
+      { "type": "StatModifier", "stat": "attackInterval", "percent": -40, "target": "AlliesInRange" }
+    ]
+  }
 }

@@ -22,6 +22,12 @@ public class FloatingText : MonoBehaviour
         Spawn(position, "+" + Mathf.RoundToInt(amount), Palette.HealText, 2.4f);
     }
 
+    /// <summary>状態の変化（「夜戦主義 ×2」など）</summary>
+    public static void Status(Vector3 position, string value)
+    {
+        Spawn(position + new Vector3(0f, 0.25f, 0f), value, Palette.StatusText, 2.2f);
+    }
+
     private static void Spawn(Vector3 position, string value, Color color, float size)
     {
         Battle battle = Battle.Current;

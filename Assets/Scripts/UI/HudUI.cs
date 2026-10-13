@@ -49,6 +49,7 @@ public class HudUI : MonoBehaviour
     // 編成バーと選択中の部員
     private DeployBar deployBar;
     private UnitPanel unitPanel;
+    private CutIn cutIn;
 
     private IVisualElementScheduledItem flashTween;
     private IVisualElementScheduledItem shakeTween;
@@ -79,6 +80,7 @@ public class HudUI : MonoBehaviour
         BuildTopBar();
         deployBar = new DeployBar(root);
         unitPanel = new UnitPanel(root);
+        cutIn = new CutIn(root);
         BuildIntro();
         BuildPause();
         BuildResult();
@@ -286,6 +288,7 @@ public class HudUI : MonoBehaviour
     {
         shownBattle = battle;
         battle.EnemyLeaked += OnEnemyLeaked;
+        battle.SkillActivated += c => cutIn.Play(c);
 
         StageData stage = battle.Stage;
         opCode.text = stage.Code;

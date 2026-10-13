@@ -1,10 +1,27 @@
 {
-  // テスト用のダミー（実在の部員ではない）
+  // テスト用のダミー（実在の部員ではない）。技はスキルの部品を試すためのもの
   "id": "dummy_defender",
   "name": "重装ダミー",
   "class": "Defender",
   "cost": 16,
   "redeployTime": 70,
   "color": "#3E6FB8",
-  "stats": { "hp": 3200, "atk": 320, "def": 560, "attackInterval": 1.2, "range": 1 }
+  "stats": { "hp": 3200, "atk": 320, "def": 560, "attackInterval": 1.2, "range": 1 },
+  "trait": {
+    "name": "テスト：鉄壁",
+    "description": "防御力がずっと20%高い",
+    "trigger": "Always",
+    "effects": [ { "type": "StatModifier", "stat": "def", "percent": 20, "target": "Self" } ]
+  },
+  "ultimate": {
+    "name": "テスト：盾打ち",
+    "description": "HPを30%回復し、射程内の敵を2秒スタンさせる（攻撃を受けるとSPが溜まる）",
+    "spCost": 8,
+    "spCharge": "OnHit",
+    "duration": 0,
+    "effects": [
+      { "type": "Heal", "percent": 30, "target": "Self" },
+      { "type": "Stun", "duration": 2, "target": "EnemiesInRange" }
+    ]
+  }
 }

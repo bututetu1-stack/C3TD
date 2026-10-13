@@ -30,6 +30,9 @@ public class Battle : MonoBehaviour
     /// <summary>敵が拠点に着いた（HUD の演出用）</summary>
     public event Action<Enemy> EnemyLeaked;
 
+    /// <summary>必殺技が発動した（カットイン用）</summary>
+    public event Action<Character> SkillActivated;
+
     private class SpawnEntry
     {
         public float time;
@@ -87,6 +90,8 @@ public class Battle : MonoBehaviour
         enemyRoot.SetParent(transform, false);
 
         State = new GameState(data.life, schedule.Count, data.initialDp);
+        if (State.MaxLife >= schedule.Count && schedule.Count > 0)
+            Debug.LogWarning(data.id + ": ライフ（" + State.MaxLife + "）が敵の数（" + schedule.Count + "）以上なので、まったく防衛しなくても勝てます");
         lastPhase = State.Phase;
         TimeController.ResetForStage(Rules.focusTimeScale);
         AudioManager.PlayBGM(data.bgm);
@@ -221,7 +226,7 @@ public class Battle : MonoBehaviour
 
     public void Retreat(Character c)
     {
-        if (c == null || !c.Alive) return;
+        if (c == null || !c.Alive || c.Member == null) return; // 召喚ユニットは撤退できない
         State.AddDp(RefundOf(c.Member), Rules.dpMax);
         Fx.Retreat(c.Center);
         AudioManager.PlaySE("retreat");
@@ -236,14 +241,67 @@ public class Battle : MonoBehaviour
         Remove(c);
     }
 
+    // ================= 必殺技・召喚 =================
+
+    public void OnSkillActivated(Character c)
+    {
+        Fx.SkillActivate(c.Center, c.ClassColor);
+        AudioManager.PlaySE("skill");
+        if (SkillActivated != null) SkillActivated(c);
+    }
+
+    // 周りの8マス（上・右・下・左を先に）
+    private static readonly Vector2Int[] Neighbors =
+    {
+        new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 0),
+        new Vector2Int(1, -1), new Vector2Int(1, 1), new Vector2Int(-1, 1), new Vector2Int(-1, -1),
+    };
+
+    /// <summary>summoner の周りの空いている地上・高台のマスに、unitId を count 体まで置く。置いた数を返す</summary>
+    public int Summon(string unitId, Character summoner, int count, float inheritPercent, float lifetime)
+    {
+        CharacterData data = GameData.Summon(unitId);
+        if (data == null || summoner == null) return 0;
+        ClassData classData = GameData.Class(data.unitClass);
+        int made = 0;
+        foreach (Vector2Int d in Neighbors)
+        {
+            if (made >= count) break;
+            Vector2Int cell = summoner.Cell + d;
+            Tile tile = Map.Get(cell);
+            if (tile == null || tile.Occupant != null) continue;
+            if (tile.Type != TileType.Ground && tile.Type != TileType.HighGround) continue;
+            Vector3 pos = UnitPosition(cell);
+            Character c = Character.CreateSummon(data, classData, summoner, inheritPercent, lifetime, cell, pos, this, characterRoot);
+            tile.Occupant = c;
+            Characters.Add(c);
+            Fx.Summon(pos);
+            made++;
+        }
+        if (made > 0) AudioManager.PlaySE("summon");
+        return made;
+    }
+
+    /// <summary>召喚ユニットの時間切れ</summary>
+    public void Dismiss(Character c)
+    {
+        if (c == null || !c.Alive) return;
+        Fx.Retreat(c.Center);
+        Remove(c);
+    }
+
     private void Remove(Character c)
     {
         c.ReleaseAll();
         Characters.Remove(c);
         Tile tile = Map.Get(c.Cell);
         if (tile != null && tile.Occupant == c) tile.Occupant = null;
-        c.Member.Deployed = null;
-        c.Member.Cooldown = c.Data.redeployTime;
+        if (c.Skills != null) c.Skills.Cancel();
+        if (c.Member != null)
+        {
+            c.Member.Deployed = null;
+            c.Member.Cooldown = c.Data.redeployTime;
+        }
         c.Despawn();
     }
 

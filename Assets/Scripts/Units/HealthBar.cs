@@ -34,6 +34,11 @@ public class HealthBar : MonoBehaviour
         return bar;
     }
 
+    public void SetColor(Color color)
+    {
+        fill.color = color;
+    }
+
     public void Set(float ratio)
     {
         value = Mathf.Clamp01(ratio);

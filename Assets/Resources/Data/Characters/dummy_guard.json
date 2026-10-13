@@ -1,10 +1,21 @@
 {
-  // テスト用のダミー（実在の部員ではない）
+  // テスト用のダミー（実在の部員ではない）。技はスキルの部品を試すためのもの
   "id": "dummy_guard",
   "name": "前衛ダミー",
   "class": "Guard",
   "cost": 10,
   "redeployTime": 70,
   "color": "#B85A3A",
-  "stats": { "hp": 1800, "atk": 520, "def": 250, "attackInterval": 1.2, "range": 1 }
+  "stats": { "hp": 1800, "atk": 520, "def": 250, "attackInterval": 1.2, "range": 1 },
+  "ultimate": {
+    "name": "テスト：三連撃",
+    "description": "10秒間、攻撃が3回当たり、攻撃力が30%上がる（攻撃するたびにSPが溜まる）",
+    "spCost": 6,
+    "spCharge": "OnAttack",
+    "duration": 10,
+    "effects": [
+      { "type": "MultiHit", "hits": 3, "target": "Self" },
+      { "type": "StatModifier", "stat": "atk", "percent": 30, "target": "Self" }
+    ]
+  }
 }

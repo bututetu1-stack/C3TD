@@ -55,6 +55,15 @@ public class BattleInput : MonoBehaviour
         TimeController.SetFocus(Selected != null || Dragging != null);
     }
 
+    /// <summary>選択中の部員の必殺技を使う（必殺技ボタン）</summary>
+    public void ActivateSelected()
+    {
+        Character c = Selected;
+        if (c == null || !c.Alive || c.Skills == null || !c.Skills.Ready) return;
+        Select(null);
+        c.Skills.Activate();
+    }
+
     /// <summary>選択中の部員を撤退させる（撤退ボタン）</summary>
     public void RetreatSelected()
     {

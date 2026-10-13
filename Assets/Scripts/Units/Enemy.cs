@@ -24,8 +24,8 @@ public class Enemy : Unit
     /// <summary>経路に沿った、拠点までの残りの距離（狙う順番に使う）</summary>
     public float RemainingDistance { get; private set; }
 
-    public override float Atk { get { return Data.atk; } }
-    public override float Def { get { return Data.def; } }
+    protected override float BaseAtk { get { return Data.atk; } }
+    protected override float BaseDef { get { return Data.def; } }
     public override float Res { get { return Data.res; } }
 
     private List<Vector3> path;
@@ -48,6 +48,7 @@ public class Enemy : Unit
     private float flash;
     private float lunge;
     private Vector3 lungeDir;
+    private Transform stunMark;
 
     public static Enemy Spawn(EnemyData data, List<Vector3> path, Battle battle, Transform parent)
     {
@@ -143,11 +144,17 @@ public class Enemy : Unit
 
         float dt = Time.deltaTime;
         age += dt;
+        TickStatus(dt);
+        UpdateStunMark();
 
         if (BlockedBy != null && !BlockedBy.Alive) BlockedBy = null;
-        if (BlockedBy == null)
+        if (Stunned)
         {
-            Move(Data.speed * dt);
+            // スタン中は歩かず、攻撃もしない
+        }
+        else if (BlockedBy == null)
+        {
+            Move(ApplyStat("speed", Data.speed) * dt);
             walkTime += dt;
             TryBeBlocked();
             if (nextPoint >= path.Count)
@@ -161,7 +168,7 @@ public class Enemy : Unit
             attackTimer -= dt;
             if (attackTimer <= 0f)
             {
-                attackTimer = Data.attackInterval;
+                attackTimer = ApplyStat("attackInterval", Data.attackInterval);
                 AttackBlocker();
             }
         }
@@ -169,6 +176,35 @@ public class Enemy : Unit
         UpdateRemaining();
         UpdateDepth();
         Animate(dt);
+    }
+
+    /// <summary>スタン中は頭の上で星が回る</summary>
+    private void UpdateStunMark()
+    {
+        if (Stunned && stunMark == null)
+        {
+            stunMark = new GameObject("Stun").transform;
+            stunMark.SetParent(transform, false);
+            stunMark.localPosition = new Vector3(0f, Data.size * 0.75f, 0f);
+            stunMark.gameObject.AddComponent<Spinner>().degreesPerSecond = 240f;
+            for (int i = 0; i < 3; i++)
+            {
+                float a = i * Mathf.PI * 2f / 3f;
+                var star = new GameObject("Star");
+                star.transform.SetParent(stunMark, false);
+                star.transform.localPosition = new Vector3(Mathf.Cos(a) * 0.22f, Mathf.Sin(a) * 0.08f, 0f);
+                star.transform.localScale = Vector3.one * 0.12f;
+                var sr = star.AddComponent<SpriteRenderer>();
+                sr.sprite = SpriteFactory.ForShape(EnemyShape.Diamond);
+                sr.color = Palette.AmberBright;
+                sr.sortingOrder = 9;
+            }
+        }
+        else if (!Stunned && stunMark != null)
+        {
+            Destroy(stunMark.gameObject);
+            stunMark = null;
+        }
     }
 
     /// <summary>止めている部員が撤退・ダウンしたので、また歩き出す</summary>
@@ -201,7 +237,7 @@ public class Enemy : Unit
         lungeDir = target.transform.position - transform.position;
         lungeDir.z = 0f;
         lungeDir.Normalize();
-        target.TakeDamage(Data.atk, DamageType.Physical);
+        target.TakeDamage(Atk, DamageType.Physical);
         Fx.Hit(target.Center, Palette.Crimson);
         AudioManager.PlaySE("hit");
     }

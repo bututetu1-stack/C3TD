@@ -132,6 +132,47 @@ public static class Fx
         }
     }
 
+    /// <summary>必殺技を発動した：大きな閃光</summary>
+    public static void SkillActivate(Vector3 position, Color classColor)
+    {
+        Sprite art = Art.Effect("SkillActivate");
+        if (art != null) FxSprite.Create(art, position, Color.white, 0.7f, 0.8f, 2.6f, Order + 2).Spin(40f);
+        FxSprite.Create(SpriteFactory.Glow, position, Palette.WithAlpha(Palette.AmberBright, 0.9f), 0.5f, 2.8f, 1.2f, Order);
+        FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(classColor, 0.95f), 0.55f, 0.3f, 2.6f, Order);
+        FxSprite.Create(SpriteFactory.ThinRing, position, Palette.WithAlpha(Color.white, 0.85f), 0.7f, 0.4f, 3.4f, Order).Delay(0.08f);
+        Shards(position, Palette.AmberBright, Color.white, 14, 3f, 6f, 0.3f);
+    }
+
+    /// <summary>SP が溜まって必殺技が使えるようになった</summary>
+    public static void SkillReady(Vector3 position)
+    {
+        FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(Palette.AmberBright, 0.9f), 0.5f, 1.6f, 0.9f, Order);
+        FxSprite.Create(SpriteFactory.Glow, position, Palette.WithAlpha(Palette.AmberBright, 0.6f), 0.4f, 1.2f, 0.6f, Order);
+    }
+
+    /// <summary>能力が上がった（特性の重ね数が増えたなど）</summary>
+    public static void Buff(Vector3 position)
+    {
+        Sprite art = Art.Effect("BuffAtk");
+        if (art != null) FxSprite.Create(art, position + new Vector3(0f, 0.2f, 0f), Color.white, 0.8f, 0.9f, 1.2f, Order);
+        for (int i = 0; i < 6; i++)
+        {
+            Vector3 p = position + new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0f), 0f);
+            FxSprite.Create(SpriteFactory.Glow, p, new Color(1f, 0.55f, 0.3f), Random.Range(0.5f, 0.8f), 0.2f, 0.06f, Order)
+                .Move(new Vector3(0f, Random.Range(1.2f, 2f), 0f), 1.5f);
+        }
+    }
+
+    /// <summary>召喚ユニットが現れた（艦娘：海から水柱）</summary>
+    public static void Summon(Vector3 position)
+    {
+        Sprite art = Art.Effect("SummonSplash");
+        if (art != null) FxSprite.Create(art, position + new Vector3(0f, 0.45f, 0f), Color.white, 0.7f, 1.2f, 1.5f, Order);
+        FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(Palette.Cyan, 0.9f), 0.5f, 0.3f, 1.4f, Order);
+        FxSprite.Create(SpriteFactory.ThinRing, position, Palette.WithAlpha(Color.white, 0.8f), 0.6f, 0.3f, 1.8f, Order).Delay(0.1f);
+        Shards(position, Color.white, Palette.Cyan, 8, 1.5f, 3f, 0.2f);
+    }
+
     private static void Shards(Vector3 position, Color a, Color b, int count, float minSpeed, float maxSpeed, float size)
     {
         for (int i = 0; i < count; i++)

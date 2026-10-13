@@ -11,6 +11,7 @@ public static class GameData
     private const string StageDir = "Data/Stages/";
     private const string EnemyDir = "Data/Enemies/";
     private const string CharacterDir = "Data/Characters/";
+    private const string SummonDir = "Data/Summons/";
     private const string ClassesPath = "Data/classes";
     private const string RulesPath = "Data/rules";
     private const string SquadPath = "Data/squad";
@@ -18,6 +19,7 @@ public static class GameData
     private static readonly Dictionary<string, StageData> stages = new Dictionary<string, StageData>();
     private static readonly Dictionary<string, EnemyData> enemies = new Dictionary<string, EnemyData>();
     private static readonly Dictionary<string, CharacterData> characters = new Dictionary<string, CharacterData>();
+    private static readonly Dictionary<string, CharacterData> summons = new Dictionary<string, CharacterData>();
     private static Dictionary<string, ClassData> classes;
     private static RulesData rules;
     private static SquadData squad;
@@ -29,6 +31,7 @@ public static class GameData
         stages.Clear();
         enemies.Clear();
         characters.Clear();
+        summons.Clear();
         classes = null;
         rules = null;
         squad = null;
@@ -37,6 +40,9 @@ public static class GameData
     public static StageData Stage(string id) { return Load(StageDir, id, stages); }
     public static EnemyData Enemy(string id) { return Load(EnemyDir, id, enemies); }
     public static CharacterData Character(string id) { return Load(CharacterDir, id, characters); }
+
+    /// <summary>召喚されるユニット（Resources/Data/Summons/{id}.json。部員と同じ書き方）</summary>
+    public static CharacterData Summon(string id) { return Load(SummonDir, id, summons); }
 
     public static RulesData Rules
     {

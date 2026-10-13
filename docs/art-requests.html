@@ -298,6 +298,7 @@
       <div class="status-row">
         <strong>いま依頼中（2026-10-13）</strong>
         <div class="status-list">
+          <span class="chip gold">艦娘の砲弾 Shell.png（M3）</span>
           <span class="chip gold">効果音・BGM（下の表）</span>
         </div>
       </div>
@@ -415,6 +416,10 @@
           <tr><td><code>hit</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>攻撃が当たった（何度も鳴る）</td><td>短く軽い打撃音。うるさくないもの</td><td class="len">0.2秒以内</td></tr>
           <tr><td><code>enemy_defeat</code></td><td><code>Audio/SE/</code></td><td>敵を倒した</td><td>紙が破れる「ビリッ」</td><td class="len">約0.4秒</td></tr>
           <tr><td><code>retreat</code></td><td><code>Audio/SE/</code></td><td>部員を撤退させた</td><td>ふわっと消える音</td><td class="len">約0.5秒</td></tr>
+          <tr><td><code>skill</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>必殺技の発動（カットイン）</td><td>力強い決め音（シャキーン）</td><td class="len">約1.2秒</td></tr>
+          <tr><td><code>skill_ready</code></td><td><code>Audio/SE/</code></td><td>必殺技が使えるようになった</td><td>軽いきらめき（ピロン）</td><td class="len">約0.5秒</td></tr>
+          <tr><td><code>summon</code></td><td><code>Audio/SE/</code></td><td>艦娘の召喚</td><td>水しぶきと汽笛</td><td class="len">約1秒</td></tr>
+          <tr><td><code>buff</code></td><td><code>Audio/SE/</code></td><td>能力が上がった（夜戦主義が重なった）</td><td>上がっていく短い音</td><td class="len">約0.5秒</td></tr>
           <tr><td><code>unit_down</code></td><td><code>Audio/SE/</code></td><td>部員が倒された</td><td>低く沈む打撃音</td><td class="len">約0.8秒</td></tr>
         </tbody>
       </table>
@@ -496,6 +501,8 @@
       prompt: "ゲームのエフェクト素材。眠っていることを表す、頭の上に浮かぶ印。大きさの違う3つの「Z」の形が右上へ向かって並び、そのまわりに小さな泡と星が浮かぶ。色は青白く、ほのかに光る。人物は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
     { group: "m3", path: "Art/Effects/SummonSplash.png", title: "艦娘の召喚", scene: "物理鉄人の「深夜出撃」で、空いているマスに艦娘が現れるとき", bg: "black", shape: "tall", style: "fx", arrow: "rise", dir: "下端が根元。上へ吹き上がる",
       prompt: "仲間が海から現れる瞬間の水柱を真横から見たもの。画像の下端の中央に水面の波紋の輪があり、そこから白と淡い水色のしぶきと光が上へ勢いよく吹き上がる。縦長の画像いっぱいに描く。" },
+    { group: "m3", path: "Art/Effects/Shell.png", title: "艦娘の砲弾", scene: "召喚された艦娘の攻撃。艦娘から敵へ、進む方向に回して飛ばす（いまは光の筋で代わりにしている）", bg: "alpha", shape: "wide", style: "none", arrow: "right", dir: "先端を右に", pending: true,
+      prompt: "ゲームのエフェクト素材。飛んでいく主砲の砲弾を真横から見た姿。先端を画像の右に向けた横向き。真鍮色の砲弾で、後ろ（左）へ短くたなびくオレンジ色の炎と光の尾。人物や文字は描かない。背景は完全に透過した透過PNG。横長 1536×1024。" },
     { group: "m3", path: "Art/Icons/kanmusu_token.png", title: "艦娘（召喚されるユニット）", scene: "物理鉄人の必殺技で召喚される艦娘のアイコン。マスの上と、召喚中の表示に使う", bg: null, shape: "sq", style: "none", arrow: "upright", dir: "正方形のアイコン",
       prompt: "オリジナルの艦娘（軍艦を擬人化した女の子）のSD（ちびキャラ）イラストのアイコン。セーラー服を着て、背中に小さな艤装（主砲と煙突）を背負い、元気に敬礼している。特定の既存キャラクターには似せない。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗り。正方形のアイコンで、背景は明るい水色のグラデーション。文字は描かない。正方形 1024×1024。" }
   ];
@@ -590,8 +597,9 @@
     body.appendChild(el("div", "scene", it.scene));
 
     const chips = el("div", "chips");
-    // 2026-10-13 に全部受け取った（作り直すとき用に文言を残している）
-    chips.appendChild(el("span", "got", "受取済"));
+    // pending のもの以外は 2026-10-13 に受け取った（作り直すとき用に文言を残している）
+    if (it.pending) chips.appendChild(el("span", "chip gold", "依頼中"));
+    else chips.appendChild(el("span", "got", "受取済"));
     if (it.bg === "black") chips.appendChild(el("span", "chip red", "黒背景"));
     if (it.bg === "alpha") chips.appendChild(el("span", "chip blue", "透過PNG"));
     chips.appendChild(el("span", "chip", SIZE_LABEL[it.shape]));

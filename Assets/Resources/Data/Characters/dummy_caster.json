@@ -1,10 +1,24 @@
 {
-  // テスト用のダミー（実在の部員ではない）
+  // テスト用のダミー（実在の部員ではない）。技はスキルの部品を試すためのもの
   "id": "dummy_caster",
   "name": "術師ダミー",
   "class": "Caster",
   "cost": 18,
   "redeployTime": 70,
   "color": "#7E52B8",
-  "stats": { "hp": 1050, "atk": 560, "def": 70, "attackInterval": 1.6, "range": 2.5 }
+  "stats": { "hp": 1050, "atk": 560, "def": 70, "attackInterval": 1.6, "range": 2.5 },
+  "trait": {
+    "name": "テスト：追撃",
+    "description": "攻撃するたび、狙った敵に攻撃力の30%の追加ダメージ",
+    "trigger": "OnAttack",
+    "effects": [ { "type": "Damage", "multiplier": 0.3, "target": "Target" } ]
+  },
+  "ultimate": {
+    "name": "テスト：大爆発",
+    "description": "射程内の敵すべてに攻撃力の250%のダメージ",
+    "spCost": 20,
+    "spCharge": "PerSecond",
+    "duration": 0,
+    "effects": [ { "type": "Damage", "multiplier": 2.5, "target": "EnemiesInRange" } ]
+  }
 }

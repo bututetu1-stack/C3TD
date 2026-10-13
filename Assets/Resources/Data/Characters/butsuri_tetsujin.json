@@ -16,6 +16,8 @@
     "name": "深夜出撃",
     "description": "周りの空きマスに艦娘を召喚する。終了後に寝落ちしてスタンする",
     "spCost": 30,
+    "line": "夜戦の時間だ。全艦、抜錨！",
+    "endLine": "……むにゃ。もう朝……？",
     "spCharge": "PerSecond",
     "duration": 15,
     "effects": [

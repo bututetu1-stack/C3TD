@@ -175,10 +175,12 @@ Assets/
 ## 作業メモ（Claude Code が更新する）
 
 ### 進み具合
-- M1 完了（2026-10-13）。ステージは `stage_01`（CLAUDE.md の例のまま）と `test_route`（確認用：曲がり道・出撃口2つ・敵4種、ライフ20）。
+- M1 完了（2026-10-13）。
+- ステージは `stage_01`（1-1。CLAUDE.md の例に、必殺技を使えるよう後半の波を足して約1分・敵14体）と `stage_02`（1-2 締切前夜。曲がり道・出撃口2つ・敵18体・最後に締切）。1-2 は M1 確認用の `test_route`（ライフ20）だったが、「何もしなくても勝てる」とオーナーに言われてライフ3・敵18体に直した（2026-10-13）。ライフが敵の数以上のステージは読み込み時に警告が出る。
 - 見た目を作り直した（2026-10-13、オーナーの「もっと凝ってよい」「文字が荒い」から）。
 - M2 完了（2026-10-13）。編成バーからのドラッグ配置・DP・攻撃（近接・弾・範囲・回復）・ブロック・撤退・ダウン・再配置待ち。部員は物理鉄人と、テスト用の `dummy_guard` `dummy_defender` `dummy_caster` `dummy_medic`。特性と必殺技は読み込んで表示するだけ（M3 で動かす）。
-- 素材依頼帳の画像は 2026-10-13 に全部受け取った（M3 用の SkillReady・SkillActivate・BuffAtk・Sleep・SummonSplash・艦娘のアイコンも届いている）。効果音・BGM はまだ。
+- M3 完了（2026-10-13）。スキルの部品・特性・必殺技・SP・発動ボタン・カットイン・召喚。物理鉄人は仕様どおり（夜戦主義：30秒ごとに ATK+10%、5段まで／深夜出撃：SP 30・15秒、周りの空きマスに艦娘3体（召喚者の50%を引き継ぐ）、終わると3秒寝落ち）。セリフ（`line`・`endLine`）は Claude が仮に書いたもので、オーナーが JSON で直してよい。ダミー4人には部品を試すためのテスト技（名前が「テスト：」）を付けてある。
+- 素材依頼帳の画像は 2026-10-13 に全部受け取った。依頼中は艦娘の砲弾 `Shell.png` と効果音・BGM。
 
 ### デザインの方針（オーナーと決めたこと）
 - 雰囲気はアークナイツ寄りの「作戦盤」：暗い紺の盤面、角を斜めに落とした板（`ChamferBox`）、琥珀色の差し色、英字の小見出し（OPERATION / TIME / ENEMY / LIFE / DP）。演出は凝ってよい。
@@ -191,6 +193,15 @@ Assets/
 - JSON は自前の `MiniJson` + `JsonMapper` で読む（JsonUtility では配列の配列や辞書が読めないため）。`//` コメントと末尾のカンマを書いてよい。知らないキーは警告を出して無視するので、綴りの間違いはコンソールで分かる。経路は読み込み時に検査する（範囲外・歩けないマスを通る・S で始まり B で終わらない）。
 - データ：`Data/rules.json`（DP の回復・上限、撤退で戻る割合、最低ダメージ、スローの速さ）、`Data/classes.json`（職業ごとの置ける地形・攻撃のしかた・ダメージの種類・標準ブロック数・範囲・弾の画像・色）、`Data/squad.json`（編成。M4 で編成画面に置き換える）、`Data/Characters/{id}.json`。
 - 敵の JSON：`res`（術耐性%）、`artScale`（絵の大きさ）、`artFacing`（絵の向き。課題とレポートは `Left`）。
+- 部員の JSON の追加項目：`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る）・`endLine`（終わったときのセリフ。吹き出し）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
+- スキル（`Skills/SkillRunner`・`Skills/SkillEffects` の先頭に一覧あり）：
+  - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）。
+  - 対象：Self / Target / AreaAroundSelf / AlliesInRange / EnemiesInRange。Target と AreaAroundSelf は、Damage・Stun・下げる StatModifier なら敵、Heal・上げる StatModifier なら味方。
+  - 効果の長さ：effect.duration があればそれ、なければ必殺技の効果時間（特性なら外すまでずっと）。必殺技で付けた増減は終わりに外す。撤退・ダウンでも外す。
+  - 特性の ElapsedTime は「ステージの経過時間」で重なる（遅れて置いても、その時点の重ね数から始まる）。
+  - SP：PerSecond（`params.spPerSecond`、省略時 1）/ OnAttack / OnHit。発動中・スタン中は溜まらない。必殺技は出撃中だけ使える。
+  - 召喚ユニット：周りの8マス（上・右・下・左・斜め）の空いた地上・高台に置く。地上ならブロックする。撤退はできず、時間切れか倒されると消える。
+- 部員を選ぶと、駒の右上に「必殺技」（SP が溜まると琥珀色。溜まるまでは SP の値、発動中は残り秒）と「撤退 +N」のボタンが出る。必殺技を使うと斜めの帯のカットイン（アイコン・技の名前・セリフ）。
 - ステージの `name` は「1-1 前期の始まり」のように番号と題名を空白で区切る（HUD と作戦開始の帯で分けて出す）。
 - 戦闘の決まり（アークナイツに合わせた）：
   - 射程は「マスの中心どうしの距離 ≤ range」のマス（Phase 2 で向きを入れるまでは全方向）。敵はいまいるマスで判定する。
@@ -208,13 +219,14 @@ Assets/
   - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst` `LeakBurst` `Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat`。M3 用に届いている名前：`SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）
 - 演出の部品：`Fx`（場面ごとの演出）、`FxSprite`（一度だけ再生して消える）、`PulseRing`、`Spinner`、`PathFlow`（経路の矢印。拠点からの距離で並べるので、終わりが同じ経路は矢印が重なる）、`FloatingText`（ダメージ・回復の数字）、`HealthBar`。ワールドの演出はゲーム時間（一時停止で止まる）、UI のアニメは実時間。
 - エディタは「ドメインのリロードなし」で再生する設定なので、static な値は `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` で毎回リセットする。
-- SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down`。BGM はステージの `bgm` に書いたキー（いまは両ステージとも `battle`）。
+- SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down` `skill` `skill_ready` `summon` `buff`。BGM はステージの `bgm` に書いたキー（いまは両ステージとも `battle`）。
 - テスト用のキー：Space 一時停止、R やり直し、N 次のステージ（最後の次は最初）、Esc・右クリックで選択とドラッグの取り消し。
 - 確かめ方は `docs/snippets/README.md`（画面の撮影、部員を置く、マウスを流し込む）。
 
 ### 気をつけること
 - C3 は「サークル」ではなく「部」。表記は「部」「部員」（2026-10-13 オーナー確認）。
 - 新しいスクリプトを書いている途中でエディタがコンパイルすると、そのファイルがコンパイル対象から漏れることがある（`The name 'X' does not exist` が消えない）。そのときは `AssetDatabase.DeleteAsset` で消して作り直す。新しいファイルが多いときは、作業用フォルダで全部書いてから一度にコピーする。
+- エディタの外から JSON を書き換えたら、再生する前に `AssetDatabase.Refresh()`（または compile_request）で取り込む。取り込まないと古い内容のまま動く。
 - コンパイルの前に再生を止める（`play_mode_stop`）。再生中に再コンパイルすると状態が壊れて NullReference が出る。オーナーが再生したままのこともある。
 - 破棄された Unity のオブジェクトは `== null` が true になる。「前のフレームの値」と比べるとき（選択中の部員など）は `ReferenceEquals` で比べる。
 - `RuntimePanelUtils.ScreenToPanel` / `CameraTransformWorldToPanel` は UI の拡大縮小を反映しないことがあるので、`UIFactory.ScreenToPanel` / `WorldToPanel`（比率で計算）を使う。
