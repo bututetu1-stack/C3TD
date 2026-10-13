@@ -1343,6 +1343,10 @@
     white-space: normal;
 }
 
+.book-name--long {
+    font-size: 16px;
+}
+
 .book-first {
     font-size: 20px;
     color: rgb(142, 152, 172);

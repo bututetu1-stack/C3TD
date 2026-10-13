@@ -142,7 +142,10 @@ public class EnemyBookScreen
             }
             if (d.boss) icon.AddToClassList("enemy-icon--boss");
             chip.Add(icon);
-            chip.Add(UIFactory.Text(d.name, UIFont.Body, "book-name"));
+            Label nameText = UIFactory.Text(d.name, UIFont.Body, "book-name");
+            // 8文字以上（エントリーシートなど）は、最後の1文字だけ次の行に送られないよう小さく
+            if (d.name.Length >= 8) nameText.AddToClassList("book-name--long");
+            chip.Add(nameText);
             string captured = id;
             chip.AddManipulator(new Clickable(() =>
             {
