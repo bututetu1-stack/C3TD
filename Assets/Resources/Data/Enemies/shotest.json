@@ -1,0 +1,14 @@
+{
+  "id": "shotest",
+  "name": "小テスト",
+  "label": "小",
+  "shape": "Diamond",
+  "color": "#E3A33B",
+  "size": 0.45,
+  "hp": 600,
+  "atk": 150,
+  "def": 0,
+  "attackInterval": 1.5,
+  "speed": 1.8,
+  "lifeDamage": 1
+}

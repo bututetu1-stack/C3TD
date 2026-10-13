@@ -1,0 +1,154 @@
+/* C3TD の UI の見た目。クラス名は UI/*.cs で付けている */
+
+.c3-root {
+    color: rgb(236, 239, 245);
+}
+
+/* ---------- 上のバー ---------- */
+.hud-top {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 72px;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 28px;
+    padding-right: 20px;
+    background-color: rgba(14, 18, 28, 0.92);
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.hud-stage-name {
+    flex-grow: 1;
+    font-size: 28px;
+}
+
+.hud-chip {
+    flex-direction: row;
+    align-items: center;
+    height: 52px;
+    margin-left: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.hud-chip-label {
+    font-size: 18px;
+    color: rgb(150, 160, 182);
+    margin-right: 10px;
+}
+
+.hud-chip-value {
+    font-size: 30px;
+    min-width: 84px;
+    -unity-text-align: middle-right;
+}
+
+.hud-life-value {
+    min-width: 0;
+    color: rgb(255, 112, 104);
+}
+
+.hud-chip-sub {
+    font-size: 20px;
+    padding-top: 6px;
+    color: rgb(150, 160, 182);
+}
+
+/* ---------- ボタン ---------- */
+.c3-root .c3-button {
+    margin: 0;
+    padding: 0;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: rgba(255, 255, 255, 0.16);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: rgb(236, 239, 245);
+    -unity-text-align: middle-center;
+}
+
+.c3-root .c3-button:hover {
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+.c3-root .c3-button:active {
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+.c3-root .hud-button {
+    width: 76px;
+    height: 52px;
+    margin-left: 14px;
+    font-size: 24px;
+}
+
+.c3-root .hud-button--wide {
+    width: 128px;
+    font-size: 22px;
+}
+
+.c3-root .hud-button--active {
+    background-color: rgb(232, 172, 58);
+    border-color: rgb(255, 210, 120);
+    color: rgb(28, 22, 10);
+}
+
+.c3-root .hud-button--active:hover {
+    background-color: rgb(245, 190, 80);
+}
+
+/* ---------- 一時停止 ---------- */
+.pause-banner {
+    position: absolute;
+    top: 92px;
+    left: 0;
+    right: 0;
+    -unity-text-align: middle-center;
+    font-size: 34px;
+    color: rgb(255, 214, 120);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- 勝敗 ---------- */
+.overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(6, 8, 14, 0.72);
+}
+
+.result-title {
+    font-size: 120px;
+    color: rgb(255, 214, 110);
+}
+
+.result-title--lost {
+    color: rgb(255, 110, 100);
+}
+
+.result-detail {
+    margin-top: 8px;
+    font-size: 30px;
+    color: rgb(200, 206, 222);
+}
+
+.result-buttons {
+    flex-direction: row;
+    margin-top: 48px;
+}
+
+.c3-root .result-button {
+    width: 260px;
+    height: 76px;
+    margin-left: 16px;
+    margin-right: 16px;
+    font-size: 30px;
+}

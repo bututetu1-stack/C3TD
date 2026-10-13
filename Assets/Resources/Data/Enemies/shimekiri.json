@@ -1,0 +1,15 @@
+{
+  "id": "shimekiri",
+  "name": "締切",
+  "label": "締切",
+  "boss": true,
+  "shape": "Hexagon",
+  "color": "#8E1F2B",
+  "size": 0.85,
+  "hp": 15000,
+  "atk": 600,
+  "def": 400,
+  "attackInterval": 2.5,
+  "speed": 0.45,
+  "lifeDamage": 1
+}

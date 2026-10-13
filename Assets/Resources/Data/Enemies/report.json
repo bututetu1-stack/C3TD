@@ -1,0 +1,14 @@
+{
+  "id": "report",
+  "name": "レポート",
+  "label": "レ",
+  "shape": "Square",
+  "color": "#7A5BBF",
+  "size": 0.62,
+  "hp": 3500,
+  "atk": 300,
+  "def": 300,
+  "attackInterval": 2.5,
+  "speed": 0.55,
+  "lifeDamage": 1
+}

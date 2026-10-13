@@ -1,0 +1,18 @@
+{
+  "id": "stage_01",
+  "name": "1-1 前期の始まり",
+  "life": 3,
+  "initialDp": 10,
+  "map": [
+    "XXXXXXXXXX",
+    "XHHHHHHHHX",
+    "S........B",
+    "XHHHHHHHHX",
+    "XXXXXXXXXX"
+  ],
+  "paths": { "p1": [[0,2],[9,2]] },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",    "path": "p1", "count": 5, "interval": 2 },
+    { "time": 20, "enemy": "shotest",  "path": "p1", "count": 3, "interval": 1 }
+  ]
+}
