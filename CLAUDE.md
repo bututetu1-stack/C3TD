@@ -30,6 +30,7 @@ MCP経由のシーン・Prefab操作は失敗しやすいので、**コードと
   - SE：`Assets/Resources/Audio/SE/{key}.wav`、BGM：`Assets/Resources/Audio/BGM/{key}.ogg`
     - ファイルがない場合は無音で動作する
 - 素材が必要になったら、**ファイル名・サイズ・用途の一覧**にしてオーナーに依頼する。
+- **部員のアイコンは先輩の手描き**。AI に読み込ませない（添付して「同じ画風で」と頼むのも、立ち絵を作るのも不可）。カットインもアイコンをそのまま使う（2026-10-14 オーナー）。AI で絵を作るときは文言だけで頼み、ゲームの画像は添付しない。
 
 ## ゲーム仕様
 
@@ -248,7 +249,7 @@ Assets/
   - `Art/Icons/{characterId}.png`（マップ上では丸く切り抜く）、`Art/Enemies/{enemyId}.png`
   - `Art/Map/Spawn.png`・`Base.png`、`Art/Background/Battle.png`
   - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst` `LeakBurst` `Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat`。M3 用に届いている名前：`SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）。2026-10-14 に届いた：`Shell` `Explosion` `DpGain` `StatusSlow` `StatusDefDown`（状態の印。なければ色付きの丸に「遅」「防」）と、タイトルの絵 `Art/Background/Title.png`
-  - `Art/CutIn/{characterId}.png`：必殺技のカットインに大きく出す立ち絵（透過・縦長。なければアイコンを四角く出す）。物理鉄人の分は依頼中
+  - `Art/CutIn/{characterId}.png`：読み込む仕組みは残っているが**使わない**。カットインは部員のアイコンをそのまま出す（2026-10-14 オーナー）
 - 演出の部品：`Fx`（場面ごとの演出）、`FxSprite`（一度だけ再生して消える）、`PulseRing`、`Spinner`、`PathFlow`（経路の矢印。拠点からの距離で並べるので、終わりが同じ経路は矢印が重なる）、`FloatingText`（ダメージ・回復の数字）、`HealthBar`。ワールドの演出はゲーム時間（一時停止で止まる）、UI のアニメは実時間。
 - エディタは再生のたびにドメインをリロードする設定（C3_shogi と同じ。2026-10-13 に変えた）。「ドメインのリロードなし」にすると、同じエディタで2回目に再生したときから UI の文字が全部消える。実行時に作ったフォント（`GameFonts`）は再生が終わると壊されるのに、UI Toolkit の文字のキャッシュは前の再生のマテリアルを持ったままになるため（`MeshGenerator.DrawText` で NullReference）。static な値を `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` でリセットするのは、そのまま残す。
 - SE のキー（ファイルがなければ無音）：`click` `life_lost` `victory` `defeat` `deploy` `retreat` `hit` `enemy_defeat` `unit_down` `skill` `skill_ready` `summon` `buff` `start`（作戦開始の帯）`boss_warning`（ボスが出る2秒前）。同じ SE は 0.05 秒に1回まで。BGM はステージの `bgm` に書いたキー（いまはどのステージも `battle`）と、メニューの `menu`、ボスが出たら `boss`（ファイルがあるときだけ切り替える）。拡張子は見ないので wav・ogg・mp3 のどれでも鳴る。

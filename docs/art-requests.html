@@ -301,8 +301,6 @@
           <span class="chip gold">新：第2章の敵 6体（通知・論文・睡魔・再履修・グループワーク・期末試験）</span>
           <span class="chip gold">新：第3章の敵 6体（エントリーシート・下書き・面接官・お祈りメール・グループディスカッション・最終面接）</span>
           <span class="chip gold">新：第4章の敵 5体（先行研究・実験データ・赤ペン・再提出・卒論審査）</span>
-          <span class="chip gold">新：物理鉄人のカットイン立ち絵</span>
-          <span class="chip gold">効果音 summon（艦娘の召喚。水しぶきと汽笛）</span>
         </div>
       </div>
       <div class="status-row done">
@@ -341,7 +339,7 @@
   <section id="howto">
     <h2>使い方</h2>
     <ol class="steps">
-      <li><div><strong>同じチャットで続けて生成する。</strong>最初の1枚が気に入ったら、それを添付して「この絵と同じ画風で」と頼むと、シリーズの絵柄がそろいます。敵は敵どうし、エフェクトはエフェクトどうしで同じチャットにすると、まとまりやすいです。</div></li>
+      <li><div><strong>同じチャットで続けて生成する。</strong>同じチャットで続けると、シリーズの絵柄がそろいます。<strong>部員のアイコン（先輩の手描き）は、AI に添付しないでください。</strong>敵は敵どうし、エフェクトはエフェクトどうしで同じチャットにすると、まとまりやすいです。</div></li>
       <li><div><strong>背景は各カードの指定どおりに。</strong>光・炎・衝撃波のように光るものは<strong>真っ黒の背景</strong>で頼んでください。黒い部分はゲーム側で自動的に透明になります。敵や矢のような物体は<strong>透過PNG</strong>で頼んでください。</div></li>
       <li><div><strong>向きを守る。</strong>敵は<strong>右向き</strong>で描いてもらえば、左へ進むときはゲーム側で左右を反転します。矢や弾は進む方向へ回すので、小図の矢印の向きで描かれている必要があります。</div></li>
       <li><div><strong>ファイル名を変えて置くだけ。</strong>カードの下にある保存先（例：<code>Assets/Resources/Art/Enemies/kadai.png</code>）に置いてください。フォルダがなければ作ってください。画像の大きさは自由で、1枚ずつ置いても大丈夫です。</div></li>
@@ -456,7 +454,7 @@
           <tr><td><code>retreat</code></td><td><code>Audio/SE/</code></td><td>部員を撤退させた</td><td>ふわっと消える音</td><td class="len">約0.5秒</td></tr>
           <tr><td><code>skill</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>必殺技の発動（カットイン）</td><td>力強い決め音（シャキーン）</td><td class="len">約1.2秒</td></tr>
           <tr><td><code>skill_ready</code></td><td><code>Audio/SE/</code></td><td>必殺技が使えるようになった</td><td>軽いきらめき（ピロン）</td><td class="len">約0.5秒</td></tr>
-          <tr><td><code>summon</code> <span class="chip gold">まだ</span></td><td><code>Audio/SE/</code></td><td>艦娘の召喚</td><td>水しぶきと汽笛</td><td class="len">約1秒</td></tr>
+          <tr><td><code>summon</code> <span class="chip">なくてよい</span></td><td><code>Audio/SE/</code></td><td>艦娘の召喚</td><td>水しぶきと汽笛</td><td class="len">約1秒</td></tr>
           <tr><td><code>buff</code></td><td><code>Audio/SE/</code></td><td>能力が上がった（夜戦主義が重なった）</td><td>上がっていく短い音</td><td class="len">約0.5秒</td></tr>
           <tr><td><code>unit_down</code></td><td><code>Audio/SE/</code></td><td>部員が倒された</td><td>低く沈む打撃音</td><td class="len">約0.8秒</td></tr>
         </tbody>
@@ -667,8 +665,6 @@
       prompt: "オリジナルの艦娘（軍艦を擬人化した女の子）のSD（ちびキャラ）イラストのアイコン。セーラー服を着て、背中に小さな艤装（主砲と煙突）を背負い、元気に敬礼している。特定の既存キャラクターには似せない。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗り。正方形のアイコンで、背景は明るい水色のグラデーション。文字は描かない。正方形 1024×1024。" },
 
     // ---------------- 2026-10-13 夜の追加 ----------------
-    { group: "new", path: "Art/CutIn/butsuri_tetsujin.png", title: "物理鉄人のカットイン（立ち絵）", scene: "必殺技「深夜出撃」のカットインで、帯からはみ出すように大きく出す（いまはアイコンを四角く出している）。ChatGPT に物理鉄人のアイコン（Assets/Resources/Art/Icons/butsuri_tetsujin.png）を添付して頼む。CutIn フォルダは新しく作る", bg: "alpha", shape: "tall", style: "none", arrow: "upright", dir: "縦長・体はやや左向き", pending: true,
-      prompt: "添付した画像と同じキャラクター・同じ服装・同じ画風で、ゲームの必殺技カットインに使う全身の立ち絵を1枚描いてください。弓を大きく引き絞った決めポーズで、体と顔はやや左を向く（画面の中央側を見る）。頭から足元まで全身を入れ、上下左右に少し余白を残す。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗りは添付の画像と同じにする。文字・ロゴ・サインは描かない。背景は完全に透過した透過PNG。縦長 1024×1536。" },
     { group: "new", path: "Art/Effects/Explosion.png", title: "砲弾の爆発", scene: "艦娘の砲弾が当たったところで、まわりの敵ごと巻き込んで爆発する（物理の範囲攻撃に使う）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
       prompt: "砲弾が着弾して爆発する瞬間を真上から見たもの。中心が白くまぶしく光り、オレンジと赤の炎の球が丸く広がり、外側に灰色の煙の輪と、四方へ飛び散る火の粉。円形にまとまった形。" },
     { group: "new", path: "Art/Effects/StatusSlow.png", title: "状態の印：鈍足", scene: "敵が遅くなっているあいだ、体力バーの左に小さく出る（いまは水色の丸に「遅」）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）",
