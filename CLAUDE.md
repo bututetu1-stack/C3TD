@@ -176,19 +176,35 @@ Assets/
 
 ### 進み具合
 - M1 完了（2026-10-13）。ステージは `stage_01`（CLAUDE.md の例のまま）と `test_route`（M1 確認用：曲がり道・出撃口2つ・敵4種、ライフ20）。
+- 見た目を作り直した（2026-10-13、オーナーの「デザインがダサい、もっと凝ってよい」「文字が荒い」から）。物理鉄人のアイコン `Art/Icons/butsuri_tetsujin.png` を受け取った（M2 の編成バーで使う）。
+
+### デザインの方針（オーナーと決めたこと）
+- 雰囲気はアークナイツ寄りの「作戦盤」：暗い紺の盤面、角を斜めに落とした板（`ChamferBox`）、琥珀色の差し色、英字の小見出し（OPERATION / TIME / ENEMY / LIFE）。演出は凝ってよい。
+- 書体の役割（`GameFonts` の `UIFont`）：Body＝Zen角ゴシック New Bold（日本語の本文・ボタン）、Display＝Oswald Bold（数字と英字）、Title＝しっぽり明朝 B1 ExtraBold（作戦名・勝敗などの日本語の大見出し）。どれも OFL で、`Resources/Fonts/Licenses` にライセンスがある。
+- 文字は UI もマップ上も SDF のフォントアセットを実行時に作って描く（縮小しても荒れない）。
+- 画像はオーナーが ChatGPT で作る。頼むときは素材依頼帳（https://claude.ai/artifact/GQmWJRGEXxumur5f64Mfoo 、元は `docs/art-requests.html`）にカードを足して文言を用意する。光るものは黒背景（ゲーム側で黒を透明にする）、物体とキャラは透過PNG、敵は右向き。
 
 ### 決めたこと・実装の約束
 - マス座標は `[列, 行]`、行は**上から0**（マップの文字列と同じ向き）。ワールド座標は1マス=1ユニットで、左下のマスの中心が (0, 0)（`StageMap.CellToWorld`）。
 - JSON は自前の `MiniJson` + `JsonMapper` で読む（JsonUtility では配列の配列や辞書が読めないため）。`//` コメントと末尾のカンマを書いてよい。知らないキーは警告を出して無視するので、綴りの間違いはコンソールで分かる。経路は読み込み時に検査する（範囲外・歩けないマスを通る・S で始まり B で終わらない）。
+- ステージの `name` は「1-1 前期の始まり」のように番号と題名を空白で区切る（HUD と作戦開始の帯で分けて出す）。
 - 勝敗：ライフが0で敗北。敵がすべて出終わって場に残っていなければ、ライフが残っている限り勝利（拠点に着いた敵がいてもよい）。
-- 実行時に作るもの：カメラの調整（`CameraFitter`、上の HUD 88px・下の編成バー 180px を空ける）、PanelSettings（`UIFactory`、1920x1080 を高さ基準で拡縮）、図形スプライト（`SpriteFactory`）、TextMeshPro のフォント（`GameFonts`）。
-- フォントは Zen角ゴシック New（OFL、`Resources/Fonts`）。UI は UI Toolkit をコードで組み、見た目は `Resources/UI/Theme.uss`。
+- 実行時に作るもの：カメラの調整（`CameraFitter`、上の HUD 96px・下の編成バー 180px を空ける。揺れもここ）、PanelSettings（`UIFactory`、1920x1080 を高さ基準で拡縮）、図形スプライト（`SpriteFactory`）、フォント（`GameFonts`）。
+- UI は UI Toolkit をコードで組む。配置・文字の大きさと色は `Resources/UI/Theme.uss`、フォントはコードで付ける。部品は `ChamferBox`（角を落とした板・縞・差し色）、`C3Button`、`IconView`（Painter2D のアイコン）、`UITween`（実時間で動く小さなアニメ）。
+- 本素材の読み込みは `Art`（`ArtTexture` で縮小して読むので、インポート設定は触らなくてよい）。置き場所は `Resources/` の下：
+  - `Art/Icons/{characterId}.png`、`Art/Enemies/{enemyId}.png`（透過・右向き。大きさは敵 JSON の `artScale` で調整）
+  - `Art/Map/Spawn.png`・`Base.png`、`Art/Background/Battle.png`
+  - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst`・`LeakBurst`。M2/M3 用に依頼帳で予約した名前：`Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat` `SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）
+- 演出の部品：`Fx`（場面ごとの演出）、`FxSprite`（一度だけ再生して消える）、`PulseRing`、`Spinner`、`PathFlow`（経路の矢印。拠点からの距離で並べるので、終わりが同じ経路は矢印が重なる）。ワールドの演出はゲーム時間（一時停止で止まる）、UI のアニメは実時間。
 - エディタは「ドメインのリロードなし」で再生する設定なので、static な値は `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` で毎回リセットする。
-- SE のキー（ファイルがなければ無音）：`click`（ボタン）、`life_lost`（拠点に着かれた）、`victory`、`defeat`。BGM はステージの `bgm` に書いたキー。
+- SE のキー（ファイルがなければ無音）：`click`（ボタン）、`life_lost`（拠点に着かれた）、`victory`、`defeat`。BGM はステージの `bgm` に書いたキー（いまは両ステージとも `battle`）。
 - テスト用のキー：Space 一時停止、R やり直し、N 次のステージ（最後の次は最初）。
 
 ### 気をつけること
 - C3 は「サークル」ではなく「部」。表記は「部」「部員」（2026-10-13 オーナー確認）。
-- 新しいスクリプトを書いている途中でエディタがコンパイルすると、そのファイルがコンパイル対象から漏れることがある（`The name 'X' does not exist` が消えない）。そのときは `AssetDatabase.DeleteAsset` で消して作り直す。
+- 新しいスクリプトを書いている途中でエディタがコンパイルすると、そのファイルがコンパイル対象から漏れることがある（`The name 'X' does not exist` が消えない）。そのときは `AssetDatabase.DeleteAsset` で消して作り直す。新しいファイルが多いときは、作業用フォルダで全部書いてから一度にコピーする。
+- コンパイルの前に再生を止める（`play_mode_stop`）。再生中に再コンパイルすると状態が壊れて NullReference が出る。オーナーが再生したままのこともある。
+- 実行時に作った Oswald のフォントアセットは字詰めが強く掛かりすぎる（「PAUS E」）ので、`getFontFeatures = false` にしている。
+- オーナーの Game ビューは小さい（734x340 程度）ので、解像度を 1920x1080 固定にした（縮小表示になる）。
 - スクリプトの改行は LF（`core.autocrlf=false`、`core.eol=lf`）。
 - GitHub CLI（`gh`）がこの PC にはない。リポジトリ（https://github.com/bututetu1-stack/C3TD ）は公開リポジトリ。

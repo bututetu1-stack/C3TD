@@ -1,0 +1,661 @@
+<title>C3TD 素材依頼帳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Shippori+Mincho+B1:wght@800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+  /* 作戦盤の書類：暗い盤面に琥珀の差し色。1カラムの依頼カードに、画用紙の形と向きの小図を添える（ゲームの HUD と同じ配色・書体） */
+  :root {
+    --bg: #0b0f18;
+    --panel: #121826;
+    --panel-2: #1a2232;
+    --line: rgba(140, 165, 210, 0.22);
+    --text: #eef1f6;
+    --text-sub: #9aa4b8;
+    --accent: #f4b63f;
+    --accent-strong: #ffd27a;
+    --on-accent: #14110a;
+    --red: #ff6b74;
+    --red-line: rgba(255, 107, 116, 0.5);
+    --blue: #6cc4ff;
+    --blue-line: rgba(108, 196, 255, 0.45);
+    --ok: #8fe0a8;
+    --ok-bg: rgba(143, 224, 168, 0.12);
+    --btn: #1f2940;
+    --btn-hover: #2a3654;
+    --code-bg: rgba(244, 182, 63, 0.1);
+    --canvas-black: #000000;
+    --canvas-check-a: #3a4256;
+    --canvas-check-b: #262d3d;
+    --arrow: #ff8a6b;
+    --arrow-on-black: #ffd36b;
+    --font-display: "Oswald", "Bahnschrift", "Arial Narrow", sans-serif;
+    --font-title: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    --font-body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #eef1f6;
+      --panel: #ffffff;
+      --panel-2: #e5eaf2;
+      --line: rgba(40, 60, 100, 0.18);
+      --text: #121826;
+      --text-sub: #4f5a6e;
+      --accent: #b7791f;
+      --accent-strong: #8a5a12;
+      --on-accent: #ffffff;
+      --red: #c23440;
+      --red-line: rgba(194, 52, 64, 0.45);
+      --blue: #1f6fb8;
+      --blue-line: rgba(31, 111, 184, 0.4);
+      --ok: #2f7a4a;
+      --ok-bg: #dcefe2;
+      --btn: #e5eaf2;
+      --btn-hover: #d6deea;
+      --code-bg: rgba(183, 121, 31, 0.1);
+      --canvas-check-a: #ffffff;
+      --canvas-check-b: #cfd5df;
+      --arrow: #d94a32;
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #eef1f6;
+    --panel: #ffffff;
+    --panel-2: #e5eaf2;
+    --line: rgba(40, 60, 100, 0.18);
+    --text: #121826;
+    --text-sub: #4f5a6e;
+    --accent: #b7791f;
+    --accent-strong: #8a5a12;
+    --on-accent: #ffffff;
+    --red: #c23440;
+    --red-line: rgba(194, 52, 64, 0.45);
+    --blue: #1f6fb8;
+    --blue-line: rgba(31, 111, 184, 0.4);
+    --ok: #2f7a4a;
+    --ok-bg: #dcefe2;
+    --btn: #e5eaf2;
+    --btn-hover: #d6deea;
+    --code-bg: rgba(183, 121, 31, 0.1);
+    --canvas-check-a: #ffffff;
+    --canvas-check-b: #cfd5df;
+    --arrow: #d94a32;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.8;
+    padding-inline: 16px;
+    padding-block: 0 64px;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  header { padding-block: 44px 28px; border-bottom: 1px solid var(--line); }
+  .eyebrow {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.32em;
+    font-size: 13px;
+  }
+  h1 {
+    font-family: var(--font-title);
+    font-weight: 800;
+    font-size: clamp(32px, 6vw, 48px);
+    letter-spacing: 0.08em;
+    margin: 4px 0 12px;
+    text-wrap: balance;
+  }
+  h2 {
+    font-family: var(--font-title);
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: 0.05em;
+    margin: 0 0 6px;
+    text-wrap: balance;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+  }
+  h2 .tag {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+  }
+  h3 { font-family: var(--font-body); font-weight: 700; font-size: 19px; margin: 0; }
+  p { margin: 0 0 10px; max-width: 65ch; }
+  .lead { color: var(--text-sub); }
+  nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  nav.toc a {
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    padding: 4px 16px;
+    font-size: 14px;
+    background: var(--panel);
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  }
+  nav.toc a:hover, nav.toc a:focus-visible { background: var(--btn-hover); outline: none; }
+  section { margin-top: 48px; }
+  .section-note { color: var(--text-sub); margin-bottom: 16px; }
+
+  .status { margin-top: 22px; display: grid; gap: 10px; }
+  .status-row {
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    display: grid;
+    gap: 6px;
+    border-left: 4px solid var(--accent);
+  }
+  .status-row.done { border-left-color: var(--ok); }
+  .status-row strong { font-weight: 700; }
+  .status-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .steps { display: grid; gap: 12px; padding: 0; margin: 14px 0 0; list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .steps li > div { min-width: 0; }
+  .steps li::before {
+    content: counter(step);
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--on-accent);
+    background: var(--accent);
+    width: 30px; height: 30px;
+    display: grid; place-items: center;
+    font-size: 16px;
+    clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 18px 20px;
+    min-width: 0;
+  }
+  .card.now { border-left: 4px solid var(--accent); }
+  .cards { display: grid; gap: 14px; margin-top: 14px; }
+
+  .fx { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 4px 18px; align-items: start; }
+  .fx-figure { display: grid; justify-items: center; gap: 6px; padding-top: 4px; }
+  .fx-figure svg { width: 104px; height: 104px; display: block; }
+  .fx-figure .dir { font-size: 12px; line-height: 1.5; color: var(--text-sub); text-align: center; }
+  .fx-body { min-width: 0; }
+  @media (max-width: 560px) {
+    .fx { grid-template-columns: 1fr; }
+    .fx-figure { grid-template-columns: 84px 1fr; justify-items: start; align-items: center; }
+    .fx-figure svg { width: 84px; height: 84px; }
+    .fx-figure .dir { text-align: left; }
+  }
+
+  .card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 4px; }
+  .file { font-family: var(--font-mono); font-size: 14px; color: var(--accent); }
+  .scene { color: var(--text-sub); font-size: 14px; margin-bottom: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chip {
+    font-size: 12px;
+    padding: 1px 10px;
+    border: 1px solid var(--line);
+    color: var(--text-sub);
+    white-space: nowrap;
+  }
+  .chip.gold { color: var(--accent-strong); border-color: var(--accent); }
+  .chip.red { color: var(--red); border-color: var(--red-line); }
+  .chip.blue { color: var(--blue); border-color: var(--blue-line); }
+  .got {
+    font-size: 12px;
+    padding: 1px 10px;
+    color: var(--ok);
+    background: var(--ok-bg);
+    white-space: nowrap;
+  }
+
+  .prompt {
+    background: var(--panel-2);
+    padding: 12px 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.75;
+    margin: 0;
+  }
+  .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
+  .save { font-size: 13px; color: var(--text-sub); min-width: 0; }
+  code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--code-bg);
+    padding: 1px 6px;
+    word-break: break-all;
+  }
+  button.copy {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--btn);
+    border: 1px solid var(--accent);
+    padding: 6px 18px;
+    cursor: pointer;
+    clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  }
+  button.copy:hover { background: var(--btn-hover); }
+  button.copy:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; }
+  button.copy.done { background: var(--ok-bg); border-color: var(--ok); color: var(--ok); }
+  .toggle { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-sub); margin-top: 12px; }
+  .toggle input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 14px; font-size: 14px; color: var(--text-sub); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .swatch { width: 22px; height: 22px; border: 1px solid var(--line); flex: none; }
+  .swatch.black { background: var(--canvas-black); }
+  .swatch.alpha {
+    background-color: var(--canvas-check-a);
+    background-image: linear-gradient(45deg, var(--canvas-check-b) 25%, transparent 25%, transparent 75%, var(--canvas-check-b) 75%),
+                      linear-gradient(45deg, var(--canvas-check-b) 25%, transparent 25%, transparent 75%, var(--canvas-check-b) 75%);
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+  }
+
+  .styles { display: grid; gap: 14px; }
+  .table-wrap { overflow-x: auto; margin-top: 12px; border: 1px solid var(--line); }
+  table { border-collapse: collapse; width: 100%; min-width: 600px; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--accent); font-family: var(--font-display); font-weight: 500; letter-spacing: 0.12em; background: var(--panel); font-size: 13px; }
+  td { background: var(--bg); }
+  tr:last-child td { border-bottom: 0; }
+  td.len { white-space: nowrap; color: var(--text-sub); font-variant-numeric: tabular-nums; }
+  a { color: var(--accent); }
+  .note { font-size: 14px; color: var(--text-sub); }
+  @media (prefers-reduced-motion: no-preference) {
+    button.copy, nav.toc a { transition: background 0.15s ease; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">C3TD / ART REQUESTS</div>
+    <h1>素材依頼帳</h1>
+    <p class="lead">ChatGPT に貼り付けて使う、画像の生成文言の一覧です。画像は決まった場所に置くだけで、次に再生したときからゲームに反映されます。置いていない画像は、いまの図形と光の演出のまま動きます。</p>
+    <div class="status">
+      <div class="status-row">
+        <strong>いま依頼中（2026-10-13）</strong>
+        <div class="status-list">
+          <span class="chip gold">敵 4体</span>
+          <span class="chip gold">出撃口・拠点の印</span>
+          <span class="chip gold">戦闘画面の背景</span>
+          <span class="chip gold">敵の出現・拠点突破のエフェクト</span>
+        </div>
+      </div>
+      <div class="status-row done">
+        <strong>受け取って組み込み済み</strong>
+        <div class="status-list"><span class="got">物理鉄人のアイコン butsuri_tetsujin.png</span></div>
+      </div>
+    </div>
+    <nav class="toc" aria-label="目次">
+      <a href="#howto">使い方</a>
+      <a href="#style">共通の画風</a>
+      <a href="#enemies">敵</a>
+      <a href="#map">出撃口・拠点・背景</a>
+      <a href="#m1fx">出現と突破</a>
+      <a href="#m2">配置と攻撃（M2）</a>
+      <a href="#m3">必殺技と召喚（M3）</a>
+      <a href="#sounds">効果音・BGM</a>
+    </nav>
+  </header>
+
+  <section id="howto">
+    <h2>使い方</h2>
+    <ol class="steps">
+      <li><div><strong>同じチャットで続けて生成する。</strong>最初の1枚が気に入ったら、それを添付して「この絵と同じ画風で」と頼むと、シリーズの絵柄がそろいます。敵は敵どうし、エフェクトはエフェクトどうしで同じチャットにすると、まとまりやすいです。</div></li>
+      <li><div><strong>背景は各カードの指定どおりに。</strong>光・炎・衝撃波のように光るものは<strong>真っ黒の背景</strong>で頼んでください。黒い部分はゲーム側で自動的に透明になります。敵や矢のような物体は<strong>透過PNG</strong>で頼んでください。</div></li>
+      <li><div><strong>向きを守る。</strong>敵は<strong>右向き</strong>で描いてもらえば、左へ進むときはゲーム側で左右を反転します。矢や弾は進む方向へ回すので、小図の矢印の向きで描かれている必要があります。</div></li>
+      <li><div><strong>ファイル名を変えて置くだけ。</strong>カードの下にある保存先（例：<code>Assets/Resources/Art/Enemies/kadai.png</code>）に置いてください。フォルダがなければ作ってください。画像の大きさは自由で、1枚ずつ置いても大丈夫です。</div></li>
+    </ol>
+    <div class="legend" aria-label="小図の見かた">
+      <span><i class="swatch black"></i>真っ黒の背景で描く（黒は透明になる）</span>
+      <span><i class="swatch alpha"></i>透過PNGで描く</span>
+      <span>矢印：絵の向き（顔・先端・飛ぶ方向）</span>
+    </div>
+  </section>
+
+  <section id="style">
+    <h2>共通の画風</h2>
+    <p class="section-note">カードの「コピー」を押すと、そのカードに合う画風の指定が先頭に付きます（背景とタイトル画面のような単独の絵には付きません）。</p>
+    <div class="styles">
+      <div class="card">
+        <div class="card-head"><h3>敵・キャラクター用</h3></div>
+        <pre class="prompt" id="style-chara">アークナイツのような2Dタワーディフェンスゲーム『C3TD』で使う、キャラクターの画像を1枚描いてください。
+・テーマは「大学生活の敵」。課題・テスト・締切など、大学生を苦しめるものを、かわいくて少し憎たらしいモンスターにする。
+・画風：SD（ちびキャラ）のアニメ調。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）。くっきりしたセル塗りと、やわらかい影。
+・体はやや右を向いた斜め前向き。頭から足元まで全身を描き、画像の中央に置いて、上下左右に少し余白を残す。
+・文字・数字・ロゴ・サインは描かない（名前はゲーム側で出す）。
+・このシリーズは全部、同じ画風・同じ線の太さ・同じ頭身で統一する。</pre>
+        <div class="row"><span class="save">敵のカードに付きます</span><button class="copy" type="button" data-target="style-chara" data-plain="1">コピー</button></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>エフェクト用</h3></div>
+        <pre class="prompt" id="style-fx">アークナイツのような2Dタワーディフェンスゲーム『C3TD』で使う、ゲームエフェクトの素材画像を1枚描いてください。
+・画風：日本のアニメやゲームの手描きエフェクト。くっきりした形と、芯が白く飛ぶ鮮やかな発光。
+・描くのはエフェクトひとつだけ。画面の中央に置き、上下左右に少し余白を残して、端で途切れさせない。
+・人物、キャラクター、手、文字、ロゴ、サイン、透かし、地面、風景は描かない。
+・このシリーズは全部、同じ画風・同じ線の太さ・同じ色の鮮やかさで統一する。</pre>
+        <div class="row"><span class="save">エフェクトと出撃口のカードに付きます</span><button class="copy" type="button" data-target="style-fx" data-plain="1">コピー</button></div>
+      </div>
+    </div>
+    <label class="toggle"><input type="checkbox" id="include-style" checked> カードをコピーするとき、共通の画風を先頭に付ける</label>
+  </section>
+
+  <section id="enemies">
+    <h2>敵<span class="tag">ENEMIES</span></h2>
+    <p class="section-note">いまは色付きの図形に「課題」などの文字を載せて代わりにしています。絵を置くと、図形と文字の代わりにその絵が歩きます（影と、ボスの赤い気配はそのまま付きます）。</p>
+    <div class="cards" data-group="enemies"></div>
+  </section>
+
+  <section id="map">
+    <h2>出撃口・拠点・背景<span class="tag">MAP</span></h2>
+    <p class="section-note">出撃口と拠点のマスの上に重ねる印と、盤の後ろに敷く背景です。印を置くと、マスの名前は下に小さく出ます。</p>
+    <div class="cards" data-group="map"></div>
+  </section>
+
+  <section id="m1fx">
+    <h2>出現と突破<span class="tag">EFFECTS</span></h2>
+    <p class="section-note">いまの演出（光の輪と破片）に重ねて使います。</p>
+    <div class="cards" data-group="m1fx"></div>
+  </section>
+
+  <section id="m2">
+    <h2>配置と攻撃<span class="tag">M2</span></h2>
+    <p class="section-note">次のマイルストーン（M2：部員の配置・攻撃・撤退）で使います。いま置いても使われませんが、先に用意しておくと、M2 の最初から本素材で見られます。</p>
+    <div class="cards" data-group="m2"></div>
+  </section>
+
+  <section id="m3">
+    <h2>必殺技と召喚<span class="tag">M3</span></h2>
+    <p class="section-note">M3（スキル・必殺技・召喚）で使います。物理鉄人の「深夜出撃」（艦娘を召喚して、終わると寝落ち）の演出もここに入っています。</p>
+    <div class="cards" data-group="m3"></div>
+  </section>
+
+  <section id="sounds">
+    <h2>効果音・BGM<span class="tag">SOUND</span></h2>
+    <p>ChatGPT は音を作れないので、フリー素材サイトなどで探してください。ファイル名を下の表のとおりにして置くと、そのまま鳴ります（mp3・ogg・wav のどれでも可。zip のままでは読めないので、解凍した中身を置いてください）。ない音は鳴らないだけで、エラーにはなりません。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ファイル名</th><th>置き場所</th><th>鳴る場面</th><th>どんな音</th><th>長さ</th></tr></thead>
+        <tbody>
+          <tr><td><code>battle</code> <span class="chip gold">優先</span></td><td><code>Audio/BGM/</code></td><td>出撃中</td><td>緊張感のある作戦BGM（ループ）。電子音とストリングス</td><td class="len">1〜3分</td></tr>
+          <tr><td><code>life_lost</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>敵に拠点を突破された</td><td>低い警告音（ブーッ）とガラスが割れる音</td><td class="len">約1秒</td></tr>
+          <tr><td><code>victory</code></td><td><code>Audio/SE/</code></td><td>防衛成功</td><td>短いファンファーレ</td><td class="len">2〜3秒</td></tr>
+          <tr><td><code>defeat</code></td><td><code>Audio/SE/</code></td><td>防衛失敗</td><td>沈んでいく低い音</td><td class="len">約2秒</td></tr>
+          <tr><td><code>click</code></td><td><code>Audio/SE/</code></td><td>ボタンを押す</td><td>短い電子音（ピッ）</td><td class="len">0.2秒</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px">置き場所はどれも <code>Assets/Resources/</code> の下です（例：<code>Assets/Resources/Audio/SE/life_lost.wav</code>）。M2 以降の音（配置・攻撃・撤退など）は、そのときに追加します。</p>
+    <p class="note">探しやすいサイトの例：<a href="https://soundeffect-lab.info/" target="_blank" rel="noopener">効果音ラボ</a>、<a href="https://otologic.jp/" target="_blank" rel="noopener">OtoLogic</a>、<a href="https://maou.audio/" target="_blank" rel="noopener">魔王魂</a>。クレジット表記などの利用規約は各サイトで確認してください。</p>
+  </section>
+</div>
+
+<script>
+  // bg: "black"（真っ黒の背景）/ "alpha"（透過PNG）/ null（背景の指定を付けない）
+  // shape: "sq" 1024×1024 / "wide" 1536×1024 / "tall" 1024×1536
+  // style: "chara" / "fx" / "none"（共通の画風を付けない）
+  // arrow: "face"（右向きの体）"right" "diag"（左上→右下）"rise"（下端から上）"spin"（向きなし・回して使う）"upright"（上下あり・回さない）
+  const BG_LINE = {
+    black: "背景：真っ黒（#000000）の単色で塗りつぶす。グラデーションや模様は入れない（黒い部分はゲーム側で透明にする）。",
+    alpha: "背景：完全に透過した透過PNG。背景色や市松模様、地面の影は描かない。"
+  };
+  const SIZE_LINE = {
+    sq: "サイズ：正方形 1024×1024。",
+    wide: "サイズ：横長 1536×1024。",
+    tall: "サイズ：縦長 1024×1536。"
+  };
+  const SIZE_LABEL = { sq: "正方形 1024×1024", wide: "横長 1536×1024", tall: "縦長 1024×1536" };
+
+  const items = [
+    // ---------------- 敵 ----------------
+    { group: "enemies", path: "Art/Enemies/kadai.png", title: "課題", scene: "標準的な敵。いちばん多く出てくる", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", now: true, priority: true,
+      prompt: "1枚のA4のプリント用紙が、怒ったモンスターになったもの。紙の上半分に、つり上がった目と、への字の口。紙には罫線と、赤ペンで書いたようなバツ印や丸がところどころにある（文字は書かない）。紙のふちから細い手足が生えていて、ずんずん歩いている。左上の角が少し折れている。色は白い紙に、赤のアクセント。" },
+    { group: "enemies", path: "Art/Enemies/shotest.png", title: "小テスト", scene: "速いが脆い敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", now: true,
+      prompt: "小さな小テストの用紙が、汗を飛ばしながら全速力で走っているモンスター。体は小さく細身で、前のめり。顔はニヤッと笑っていて、すばしっこそう。頭に小さなストップウォッチを付けている。うしろに短いスピード線が数本。紙は薄い黄色、アクセントはオレンジ。" },
+    { group: "enemies", path: "Art/Enemies/report.png", title: "レポート", scene: "遅いが硬い敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", now: true,
+      prompt: "何十枚も重ねてホチキスで留めた分厚いレポートの束が、重たいゴーレムになったモンスター。体はずんぐりした四角で、紙の束の層が見える。大きな黒いクリップが肩当てのように付き、ホチキスの針が鎧の留め具になっている。目は眠そうだが、頑丈そう。のっしのっしと歩く。紙は白から薄い紫、アクセントは紫。" },
+    { group: "enemies", path: "Art/Enemies/shimekiri.png", title: "締切（ボス）", scene: "ボス。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", now: true, priority: true,
+      prompt: "「締切」を擬人化した、大きなボスモンスター。大きな丸い目覚まし時計の悪魔で、時計の文字盤が顔になっていて、赤く光る目と牙のある口がある。時計の針は真夜中の12時の直前を指している（数字は描かない）。頭の上の2つのベルが角のように突き出し、背中から破れたカレンダーのページがマントのように何枚もなびく。体のまわりに赤黒い炎のオーラ。威圧感があり、ほかの敵より大きく堂々と描く。色は深い赤と黒、金のアクセント。" },
+
+    // ---------------- 出撃口・拠点・背景 ----------------
+    { group: "map", path: "Art/Map/Spawn.png", title: "出撃口の印", scene: "出撃口（S）のマスの上で、ゆっくり回る", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", now: true,
+      prompt: "真上から見下ろした、赤く渦巻くゲートの穴。中心は暗く、そのまわりを赤とオレンジの光がうずを巻き、プリントの切れ端のような白い紙片が数枚、吸い出されるように舞っている。円形にまとまった形。" },
+    { group: "map", path: "Art/Map/Base.png", title: "拠点の印", scene: "拠点（B）のマスの上に浮かぶ。守るべき「部室」の紋章", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）", now: true,
+      prompt: "タワーディフェンスゲームの「守るべき拠点」を表す紋章。正面から見た、上に小さな窓のある木の扉（大学の部室の扉）を、青く光る六角形の盾の枠が囲んでいる。扉の上に小さな星が1つ。すっきりした形で、小さく表示しても分かるように線は太め。文字・数字・ロゴは描かない。" },
+    { group: "map", path: "Art/Background/Battle.png", title: "戦闘画面の背景", scene: "盤の後ろに暗く敷く（ゲーム側でさらに暗くする）", bg: null, shape: "wide", style: "none", arrow: "upright", dir: "横長・上下あり", now: true,
+      prompt: "タワーディフェンスゲームの戦闘画面の背景画像。夜の大学のキャンパスを真上から見下ろした、暗い紺色の設計図（ブループリント）風の図。建物の輪郭や道や木が、細い水色の線で薄く描かれ、方眼の線がうっすら重なる。全体はとても暗く、中央はゲームの盤を重ねるので、特に暗く模様を少なくする。人物・文字・数字・ロゴは描かない。横長 1536×1024。" },
+
+    // ---------------- 出現と突破 ----------------
+    { group: "m1fx", path: "Art/Effects/SpawnBurst.png", title: "敵の出現", scene: "敵が出撃口から現れる瞬間に、回りながら弾ける", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", now: true,
+      prompt: "敵が出現する瞬間の、赤い光が弾けるエフェクト。中心から赤とオレンジの光の輪が広がり、細い光の筋と、小さな紙片のような破片が四方へ飛ぶ。円形にまとまった形。" },
+    { group: "m1fx", path: "Art/Effects/LeakBurst.png", title: "拠点の突破", scene: "敵に拠点を突破されてライフが減るとき。画面が揺れ、ふちが赤く光るのに合わせて弾ける", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", now: true, priority: true,
+      prompt: "守りを突破された瞬間の、深紅の衝撃波。中心が白くまぶしく光り、そこから赤い衝撃波の輪と、割れたガラスのような鋭い破片が四方へ飛び散る。危険を知らせる強い印象。円形にまとまった形。" },
+
+    // ---------------- M2：配置と攻撃 ----------------
+    { group: "m2", path: "Art/Effects/Deploy.png", title: "配置", scene: "部員をマスに置いた瞬間、足元から立ちのぼる", bg: "black", shape: "sq", style: "fx", arrow: "upright", dir: "上下あり（回さない）",
+      prompt: "キャラクターを配置した瞬間の光。足元に金色の光の輪が広がり、そこから白と金の短い光の柱が上へ立ちのぼる。まわりに小さな光の粒。" },
+    { group: "m2", path: "Art/Effects/Retreat.png", title: "撤退", scene: "部員を撤退させたとき、ふわっと消える", bg: "black", shape: "sq", style: "fx", arrow: "upright", dir: "上下あり（回さない）",
+      prompt: "キャラクターが撤退して消えるときの光。足元から上へ、青白い光の粒がふわりと昇りながら薄れていく。中央に縦長のやわらかな光。" },
+    { group: "m2", path: "Art/Effects/Slash.png", title: "近接攻撃（斬撃）", scene: "前衛・重装の攻撃。攻撃された敵の上に一瞬出る", bg: "black", shape: "sq", style: "fx", arrow: "diag", dir: "左上から右下へ",
+      prompt: "近接攻撃の斬撃。画面の左上から右下へ、三日月のように少し弧を描く鋭い光の筋。芯は白く、縁は水色。軌跡の後ろに細かい光の粒が散る。" },
+    { group: "m2", path: "Art/Effects/Hit.png", title: "命中", scene: "攻撃が当たったとき（どの職業でも）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "攻撃が命中した瞬間の衝撃。中心から放射状に飛び散る白と金色の火花と、星形の鋭い閃光。円形にまとまった形。" },
+    { group: "m2", path: "Art/Effects/Arrow.png", title: "狙撃の矢", scene: "狙撃の攻撃。射手から敵へ、進む方向に回して飛ばす（物理鉄人もこれ）", bg: "alpha", shape: "wide", style: "none", arrow: "right", dir: "矢じりを右に",
+      prompt: "飛んでいく1本の和弓の矢を真横から見た姿。矢じりを画像の右に向けた横向き。黒い矢柄、鋼色の矢じり、後ろ（左）に白い矢羽根。後ろに短い光の尾が少し伸びる。背景は完全に透過した透過PNG。横長 1536×1024。" },
+    { group: "m2", path: "Art/Effects/MagicOrb.png", title: "術師の弾", scene: "術師の攻撃。進む方向に回して飛ばす", bg: "black", shape: "wide", style: "fx", arrow: "right", dir: "右へ飛ぶ",
+      prompt: "術師が放つ光の弾を真横から見たもの。右に向かって飛ぶ、紫と水色に光る丸い弾。後ろ（左）に細く光の尾が伸びる。" },
+    { group: "m2", path: "Art/Effects/MagicBurst.png", title: "術の着弾（範囲）", scene: "術師の弾が当たったところで、まわりの敵ごと巻き込んで広がる", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "術の弾が着弾して広がる範囲攻撃を真上から見たもの。紫と水色の光の輪が円く広がり、内側に細い幾何学模様（同心円と放射状の線。文字や記号は描かない）がうっすら浮かぶ。円形にまとまった形。" },
+    { group: "m2", path: "Art/Effects/Heal.png", title: "回復", scene: "医療が味方を回復したとき", bg: "black", shape: "sq", style: "fx", arrow: "upright", dir: "上下あり（回さない）",
+      prompt: "体力が回復するエフェクト。やわらかい若草色の光の輪と、下から上へふわりと立ちのぼる光の粒、小さな十字のきらめき。" },
+    { group: "m2", path: "Art/Effects/EnemyDefeat.png", title: "敵の撃破（紙が破れて散る）", scene: "敵を倒したとき。課題やレポートが破れて紙吹雪になる", bg: "alpha", shape: "sq", style: "none", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "ゲームのエフェクト素材。紙が勢いよく破れて飛び散る瞬間を正面から見たもの。中心から、破れた白い紙の切れ端（ところどころに罫線と赤ペンの線。文字は書かない）が四方へ勢いよく飛び散り、小さな金色の光の粒が混じる。円形にまとまった形。人物や手は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
+
+    // ---------------- M3：必殺技と召喚 ----------------
+    { group: "m3", path: "Art/Effects/SkillReady.png", title: "必殺技の準備完了", scene: "SPが溜まって必殺技が使えるとき、足元で回り続ける", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "必殺技が使えるようになった合図を真上から見たもの。細い金色の光の輪が二重に回り、輪に沿って小さなひし形の光が等間隔に並ぶ。中心は空いている。円形にまとまった形。" },
+    { group: "m3", path: "Art/Effects/SkillActivate.png", title: "必殺技の発動", scene: "必殺技を押した瞬間、部員の位置で大きく弾ける", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "必殺技を発動した瞬間の大きな閃光。中心が白く強く輝き、金色の光線が放射状に鋭く伸び、外側へ光の輪が広がる。円形にまとまった形。" },
+    { group: "m3", path: "Art/Effects/BuffAtk.png", title: "攻撃力アップ", scene: "特性や必殺技で攻撃力が上がっているあいだ、足元で燃える（物理鉄人の「夜戦主義」も）", bg: "black", shape: "sq", style: "fx", arrow: "upright", dir: "上下あり（回さない）",
+      prompt: "攻撃力が上がる強化の気。赤とオレンジの炎のオーラが下から上へ燃え立ち、中央に上向きの矢印の形をした光が浮かぶ。" },
+    { group: "m3", path: "Art/Effects/Sleep.png", title: "寝落ち（スタン）", scene: "物理鉄人の「深夜出撃」が終わったあと、寝落ちしているあいだ頭の上に浮かぶ", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）",
+      prompt: "ゲームのエフェクト素材。眠っていることを表す、頭の上に浮かぶ印。大きさの違う3つの「Z」の形が右上へ向かって並び、そのまわりに小さな泡と星が浮かぶ。色は青白く、ほのかに光る。人物は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
+    { group: "m3", path: "Art/Effects/SummonSplash.png", title: "艦娘の召喚", scene: "物理鉄人の「深夜出撃」で、空いているマスに艦娘が現れるとき", bg: "black", shape: "tall", style: "fx", arrow: "rise", dir: "下端が根元。上へ吹き上がる",
+      prompt: "仲間が海から現れる瞬間の水柱を真横から見たもの。画像の下端の中央に水面の波紋の輪があり、そこから白と淡い水色のしぶきと光が上へ勢いよく吹き上がる。縦長の画像いっぱいに描く。" },
+    { group: "m3", path: "Art/Icons/kanmusu_token.png", title: "艦娘（召喚されるユニット）", scene: "物理鉄人の必殺技で召喚される艦娘のアイコン。マスの上と、召喚中の表示に使う", bg: null, shape: "sq", style: "none", arrow: "upright", dir: "正方形のアイコン",
+      prompt: "オリジナルの艦娘（軍艦を擬人化した女の子）のSD（ちびキャラ）イラストのアイコン。セーラー服を着て、背中に小さな艤装（主砲と煙突）を背負い、元気に敬礼している。特定の既存キャラクターには似せない。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗り。正方形のアイコンで、背景は明るい水色のグラデーション。文字は描かない。正方形 1024×1024。" }
+  ];
+
+  const NS = "http://www.w3.org/2000/svg";
+  function svgEl(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  let figId = 0;
+  // 画用紙の形（縦横比）・背景・絵の向きを示す小図
+  function figure(it) {
+    const label = (it.bg === "black" ? "黒背景" : it.bg === "alpha" ? "透過" : "背景あり") + "、" + it.dir;
+    const svg = svgEl("svg", { viewBox: "0 0 100 100", role: "img", "aria-label": label });
+    const w = it.shape === "wide" ? 90 : it.shape === "tall" ? 60 : 82;
+    const h = it.shape === "wide" ? 60 : it.shape === "tall" ? 90 : 82;
+    const x = (100 - w) / 2, y = (100 - h) / 2;
+    const id = "chk" + (figId++);
+    const defs = svgEl("defs", {});
+    const pat = svgEl("pattern", { id, width: 10, height: 10, patternUnits: "userSpaceOnUse" });
+    pat.appendChild(svgEl("rect", { width: 10, height: 10, style: "fill: var(--canvas-check-a)" }));
+    pat.appendChild(svgEl("rect", { width: 5, height: 5, style: "fill: var(--canvas-check-b)" }));
+    pat.appendChild(svgEl("rect", { x: 5, y: 5, width: 5, height: 5, style: "fill: var(--canvas-check-b)" }));
+    defs.appendChild(pat);
+    svg.appendChild(defs);
+    let fill = "fill: var(--panel-2); stroke: var(--line)";
+    if (it.bg === "black") fill = "fill: var(--canvas-black); stroke: var(--line)";
+    if (it.bg === "alpha") fill = "fill: url(#" + id + "); stroke: var(--line)";
+    svg.appendChild(svgEl("rect", { x, y, width: w, height: h, style: fill }));
+
+    const color = it.bg === "black" ? "var(--arrow-on-black)" : "var(--arrow)";
+    const stroke = "stroke: " + color + "; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; fill: none";
+    const head = "fill: " + color;
+    const cx = 50, cy = 50;
+    function arrow(x1, y1, x2, y2) {
+      svg.appendChild(svgEl("line", { x1, y1, x2, y2, style: stroke }));
+      const a = Math.atan2(y2 - y1, x2 - x1), s = 11;
+      const p1 = [x2 + Math.cos(a) * 3, y2 + Math.sin(a) * 3];
+      const p2 = [x2 - Math.cos(a - 0.5) * s, y2 - Math.sin(a - 0.5) * s];
+      const p3 = [x2 - Math.cos(a + 0.5) * s, y2 - Math.sin(a + 0.5) * s];
+      svg.appendChild(svgEl("polygon", { points: [p1, p2, p3].map(p => p.join(",")).join(" "), style: head }));
+    }
+    switch (it.arrow) {
+      case "face":
+        svg.appendChild(svgEl("circle", { cx: cx - 6, cy: cy - 12, r: 11, style: stroke }));
+        svg.appendChild(svgEl("line", { x1: cx - 6, y1: cy - 1, x2: cx - 6, y2: cy + 20, style: stroke }));
+        arrow(cx - 2, cy + 6, cx + 30, cy + 6);
+        break;
+      case "right": arrow(x + 14, cy, x + w - 16, cy); break;
+      case "diag": arrow(x + 16, y + 16, x + w - 18, y + h - 18); break;
+      case "rise":
+        svg.appendChild(svgEl("line", { x1: cx - 14, y1: y + h - 4, x2: cx + 14, y2: y + h - 4, style: stroke }));
+        arrow(cx, y + h - 10, cx, y + 18);
+        break;
+      case "spin":
+        svg.appendChild(svgEl("path", { d: "M 70 50 A 20 20 0 1 1 56 31", style: stroke }));
+        svg.appendChild(svgEl("polygon", { points: "52,22 66,30 52,40", style: head }));
+        break;
+      case "upright": {
+        const t = svgEl("text", { x: cx, y: y + 26, "text-anchor": "middle", "font-size": 18, "font-weight": 700, style: head + "; font-family: var(--font-body)" });
+        t.textContent = "上";
+        svg.appendChild(t);
+        arrow(cx, y + h - 14, cx, y + 38);
+        break;
+      }
+    }
+    return svg;
+  }
+
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  let idCounter = 0;
+  function card(it) {
+    const c = el("article", "card fx" + (it.now ? " now" : ""));
+    const fig = el("div", "fx-figure");
+    fig.appendChild(figure(it));
+    fig.appendChild(el("div", "dir", it.dir));
+    c.appendChild(fig);
+
+    const body = el("div", "fx-body");
+    const head = el("div", "card-head");
+    head.appendChild(el("h3", null, it.title));
+    head.appendChild(el("span", "file", it.path.split("/").pop()));
+    body.appendChild(head);
+    body.appendChild(el("div", "scene", it.scene));
+
+    const chips = el("div", "chips");
+    if (it.now) chips.appendChild(el("span", "chip gold", "依頼中"));
+    else chips.appendChild(el("span", "chip", "あとで使う"));
+    if (it.priority) chips.appendChild(el("span", "chip red", "優先"));
+    if (it.bg === "black") chips.appendChild(el("span", "chip red", "黒背景"));
+    if (it.bg === "alpha") chips.appendChild(el("span", "chip blue", "透過PNG"));
+    chips.appendChild(el("span", "chip", SIZE_LABEL[it.shape]));
+    body.appendChild(chips);
+
+    let text = it.prompt;
+    if (it.style !== "none") {
+      if (it.bg) text += "\n" + BG_LINE[it.bg];
+      text += "\n" + SIZE_LINE[it.shape];
+    }
+    const pre = el("pre", "prompt", text);
+    pre.id = "p" + (idCounter++);
+    body.appendChild(pre);
+
+    const row = el("div", "row");
+    const save = el("span", "save", "保存先 ");
+    save.appendChild(el("code", null, "Assets/Resources/" + it.path));
+    row.appendChild(save);
+    const btn = el("button", "copy", "コピー");
+    btn.type = "button";
+    btn.dataset.target = pre.id;
+    btn.dataset.style = it.style;
+    row.appendChild(btn);
+    body.appendChild(row);
+    c.appendChild(body);
+    return c;
+  }
+
+  document.querySelectorAll(".cards[data-group]").forEach(box => {
+    items.filter(it => it.group === box.dataset.group).forEach(it => box.appendChild(card(it)));
+  });
+
+  function textFor(btn) {
+    const body = document.getElementById(btn.dataset.target).textContent;
+    if (btn.dataset.plain) return body;
+    const include = document.getElementById("include-style").checked;
+    const style = btn.dataset.style;
+    if (!include || !style || style === "none") return body;
+    return document.getElementById(style === "chara" ? "style-chara" : "style-fx").textContent + "\n\n" + body;
+  }
+
+  function selectText(node) {
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  document.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button.copy");
+    if (!btn) return;
+    const text = textFor(btn);
+    const done = () => {
+      btn.textContent = "コピーしました";
+      btn.classList.add("done");
+      setTimeout(() => { btn.textContent = "コピー"; btn.classList.remove("done"); }, 1600);
+    };
+    const fallback = () => {
+      selectText(document.getElementById(btn.dataset.target));
+      btn.textContent = "選択しました（Ctrl+Cでコピー）";
+    };
+    try {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } catch (e) {
+      fallback();
+    }
+  });
+
+  try {
+    const saved = localStorage.getItem("c3td-include-style");
+    if (saved !== null) document.getElementById("include-style").checked = saved === "1";
+  } catch (e) {}
+  document.getElementById("include-style").addEventListener("change", (ev) => {
+    try { localStorage.setItem("c3td-include-style", ev.target.checked ? "1" : "0"); } catch (e) {}
+  });
+</script>

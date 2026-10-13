@@ -3,6 +3,7 @@
   "name": "1-1 前期の始まり",
   "life": 3,
   "initialDp": 10,
+  "bgm": "battle",
   "map": [
     "XXXXXXXXXX",
     "XHHHHHHHHX",

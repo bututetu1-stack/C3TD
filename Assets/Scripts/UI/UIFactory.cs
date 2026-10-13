@@ -1,10 +1,10 @@
-using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 /// <summary>
 /// UI Toolkit の画面をコードで組み立てるためのヘルパー。
-/// PanelSettings は実行時に作り、見た目は Resources/UI/Theme.uss で付ける。
+/// PanelSettings は実行時に作り、配置と文字の大きさ・色は Resources/UI/Theme.uss、
+/// フォントはコード（GameFonts）で付ける。
 /// </summary>
 public static class UIFactory
 {
@@ -13,12 +13,18 @@ public static class UIFactory
 
     private static PanelSettings panelSettings;
     private static StyleSheet theme;
+    private static Texture2D vignette;
+    private static Texture2D fadeDown;
+    private static Texture2D fadeUp;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
     {
         panelSettings = null;
         theme = null;
+        vignette = null;
+        fadeDown = null;
+        fadeUp = null;
     }
 
     private static PanelSettings SharedPanelSettings
@@ -58,7 +64,7 @@ public static class UIFactory
         VisualElement root = doc.rootVisualElement;
         if (Theme != null) root.styleSheets.Add(Theme);
         root.AddToClassList("c3-root");
-        if (GameFonts.Medium != null) root.style.unityFontDefinition = GameFonts.UIRegular;
+        root.style.unityFontDefinition = GameFonts.UI(UIFont.Body);
         root.style.position = Position.Absolute;
         root.style.left = 0;
         root.style.top = 0;
@@ -76,39 +82,25 @@ public static class UIFactory
         return box;
     }
 
-    public static Label Label(string text, params string[] classes)
+    /// <summary>文字。大きさと色は USS のクラスで、フォントは役割で決める</summary>
+    public static Label Text(string text, UIFont font, params string[] classes)
     {
         var label = new Label(text);
+        label.AddToClassList("c3-text");
         foreach (var c in classes) label.AddToClassList(c);
+        label.style.unityFontDefinition = GameFonts.UI(font);
         label.pickingMode = PickingMode.Ignore;
         return label;
     }
 
-    /// <summary>太字のラベル（太字用のフォントに切り替える）</summary>
-    public static Label BoldLabel(string text, params string[] classes)
+    /// <summary>画像を引き伸ばして貼った要素（tint で色を付ける）</summary>
+    public static VisualElement Image(Texture2D texture, Color tint, params string[] classes)
     {
-        var label = Label(text, classes);
-        SetBold(label);
-        return label;
-    }
-
-    public static Button Button(string text, Action onClick, params string[] classes)
-    {
-        var button = new Button(() =>
-        {
-            AudioManager.PlaySE("click");
-            if (onClick != null) onClick();
-        });
-        button.text = text;
-        button.AddToClassList("c3-button");
-        foreach (var c in classes) button.AddToClassList(c);
-        SetBold(button);
-        return button;
-    }
-
-    public static void SetBold(VisualElement element)
-    {
-        if (GameFonts.Bold != null) element.style.unityFontDefinition = GameFonts.UIBold;
+        var image = Box(classes);
+        image.AddToClassList("stretch-image");
+        image.style.backgroundImage = new StyleBackground(texture);
+        image.style.unityBackgroundImageTintColor = tint;
+        return image;
     }
 
     public static void SetVisible(VisualElement element, bool visible)
@@ -121,5 +113,62 @@ public static class UIFactory
     {
         int total = Mathf.FloorToInt(Mathf.Max(0f, seconds));
         return (total / 60).ToString("00") + ":" + (total % 60).ToString("00");
+    }
+
+    // ---------------- 生成するテクスチャ ----------------
+
+    /// <summary>四隅ほど濃くなる周辺減光</summary>
+    public static Texture2D Vignette
+    {
+        get
+        {
+            if (vignette == null)
+            {
+                vignette = Generate(128, 128, (u, v) =>
+                {
+                    float dx = (u - 0.5f) * 2f, dy = (v - 0.5f) * 2f;
+                    float r = Mathf.Sqrt(dx * dx * 0.8f + dy * dy);
+                    float t = Mathf.Clamp01((r - 0.55f) / 0.75f);
+                    return t * t * (3f - 2f * t);
+                });
+            }
+            return vignette;
+        }
+    }
+
+    /// <summary>上が濃く、下へ向かって透明になる</summary>
+    public static Texture2D FadeDown
+    {
+        get
+        {
+            if (fadeDown == null) fadeDown = Generate(4, 128, (u, v) => v * v);
+            return fadeDown;
+        }
+    }
+
+    /// <summary>下が濃く、上へ向かって透明になる</summary>
+    public static Texture2D FadeUp
+    {
+        get
+        {
+            if (fadeUp == null) fadeUp = Generate(4, 128, (u, v) => (1f - v) * (1f - v));
+            return fadeUp;
+        }
+    }
+
+    /// <summary>白地に不透明度だけを入れたテクスチャ。v は下が0、上が1</summary>
+    private static Texture2D Generate(int w, int h, System.Func<float, float, float> alpha)
+    {
+        var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        tex.wrapMode = TextureWrapMode.Clamp;
+        tex.filterMode = FilterMode.Bilinear;
+        var px = new Color32[w * h];
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+                px[y * w + x] = new Color(1f, 1f, 1f, alpha((x + 0.5f) / w, (y + 0.5f) / h));
+        tex.SetPixels32(px);
+        tex.Apply(false, true);
+        tex.hideFlags = HideFlags.DontSave;
+        return tex;
     }
 }

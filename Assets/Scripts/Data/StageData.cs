@@ -17,6 +17,44 @@ public class StageData
     public Dictionary<string, List<Vector2Int>> paths = new Dictionary<string, List<Vector2Int>>();
 
     public List<WaveData> waves = new List<WaveData>();
+
+    /// <summary>name の先頭の「1-1」のような番号（なければ空）</summary>
+    public string Code
+    {
+        get
+        {
+            string code, title;
+            SplitName(out code, out title);
+            return code;
+        }
+    }
+
+    /// <summary>name から番号を除いた題名</summary>
+    public string Title
+    {
+        get
+        {
+            string code, title;
+            SplitName(out code, out title);
+            return title;
+        }
+    }
+
+    private void SplitName(out string code, out string title)
+    {
+        code = "";
+        title = name ?? "";
+        int space = title.IndexOfAny(new[] { ' ', '　' });
+        if (space <= 0) return;
+        string head = title.Substring(0, space);
+        foreach (char c in head)
+        {
+            bool ascii = (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '-';
+            if (!ascii) return;
+        }
+        code = head;
+        title = title.Substring(space + 1).Trim();
+    }
 }
 
 /// <summary>出撃の1グループ。time 秒に1体目が出て、interval 秒ごとに count 体出る</summary>

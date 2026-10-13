@@ -23,6 +23,9 @@ public class EnemyData
     public string color;
     public float size;
 
+    /// <summary>Art/Enemies/{id}.png の絵を使うときの大きさ（size に掛ける）。0 なら標準</summary>
+    public float artScale;
+
     // ステータス
     public int hp;
     public int atk;

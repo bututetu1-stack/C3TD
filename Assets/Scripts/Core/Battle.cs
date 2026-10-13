@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,9 @@ public class Battle : MonoBehaviour
 
     /// <summary>場に出ている敵</summary>
     public readonly List<Enemy> Enemies = new List<Enemy>();
+
+    /// <summary>敵が拠点に着いた（HUD の演出用）</summary>
+    public event Action<Enemy> EnemyLeaked;
 
     private class SpawnEntry
     {
@@ -133,7 +137,13 @@ public class Battle : MonoBehaviour
         Enemies.Remove(enemy);
         State.OnEnemyLeaked(enemy.Data.lifeDamage);
         AudioManager.PlaySE("life_lost");
-        FlashTile(Map.WorldToCell(enemy.transform.position));
+
+        Vector2Int cell = Map.WorldToCell(enemy.transform.position);
+        Vector3 at = Map.CellToWorld(cell);
+        FlashTile(cell);
+        Fx.EnemyLeak(at);
+        CameraFitter.Shake(0.14f, 0.35f);
+        if (EnemyLeaked != null) EnemyLeaked(enemy);
         Destroy(enemy.gameObject);
     }
 

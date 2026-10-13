@@ -3,26 +3,53 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// 出撃中の HUD。上のバー（ステージ名・経過時間・敵の数・ライフ・速度・一時停止）と、
-/// 一時停止の表示、勝敗の画面。値は毎フレーム Battle.Current から読む。
+/// 出撃中の HUD。上のバー（作戦名・経過時間・敵の数・ライフ・速度・一時停止）、
+/// 作戦開始の帯、一時停止の帯、勝敗の帯、拠点に着かれたときの赤い光。
+/// 値は毎フレーム Battle.Current から読む。
 /// </summary>
 public class HudUI : MonoBehaviour
 {
-    private GameBootstrap bootstrap;
+    private const float IntroDuration = 2.6f;
 
-    private Label stageName;
+    private GameBootstrap bootstrap;
+    private VisualElement root;
+
+    // 上のバー
+    private Label opCode;
+    private VisualElement opSep;
+    private Label opName;
     private Label timeValue;
     private Label enemyValue;
+    private Label enemyTotal;
     private Label lifeValue;
     private Label lifeMax;
-    private Button speedButton;
-    private Button pauseButton;
-    private VisualElement pauseBanner;
+    private ChamferBox lifePlate;
+    private C3Button speedButton;
+    private C3Button pauseButton;
 
-    private VisualElement resultOverlay;
+    // 全面の演出
+    private VisualElement damageFlash;
+    private VisualElement pauseLayer;
+    private VisualElement introLayer;
+    private ChamferBox introBand;
+    private VisualElement introContent;
+    private Label introCaption;
+    private Label introName;
+    private VisualElement resultLayer;
+    private ChamferBox resultBand;
+    private VisualElement resultContent;
+    private VisualElement resultFooter;
+    private Label resultEnglish;
     private Label resultTitle;
-    private Label resultDetail;
-    private Button nextButton;
+    private Label resultLife;
+    private Label resultTime;
+    private Label resultEnemy;
+    private C3Button nextButton;
+
+    private IVisualElementScheduledItem flashTween;
+    private IVisualElementScheduledItem shakeTween;
+    private IVisualElementScheduledItem introTween;
+    private IVisualElementScheduledItem resultTween;
 
     // 前のフレームの値（変わったときだけ書き換える）
     private Battle shownBattle;
@@ -36,71 +63,167 @@ public class HudUI : MonoBehaviour
     public void Init(GameBootstrap owner)
     {
         bootstrap = owner;
-        VisualElement root = UIFactory.CreateScreen("HUD", transform, 10);
-        BuildTopBar(root);
+        root = UIFactory.CreateScreen("HUD", transform, 10);
 
-        pauseBanner = UIFactory.BoldLabel("一時停止中", "pause-banner");
-        root.Add(pauseBanner);
-        UIFactory.SetVisible(pauseBanner, false);
+        root.Add(UIFactory.Image(UIFactory.Vignette, Palette.UiVignette, "full"));
+        root.Add(UIFactory.Image(UIFactory.FadeDown, Palette.UiShade, "top-shade"));
+        root.Add(UIFactory.Image(UIFactory.FadeUp, Palette.UiShade, "bottom-shade"));
+        damageFlash = UIFactory.Image(UIFactory.Vignette, Palette.Crimson, "full");
+        damageFlash.style.opacity = 0f;
+        root.Add(damageFlash);
 
-        BuildResult(root);
+        BuildTopBar();
+        BuildIntro();
+        BuildPause();
+        BuildResult();
     }
 
-    private void BuildTopBar(VisualElement root)
+    // ================= 組み立て =================
+
+    private void BuildTopBar()
     {
-        var bar = UIFactory.Box("hud-top");
-        bar.pickingMode = PickingMode.Position; // バーの後ろのマップをクリックしないように
+        var bar = UIFactory.Box("top-bar");
         root.Add(bar);
 
-        stageName = UIFactory.BoldLabel("", "hud-stage-name");
-        bar.Add(stageName);
+        var op = new ChamferBox();
+        op.AddToClassList("op-plate");
+        op.SetFill(Palette.UiPanel).SetCut(26f, ChamferBox.Corners.BottomRight).SetAccent(Palette.Amber, 6f).SetStripes(Palette.UiStripe, 16f);
+        op.Add(UIFactory.Text("OPERATION", UIFont.Display, "op-caption"));
+        var row = UIFactory.Box("op-row");
+        opCode = UIFactory.Text("", UIFont.Display, "op-code");
+        row.Add(opCode);
+        opSep = UIFactory.Box("op-sep");
+        row.Add(opSep);
+        opName = UIFactory.Text("", UIFont.Title, "op-name");
+        row.Add(opName);
+        op.Add(row);
+        bar.Add(op);
 
-        timeValue = AddChip(bar, "経過", "hud-chip-value");
-        enemyValue = AddChip(bar, "敵", "hud-chip-value");
+        bar.Add(UIFactory.Box("top-spacer"));
 
-        var lifeChip = UIFactory.Box("hud-chip");
-        lifeChip.Add(UIFactory.Label("ライフ", "hud-chip-label"));
-        lifeValue = UIFactory.BoldLabel("", "hud-chip-value", "hud-life-value");
-        lifeChip.Add(lifeValue);
-        lifeMax = UIFactory.Label("", "hud-chip-sub");
-        lifeChip.Add(lifeMax);
-        bar.Add(lifeChip);
+        Label unused;
+        AddStat(bar, IconKind.Clock, Palette.TextSub, "TIME", out timeValue, out unused);
+        AddStat(bar, IconKind.Paper, Palette.TextSub, "ENEMY", out enemyValue, out enemyTotal);
+        lifePlate = AddStat(bar, IconKind.Heart, Palette.Crimson, "LIFE", out lifeValue, out lifeMax);
+        lifeValue.AddToClassList("life-value");
 
-        speedButton = UIFactory.Button("×1", TimeController.ToggleSpeed, "hud-button");
+        speedButton = new C3Button(IconKind.FastForward, 26f, "x1", TimeController.ToggleSpeed);
+        speedButton.AddToClassList("hud-button");
+        speedButton.AddToClassList("hud-button--speed");
         bar.Add(speedButton);
-        pauseButton = UIFactory.Button("一時停止", TimeController.TogglePause, "hud-button", "hud-button--wide");
+        pauseButton = new C3Button(IconKind.Pause, 26f, null, TimeController.TogglePause);
+        pauseButton.AddToClassList("hud-button");
         bar.Add(pauseButton);
     }
 
-    private Label AddChip(VisualElement bar, string caption, string valueClass)
+    private ChamferBox AddStat(VisualElement bar, IconKind icon, Color iconColor, string caption, out Label value, out Label sub)
     {
-        var chip = UIFactory.Box("hud-chip");
-        chip.Add(UIFactory.Label(caption, "hud-chip-label"));
-        var value = UIFactory.BoldLabel("", valueClass);
-        chip.Add(value);
-        bar.Add(chip);
+        var plate = new ChamferBox();
+        plate.AddToClassList("stat");
+        plate.SetFill(Palette.UiPanel).SetStroke(Palette.UiPanelLine, 1f).SetCut(12f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight);
+        var iconView = new IconView(icon, 30f, iconColor);
+        iconView.AddToClassList("stat-icon");
+        plate.Add(iconView);
+
+        var text = UIFactory.Box("stat-text");
+        text.Add(UIFactory.Text(caption, UIFont.Display, "stat-caption"));
+        var valueRow = UIFactory.Box("stat-value-row");
+        value = UIFactory.Text("", UIFont.Display, "stat-value");
+        valueRow.Add(value);
+        sub = UIFactory.Text("", UIFont.Display, "stat-sub");
+        valueRow.Add(sub);
+        text.Add(valueRow);
+        plate.Add(text);
+        bar.Add(plate);
+        return plate;
+    }
+
+    private void BuildIntro()
+    {
+        introLayer = UIFactory.Box("full", "intro-layer");
+        introBand = new ChamferBox();
+        introBand.AddToClassList("intro-band");
+        introBand.SetFill(Palette.UiBand).SetCut(0f, ChamferBox.Corners.None).SetAccent(Palette.Amber, 10f).SetStripes(Palette.UiStripe, 22f);
+        introBand.pickingMode = PickingMode.Ignore;
+
+        introContent = UIFactory.Box("intro-content");
+        introCaption = UIFactory.Text("", UIFont.Display, "intro-caption");
+        introContent.Add(introCaption);
+        introName = UIFactory.Text("", UIFont.Title, "intro-name");
+        introContent.Add(introName);
+        var start = UIFactory.Box("intro-start-row");
+        start.Add(UIFactory.Box("intro-line"));
+        start.Add(UIFactory.Text("作戦開始", UIFont.Body, "intro-start"));
+        start.Add(UIFactory.Box("intro-line"));
+        introContent.Add(start);
+        introBand.Add(introContent);
+        introLayer.Add(introBand);
+        root.Add(introLayer);
+        UIFactory.SetVisible(introLayer, false);
+    }
+
+    private void BuildPause()
+    {
+        pauseLayer = UIFactory.Box("full", "dim", "center-column");
+        var band = new ChamferBox();
+        band.AddToClassList("pause-band");
+        band.SetFill(Palette.UiBand).SetCut(0f, ChamferBox.Corners.None).SetStripes(Palette.UiStripe, 22f);
+        band.pickingMode = PickingMode.Ignore;
+        band.Add(UIFactory.Text("PAUSE", UIFont.Display, "pause-title"));
+        band.Add(UIFactory.Text("一時停止中　Space で再開", UIFont.Body, "pause-sub"));
+        pauseLayer.Add(band);
+        root.Add(pauseLayer);
+        UIFactory.SetVisible(pauseLayer, false);
+    }
+
+    private void BuildResult()
+    {
+        resultLayer = UIFactory.Box("full", "dim", "center-column");
+        resultLayer.pickingMode = PickingMode.Position; // 後ろをクリックさせない
+
+        resultBand = new ChamferBox();
+        resultBand.AddToClassList("result-band");
+        resultBand.SetCut(0f, ChamferBox.Corners.None).SetStripes(Palette.UiStripe, 22f);
+        resultBand.pickingMode = PickingMode.Ignore;
+
+        resultContent = UIFactory.Box("result-content");
+        resultEnglish = UIFactory.Text("", UIFont.Display, "result-en");
+        resultContent.Add(resultEnglish);
+        resultTitle = UIFactory.Text("", UIFont.Title, "result-title");
+        resultContent.Add(resultTitle);
+
+        var stats = UIFactory.Box("result-stats");
+        resultLife = AddResultStat(stats, "LIFE");
+        resultTime = AddResultStat(stats, "TIME");
+        resultEnemy = AddResultStat(stats, "ENEMY");
+        resultContent.Add(stats);
+        resultBand.Add(resultContent);
+        resultLayer.Add(resultBand);
+
+        resultFooter = UIFactory.Box("result-buttons");
+        var retry = new C3Button(IconKind.Retry, 30f, "もう一度", () => bootstrap.Retry());
+        retry.AddToClassList("result-button");
+        resultFooter.Add(retry);
+        nextButton = new C3Button(IconKind.Next, 30f, "次のステージ", () => bootstrap.StartStage(bootstrap.NextStageId()));
+        nextButton.AddToClassList("result-button");
+        resultFooter.Add(nextButton);
+        resultLayer.Add(resultFooter);
+
+        root.Add(resultLayer);
+        UIFactory.SetVisible(resultLayer, false);
+    }
+
+    private Label AddResultStat(VisualElement parent, string caption)
+    {
+        var item = UIFactory.Box("result-stat");
+        item.Add(UIFactory.Text(caption, UIFont.Display, "result-stat-caption"));
+        var value = UIFactory.Text("", UIFont.Display, "result-stat-value");
+        item.Add(value);
+        parent.Add(item);
         return value;
     }
 
-    private void BuildResult(VisualElement root)
-    {
-        resultOverlay = UIFactory.Box("overlay");
-        resultOverlay.pickingMode = PickingMode.Position;
-        root.Add(resultOverlay);
-
-        resultTitle = UIFactory.BoldLabel("", "result-title");
-        resultOverlay.Add(resultTitle);
-        resultDetail = UIFactory.Label("", "result-detail");
-        resultOverlay.Add(resultDetail);
-
-        var buttons = UIFactory.Box("result-buttons");
-        buttons.Add(UIFactory.Button("もう一度", () => bootstrap.Retry(), "result-button"));
-        nextButton = UIFactory.Button("次のステージ", () => bootstrap.StartStage(bootstrap.NextStageId()), "result-button");
-        buttons.Add(nextButton);
-        resultOverlay.Add(buttons);
-
-        UIFactory.SetVisible(resultOverlay, false);
-    }
+    // ================= 毎フレーム =================
 
     void Update()
     {
@@ -110,15 +233,7 @@ public class HudUI : MonoBehaviour
         if (battle == null || battle.State == null) return;
         GameState state = battle.State;
 
-        if (battle != shownBattle)
-        {
-            shownBattle = battle;
-            stageName.text = battle.Stage.name;
-            lifeMax.text = "/" + state.MaxLife;
-            shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = -1;
-            shownPhase = GamePhase.Playing;
-            UIFactory.SetVisible(resultOverlay, false);
-        }
+        if (battle != shownBattle) OnBattleChanged(battle);
 
         int seconds = Mathf.FloorToInt(state.ElapsedTime);
         if (seconds != shownSeconds)
@@ -129,7 +244,8 @@ public class HudUI : MonoBehaviour
         if (state.EnemiesFinished != shownFinished)
         {
             shownFinished = state.EnemiesFinished;
-            enemyValue.text = state.EnemiesFinished + "/" + state.EnemiesTotal;
+            enemyValue.text = state.EnemiesFinished.ToString();
+            enemyTotal.text = "/" + state.EnemiesTotal;
         }
         if (state.Life != shownLife)
         {
@@ -139,32 +255,110 @@ public class HudUI : MonoBehaviour
         if (TimeController.Speed != shownSpeed)
         {
             shownSpeed = TimeController.Speed;
-            speedButton.text = "×" + TimeController.Speed;
-            speedButton.EnableInClassList("hud-button--active", TimeController.Speed > 1);
+            speedButton.Text.text = "x" + TimeController.Speed;
+            speedButton.Active = TimeController.Speed > 1;
         }
         int paused = TimeController.Paused ? 1 : 0;
         if (paused != shownPaused)
         {
             shownPaused = paused;
-            pauseButton.text = TimeController.Paused ? "再開" : "一時停止";
-            pauseButton.EnableInClassList("hud-button--active", TimeController.Paused);
-            UIFactory.SetVisible(pauseBanner, TimeController.Paused);
+            pauseButton.Icon.SetKind(TimeController.Paused ? IconKind.Play : IconKind.Pause);
+            pauseButton.Active = TimeController.Paused;
         }
+        UIFactory.SetVisible(pauseLayer, TimeController.Paused && state.Phase == GamePhase.Playing);
+
         if (state.Phase != shownPhase)
         {
             shownPhase = state.Phase;
-            ShowResult(state);
+            if (state.Phase != GamePhase.Playing) ShowResult(state);
         }
     }
 
+    private void OnBattleChanged(Battle battle)
+    {
+        shownBattle = battle;
+        battle.EnemyLeaked += OnEnemyLeaked;
+
+        StageData stage = battle.Stage;
+        opCode.text = stage.Code;
+        UIFactory.SetVisible(opCode, !string.IsNullOrEmpty(stage.Code));
+        UIFactory.SetVisible(opSep, !string.IsNullOrEmpty(stage.Code));
+        opName.text = stage.Title;
+        lifeMax.text = "/" + battle.State.MaxLife;
+
+        shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = -1;
+        shownPhase = GamePhase.Playing;
+        UITween.Stop(ref resultTween);
+        UIFactory.SetVisible(resultLayer, false);
+        PlayIntro(stage);
+    }
+
+    // ================= 演出 =================
+
+    /// <summary>作戦開始の帯：開いて、名前が滑り込み、閉じる</summary>
+    private void PlayIntro(StageData stage)
+    {
+        introCaption.text = string.IsNullOrEmpty(stage.Code) ? "OPERATION" : "OPERATION  " + stage.Code;
+        introName.text = stage.Title;
+        UIFactory.SetVisible(introLayer, true);
+        UITween.Stop(ref introTween);
+        introTween = UITween.Run(introLayer, IntroDuration, t =>
+        {
+            float time = t * IntroDuration;
+            float open = Ease.OutCubic(time / 0.35f);
+            float close = Ease.InCubic((time - (IntroDuration - 0.45f)) / 0.45f);
+            introBand.style.scale = new Scale(new Vector3(1f, Mathf.Max(0.001f, open * (1f - close)), 1f));
+            float show = Ease.OutCubic((time - 0.12f) / 0.5f);
+            introContent.style.opacity = show * (1f - close);
+            introContent.style.translate = new Translate((1f - show) * -80f + close * 80f, 0f);
+        }, () => UIFactory.SetVisible(introLayer, false));
+    }
+
+    /// <summary>勝敗の帯</summary>
     private void ShowResult(GameState state)
     {
         bool won = state.Phase == GamePhase.Won;
+        Color accent = won ? Palette.Amber : Palette.Crimson;
+        resultEnglish.text = won ? "OPERATION COMPLETE" : "OPERATION FAILED";
+        resultEnglish.style.color = accent;
         resultTitle.text = won ? "防衛成功" : "防衛失敗";
-        resultTitle.EnableInClassList("result-title--lost", !won);
-        resultDetail.text = "ライフ " + state.Life + "/" + state.MaxLife + "　経過 " + UIFactory.FormatTime(state.ElapsedTime);
+        resultBand.SetFill(Palette.UiBand).SetAccent(accent, 12f);
+        resultLife.text = state.Life + "/" + state.MaxLife;
+        resultTime.text = UIFactory.FormatTime(state.ElapsedTime);
+        resultEnemy.text = state.EnemiesFinished + "/" + state.EnemiesTotal;
         UIFactory.SetVisible(nextButton, bootstrap.NextStageId() != null);
-        UIFactory.SetVisible(resultOverlay, true);
+
+        UITween.Stop(ref introTween);
+        UIFactory.SetVisible(introLayer, false);
+        UIFactory.SetVisible(resultLayer, true);
+        UITween.Stop(ref resultTween);
+        resultTween = UITween.Run(resultLayer, 1.0f, t =>
+        {
+            float time = t * 1.0f;
+            resultLayer.style.opacity = Ease.OutCubic(time / 0.25f);
+            resultBand.style.scale = new Scale(new Vector3(1f, Mathf.Max(0.001f, Ease.OutCubic((time - 0.05f) / 0.35f)), 1f));
+            float title = Ease.OutCubic((time - 0.2f) / 0.45f);
+            resultContent.style.opacity = title;
+            resultContent.style.translate = new Translate((1f - title) * -100f, 0f);
+            float footer = Ease.OutCubic((time - 0.5f) / 0.4f);
+            resultFooter.style.opacity = footer;
+            resultFooter.style.translate = new Translate(0f, (1f - footer) * 24f);
+        });
+    }
+
+    /// <summary>拠点に着かれた：画面のふちが赤く光り、ライフの札が揺れる</summary>
+    private void OnEnemyLeaked(Enemy enemy)
+    {
+        UITween.Stop(ref flashTween);
+        flashTween = UITween.Run(damageFlash, 0.7f, t => damageFlash.style.opacity = 0.9f * (1f - Ease.OutCubic(t)));
+        UITween.Stop(ref shakeTween);
+        shakeTween = UITween.Run(lifePlate, 0.45f, t =>
+        {
+            float k = 1f - t;
+            lifePlate.style.translate = new Translate(Mathf.Sin(t * 40f) * 9f * k, 0f);
+            float pop = 1f + 0.35f * k * k;
+            lifeValue.style.scale = new Scale(new Vector3(pop, pop, 1f));
+        });
     }
 
     /// <summary>Space：一時停止、R：やり直し、N：次のステージ（テスト用）</summary>

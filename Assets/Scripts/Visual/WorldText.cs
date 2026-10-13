@@ -4,14 +4,15 @@ using UnityEngine;
 /// <summary>マップ上に置く文字（TextMeshPro）を作る</summary>
 public static class WorldText
 {
-    /// <summary>fontSize はおよそ「10 で 1 マスの高さ」</summary>
-    public static TextMeshPro Create(Transform parent, string text, float fontSize, Color color, int sortingOrder, bool outline)
+    /// <summary>fontSize はおよそ「10 で 1 マスの高さ」。display なら英字・数字用のフォント</summary>
+    public static TextMeshPro Create(Transform parent, string text, float fontSize, Color color, int sortingOrder, bool outline, bool display = false)
     {
         var obj = new GameObject("Text");
         obj.transform.SetParent(parent, false);
         var tmp = obj.AddComponent<TextMeshPro>();
-        if (GameFonts.WorldTMP != null) tmp.font = GameFonts.WorldTMP;
-        if (outline && GameFonts.OutlineMaterial != null) tmp.fontSharedMaterial = GameFonts.OutlineMaterial;
+        TMP_FontAsset font = display ? GameFonts.WorldDisplayTMP : GameFonts.WorldTMP;
+        if (font != null) tmp.font = font;
+        if (outline && !display && GameFonts.OutlineMaterial != null) tmp.fontSharedMaterial = GameFonts.OutlineMaterial;
         tmp.text = text;
         tmp.fontSize = fontSize;
         tmp.color = color;
