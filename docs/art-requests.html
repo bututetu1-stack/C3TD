@@ -296,19 +296,15 @@
     <p class="lead">ChatGPT に貼り付けて使う、画像の生成文言の一覧です。画像は決まった場所に置くだけで、次に再生したときからゲームに反映されます。置いていない画像は、いまの図形と光の演出のまま動きます。</p>
     <div class="status">
       <div class="status-row">
-        <strong>いま依頼中（2026-10-13 夜に更新）</strong>
+        <strong>いま依頼中（2026-10-14 に更新）</strong>
         <div class="status-list">
           <span class="chip gold">新：物理鉄人のカットイン立ち絵</span>
-          <span class="chip gold">新：砲弾の爆発 Explosion.png</span>
-          <span class="chip gold">新：状態の印（鈍足・防御ダウン）</span>
-          <span class="chip gold">新：DP 獲得</span>
-          <span class="chip gold">艦娘の砲弾 Shell.png（M3）</span>
-          <span class="chip gold">タイトル画面の絵 Title.png（任意）</span>
-          <span class="chip gold">効果音・BGM（下の表）</span>
+          <span class="chip gold">BGM menu・boss（Gemini で作れる）</span>
+          <span class="chip gold">効果音（下の表。フリー素材サイトで）</span>
         </div>
       </div>
       <div class="status-row done">
-        <strong>受け取って組み込み済み（画像はこのページの全部）</strong>
+        <strong>受け取って組み込み済み</strong>
         <div class="status-list">
           <span class="got">物理鉄人のアイコン</span>
           <span class="got">敵 4体</span>
@@ -317,6 +313,8 @@
           <span class="got">出現・突破</span>
           <span class="got">配置・撤退・攻撃・回復・撃破（M2 で使用中）</span>
           <span class="got">必殺技・寝落ち・召喚・艦娘（M3 で使う）</span>
+          <span class="got">艦娘の砲弾・砲弾の爆発・状態の印・DP 獲得・タイトルの絵（10/14）</span>
+          <span class="got">戦闘の BGM battle（Gemini・10/14）</span>
         </div>
         <p class="note" style="margin:4px 0 0">拠点の印は黒背景で届きましたが、ゲーム側でふちから続く黒だけを抜いているので、そのまま使えます。課題とレポートは左向きでしたが、敵のデータに向きを書いて反転させているので、描き直しは要りません。</p>
       </div>
@@ -331,6 +329,7 @@
       <a href="#m3">必殺技と召喚（M3）</a>
       <a href="#new">追加の依頼（10/13 夜）</a>
       <a href="#sounds">効果音・BGM</a>
+      <a href="#gemini">Gemini で作る音</a>
     </nav>
   </header>
 
@@ -414,12 +413,12 @@
 
   <section id="sounds">
     <h2>効果音・BGM<span class="tag">SOUND</span></h2>
-    <p>ChatGPT は音を作れないので、フリー素材サイトなどで探してください。ファイル名を下の表のとおりにして置くと、そのまま鳴ります（mp3・ogg・wav のどれでも可。zip のままでは読めないので、解凍した中身を置いてください）。ない音は鳴らないだけで、エラーにはなりません。</p>
+    <p>ChatGPT は音を作れないので、効果音はフリー素材サイトなどで探してください（BGM は下の「Gemini で作る」で作れます）。ファイル名を下の表のとおりにして置くと、そのまま鳴ります（mp3・ogg・wav のどれでも可。zip のままでは読めないので、解凍した中身を置いてください）。ない音は鳴らないだけで、エラーにはなりません。</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>ファイル名</th><th>置き場所</th><th>鳴る場面</th><th>どんな音</th><th>長さ</th></tr></thead>
         <tbody>
-          <tr><td><code>battle</code> <span class="chip gold">優先</span></td><td><code>Audio/BGM/</code></td><td>出撃中</td><td>緊張感のある作戦BGM（ループ）。電子音とストリングス</td><td class="len">1〜3分</td></tr>
+          <tr><td><code>battle</code> <span class="got">受取済</span></td><td><code>Audio/BGM/</code></td><td>出撃中</td><td>緊張感のある作戦BGM（ループ）。電子音とストリングス</td><td class="len">1〜3分</td></tr>
           <tr><td><code>menu</code></td><td><code>Audio/BGM/</code></td><td>タイトル・作戦選択・編成</td><td>落ち着いた作戦室のBGM（ループ）</td><td class="len">1〜3分</td></tr>
           <tr><td><code>boss</code> <span class="chip">新・任意</span></td><td><code>Audio/BGM/</code></td><td>ボス（締切）が出てから。なければ battle のまま</td><td>激しく切迫したボス戦のBGM（ループ）</td><td class="len">1〜3分</td></tr>
           <tr><td><code>start</code> <span class="chip">新</span></td><td><code>Audio/SE/</code></td><td>出撃して「作戦開始」の帯が出る</td><td>作戦開始の合図。短いファンファーレや、無線の「ザッ」</td><td class="len">1〜2秒</td></tr>
@@ -443,6 +442,85 @@
     <p class="note" style="margin-top:12px">置き場所はどれも <code>Assets/Resources/</code> の下です（例：<code>Assets/Resources/Audio/SE/life_lost.wav</code>）。表の音は全部、置けばすぐに鳴ります。</p>
     <p class="note">BGM は最後まで行くと最初に戻ってくり返すので、「ループ」と書かれた曲がつなぎ目が自然です。<code>hit</code> は攻撃のたびに鳴るので（同じ音は0.05秒に1回までに絞っています）、短く小さめの音を選んでください。音量はだいたいそろえておいてもらえると助かります（あとからゲーム側でも調整できます）。</p>
     <p class="note">探しやすいサイトの例：<a href="https://soundeffect-lab.info/" target="_blank" rel="noopener">効果音ラボ</a>、<a href="https://otologic.jp/" target="_blank" rel="noopener">OtoLogic</a>、<a href="https://maou.audio/" target="_blank" rel="noopener">魔王魂</a>。クレジット表記などの利用規約は各サイトで確認してください。</p>
+
+    <h3 id="gemini" style="margin-top:28px">Gemini で作る（BGM と短いジングル）</h3>
+    <p>Gemini の音楽生成（Lyria）は、ボーカルなしの曲を最長3分くらいまで作れます。<strong>BGM はこれで作れます。</strong>ループ機能はありませんが、ゲーム側で曲の終わり近くから頭へ重ねてつなぐので、そのまま置けば途切れずにくり返します（終わりのフェードアウトも自動で除きます）。</p>
+    <p><strong>攻撃・クリック・配置のような短い効果音は、音楽生成では作れません。</strong>上の表の効果音は、フリー素材サイトで探してください。勝ち・負け・作戦開始のような数秒のジングルは作れることがあるので、下に文言を付けました（後ろの無音はゲーム側で切ります）。</p>
+    <ol class="steps">
+      <li><div>Gemini で音楽を作るときに<strong>「インストゥルメンタル（ボーカルなし）」</strong>を選び、下の文言を貼ってください。</div></li>
+      <li><div>ダウンロードは音声（mp3）がいちばん簡単です。m4a や mp4 で落ちてきても、そのまま置いてもらえれば Claude が mp3 に直します（Unity は m4a を読めません）。</div></li>
+      <li><div>ファイル名を変えて置いてください（例：<code>Assets/Resources/Audio/BGM/menu.mp3</code>）。イントロを飛ばして2周目からくり返したい、音量を下げたい、などは <code>Data/audio.json</code> で直せるので、聞いて気になったところを教えてください。</div></li>
+    </ol>
+    <div class="cards">
+      <article class="card">
+        <div class="card-head"><h3>戦闘 BGM</h3><span class="file">battle.mp3</span></div>
+        <div class="scene">出撃中ずっと流れる。いまは 10/14 に作ってもらった1分30秒の曲が入っています。作り直すときに使ってください。</div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">BGM・約2分</span></div>
+        <pre class="prompt" id="g-battle">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
+・アークナイツのような、作戦を指揮する緊張感のある戦闘曲。舞台は大学で、押し寄せる課題やテストを部員たちが迎え撃つ。
+・ボーカルなしのインストゥルメンタル。
+・テンポは BPM 140 前後。脈打つシンセベース、細かく刻むストリングス、タイトなエレクトロのドラム、要所で鳴るブラスの短いアクセント。
+・ゲーム中にくり返し流すので、長いイントロやエンディング、フェードアウトは入れない。最初から最後まで同じくらいの盛り上がりで続け、終わりが曲の頭へ自然につながるようにする。
+・長さは2分くらい。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/battle.mp3</code></span><button class="copy" type="button" data-target="g-battle" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card now">
+        <div class="card-head"><h3>メニュー BGM</h3><span class="file">menu.mp3</span></div>
+        <div class="scene">タイトル・作戦選択・編成の画面で流れる。</div>
+        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">BGM・約2分</span></div>
+        <pre class="prompt" id="g-menu">2Dタワーディフェンスゲームの、作戦選択と編成の画面で流すBGMを作ってください。
+・夜の作戦室で、次の作戦の準備をしている雰囲気。落ち着いていて、少しだけわくわくする。
+・ボーカルなしのインストゥルメンタル。
+・テンポは BPM 90 前後。やわらかいエレクトリックピアノ、薄く広がるシンセパッド、控えめなビートとベース。
+・長く聞いても疲れないよう、耳につく派手なメロディは控えめにする。
+・くり返し流すので、長いイントロやエンディング、フェードアウトは入れず、終わりが曲の頭へ自然につながるようにする。
+・長さは2分くらい。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/menu.mp3</code></span><button class="copy" type="button" data-target="g-menu" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card now">
+        <div class="card-head"><h3>ボス BGM（任意）</h3><span class="file">boss.mp3</span></div>
+        <div class="scene">1-5 でボス「締切」が出たら切り替わる。なければ戦闘 BGM のまま。</div>
+        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">BGM・約2分</span></div>
+        <pre class="prompt" id="g-boss">2Dタワーディフェンスゲームのボス戦のBGMを作ってください。
+・ボスは「締切」という名前の、巨大な目覚まし時計の悪魔。締切が迫ってくる切迫感を出す。
+・ボーカルなしのインストゥルメンタル。
+・テンポは BPM 160 前後。時計の秒針のような「チクタク」という刻みを曲全体に通し、重いドラム、歪んだシンセベース、鋭いストリングスのスタッカート、警報のようなブラスを重ねる。
+・くり返し流すので、長いイントロやエンディング、フェードアウトは入れず、最初から最後まで緊張を保ち、終わりが曲の頭へ自然につながるようにする。
+・長さは2分くらい。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/boss.mp3</code></span><button class="copy" type="button" data-target="g-boss" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>勝利のジングル</h3><span class="file">victory.mp3</span></div>
+        <div class="scene">防衛に成功したとき。後ろの無音はゲーム側で切ります。ジングルのあとも曲が続いてしまったら、何秒まで使うかを教えてください。</div>
+        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">SE・5秒くらい</span></div>
+        <pre class="prompt" id="g-victory">ゲームで作戦に成功したときに流す、短い勝利のジングルを作ってください。
+・ボーカルなしのインストゥルメンタル。
+・明るく堂々としたブラスとストリングスのファンファーレ。最後はティンパニとともに大きな和音でしっかり終わる。
+・ジングル本体は5秒くらいにして、そのあとは無音にする。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/SE/victory.mp3</code></span><button class="copy" type="button" data-target="g-victory" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>敗北のジングル</h3><span class="file">defeat.mp3</span></div>
+        <div class="scene">防衛に失敗したとき。</div>
+        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">SE・4秒くらい</span></div>
+        <pre class="prompt" id="g-defeat">ゲームで作戦に失敗したときに流す、短い敗北のジングルを作ってください。
+・ボーカルなしのインストゥルメンタル。
+・低いストリングスとピアノで、沈んでいくように下がっていくフレーズ。重すぎず、少しほろ苦い感じ。
+・ジングル本体は4秒くらいにして、そのあとは無音にする。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/SE/defeat.mp3</code></span><button class="copy" type="button" data-target="g-defeat" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>作戦開始のジングル</h3><span class="file">start.mp3</span></div>
+        <div class="scene">出撃して「作戦開始」の帯が出たとき。</div>
+        <div class="chips"><span class="chip gold">依頼中</span><span class="chip">SE・2秒くらい</span></div>
+        <pre class="prompt" id="g-start">ゲームで作戦が始まる合図に流す、短いジングルを作ってください。
+・ボーカルなしのインストゥルメンタル。
+・無線のノイズのような短い電子音のあとに、力強いブラスとドラムが一発「ジャーン」と鳴って締まる。
+・ジングル本体は2秒くらいにして、そのあとは無音にする。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/SE/start.mp3</code></span><button class="copy" type="button" data-target="g-start" data-plain="1">コピー</button></div>
+      </article>
+    </div>
+    <p class="note" style="margin-top:12px">Gemini で作った曲には、聞こえない透かし（SynthID）が入ります。使い方は Google の利用規約に従います。部内だけで遊ぶ作品なので心配は少ないですが、外へ公開することになったら、そのときに規約を確かめてください。</p>
   </section>
 </div>
 
@@ -478,7 +556,7 @@
       prompt: "真上から見下ろした、赤く渦巻くゲートの穴。中心は暗く、そのまわりを赤とオレンジの光がうずを巻き、プリントの切れ端のような白い紙片が数枚、吸い出されるように舞っている。円形にまとまった形。" },
     { group: "map", path: "Art/Map/Base.png", title: "拠点の印", scene: "拠点（B）のマスの上に浮かぶ。守るべき「部室」の紋章", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）", now: true,
       prompt: "タワーディフェンスゲームの「守るべき拠点」を表す紋章。正面から見た、上に小さな窓のある木の扉（大学の部室の扉）を、青く光る六角形の盾の枠が囲んでいる。扉の上に小さな星が1つ。すっきりした形で、小さく表示しても分かるように線は太め。文字・数字・ロゴは描かない。" },
-    { group: "map", path: "Art/Background/Title.png", title: "タイトル・作戦選択の背景（任意）", scene: "タイトル・作戦選択・編成の画面に暗くして敷く。なければ戦闘画面の背景を使う（左半分にタイトルの文字が重なる）", bg: null, shape: "wide", style: "none", arrow: "upright", dir: "横長・上下あり", pending: true,
+    { group: "map", path: "Art/Background/Title.png", title: "タイトル・作戦選択の背景（任意）", scene: "タイトル・作戦選択・編成の画面に暗くして敷く。なければ戦闘画面の背景を使う（左半分にタイトルの文字が重なる）", bg: null, shape: "wide", style: "none", arrow: "upright", dir: "横長・上下あり",
       prompt: "タワーディフェンスゲームのタイトル画面の背景イラスト。夜の大学のキャンパスを少し高い位置から見下ろした風景で、校舎の窓にいくつか明かりが灯り、遠くに部室棟が見える。空は深い紺色で、星が少し出ている。画面の左半分はタイトルの文字を重ねるので暗くすっきりさせ、見どころは右半分に寄せる。人物・キャラクター・文字・ロゴは描かない。落ち着いた紺と琥珀色の色調。横長 1536×1024。" },
     { group: "map", path: "Art/Background/Battle.png", title: "戦闘画面の背景", scene: "盤の後ろに暗く敷く（ゲーム側でさらに暗くする）", bg: null, shape: "wide", style: "none", arrow: "upright", dir: "横長・上下あり", now: true,
       prompt: "タワーディフェンスゲームの戦闘画面の背景画像。夜の大学のキャンパスを真上から見下ろした、暗い紺色の設計図（ブループリント）風の図。建物の輪郭や道や木が、細い水色の線で薄く描かれ、方眼の線がうっすら重なる。全体はとても暗く、中央はゲームの盤を重ねるので、特に暗く模様を少なくする。人物・文字・数字・ロゴは描かない。横長 1536×1024。" },
@@ -520,7 +598,7 @@
       prompt: "ゲームのエフェクト素材。眠っていることを表す、頭の上に浮かぶ印。大きさの違う3つの「Z」の形が右上へ向かって並び、そのまわりに小さな泡と星が浮かぶ。色は青白く、ほのかに光る。人物は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
     { group: "m3", path: "Art/Effects/SummonSplash.png", title: "艦娘の召喚", scene: "物理鉄人の「深夜出撃」で、空いているマスに艦娘が現れるとき", bg: "black", shape: "tall", style: "fx", arrow: "rise", dir: "下端が根元。上へ吹き上がる",
       prompt: "仲間が海から現れる瞬間の水柱を真横から見たもの。画像の下端の中央に水面の波紋の輪があり、そこから白と淡い水色のしぶきと光が上へ勢いよく吹き上がる。縦長の画像いっぱいに描く。" },
-    { group: "m3", path: "Art/Effects/Shell.png", title: "艦娘の砲弾", scene: "召喚された艦娘の攻撃。艦娘から敵へ、進む方向に回して飛ばす（いまは光の筋で代わりにしている）", bg: "alpha", shape: "wide", style: "none", arrow: "right", dir: "先端を右に", pending: true,
+    { group: "m3", path: "Art/Effects/Shell.png", title: "艦娘の砲弾", scene: "召喚された艦娘の攻撃。艦娘から敵へ、進む方向に回して飛ばす（いまは光の筋で代わりにしている）", bg: "alpha", shape: "wide", style: "none", arrow: "right", dir: "先端を右に",
       prompt: "ゲームのエフェクト素材。飛んでいく主砲の砲弾を真横から見た姿。先端を画像の右に向けた横向き。真鍮色の砲弾で、後ろ（左）へ短くたなびくオレンジ色の炎と光の尾。人物や文字は描かない。背景は完全に透過した透過PNG。横長 1536×1024。" },
     { group: "m3", path: "Art/Icons/kanmusu_token.png", title: "艦娘（召喚されるユニット）", scene: "物理鉄人の必殺技で召喚される艦娘のアイコン。マスの上と、召喚中の表示に使う", bg: null, shape: "sq", style: "none", arrow: "upright", dir: "正方形のアイコン",
       prompt: "オリジナルの艦娘（軍艦を擬人化した女の子）のSD（ちびキャラ）イラストのアイコン。セーラー服を着て、背中に小さな艤装（主砲と煙突）を背負い、元気に敬礼している。特定の既存キャラクターには似せない。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗り。正方形のアイコンで、背景は明るい水色のグラデーション。文字は描かない。正方形 1024×1024。" },
@@ -528,13 +606,13 @@
     // ---------------- 2026-10-13 夜の追加 ----------------
     { group: "new", path: "Art/CutIn/butsuri_tetsujin.png", title: "物理鉄人のカットイン（立ち絵）", scene: "必殺技「深夜出撃」のカットインで、帯からはみ出すように大きく出す（いまはアイコンを四角く出している）。ChatGPT に物理鉄人のアイコン（Assets/Resources/Art/Icons/butsuri_tetsujin.png）を添付して頼む。CutIn フォルダは新しく作る", bg: "alpha", shape: "tall", style: "none", arrow: "upright", dir: "縦長・体はやや左向き", pending: true,
       prompt: "添付した画像と同じキャラクター・同じ服装・同じ画風で、ゲームの必殺技カットインに使う全身の立ち絵を1枚描いてください。弓を大きく引き絞った決めポーズで、体と顔はやや左を向く（画面の中央側を見る）。頭から足元まで全身を入れ、上下左右に少し余白を残す。太めの黒い主線と、外側を囲む白い太めのフチ取り（ステッカー風）、くっきりしたセル塗りは添付の画像と同じにする。文字・ロゴ・サインは描かない。背景は完全に透過した透過PNG。縦長 1024×1536。" },
-    { group: "new", path: "Art/Effects/Explosion.png", title: "砲弾の爆発", scene: "艦娘の砲弾が当たったところで、まわりの敵ごと巻き込んで爆発する（物理の範囲攻撃に使う）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", pending: true,
+    { group: "new", path: "Art/Effects/Explosion.png", title: "砲弾の爆発", scene: "艦娘の砲弾が当たったところで、まわりの敵ごと巻き込んで爆発する（物理の範囲攻撃に使う）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
       prompt: "砲弾が着弾して爆発する瞬間を真上から見たもの。中心が白くまぶしく光り、オレンジと赤の炎の球が丸く広がり、外側に灰色の煙の輪と、四方へ飛び散る火の粉。円形にまとまった形。" },
-    { group: "new", path: "Art/Effects/StatusSlow.png", title: "状態の印：鈍足", scene: "敵が遅くなっているあいだ、体力バーの左に小さく出る（いまは水色の丸に「遅」）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）", pending: true,
+    { group: "new", path: "Art/Effects/StatusSlow.png", title: "状態の印：鈍足", scene: "敵が遅くなっているあいだ、体力バーの左に小さく出る（いまは水色の丸に「遅」）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）",
       prompt: "ゲームのアイコン素材。動きが遅くなっていることを表す小さな印。水色の砂時計に、白い氷の結晶がひとつ重なっている。小さく表示しても分かるように、太い線のシンプルな形と、はっきりした色にする。人物や文字は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
-    { group: "new", path: "Art/Effects/StatusDefDown.png", title: "状態の印：防御ダウン", scene: "敵の防御が下がっているあいだ、体力バーの左に小さく出る（いまは赤い丸に「防」）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）", pending: true,
+    { group: "new", path: "Art/Effects/StatusDefDown.png", title: "状態の印：防御ダウン", scene: "敵の防御が下がっているあいだ、体力バーの左に小さく出る（いまは赤い丸に「防」）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）",
       prompt: "ゲームのアイコン素材。防御力が下がっていることを表す小さな印。ひびの入った銀色の盾に、赤い下向きの矢印が重なっている。小さく表示しても分かるように、太い線のシンプルな形と、はっきりした色にする。人物や文字は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
-    { group: "new", path: "Art/Effects/DpGain.png", title: "DP 獲得", scene: "必殺技などで DP が増えたとき、部員の位置からきらきらと立ちのぼる（いまは先鋒ダミーの「補給」で使う）", bg: "black", shape: "sq", style: "fx", arrow: "upright", dir: "上下あり（回さない）", pending: true,
+    { group: "new", path: "Art/Effects/DpGain.png", title: "DP 獲得", scene: "必殺技などで DP が増えたとき、部員の位置からきらきらと立ちのぼる（いまは先鋒ダミーの「補給」で使う）", bg: "black", shape: "sq", style: "fx", arrow: "upright", dir: "上下あり（回さない）",
       prompt: "配置コストを手に入れたときの光。金色に光る小さなひし形の結晶がいくつも、下から上へきらきらと舞い上がり、中央にやわらかな金色の光の柱が立つ。" }
   ];
 
