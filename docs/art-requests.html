@@ -298,6 +298,7 @@
       <div class="status-row">
         <strong>いま依頼中（2026-10-14 に更新）</strong>
         <div class="status-list">
+          <span class="chip gold">新：第2章の敵 6体（通知・論文・睡魔・再履修・グループワーク・期末試験）</span>
           <span class="chip gold">新：物理鉄人のカットイン立ち絵</span>
           <span class="chip gold">効果音 summon（艦娘の召喚。水しぶきと汽笛）</span>
         </div>
@@ -322,6 +323,7 @@
       <a href="#howto">使い方</a>
       <a href="#style">共通の画風</a>
       <a href="#enemies">敵</a>
+      <a href="#enemies2">第2章の敵</a>
       <a href="#map">出撃口・拠点・背景</a>
       <a href="#m1fx">出現と突破</a>
       <a href="#m2">配置と攻撃（M2）</a>
@@ -378,6 +380,12 @@
     <h2>敵<span class="tag">ENEMIES</span></h2>
     <p class="section-note">いまは色付きの図形に「課題」などの文字を載せて代わりにしています。絵を置くと、図形と文字の代わりにその絵が歩きます（影と、ボスの赤い気配はそのまま付きます）。</p>
     <div class="cards" data-group="enemies"></div>
+  </section>
+
+  <section id="enemies2">
+    <h2>第2章の敵<span class="tag">ENEMIES 2</span></h2>
+    <p class="section-note">第2章「後期」で出てくる6体です。いまは色付きの図形に「通」「論」などの文字で代わりにしています。通知は空を飛ぶので、ゲーム側で少し持ち上げて描きます（絵は地面に立たせなくてよい）。</p>
+    <div class="cards" data-group="enemies2"></div>
   </section>
 
   <section id="map">
@@ -549,6 +557,20 @@
       prompt: "何十枚も重ねてホチキスで留めた分厚いレポートの束が、重たいゴーレムになったモンスター。体はずんぐりした四角で、紙の束の層が見える。大きな黒いクリップが肩当てのように付き、ホチキスの針が鎧の留め具になっている。目は眠そうだが、頑丈そう。のっしのっしと歩く。紙は白から薄い紫、アクセントは紫。" },
     { group: "enemies", path: "Art/Enemies/shimekiri.png", title: "締切（ボス）", scene: "ボス。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", now: true, priority: true,
       prompt: "「締切」を擬人化した、大きなボスモンスター。大きな丸い目覚まし時計の悪魔で、時計の文字盤が顔になっていて、赤く光る目と牙のある口がある。時計の針は真夜中の12時の直前を指している（数字は描かない）。頭の上の2つのベルが角のように突き出し、背中から破れたカレンダーのページがマントのように何枚もなびく。体のまわりに赤黒い炎のオーラ。威圧感があり、ほかの敵より大きく堂々と描く。色は深い赤と黒、金のアクセント。" },
+
+    // ---------------- 第2章の敵（2026-10-14） ----------------
+    { group: "enemies2", path: "Art/Enemies/tsuuchi.png", title: "通知", scene: "空を飛ぶ敵。前衛では止められず、狙撃・術師で撃ち落とす", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "スマホのメッセージ通知の吹き出しが、小さな羽を生やして飛んでいるモンスター。緑色の丸い吹き出しの体に、赤い未読バッジ（数字は描かない）を頭に付け、ニヤッと笑う顔。足はなく、空中に浮いている。色は明るい緑と白、アクセントは赤。" },
+    { group: "enemies2", path: "Art/Enemies/ronbun.png", title: "論文", scene: "術が効きにくい敵（術耐性 60%）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "分厚い学術論文の冊子が、メガネをかけた理屈っぽいモンスターになったもの。表紙は青緑色のハードカバーで、背表紙に金の線（文字は描かない）。冊子から細い手足が生え、片手に赤ペンを持ち、もう片方の手で眼鏡をくいっと上げている。まわりに数式のような細かい模様がうっすら浮かぶ（読める文字や数字は描かない）。色は青緑と白、アクセントは金。" },
+    { group: "enemies2", path: "Art/Enemies/suima.png", title: "睡魔", scene: "離れたところから部員を撃って眠らせる敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "眠気を擬人化した、ふわふわの紫色の雲のようなモンスター。ナイトキャップをかぶり、半分閉じた眠そうな目で、口からあくびの泡が出ている。手には先が星になった小さな杖を持ち、杖の先から紫の光の粒がこぼれる。色は紫と藍色、アクセントは淡い黄色。" },
+    { group: "enemies2", path: "Art/Enemies/rerishuu.png", title: "再履修", scene: "倒されても一度だけ起き上がる敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "去年落とした単位の成績表が、包帯を巻いたゾンビのようなモンスターになったもの。体は少し破れた紙で、赤い丸いスタンプの跡がある（文字は描かない）。頭に包帯、目はうつろだがしぶとそう。片腕を前に伸ばして、のろのろ歩いている。色はくすんだオレンジと生成り色、アクセントは赤。" },
+    { group: "enemies2", path: "Art/Enemies/groupwork.png", title: "グループワーク", scene: "まわりの敵の防御を上げる敵（足元の琥珀色の輪はゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true,
+      prompt: "グループワークの班を表すモンスター。4枚の小さなプリント用紙が肩を組んで円陣を組み、ひとかたまりになっている。真ん中にホワイトボードのような四角い盾を掲げ、全員が気合いの入った顔をしている。色は黄土色と白、アクセントは琥珀色。" },
+    { group: "enemies2", path: "Art/Enemies/kimatsu.png", title: "期末試験（ボス）", scene: "第2章のボス。14 秒ごとに小テストを呼ぶ。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", pending: true, priority: true,
+      prompt: "「期末試験」を擬人化した、大きなボスモンスター。分厚い試験問題の冊子が積み重なってできた巨人で、胸に巨大な答案用紙の顔（赤く光る目、ギザギザの口）がある。肩には鉛筆が槍のように突き刺さり、背中から黒い炎とともに答案用紙が何枚も舞う。威圧感があり、ほかの敵より大きく堂々と描く。読める文字や数字は描かない。色は深い紫と黒、アクセントは赤と金。" },
 
     // ---------------- 出撃口・拠点・背景 ----------------
     { group: "map", path: "Art/Map/Spawn.png", title: "出撃口の印", scene: "出撃口（S）のマスの上で、ゆっくり回る", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", now: true,
