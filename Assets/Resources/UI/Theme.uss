@@ -1427,7 +1427,40 @@
 .squad-help {
     font-size: 21px;
     color: rgb(142, 152, 172);
-    margin-bottom: 14px;
+    margin-bottom: 10px;
+}
+
+/* この作戦の注意（出てくる敵から。編成でまかなえていなければ赤） */
+.squad-tips {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.squad-tip {
+    font-size: 18px;
+    padding: 3px 10px 3px 10px;
+    margin-right: 8px;
+    margin-bottom: 6px;
+    border-width: 1px;
+}
+
+.squad-tip--ok {
+    color: rgb(150, 220, 170);
+    border-color: rgba(110, 200, 140, 0.45);
+    background-color: rgba(40, 90, 60, 0.35);
+}
+
+.squad-tip--warn {
+    color: rgb(255, 255, 255);
+    border-color: rgb(239, 74, 85);
+    background-color: rgba(239, 74, 85, 0.4);
+}
+
+.squad-tip--info {
+    color: rgb(214, 219, 232);
+    border-color: rgba(255, 255, 255, 0.18);
+    background-color: rgba(255, 255, 255, 0.06);
 }
 
 .squad-roster-scroll {

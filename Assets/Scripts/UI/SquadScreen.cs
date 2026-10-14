@@ -14,6 +14,7 @@ public class SquadScreen
     private readonly GameBootstrap bootstrap;
     private readonly Label stageLabel;
     private readonly VisualElement roster;
+    private readonly VisualElement tipsBox;
     private readonly VisualElement slots;
     private readonly Label countLabel;
     private readonly C3Button goButton;
@@ -37,6 +38,9 @@ public class SquadScreen
         var body = UIFactory.Box("squad-body");
         var left = UIFactory.Box("squad-left");
         left.Add(UIFactory.Text("カードを押すと編成に入れる・外す（入れた順に編成バーへ並ぶ）", UIFont.Medium, "squad-help"));
+        // この作戦の注意（出てくる敵から。いまの編成でまかなえていなければ赤）
+        tipsBox = UIFactory.Box("squad-tips");
+        left.Add(tipsBox);
         roster = UIFactory.Box("squad-roster");
         // 部員が増えたり、スマホで UI が大きくなったりしても下の編成バーに重ならないよう、縦に流せるようにする
         var rosterScroll = new ScrollView(ScrollViewMode.Vertical);
@@ -153,7 +157,22 @@ public class SquadScreen
             slots.Add(slot);
         }
         countLabel.text = squad.Count + "/" + max;
+        RefreshTips();
         goButton.Interactable = squad.Count > 0;
+    }
+
+    private void RefreshTips()
+    {
+        tipsBox.Clear();
+        List<StageTips.Tip> tips = StageTips.For(GameData.Stage(StageId), squad);
+        UIFactory.SetVisible(tipsBox, tips.Count > 0);
+        foreach (StageTips.Tip t in tips)
+        {
+            string mark = t.Covered == false ? "！ " : t.Covered == true ? "✓ " : "・ ";
+            var chip = UIFactory.Text(mark + t.Text, UIFont.Body, "squad-tip");
+            chip.AddToClassList(t.Covered == false ? "squad-tip--warn" : t.Covered == true ? "squad-tip--ok" : "squad-tip--info");
+            tipsBox.Add(chip);
+        }
     }
 
     private void ShowDetail(string id)
