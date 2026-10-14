@@ -1769,6 +1769,155 @@
     font-size: 26px;
 }
 
+/* タイトルの下の段（敵図鑑・遊び方・設定） */
+.title-subrow {
+    flex-direction: row;
+}
+
+.title-subrow .title-button--sub {
+    width: 200px;
+    margin-right: 14px;
+}
+
+/* ---------- 設定（音量） ---------- */
+.settings-layer {
+    background-color: rgba(3, 5, 10, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.settings-panel {
+    width: 860px;
+    padding: 28px 40px 30px 40px;
+}
+
+.settings-title {
+    font-size: 44px;
+    color: rgb(255, 255, 255);
+    margin-bottom: 18px;
+}
+
+.settings-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.settings-caption {
+    width: 130px;
+    font-size: 24px;
+    color: rgb(238, 241, 246);
+}
+
+.settings-step {
+    width: 56px;
+    height: 52px;
+}
+
+.settings-step .c3-button-text {
+    font-size: 26px;
+}
+
+.settings-bar {
+    flex-direction: row;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.vol-cell {
+    width: 38px;
+    height: 40px;
+    margin-right: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.vol-cell--on {
+    background-color: rgb(244, 182, 63);
+    border-color: rgb(255, 210, 122);
+}
+
+.settings-value {
+    width: 90px;
+    margin-left: 14px;
+    font-size: 28px;
+    color: rgb(255, 255, 255);
+}
+
+.settings-keys {
+    font-size: 18px;
+    color: rgb(142, 152, 172);
+    margin-top: 6px;
+    margin-bottom: 18px;
+    white-space: normal;
+}
+
+.settings-close {
+    width: 240px;
+    height: 62px;
+    align-self: flex-end;
+}
+
+.settings-close .c3-button-text {
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+.pause-settings {
+    width: 260px;
+    height: 56px;
+    margin-top: 18px;
+    align-self: center;
+}
+
+.pause-settings .c3-button-text {
+    font-size: 22px;
+    margin-left: 10px;
+}
+
+/* ---------- 遊び方 ---------- */
+.help-scroll {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.help-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-bottom: 30px;
+}
+
+.help-card {
+    width: 32%;
+    margin-right: 1.2%;
+    margin-bottom: 16px;
+    padding: 18px 22px 20px 26px;
+}
+
+.help-caption {
+    font-size: 16px;
+    letter-spacing: 5px;
+    color: rgb(244, 182, 63);
+}
+
+.help-title {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+    margin-bottom: 8px;
+}
+
+.help-body {
+    font-size: 19px;
+    color: rgb(214, 219, 232);
+    white-space: normal;
+    -unity-paragraph-spacing: 6px;
+}
+
+.c3-mobile .help-card {
+    width: 48.5%;
+}
+
 /* ---------- スマホ（UI を大きくしたとき。UIFactory.Zoom > 1） ---------- */
 /* 作戦選択の「出てくる敵」は、縦が足りないので種類が少なくても3列にする */
 .c3-mobile .detail-enemies .enemy-chip {

@@ -307,6 +307,7 @@ public class Battle : MonoBehaviour
         if (State.Phase != lastPhase)
         {
             lastPhase = State.Phase;
+            if (State.Phase != GamePhase.Playing) RecordMembers();
             if (State.Phase == GamePhase.Won)
             {
                 AudioManager.PlaySE("victory");
@@ -319,6 +320,16 @@ public class Battle : MonoBehaviour
                 if (endless != null) EndlessNewBest = Progress.RecordEndless(Stage.id, EndlessSurvived);
             }
         }
+    }
+
+    /// <summary>出撃が終わったら、置いた部員の出撃回数と MVP を記録する（部員の札に出す）</summary>
+    private void RecordMembers()
+    {
+        var ids = new List<string>();
+        foreach (MemberStats s in Stats.Deployed()) ids.Add(s.Data.id);
+        if (ids.Count == 0) return;
+        MemberStats mvp = Stats.Mvp();
+        Progress.RecordMembers(ids, mvp != null ? mvp.Data.id : null);
     }
 
     /// <summary>エンドレスで守りきった波の数（いまの波のひとつ前まで）</summary>

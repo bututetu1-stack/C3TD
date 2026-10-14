@@ -16,6 +16,8 @@ public class MenuUI : MonoBehaviour
     private StageSelectScreen select;
     private SquadScreen squad;
     private EnemyBookScreen book;
+    private HelpScreen help;
+    private SettingsPanel settings;
     private VisualElement current;
     private IVisualElementScheduledItem showTween;
 
@@ -29,6 +31,8 @@ public class MenuUI : MonoBehaviour
         select = new StageSelectScreen(root, bootstrap);
         squad = new SquadScreen(root, bootstrap);
         book = new EnemyBookScreen(root, bootstrap);
+        help = new HelpScreen(root, bootstrap);
+        settings = new SettingsPanel(root);
         HideAll();
     }
 
@@ -72,8 +76,19 @@ public class MenuUI : MonoBehaviour
         Show(book.Root);
     }
 
+    public void ShowHelp()
+    {
+        Show(help.Root);
+    }
+
+    public void ShowSettings()
+    {
+        settings.Show();
+    }
+
     public void HideAll()
     {
+        settings.Hide();
         root.style.display = DisplayStyle.None;
         current = null;
     }
@@ -82,7 +97,7 @@ public class MenuUI : MonoBehaviour
     private void Show(VisualElement screen)
     {
         root.style.display = DisplayStyle.Flex;
-        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root }) UIFactory.SetVisible(s, s == screen);
+        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root, help.Root }) UIFactory.SetVisible(s, s == screen);
         current = screen;
         AudioManager.PlayBGM("menu");
         UITween.Stop(ref showTween);
@@ -101,9 +116,13 @@ public class MenuUI : MonoBehaviour
         if (kb == null) return;
         if (kb.escapeKey.wasPressedThisFrame)
         {
-            if (current == squad.Root) bootstrap.ShowStageSelect(squad.StageId);
-            else if (current == select.Root || current == book.Root) bootstrap.ShowTitle();
+            // 設定の札が開いていれば、先にそれを閉じる
+            if (settings.IsOpen) settings.Hide();
+            else if (current == squad.Root) bootstrap.ShowStageSelect(squad.StageId);
+            else if (current == select.Root || current == book.Root || current == help.Root) bootstrap.ShowTitle();
+            return;
         }
+        if (settings.IsOpen) return;
         if (current == title.Root && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
             bootstrap.ShowStageSelect();
     }

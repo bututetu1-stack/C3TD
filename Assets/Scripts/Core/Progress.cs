@@ -15,6 +15,15 @@ public class StageRecord
     public bool hard;
 }
 
+/// <summary>部員ごとの記録（出撃した回数と MVP の回数）</summary>
+[Serializable]
+public class MemberRecord
+{
+    public string id;
+    public int sorties;
+    public int mvp;
+}
+
 /// <summary>エンドレスの最高記録（守りきった波の数）</summary>
 [Serializable]
 public class EndlessRecord
@@ -28,6 +37,7 @@ public class ProgressData
 {
     public List<StageRecord> stages = new List<StageRecord>();
     public List<EndlessRecord> endless = new List<EndlessRecord>();
+    public List<MemberRecord> members = new List<MemberRecord>();
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -130,6 +140,33 @@ public static class Progress
         r.cleared = true;
         r.stars = Mathf.Max(r.stars, life >= maxLife ? 3 : 2);
         if (hard) r.hard = true;
+        Save();
+    }
+
+    /// <summary>部員の記録（なければ null）</summary>
+    public static MemberRecord Member(string id)
+    {
+        if (Data.members == null) return null;
+        foreach (MemberRecord r in Data.members)
+            if (r.id == id) return r;
+        return null;
+    }
+
+    /// <summary>出撃が終わったとき：置いた部員の出撃回数と、MVP の回数を足す</summary>
+    public static void RecordMembers(List<string> deployed, string mvp)
+    {
+        if (Data.members == null) Data.members = new List<MemberRecord>();
+        foreach (string id in deployed)
+        {
+            MemberRecord r = Member(id);
+            if (r == null)
+            {
+                r = new MemberRecord { id = id };
+                Data.members.Add(r);
+            }
+            r.sorties++;
+            if (id == mvp) r.mvp++;
+        }
         Save();
     }
 

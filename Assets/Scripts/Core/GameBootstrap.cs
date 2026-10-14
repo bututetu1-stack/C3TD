@@ -75,6 +75,18 @@ public class GameBootstrap : MonoBehaviour
         menu.ShowEnemyBook();
     }
 
+    public void ShowHelp()
+    {
+        EndBattle();
+        menu.ShowHelp();
+    }
+
+    /// <summary>設定の札（タイトルの上に重ねる）</summary>
+    public void ShowSettings()
+    {
+        menu.ShowSettings();
+    }
+
     public void ShowSquad(string id)
     {
         EndBattle();

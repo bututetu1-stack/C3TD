@@ -103,6 +103,7 @@ public class HudUI : MonoBehaviour
     private UnitPanel unitPanel;
     private EnemyPanel enemyPanel;
     private CutIn cutIn;
+    private SettingsPanel settings;
 
     private IVisualElementScheduledItem flashTween;
     private IVisualElementScheduledItem shakeTween;
@@ -145,6 +146,7 @@ public class HudUI : MonoBehaviour
         BuildIntro();
         BuildPause();
         BuildResult();
+        settings = new SettingsPanel(root);
     }
 
     // ================= 組み立て =================
@@ -507,6 +509,9 @@ public class HudUI : MonoBehaviour
         quit.AddToClassList("result-button");
         buttons.Add(quit);
         pauseLayer.Add(buttons);
+        var settingsButton = new C3Button(IconKind.Next, 22f, "設定（音量）", () => settings.Show());
+        settingsButton.AddToClassList("pause-settings");
+        pauseLayer.Add(settingsButton);
         root.Add(pauseLayer);
         UIFactory.SetVisible(pauseLayer, false);
     }
@@ -646,6 +651,8 @@ public class HudUI : MonoBehaviour
             pauseButton.Active = TimeController.Paused;
         }
         UIFactory.SetVisible(pauseLayer, TimeController.Paused && state.Phase == GamePhase.Playing);
+        // 一時停止をやめたら、設定の札も閉じる
+        if (!TimeController.Paused && settings.IsOpen) settings.Hide();
         if (TimeController.Paused && introTween != null)
         {
             // 一時停止メニューの後ろに作戦開始の帯が透けないように消す
@@ -902,6 +909,11 @@ public class HudUI : MonoBehaviour
     {
         Keyboard kb = Keyboard.current;
         if (kb == null) return;
+        if (settings.IsOpen)
+        {
+            if (kb.escapeKey.wasPressedThisFrame) settings.Hide();
+            return;
+        }
         if (kb.spaceKey.wasPressedThisFrame) TimeController.TogglePause();
         if (kb.rKey.wasPressedThisFrame) bootstrap.Retry();
         if (kb.nKey.wasPressedThisFrame) bootstrap.StartBattle(bootstrap.NextStageId(true));

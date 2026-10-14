@@ -161,5 +161,8 @@ public class SquadScreen
         CharacterData d = id != null ? GameData.Character(id) : null;
         if (d == null) return;
         detail.Fill(d, GameData.Class(d.unitClass));
+        // これまでの記録（出撃と MVP の回数）
+        MemberRecord rec = Progress.Member(d.id);
+        detail.SetStatus(rec != null && rec.sorties > 0 ? "出撃 " + rec.sorties + " 回・MVP " + rec.mvp + " 回" : "", Palette.AmberBright);
     }
 }

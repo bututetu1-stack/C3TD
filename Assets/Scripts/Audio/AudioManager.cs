@@ -24,6 +24,33 @@ public class AudioManager : MonoBehaviour
 
     private static AudioManager instance;
 
+    private const string BgmKey = "c3td.volume.bgm";
+    private const string SeKey = "c3td.volume.se";
+
+    /// <summary>設定の音量（0〜1）。audio.json の音ごとの音量に掛ける。PlayerPrefs に覚える</summary>
+    public static float BgmLevel
+    {
+        get { return PlayerPrefs.GetFloat(BgmKey, 1f); }
+        set
+        {
+            PlayerPrefs.SetFloat(BgmKey, Mathf.Clamp01(value));
+            PlayerPrefs.Save();
+            var self = Instance;
+            // 重ねてつないでいる最中でなければ、いま鳴っている曲にすぐ効かせる
+            if (self.fadeElapsed < 0f) self.bgm[self.bgmIndex].volume = self.bgmVolume * Mathf.Clamp01(value);
+        }
+    }
+
+    public static float SeLevel
+    {
+        get { return PlayerPrefs.GetFloat(SeKey, 1f); }
+        set
+        {
+            PlayerPrefs.SetFloat(SeKey, Mathf.Clamp01(value));
+            PlayerPrefs.Save();
+        }
+    }
+
     private readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
     private readonly Dictionary<string, AudioClip> seClips = new Dictionary<string, AudioClip>();
     private readonly Dictionary<AudioClip, float> bgmEnds = new Dictionary<AudioClip, float>();
@@ -92,7 +119,8 @@ public class AudioManager : MonoBehaviour
         if (self.lastPlayed.TryGetValue(key, out last) && now - last < MinInterval) return;
         self.lastPlayed[key] = now;
         AudioEntry entry = GameData.Audio.Se(key);
-        float volume = entry != null ? entry.volume : 1f;
+        float volume = (entry != null ? entry.volume : 1f) * SeLevel;
+        if (volume <= 0.001f) return;
         // 切り出せなかった（ブラウザ版）のに使う部分が決まっているときは、その部分だけ鳴らす
         if (!self.cut.Contains(key) && entry != null && (entry.start > 0f || entry.end > 0f))
             self.PlayPart(clip, entry.start, entry.end, volume);
@@ -205,7 +233,7 @@ public class AudioManager : MonoBehaviour
         self.bgmEntry = entry;
         self.bgmVolume = entry != null ? entry.volume : 1f;
         current.clip = clip;
-        current.volume = self.bgmVolume;
+        current.volume = self.bgmVolume * BgmLevel;
         // 読み込み済みなら使う部分を決めてから鳴らす。ブラウザ版の BGM は鳴らし始めてから読み込まれるので、決めるのは Update で
         self.boundsPending = true;
         if (clip.loadState == AudioDataLoadState.Loaded) self.ResolveBounds(current);
@@ -256,8 +284,9 @@ public class AudioManager : MonoBehaviour
 
         fadeElapsed += Time.unscaledDeltaTime;
         float t = fadeLength > 0f ? Mathf.Clamp01(fadeElapsed / fadeLength) : 1f;
-        current.volume = bgmVolume * (1f - t);
-        next.volume = bgmVolume * t;
+        float level = bgmVolume * BgmLevel;
+        current.volume = level * (1f - t);
+        next.volume = level * t;
         if (t >= 1f)
         {
             current.Stop();
