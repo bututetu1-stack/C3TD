@@ -134,31 +134,46 @@ public abstract class Unit : MonoBehaviour
 
     // ================= 体力 =================
 
-    /// <summary>攻撃を受ける。防御・術耐性で減らしたあとの、実際に減った量を返す</summary>
-    public float TakeDamage(float atk, DamageType type)
+    /// <summary>
+    /// 攻撃を受ける。防御・術耐性で減らしたあとの、実際に減った量を返す。
+    /// source（攻撃したもの）を渡すと、部員の活躍（BattleStats）に記録する
+    /// </summary>
+    public float TakeDamage(float atk, DamageType type, Unit source = null)
     {
         if (!Alive) return 0f;
         if (Evade(type)) return 0f;
-        float damage = Absorb(Combat.Mitigate(atk, type, Def, Res));
+        float mitigated = Combat.Mitigate(atk, type, Def, Res);
+        float damage = Absorb(mitigated);
+        float absorbed = Mathf.Max(0f, mitigated - damage);
         if (damage <= 0f)
         {
             OnDamaged();
+            Record(source, absorbed, false);
             return 0f;
         }
+        float before = Hp;
         Hp = Mathf.Max(0f, Hp - damage);
         if (healthBar != null) healthBar.Set(Hp / MaxHp);
         FloatingText.Damage(Center, damage, DamageColor(type));
         OnDamaged();
+        bool killed = false;
         if (Hp <= 0f && !SurviveLethal())
         {
             Alive = false;
             OnDeath();
+            killed = !Alive; // 起き上がる敵は倒したことにしない
         }
+        Record(source, absorbed + Mathf.Min(damage, before), killed);
         return damage;
     }
 
-    /// <summary>回復する。実際に増えた量を返す</summary>
-    public float Heal(float amount)
+    private void Record(Unit source, float amount, bool killed)
+    {
+        if (battle != null && battle.Stats != null) battle.Stats.Hit(source, this, amount, killed);
+    }
+
+    /// <summary>回復する。実際に増えた量を返す。source（回復したもの）を渡すと、部員の活躍に記録する</summary>
+    public float Heal(float amount, Unit source = null)
     {
         if (!Alive) return 0f;
         float before = Hp;
@@ -166,6 +181,7 @@ public abstract class Unit : MonoBehaviour
         if (healthBar != null) healthBar.Set(Hp / MaxHp);
         float healed = Hp - before;
         if (healed >= 1f) FloatingText.Heal(Center, healed);
+        if (battle != null && battle.Stats != null) battle.Stats.Healed(source, healed);
         return healed;
     }
 

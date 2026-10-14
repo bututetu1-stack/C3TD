@@ -171,6 +171,111 @@
     width: 96px;
 }
 
+/* 次の敵（NEXT）：敵のアイコン・数・あと何秒と「呼ぶ」 */
+.next-plate {
+    padding-right: 10px;
+}
+
+.next-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 23px;
+    border-width: 2px;
+    margin-left: 12px;
+    -unity-background-scale-mode: scale-to-fit;
+    align-items: center;
+    justify-content: center;
+}
+
+.next-icon-label {
+    font-size: 22px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.next-count {
+    font-size: 26px;
+    color: rgb(238, 241, 246);
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.call-button {
+    height: 50px;
+    padding-left: 12px;
+    padding-right: 14px;
+    margin-left: 6px;
+}
+
+.call-button .c3-button-text {
+    font-size: 19px;
+    margin-left: 6px;
+}
+
+/* 初めて出る敵の知らせ（画面の上のまん中） */
+.new-enemy-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 104px;
+    align-items: center;
+}
+
+.new-enemy {
+    flex-direction: row;
+    align-items: center;
+    max-width: 980px;
+    padding: 12px 26px 14px 24px;
+}
+
+.new-enemy-icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 38px;
+    border-width: 2px;
+    border-color: rgb(239, 74, 85);
+    margin-right: 18px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: scale-to-fit;
+    align-items: center;
+    justify-content: center;
+}
+
+.new-enemy-icon-label {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.new-enemy-text {
+    flex-shrink: 1;
+}
+
+.new-enemy-head {
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.new-enemy-caption {
+    font-size: 19px;
+    letter-spacing: 5px;
+    color: rgb(239, 74, 85);
+    margin-right: 14px;
+    margin-bottom: 4px;
+}
+
+.new-enemy-name {
+    font-size: 32px;
+    color: rgb(255, 255, 255);
+}
+
+.new-enemy-traits {
+    font-size: 19px;
+    color: rgb(214, 219, 232);
+    white-space: normal;
+    -unity-paragraph-spacing: 3px;
+}
+
 /* ---------- 作戦開始 ---------- */
 .intro-layer {
     justify-content: center;
@@ -303,6 +408,109 @@
     flex-direction: row;
     justify-content: center;
     margin-top: 36px;
+}
+
+/* ---------- 結果：部員の活躍と MVP ---------- */
+.result-team {
+    align-items: center;
+    margin-top: 22px;
+}
+
+.team-caption {
+    font-size: 20px;
+    letter-spacing: 6px;
+    color: rgb(142, 152, 172);
+    margin-bottom: 10px;
+}
+
+.team-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.team-chip {
+    width: 196px;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-bottom: 8px;
+    padding: 12px 14px 12px 14px;
+}
+
+.team-head {
+    flex-direction: row;
+    align-items: center;
+}
+
+.team-portrait {
+    width: 48px;
+    height: 48px;
+    border-width: 2px;
+    margin-right: 10px;
+    -unity-background-scale-mode: scale-and-crop;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.team-initial {
+    font-size: 26px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.team-name {
+    font-size: 19px;
+    color: rgb(255, 255, 255);
+    flex-shrink: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.team-line {
+    flex-direction: row;
+    align-items: flex-end;
+    margin-top: 8px;
+}
+
+.team-stat-caption {
+    font-size: 16px;
+    color: rgb(142, 152, 172);
+    margin-right: 8px;
+    margin-bottom: 4px;
+}
+
+.team-stat-value {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+}
+
+.team-sub {
+    font-size: 16px;
+    color: rgb(142, 152, 172);
+}
+
+.team-track {
+    height: 6px;
+    margin-top: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.team-fill {
+    height: 6px;
+    width: 0;
+}
+
+.team-mvp {
+    position: absolute;
+    right: 10px;
+    top: -14px;
+    font-size: 22px;
+    letter-spacing: 3px;
+    padding: 0 10px 0 13px;
+    color: rgb(20, 17, 10);
+    background-color: rgb(255, 210, 122);
 }
 
 .result-button {
@@ -448,6 +656,19 @@
 .card-timer {
     font-size: 46px;
     color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+/* キーボードの数字（1〜9 でカードを選べる。スマホでは出さない） */
+.card-key {
+    position: absolute;
+    right: 3px;
+    bottom: 29px;
+    width: 26px;
+    height: 26px;
+    font-size: 17px;
+    color: rgb(244, 182, 63);
+    background-color: rgba(6, 9, 16, 0.85);
     -unity-text-align: middle-center;
 }
 

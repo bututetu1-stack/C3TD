@@ -134,6 +134,12 @@ public static class UIFactory
         element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
+    /// <summary>SetVisible で出しているか</summary>
+    public static bool IsVisible(VisualElement element)
+    {
+        return element.style.display != DisplayStyle.None;
+    }
+
     /// <summary>
     /// 画面のピクセル座標（左下が原点）を、root の座標（UI の参照解像度、左上が原点）にする。
     /// RuntimePanelUtils.ScreenToPanel は拡大縮小を反映しないことがあるので、比率で計算する。

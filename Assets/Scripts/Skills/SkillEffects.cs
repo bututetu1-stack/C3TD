@@ -49,7 +49,7 @@ public static class SkillEffects
                 foreach (Unit u in Targets(e, ctx, true))
                 {
                     Fx.Hit(u.Center, caster.ClassColor);
-                    u.TakeDamage(caster.Atk * Multiplier(e), caster.Class.damageType);
+                    u.TakeDamage(caster.Atk * Multiplier(e), caster.Class.damageType, caster);
                 }
                 break;
 
@@ -62,7 +62,7 @@ public static class SkillEffects
                     if (e.multiplier > 0f) amount += caster.Atk * e.multiplier;
                     if (e.percent > 0f) amount += u.MaxHp * e.percent / 100f;
                     if (amount <= 0f) amount = caster.Atk;
-                    u.Heal(amount);
+                    u.Heal(amount, caster);
                     Fx.Heal(u.Center);
                 }
                 break;

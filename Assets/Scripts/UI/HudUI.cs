@@ -30,6 +30,32 @@ public class HudUI : MonoBehaviour
     private C3Button speedButton;
     private C3Button pauseButton;
 
+    // 次の敵（何が・何体・あと何秒）と「早く呼ぶ」
+    private ChamferBox nextPlate;
+    private VisualElement nextIcon;
+    private Label nextIconLabel;
+    private Label nextCount;
+    private Label nextTime;
+    private C3Button callButton;
+    private EnemyData shownNextEnemy;
+    private int shownNextCount = -1;
+    private int shownNextSeconds = -2;
+    private int shownCallBonus = -1;
+
+    // 初めて出る敵の知らせ（Kingdom Rush の新しい敵の札）
+    private VisualElement newEnemyLayer;
+    private ChamferBox newEnemyPlate;
+    private VisualElement newEnemyIcon;
+    private Label newEnemyIconLabel;
+    private Label newEnemyName;
+    private Label newEnemyTraits;
+    private Enemy newEnemyShown;
+    private float newEnemyRemaining;
+    private IVisualElementScheduledItem newEnemyTween;
+    private readonly System.Collections.Generic.Queue<Enemy> newEnemyQueue = new System.Collections.Generic.Queue<Enemy>();
+    private System.Collections.Generic.HashSet<string> knownEnemies = new System.Collections.Generic.HashSet<string>();
+    private const float NewEnemyDuration = 7f;
+
     // ボスの体力（ボスが場にいるあいだだけ出す）
     private VisualElement bossLayer;
     private Label bossName;
@@ -66,6 +92,7 @@ public class HudUI : MonoBehaviour
     private Label resultTime;
     private Label resultEnemy;
     private VisualElement resultStars;
+    private VisualElement resultTeam;
     private C3Button nextButton;
 
     // 編成バーと選択中の部員
@@ -103,6 +130,7 @@ public class HudUI : MonoBehaviour
         BuildTopBar();
         BuildBossBar();
         BuildHint();
+        BuildNewEnemy();
         deployBar = new DeployBar(root);
         // ヒントの札は編成バーの左の空いたところに収める（幅の上限は USS の max-width）
         deployBar.Root.RegisterCallback<GeometryChangedEvent>(e =>
@@ -138,6 +166,7 @@ public class HudUI : MonoBehaviour
         bar.Add(op);
 
         bar.Add(UIFactory.Box("top-spacer"));
+        BuildNext(bar);
 
         Label unused;
         AddStat(bar, IconKind.Clock, Palette.TextSub, "TIME", out timeValue, out unused);
@@ -152,6 +181,159 @@ public class HudUI : MonoBehaviour
         pauseButton = new C3Button(IconKind.Pause, 26f, null, TimeController.TogglePause);
         pauseButton.AddToClassList("hud-button");
         bar.Add(pauseButton);
+    }
+
+    /// <summary>次の敵の札：敵のアイコン・数・あと何秒。間があいているときは「呼ぶ」で早く出して DP をもらえる</summary>
+    private void BuildNext(VisualElement bar)
+    {
+        nextPlate = new ChamferBox();
+        nextPlate.AddToClassList("stat");
+        nextPlate.AddToClassList("next-plate");
+        nextPlate.SetFill(Palette.UiPanel).SetStroke(Palette.UiPanelLine, 1f).SetCut(12f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight);
+        var text = UIFactory.Box("stat-text");
+        text.Add(UIFactory.Text("NEXT", UIFont.Display, "stat-caption"));
+        var row = UIFactory.Box("stat-value-row");
+        nextTime = UIFactory.Text("", UIFont.Display, "stat-value");
+        row.Add(nextTime);
+        text.Add(row);
+        nextPlate.Add(text);
+        nextIcon = UIFactory.Box("next-icon");
+        nextIconLabel = UIFactory.Text("", UIFont.Title, "next-icon-label");
+        nextIcon.Add(nextIconLabel);
+        nextPlate.Add(nextIcon);
+        nextCount = UIFactory.Text("", UIFont.Display, "next-count");
+        nextPlate.Add(nextCount);
+        callButton = new C3Button(IconKind.Next, 20f, "呼ぶ", () =>
+        {
+            Battle b = Battle.Current;
+            if (b != null) b.CallEarly();
+        });
+        callButton.AddToClassList("call-button");
+        nextPlate.Add(callButton);
+        bar.Add(nextPlate);
+    }
+
+    private void RefreshNext(Battle battle)
+    {
+        float wait = battle.NextSpawnIn;
+        bool show = wait >= 0f && battle.State.Phase == GamePhase.Playing;
+        UIFactory.SetVisible(nextPlate, show);
+        if (!show) return;
+
+        int count;
+        EnemyData enemy = battle.NextEnemy(out count);
+        if (!ReferenceEquals(enemy, shownNextEnemy))
+        {
+            shownNextEnemy = enemy;
+            Sprite art = enemy != null ? Art.Enemy(enemy.id) : null;
+            nextIcon.style.backgroundImage = art != null ? new StyleBackground(art) : new StyleBackground(StyleKeyword.None);
+            nextIcon.style.backgroundColor = art != null ? new Color(1f, 1f, 1f, 0.06f) : Palette.Hex(enemy != null ? enemy.color : null, Palette.Crimson);
+            nextIconLabel.text = art != null || enemy == null ? "" : enemy.Label;
+            Color frame = enemy != null && enemy.boss ? Palette.Amber : Palette.Crimson;
+            nextIcon.style.borderLeftColor = nextIcon.style.borderRightColor = nextIcon.style.borderTopColor = nextIcon.style.borderBottomColor = frame;
+        }
+        if (count != shownNextCount)
+        {
+            shownNextCount = count;
+            nextCount.text = "×" + count;
+        }
+        int seconds = Mathf.CeilToInt(wait);
+        if (seconds != shownNextSeconds)
+        {
+            shownNextSeconds = seconds;
+            nextTime.text = seconds <= 0 ? "NOW" : seconds + "s";
+        }
+        bool canCall = battle.CanCallEarly;
+        UIFactory.SetVisible(callButton, canCall);
+        if (canCall)
+        {
+            int bonus = battle.CallEarlyBonus;
+            if (bonus != shownCallBonus)
+            {
+                shownCallBonus = bonus;
+                callButton.Text.text = (Application.isMobilePlatform ? "+" : "呼ぶ +") + bonus;
+            }
+        }
+    }
+
+    /// <summary>初めて出る敵の札（画面の上のまん中。押すとその敵の札を開く）</summary>
+    private void BuildNewEnemy()
+    {
+        newEnemyLayer = UIFactory.Box("new-enemy-layer");
+        newEnemyPlate = new ChamferBox();
+        newEnemyPlate.AddToClassList("new-enemy");
+        newEnemyPlate.SetFill(Palette.UiBand).SetStroke(Palette.WithAlpha(Palette.Crimson, 0.7f), 1.5f)
+            .SetCut(16f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetAccent(Palette.Crimson, 6f).SetStripes(Palette.UiStripe, 18f);
+        newEnemyPlate.pickingMode = PickingMode.Position;
+        newEnemyIcon = UIFactory.Box("new-enemy-icon");
+        newEnemyIconLabel = UIFactory.Text("", UIFont.Title, "new-enemy-icon-label");
+        newEnemyIcon.Add(newEnemyIconLabel);
+        newEnemyPlate.Add(newEnemyIcon);
+        var text = UIFactory.Box("new-enemy-text");
+        var head = UIFactory.Box("new-enemy-head");
+        head.Add(UIFactory.Text("NEW ENEMY", UIFont.Display, "new-enemy-caption"));
+        newEnemyName = UIFactory.Text("", UIFont.Title, "new-enemy-name");
+        head.Add(newEnemyName);
+        text.Add(head);
+        newEnemyTraits = UIFactory.Text("", UIFont.Medium, "new-enemy-traits");
+        text.Add(newEnemyTraits);
+        newEnemyPlate.Add(text);
+        newEnemyPlate.AddManipulator(new Clickable(() =>
+        {
+            if (newEnemyShown != null && newEnemyShown.Alive && BattleInput.Instance != null) BattleInput.Instance.Inspect(newEnemyShown);
+            HideNewEnemy();
+        }));
+        newEnemyLayer.Add(newEnemyPlate);
+        UIFactory.SetVisible(newEnemyLayer, false);
+        root.Add(newEnemyLayer);
+    }
+
+    private void OnEnemySpawned(Enemy e)
+    {
+        if (e == null || e.Data == null || knownEnemies.Contains(e.Data.id)) return;
+        knownEnemies.Add(e.Data.id);
+        newEnemyQueue.Enqueue(e);
+    }
+
+    private void RefreshNewEnemy(Battle battle)
+    {
+        if (UIFactory.IsVisible(newEnemyLayer))
+        {
+            if (!TimeController.Paused) newEnemyRemaining -= Time.unscaledDeltaTime;
+            if (newEnemyRemaining <= 0f || battle.State.Phase != GamePhase.Playing) HideNewEnemy();
+        }
+        // ボスの体力バーが出ていれば、その下に
+        newEnemyLayer.style.top = shownBoss != null ? 196f : 104f;
+        if (UIFactory.IsVisible(newEnemyLayer) || newEnemyQueue.Count == 0 || battle.State.Phase != GamePhase.Playing) return;
+
+        Enemy e = newEnemyQueue.Dequeue();
+        EnemyData d = e.Data;
+        newEnemyShown = e;
+        newEnemyRemaining = NewEnemyDuration;
+        Sprite art = Art.Enemy(d.id);
+        newEnemyIcon.style.backgroundImage = art != null ? new StyleBackground(art) : new StyleBackground(StyleKeyword.None);
+        newEnemyIcon.style.backgroundColor = art != null ? new Color(1f, 1f, 1f, 0.06f) : Palette.Hex(d.color, Palette.Crimson);
+        newEnemyIconLabel.text = art != null ? "" : d.Label;
+        newEnemyName.text = d.name + (d.boss ? "（ボス）" : "");
+        string traits = EnemyPanel.Traits(d);
+        newEnemyTraits.text = traits.Length > 0 ? SkillText.Format(traits) : "特別な性質はない";
+        UIFactory.SetVisible(newEnemyLayer, true);
+        UITween.Stop(ref newEnemyTween);
+        newEnemyTween = UITween.Run(newEnemyPlate, 0.35f, t =>
+        {
+            float k = Ease.OutCubic(t);
+            newEnemyPlate.style.opacity = k;
+            newEnemyPlate.style.translate = new Translate(0f, (1f - k) * -20f);
+        });
+        AudioManager.PlaySE("skill_ready");
+    }
+
+    private void HideNewEnemy()
+    {
+        newEnemyShown = null;
+        newEnemyRemaining = 0f;
+        UITween.Stop(ref newEnemyTween);
+        UIFactory.SetVisible(newEnemyLayer, false);
     }
 
     private void BuildBossBar()
@@ -359,6 +541,10 @@ public class HudUI : MonoBehaviour
         resultBand.Add(resultContent);
         resultLayer.Add(resultBand);
 
+        // 部員の活躍（置いた部員ごとの与えたダメージ・回復と MVP）
+        resultTeam = UIFactory.Box("result-team");
+        resultLayer.Add(resultTeam);
+
         resultFooter = UIFactory.Box("result-buttons");
         var retry = new C3Button(IconKind.Retry, 30f, "もう一度", () => bootstrap.Retry());
         retry.AddToClassList("result-button");
@@ -408,6 +594,8 @@ public class HudUI : MonoBehaviour
         enemyPanel.Refresh(BattleInput.Instance != null ? BattleInput.Instance.Inspected : null);
         RefreshBoss(battle);
         RefreshHint(battle);
+        RefreshNext(battle);
+        RefreshNewEnemy(battle);
 
         int seconds = Mathf.FloorToInt(state.ElapsedTime);
         if (seconds != shownSeconds)
@@ -459,6 +647,12 @@ public class HudUI : MonoBehaviour
         shownBattle = battle;
         battle.EnemyLeaked += OnEnemyLeaked;
         battle.SkillActivated += c => cutIn.Play(c);
+        battle.EnemySpawned += OnEnemySpawned;
+        knownEnemies = GameData.EnemiesBefore(battle.Stage.id);
+        newEnemyQueue.Clear();
+        HideNewEnemy();
+        shownNextEnemy = null;
+        shownNextCount = shownNextSeconds = shownCallBonus = -1;
 
         StageData stage = battle.Stage;
         opCode.text = stage.Code;
@@ -538,6 +732,8 @@ public class HudUI : MonoBehaviour
         for (int i = 0; i < resultStars.childCount; i++)
             ((IconView)resultStars[i]).SetColor(i < stars ? Palette.AmberBright : new Color(1f, 1f, 1f, 0.15f));
 
+        FillTeam(shownBattle);
+
         UITween.Stop(ref introTween);
         UIFactory.SetVisible(introLayer, false);
         UIFactory.SetVisible(resultLayer, true);
@@ -550,10 +746,86 @@ public class HudUI : MonoBehaviour
             float title = Ease.OutCubic((time - 0.2f) / 0.45f);
             resultContent.style.opacity = title;
             resultContent.style.translate = new Translate((1f - title) * -100f, 0f);
+            float team = Ease.OutCubic((time - 0.4f) / 0.4f);
+            resultTeam.style.opacity = team;
+            resultTeam.style.translate = new Translate(0f, (1f - team) * 24f);
             float footer = Ease.OutCubic((time - 0.5f) / 0.4f);
             resultFooter.style.opacity = footer;
             resultFooter.style.translate = new Translate(0f, (1f - footer) * 24f);
         });
+    }
+
+    /// <summary>部員の活躍：置いた部員ごとに、いちばん大きな働き（与えたダメージ・回復・止めた時間）と、いちばん活躍した部員に MVP</summary>
+    private void FillTeam(Battle battle)
+    {
+        resultTeam.Clear();
+        if (battle == null || battle.Stats == null) return;
+        var list = battle.Stats.Deployed();
+        UIFactory.SetVisible(resultTeam, list.Count > 0);
+        if (list.Count == 0) return;
+        MemberStats mvp = battle.Stats.Mvp();
+        float max = 1f;
+        foreach (MemberStats s in list) max = Mathf.Max(max, s.Score);
+
+        resultTeam.Add(UIFactory.Text("部員の活躍", UIFont.Body, "team-caption"));
+        var row = UIFactory.Box("team-row");
+        foreach (MemberStats s in list)
+        {
+            bool isMvp = ReferenceEquals(s, mvp);
+            Color classColor = Palette.Hex(s.Class.color, Palette.Amber);
+            var chip = new ChamferBox();
+            chip.AddToClassList("team-chip");
+            chip.SetFill(Palette.UiPanel).SetStroke(isMvp ? Palette.AmberBright : Palette.WithAlpha(classColor, 0.6f), isMvp ? 3f : 1.5f)
+                .SetCut(12f, ChamferBox.Corners.TopRight | ChamferBox.Corners.BottomLeft);
+
+            var head = UIFactory.Box("team-head");
+            var portrait = UIFactory.Box("team-portrait");
+            Sprite icon = Art.Icon(s.Data.id);
+            if (icon != null) portrait.style.backgroundImage = new StyleBackground(icon);
+            else
+            {
+                portrait.style.backgroundColor = Palette.Hex(s.Data.color, classColor);
+                portrait.Add(UIFactory.Text(s.Data.Initial, UIFont.Title, "team-initial"));
+            }
+            portrait.style.borderLeftColor = portrait.style.borderRightColor = portrait.style.borderTopColor = portrait.style.borderBottomColor = classColor;
+            head.Add(portrait);
+            head.Add(UIFactory.Text(s.Data.name, UIFont.Body, "team-name"));
+            chip.Add(head);
+
+            // いちばん大きな働きを1つ、数字で
+            string caption, value;
+            if (s.Heal > s.Damage && s.Heal >= 1f)
+            {
+                caption = "回復";
+                value = Mathf.RoundToInt(s.Heal).ToString("N0");
+            }
+            else if (s.BlockTime >= 10f && s.Taken > s.Damage)
+            {
+                caption = "止めた";
+                value = Mathf.RoundToInt(s.BlockTime) + "秒";
+            }
+            else
+            {
+                caption = "ダメージ";
+                value = Mathf.RoundToInt(s.Damage).ToString("N0");
+            }
+            var line = UIFactory.Box("team-line");
+            line.Add(UIFactory.Text(caption, UIFont.Body, "team-stat-caption"));
+            line.Add(UIFactory.Text(value, UIFont.Display, "team-stat-value"));
+            chip.Add(line);
+            chip.Add(UIFactory.Text(s.Kills > 0 ? "撃破 " + s.Kills : "撃破 0", UIFont.Body, "team-sub"));
+
+            var track = UIFactory.Box("team-track");
+            var fill = UIFactory.Box("team-fill");
+            fill.style.width = Length.Percent(Mathf.Clamp01(s.Score / max) * 100f);
+            fill.style.backgroundColor = isMvp ? Palette.AmberBright : classColor;
+            track.Add(fill);
+            chip.Add(track);
+
+            if (isMvp) chip.Add(UIFactory.Text("MVP", UIFont.Display, "team-mvp"));
+            row.Add(chip);
+        }
+        resultTeam.Add(row);
     }
 
     /// <summary>拠点に着かれた：画面のふちが赤く光り、ライフの札が揺れる</summary>

@@ -52,6 +52,12 @@ public class RulesData
 
     /// <summary>編成に入れられる人数</summary>
     public int squadMax = 8;
+
+    /// <summary>次の敵を早く呼ぶと、早めた1秒あたりにもらえる DP（Kingdom Rush の「早く呼ぶ」）</summary>
+    public float callEarlyDpPerSecond = 0.5f;
+
+    /// <summary>次の敵までこの秒以上あるときだけ、早く呼べる</summary>
+    public float callEarlyMinGap = 4f;
 }
 
 /// <summary>出撃する部員（Resources/Data/squad.json）。M4 で編成画面に置き換える</summary>

@@ -26,6 +26,9 @@ public class Battle : MonoBehaviour
     }
     public StageMap Map { get; private set; }
     public GameState State { get; private set; }
+
+    /// <summary>部員ごとの活躍（結果の画面の「部員の活躍」と MVP）</summary>
+    public BattleStats Stats { get; private set; }
     public MapHighlight Highlight { get; private set; }
     public RulesData Rules { get; private set; }
 
@@ -47,6 +50,9 @@ public class Battle : MonoBehaviour
     /// <summary>必殺技が発動した（カットイン用）</summary>
     public event Action<Character> SkillActivated;
 
+    /// <summary>敵が出た（予定どおり・呼ばれて・分かれて。HUD の「NEW ENEMY」用）</summary>
+    public event Action<Enemy> EnemySpawned;
+
     private class SpawnEntry
     {
         public float time;
@@ -63,6 +69,62 @@ public class Battle : MonoBehaviour
 
     /// <summary>敵が出てくる何秒前に出撃口で予告するか</summary>
     private const float WarnLead = 2f;
+
+    // 敵の予定を進める時計。「早く呼ぶ」で先へ進めたぶんだけ、ステージの経過時間より先にいる
+    private float spawnOffset;
+    private float SpawnClock { get { return State.ElapsedTime + spawnOffset; } }
+
+    /// <summary>次の敵が出るまでの秒（もう予定がなければ -1）</summary>
+    public float NextSpawnIn
+    {
+        get { return nextSpawn < schedule.Count ? Mathf.Max(0f, schedule[nextSpawn].time - SpawnClock) : -1f; }
+    }
+
+    /// <summary>
+    /// 次に出る敵と、そのあと続けて出る同じ敵の数（同じ敵どうしの間が 5 秒をこえたら別の群れ。ほかの敵がはさまってもよい）。
+    /// 予定がなければ null
+    /// </summary>
+    public EnemyData NextEnemy(out int count)
+    {
+        count = 0;
+        if (nextSpawn >= schedule.Count) return null;
+        EnemyData enemy = schedule[nextSpawn].enemy;
+        float last = schedule[nextSpawn].time;
+        for (int i = nextSpawn; i < schedule.Count; i++)
+        {
+            if (schedule[i].enemy != enemy) continue;
+            if (schedule[i].time - last > 5f) break;
+            last = schedule[i].time;
+            count++;
+        }
+        return enemy;
+    }
+
+    /// <summary>次の敵を早く呼べるか（次まで callEarlyMinGap 秒以上あるとき）</summary>
+    public bool CanCallEarly
+    {
+        get { return State.Phase == GamePhase.Playing && NextSpawnIn >= Rules.callEarlyMinGap; }
+    }
+
+    /// <summary>早く呼んだときにもらえる DP</summary>
+    public int CallEarlyBonus
+    {
+        get { return Mathf.Max(1, Mathf.FloorToInt(Mathf.Max(0f, NextSpawnIn) * Rules.callEarlyDpPerSecond)); }
+    }
+
+    /// <summary>次の敵をすぐ出す（そのぶん DP をもらう）。予定の時計を進めるので、そのあとの敵もみな早まる</summary>
+    public bool CallEarly()
+    {
+        if (!CanCallEarly) return false;
+        int bonus = CallEarlyBonus;
+        Vector3 at = schedule[nextSpawn].path[0];
+        spawnOffset += NextSpawnIn;
+        State.AddDp(bonus, Rules.dpMax);
+        Fx.DpGain(at);
+        FloatingText.Status(at + new Vector3(0f, 0.5f, 0f), "早く呼んだ　DP +" + bonus);
+        AudioManager.PlaySE("buff");
+        return true;
+    }
     private Transform enemyRoot;
     private Transform characterRoot;
     private GamePhase lastPhase;
@@ -98,6 +160,7 @@ public class Battle : MonoBehaviour
         AddPaths(data, data.airPaths, true, worldPaths);
         BuildSchedule(data, worldPaths);
         BuildSquad(squadIds);
+        Stats = new BattleStats(Squad);
 
         characterRoot = new GameObject("Characters").transform;
         characterRoot.SetParent(transform, false);
@@ -190,10 +253,12 @@ public class Battle : MonoBehaviour
             foreach (SquadMember m in Squad)
                 if (m.Cooldown > 0f) m.Cooldown = Mathf.Max(0f, m.Cooldown - dt);
 
-            while (nextSpawn < schedule.Count && schedule[nextSpawn].time <= State.ElapsedTime)
+            while (nextSpawn < schedule.Count && schedule[nextSpawn].time <= SpawnClock)
             {
                 SpawnEntry entry = schedule[nextSpawn++];
-                Enemies.Add(Enemy.Spawn(entry.enemy, entry.path, this, enemyRoot));
+                Enemy spawned = Enemy.Spawn(entry.enemy, entry.path, this, enemyRoot);
+                Enemies.Add(spawned);
+                if (EnemySpawned != null) EnemySpawned(spawned);
                 // ボスが出たら BGM をステージの bossBgm（省略時は boss）に（ファイルがなければそのまま）
                 string bossKey = string.IsNullOrEmpty(Stage.bossBgm) ? "boss" : Stage.bossBgm;
                 if (entry.enemy.boss && AudioManager.HasBGM(bossKey)) AudioManager.PlayBGM(bossKey);
@@ -219,7 +284,7 @@ public class Battle : MonoBehaviour
     /// </summary>
     private void WarnUpcoming()
     {
-        while (nextWarn < schedule.Count && schedule[nextWarn].time - State.ElapsedTime <= WarnLead)
+        while (nextWarn < schedule.Count && schedule[nextWarn].time - SpawnClock <= WarnLead)
         {
             SpawnEntry entry = schedule[nextWarn++];
             Vector3 at = entry.path[0];
@@ -271,6 +336,7 @@ public class Battle : MonoBehaviour
         Vector3 pos = UnitPosition(cell);
         Character c = Character.Create(member, cell, pos, this, characterRoot);
         member.Deployed = c;
+        Stats.Deploy(member);
         Map.Get(cell).Occupant = c;
         Characters.Add(c);
         Fx.Deploy(pos, c.ClassColor);
@@ -381,7 +447,11 @@ public class Battle : MonoBehaviour
     public void SpawnSummoned(EnemyData data, Enemy summoner, int count, bool announce = true)
     {
         for (int i = 0; i < count; i++)
-            Enemies.Add(Enemy.SpawnOnPath(data, summoner.Path, summoner.NextPoint, summoner.transform.position, this, enemyRoot));
+        {
+            Enemy spawned = Enemy.SpawnOnPath(data, summoner.Path, summoner.NextPoint, summoner.transform.position, this, enemyRoot);
+            Enemies.Add(spawned);
+            if (EnemySpawned != null) EnemySpawned(spawned);
+        }
         State.AddEnemies(count);
         if (!announce) return;
         Fx.Summon(summoner.transform.position);

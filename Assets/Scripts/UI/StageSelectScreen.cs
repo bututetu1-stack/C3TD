@@ -259,7 +259,7 @@ public class StageSelectScreen
         detailEnemyTotal.text = total.ToString();
 
         detailEnemies.Clear();
-        HashSet<string> seenBefore = EnemiesBefore(id);
+        HashSet<string> seenBefore = GameData.EnemiesBefore(id);
         // 敵の種類が多いときは3列にして、小さく並べる（下の「編成へ」に隠れないように）
         detailEnemies.EnableInClassList("detail-enemies--many", counts.Count > 6);
         foreach (var kv in counts)
@@ -273,20 +273,6 @@ public class StageSelectScreen
     }
 
     // ================= 部品 =================
-
-    /// <summary>このステージより前の作戦（campaign.json の順）のウェーブに出てくる敵</summary>
-    private static HashSet<string> EnemiesBefore(string stageId)
-    {
-        var seen = new HashSet<string>();
-        foreach (string id in GameData.Campaign.AllStages())
-        {
-            if (id == stageId) break;
-            StageData s = GameData.Stage(id);
-            if (s == null) continue;
-            foreach (WaveData w in s.waves) seen.Add(w.enemy);
-        }
-        return seen;
-    }
 
     /// <summary>敵の札。この作戦で初めて出る敵には、アイコンの左上に「NEW」</summary>
     private static VisualElement EnemyChip(EnemyData enemy, int count, bool isNew)

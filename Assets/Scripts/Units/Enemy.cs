@@ -391,7 +391,7 @@ public class Enemy : Unit
     private void HitCharacter(Character target)
     {
         if (target == null || !target.Alive || battle == null) return;
-        target.TakeDamage(Atk, Data.damageType);
+        target.TakeDamage(Atk, Data.damageType, this);
         if (Data.stunOnHit > 0f) target.Stun(Data.stunOnHit);
         EnemyHitModifier hm = Data.hitModifier;
         if (hm != null && !string.IsNullOrEmpty(hm.stat) && target.Alive

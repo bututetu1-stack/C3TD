@@ -97,6 +97,9 @@ public class DeployBar
         var box = new CharacterCard(member.Data, member.Class);
         box.AddToClassList("deploy-card");
         card.Cost = box.Cost;
+        // 1〜9 のキーで選べることを、カードの右上に小さく出す（キーボードのない スマホでは出さない）
+        int index = cards.Count;
+        if (index < 9 && !Application.isMobilePlatform) box.Add(UIFactory.Text((index + 1).ToString(), UIFont.Display, "card-key"));
 
         card.Shade = UIFactory.Box("card-shade");
         card.Timer = UIFactory.Text("", UIFont.Display, "card-timer");

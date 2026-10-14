@@ -5,5 +5,7 @@
   "retreatRefundRate": 0.5,  // 撤退で戻るコストの割合（切り捨て）
   "minDamageRate": 0.05,     // どんなに硬くても、攻撃力のこの割合は通る
   "focusTimeScale": 0.2,     // ドラッグ中・選択中の時間の速さ
-  "squadMax": 8              // 編成に入れられる人数
+  "squadMax": 8,             // 編成に入れられる人数
+  "callEarlyDpPerSecond": 0.5, // 次の敵を早く呼んだとき、早めた1秒あたりにもらえる DP
+  "callEarlyMinGap": 4       // 次の敵までこの秒以上あるときだけ早く呼べる
 }

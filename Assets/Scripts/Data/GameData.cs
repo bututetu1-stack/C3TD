@@ -101,6 +101,32 @@ public static class GameData
     }
 
     /// <summary>Data/Characters にある部員の id。squad.json に書いた順を先に、残りは名前順</summary>
+    /// <summary>
+    /// このステージより前の作戦（campaign.json の順）で出てくる敵。ウェーブの敵と、その敵が呼ぶ・分かれて出す敵も含める
+    /// （出撃中の「NEW ENEMY」と、作戦選択の「NEW」）
+    /// </summary>
+    public static HashSet<string> EnemiesBefore(string stageId)
+    {
+        var seen = new HashSet<string>();
+        foreach (string id in Campaign.AllStages())
+        {
+            if (id == stageId) break;
+            StageData s = Stage(id);
+            if (s == null) continue;
+            foreach (WaveData w in s.waves) AddWithChildren(w.enemy, seen);
+        }
+        return seen;
+    }
+
+    private static void AddWithChildren(string enemyId, HashSet<string> seen)
+    {
+        if (string.IsNullOrEmpty(enemyId) || !seen.Add(enemyId)) return;
+        EnemyData e = Enemy(enemyId);
+        if (e == null) return;
+        if (e.summon != null) AddWithChildren(e.summon.enemy, seen);
+        if (e.split != null) AddWithChildren(e.split.enemy, seen);
+    }
+
     public static List<string> CharacterIds()
     {
         var rest = new List<string>();

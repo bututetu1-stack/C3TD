@@ -252,6 +252,7 @@ public class Character : Unit
             TickStatus(dt);
             Skills.Tick(dt);
             Blocked.RemoveAll(e => e == null || !e.Alive || e.BlockedBy != this);
+            if (Blocked.Count > 0 && battle.Stats != null) battle.Stats.Block(this, dt);
 
             if (!Stunned)
             {
@@ -305,7 +306,7 @@ public class Character : Unit
             Projectile.Launch(ProjectileSprite(), ProjectileColor(), Center, ally, OrbSpeed, 0.34f, false, at =>
             {
                 if (ally == null || !ally.Alive) return;
-                ally.Heal(amount);
+                ally.Heal(amount, this);
                 Fx.Heal(ally.Center);
             });
             Skills.OnAttack(ally);
@@ -354,14 +355,14 @@ public class Character : Unit
                     if (!e.Alive) continue;
                     Vector3 p = e.transform.position;
                     float dx = p.x - at.x, dy = p.y - at.y;
-                    if (dx * dx + dy * dy <= r2) e.TakeDamage(atk, Class.damageType);
+                    if (dx * dx + dy * dy <= r2) e.TakeDamage(atk, Class.damageType, this);
                 }
             }
             else
             {
                 if (target == null || !target.Alive) return;
                 Fx.Hit(at, ClassColor);
-                target.TakeDamage(atk, Class.damageType);
+                target.TakeDamage(atk, Class.damageType, this);
             }
         }
         AudioManager.PlaySE("hit");

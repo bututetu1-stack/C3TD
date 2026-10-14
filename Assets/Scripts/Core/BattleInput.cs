@@ -185,6 +185,8 @@ public class BattleInput : MonoBehaviour
             return;
         }
 
+        HandleCardKeys(battle, kb);
+
         Vector2 screen = pointer.position.ReadValue();
         bool pressed = pressAction != null ? pressAction.WasPressedThisFrame() : pointer.press.wasPressedThisFrame;
         bool released = pressAction != null ? pressAction.WasReleasedThisFrame() || !pressAction.IsPressed() : !pointer.press.isPressed;
@@ -277,6 +279,23 @@ public class BattleInput : MonoBehaviour
         Character hovered = ReferenceEquals(pointer, mouse) && !(hud != null && hud.IsOverUI(screen)) ? battle.CharacterAt(cell) : null;
         if (hovered != null) battle.Highlight.Show(null, Combat.CellsInRange(battle.Map, hovered.Cell, hovered.Range), null, true);
         else battle.Highlight.Clear();
+    }
+
+    /// <summary>1〜9 のキー：編成バーの左から数えたカードを選ぶ（もう一度押すとやめる）。このあと置くマスを押す</summary>
+    private void HandleCardKeys(Battle battle, Keyboard kb)
+    {
+        if (kb == null || Dragging != null) return;
+        Key[] keys = { Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4, Key.Digit5, Key.Digit6, Key.Digit7, Key.Digit8, Key.Digit9 };
+        Key[] pad = { Key.Numpad1, Key.Numpad2, Key.Numpad3, Key.Numpad4, Key.Numpad5, Key.Numpad6, Key.Numpad7, Key.Numpad8, Key.Numpad9 };
+        for (int i = 0; i < keys.Length && i < battle.Squad.Count; i++)
+        {
+            if (!kb[keys[i]].wasPressedThisFrame && !kb[pad[i]].wasPressedThisFrame) continue;
+            SquadMember m = battle.Squad[i];
+            if (ReferenceEquals(Armed, m)) Disarm();
+            else if (m.Ready && battle.CanAfford(m)) Arm(m);
+            else AudioManager.PlaySE("click");
+            return;
+        }
     }
 
     /// <summary>カードを選んだままにする（次に押したマスに置く）</summary>
