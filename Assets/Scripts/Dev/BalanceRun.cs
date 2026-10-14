@@ -28,6 +28,8 @@ public class BalanceRun : MonoBehaviour
     {
         var boot = GetComponent<GameBootstrap>();
         var sb = new StringBuilder();
+        // バランスは強化なしで測る
+        Upgrades.Enabled = false;
         foreach (string id in Stages)
         {
             int wins = 0, perfect = 0, timeouts = 0;
@@ -81,6 +83,7 @@ public class BalanceRun : MonoBehaviour
             sb.Append(losses);
         }
         Time.timeScale = 1f;
+        Upgrades.Enabled = true;
         Report = sb.ToString();
         Debug.Log("BalanceRun\n" + Report);
         Done = true;

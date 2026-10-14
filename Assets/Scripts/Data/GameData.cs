@@ -17,6 +17,7 @@ public static class GameData
     private const string SquadPath = "Data/squad";
     private const string CampaignPath = "Data/campaign";
     private const string AudioPath = "Data/audio";
+    private const string UpgradesPath = "Data/upgrades";
 
     private static readonly Dictionary<string, StageData> stages = new Dictionary<string, StageData>();
     private static readonly Dictionary<string, EnemyData> enemies = new Dictionary<string, EnemyData>();
@@ -27,6 +28,7 @@ public static class GameData
     private static SquadData squad;
     private static CampaignData campaign;
     private static AudioData audio;
+    private static UpgradesData upgrades;
 
     // ドメインのリロードなしでプレイしても、JSON の変更が反映されるようにする
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -41,6 +43,7 @@ public static class GameData
         squad = null;
         campaign = null;
         audio = null;
+        upgrades = null;
     }
 
     public static StageData Stage(string id) { return Load(StageDir, id, stages); }
@@ -57,6 +60,16 @@ public static class GameData
         {
             if (audio == null) audio = Parse<AudioData>(AudioPath) ?? new AudioData();
             return audio;
+        }
+    }
+
+    /// <summary>強化（Data/upgrades.json）</summary>
+    public static UpgradesData Upgrades
+    {
+        get
+        {
+            if (upgrades == null) upgrades = Parse<UpgradesData>(UpgradesPath) ?? new UpgradesData();
+            return upgrades;
         }
     }
 

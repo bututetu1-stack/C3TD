@@ -193,7 +193,7 @@ public class Battle : MonoBehaviour
         enemyRoot = new GameObject("Enemies").transform;
         enemyRoot.SetParent(transform, false);
 
-        State = new GameState(Hard ? 1 : data.life, schedule.Count, data.initialDp);
+        State = new GameState(Hard ? 1 : data.life, schedule.Count, data.initialDp + Upgrades.ExtraDp());
         FillEndless();
         if (endless == null && !Hard && State.MaxLife >= schedule.Count && schedule.Count > 0)
             Debug.LogWarning(data.id + ": ライフ（" + State.MaxLife + "）が敵の数（" + schedule.Count + "）以上なので、まったく防衛しなくても勝てます");
@@ -501,7 +501,7 @@ public class Battle : MonoBehaviour
         if (c.Member != null)
         {
             c.Member.Deployed = null;
-            c.Member.Cooldown = c.Data.redeployTime;
+            c.Member.Cooldown = c.Data.redeployTime * Upgrades.RedeployScale();
         }
         c.Despawn();
     }

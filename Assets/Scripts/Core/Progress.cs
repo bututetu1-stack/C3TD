@@ -15,6 +15,14 @@ public class StageRecord
     public bool hard;
 }
 
+/// <summary>強化の段</summary>
+[Serializable]
+public class UpgradeLevelRecord
+{
+    public string id;
+    public int level;
+}
+
 /// <summary>編成の控え（編成1〜4）</summary>
 [Serializable]
 public class SquadPreset
@@ -49,6 +57,7 @@ public class ProgressData
     /// <summary>編成1〜4（アークナイツの編成の控え）と、いま使っている番号</summary>
     public List<SquadPreset> presets = new List<SquadPreset>();
     public int preset;
+    public List<UpgradeLevelRecord> upgrades = new List<UpgradeLevelRecord>();
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -206,6 +215,30 @@ public static class Progress
         if (best) r.wave = wave;
         Save();
         return best;
+    }
+
+    /// <summary>強化の段（なければ 0）</summary>
+    public static int UpgradeLevel(string id)
+    {
+        if (Data.upgrades == null) return 0;
+        foreach (UpgradeLevelRecord r in Data.upgrades)
+            if (r.id == id) return r.level;
+        return 0;
+    }
+
+    public static void SetUpgradeLevel(string id, int level)
+    {
+        if (Data.upgrades == null) Data.upgrades = new List<UpgradeLevelRecord>();
+        UpgradeLevelRecord rec = null;
+        foreach (UpgradeLevelRecord r in Data.upgrades)
+            if (r.id == id) rec = r;
+        if (rec == null)
+        {
+            rec = new UpgradeLevelRecord { id = id };
+            Data.upgrades.Add(rec);
+        }
+        rec.level = Mathf.Max(0, level);
+        Save();
     }
 
     public const int PresetCount = 4;

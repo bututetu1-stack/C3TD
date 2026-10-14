@@ -2026,6 +2026,87 @@
     width: 170px;
 }
 
+/* ---------- 強化 ---------- */
+.upgrade-help {
+    font-size: 19px;
+    color: rgb(178, 186, 204);
+    margin-bottom: 14px;
+    white-space: normal;
+}
+
+.upgrade-panel {
+    padding: 10px 28px 10px 28px;
+}
+
+.upgrade-row {
+    flex-direction: row;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.upgrade-names {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.upgrade-name {
+    font-size: 26px;
+    color: rgb(255, 255, 255);
+}
+
+.upgrade-effect {
+    font-size: 19px;
+    color: rgb(214, 219, 232);
+}
+
+.upgrade-pips {
+    flex-direction: row;
+    margin-right: 24px;
+}
+
+.upgrade-pip {
+    width: 30px;
+    height: 14px;
+    margin-left: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.upgrade-pip--on {
+    background-color: rgb(244, 182, 63);
+    border-color: rgb(255, 210, 122);
+}
+
+.upgrade-buy {
+    width: 250px;
+    height: 54px;
+}
+
+.upgrade-buy .c3-button-text {
+    font-size: 20px;
+    margin-left: 8px;
+}
+
+.upgrade-reset {
+    width: 380px;
+    height: 58px;
+    margin-top: 16px;
+    align-self: flex-end;
+}
+
+.upgrade-reset .c3-button-text {
+    font-size: 21px;
+    margin-left: 10px;
+}
+
+.title-subrow .title-button.title-button--sub {
+    width: 150px;
+}
+
 /* ---------- 遊び方 ---------- */
 .help-scroll {
     flex-grow: 1;

@@ -1,0 +1,14 @@
+{
+  // 強化（Kingdom Rush の★で買う強化のように）。作戦の★（と強襲のクリア 1 つにつき★1）で、部の備品をそろえて部員を少し強くする。
+  // stat：hp（体力）・atk（攻撃力。医療なら回復量）・dp（はじめの DP）・redeploy（再配置までの時間を減らす）
+  // classes：効く職業（Guard・Defender・Sniper・Caster・Medic。書かなければ全員）。perLevel：1 段ごとの量（% か DP）。costs：段ごとの★
+  "upgrades": [
+    { "id": "sofa",     "name": "部室のソファ",     "text": "前衛・重装の体力 +{0}%",   "classes": ["Guard", "Defender"], "stat": "hp",       "perLevel": 5, "costs": [1, 2, 3] },
+    { "id": "mouse",    "name": "新しいマウス",     "text": "狙撃の攻撃力 +{0}%",       "classes": ["Sniper"],            "stat": "atk",      "perLevel": 6, "costs": [1, 2, 3] },
+    { "id": "keyboard", "name": "静かなキーボード", "text": "術師の攻撃力 +{0}%",       "classes": ["Caster"],            "stat": "atk",      "perLevel": 5, "costs": [1, 2, 3] },
+    { "id": "dumbbell", "name": "部室のダンベル",   "text": "前衛・重装の攻撃力 +{0}%", "classes": ["Guard", "Defender"], "stat": "atk",      "perLevel": 4, "costs": [1, 2, 3] },
+    { "id": "snack",    "name": "差し入れのお菓子", "text": "医療の回復量 +{0}%",       "classes": ["Medic"],             "stat": "atk",      "perLevel": 6, "costs": [1, 2, 3] },
+    { "id": "budget",   "name": "部費の前借り",     "text": "はじめの DP +{0}",                                           "stat": "dp",       "perLevel": 2, "costs": [1, 2, 3] },
+    { "id": "key",      "name": "部室の合鍵",       "text": "再配置までの時間 -{0}%",                                     "stat": "redeploy", "perLevel": 8, "costs": [1, 2, 3] }
+  ]
+}

@@ -115,7 +115,8 @@ public class Character : Unit
     {
         Character c = Spawn(member.Data, member.Class, cell, position, battle, parent);
         c.Member = member;
-        c.SetBaseStats(member.Data.stats.hp, member.Data.stats.atk, member.Data.stats.def);
+        // 強化（★で買う）の分を掛ける
+        c.SetBaseStats(member.Data.stats.hp * Upgrades.HpScale(member.Data.unitClass), member.Data.stats.atk * Upgrades.AtkScale(member.Data.unitClass), member.Data.stats.def);
         c.Finish();
         return c;
     }

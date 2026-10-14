@@ -87,6 +87,12 @@ public class GameBootstrap : MonoBehaviour
         menu.ShowRecords();
     }
 
+    public void ShowUpgrades()
+    {
+        EndBattle();
+        menu.ShowUpgrades();
+    }
+
     /// <summary>設定の札（タイトルの上に重ねる）</summary>
     public void ShowSettings()
     {
