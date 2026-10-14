@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-/// <summary>タイトル画面。「作戦開始」で作戦選択へ。下に「敵図鑑」「遊び方」「設定」</summary>
+/// <summary>タイトル画面。「作戦開始」で作戦選択へ。下に「敵図鑑」「遊び方」「記録」「設定」</summary>
 public class TitleScreen
 {
     public readonly VisualElement Root;
@@ -28,6 +28,10 @@ public class TitleScreen
         help.AddToClassList("title-button");
         help.AddToClassList("title-button--sub");
         subRow.Add(help);
+        var records = new C3Button(IconKind.Next, 26f, "記録", () => bootstrap.ShowRecords());
+        records.AddToClassList("title-button");
+        records.AddToClassList("title-button--sub");
+        subRow.Add(records);
         var settings = new C3Button(IconKind.Next, 26f, "設定", () => bootstrap.ShowSettings());
         settings.AddToClassList("title-button");
         settings.AddToClassList("title-button--sub");

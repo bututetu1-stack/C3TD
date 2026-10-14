@@ -17,6 +17,7 @@ public class MenuUI : MonoBehaviour
     private SquadScreen squad;
     private EnemyBookScreen book;
     private HelpScreen help;
+    private RecordsScreen records;
     private SettingsPanel settings;
     private VisualElement current;
     private IVisualElementScheduledItem showTween;
@@ -32,6 +33,7 @@ public class MenuUI : MonoBehaviour
         squad = new SquadScreen(root, bootstrap);
         book = new EnemyBookScreen(root, bootstrap);
         help = new HelpScreen(root, bootstrap);
+        records = new RecordsScreen(root, bootstrap);
         settings = new SettingsPanel(root);
         HideAll();
     }
@@ -81,6 +83,12 @@ public class MenuUI : MonoBehaviour
         Show(help.Root);
     }
 
+    public void ShowRecords()
+    {
+        records.Open();
+        Show(records.Root);
+    }
+
     public void ShowSettings()
     {
         settings.Show();
@@ -97,7 +105,7 @@ public class MenuUI : MonoBehaviour
     private void Show(VisualElement screen)
     {
         root.style.display = DisplayStyle.Flex;
-        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root, help.Root }) UIFactory.SetVisible(s, s == screen);
+        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root, help.Root, records.Root }) UIFactory.SetVisible(s, s == screen);
         current = screen;
         AudioManager.PlayBGM("menu");
         UITween.Stop(ref showTween);
@@ -119,7 +127,7 @@ public class MenuUI : MonoBehaviour
             // 設定の札が開いていれば、先にそれを閉じる
             if (settings.IsOpen) settings.Hide();
             else if (current == squad.Root) bootstrap.ShowStageSelect(squad.StageId);
-            else if (current == select.Root || current == book.Root || current == help.Root) bootstrap.ShowTitle();
+            else if (current == select.Root || current == book.Root || current == help.Root || current == records.Root) bootstrap.ShowTitle();
             return;
         }
         if (settings.IsOpen) return;
