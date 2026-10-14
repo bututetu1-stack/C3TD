@@ -33,6 +33,9 @@ public class StageData
     /// <summary>出撃中に画面の左下に出す操作のヒント（なくてよい）</summary>
     public List<HintData> hints = new List<HintData>();
 
+    /// <summary>エンドレス（敵の波が終わらない。拠点を守れた波の数を競う）。書けば waves の代わりに波を作り続ける</summary>
+    public EndlessData endless;
+
     /// <summary>name の先頭の「1-1」のような番号（なければ空）</summary>
     public string Code
     {
@@ -70,6 +73,42 @@ public class StageData
         code = head;
         title = title.Substring(space + 1).Trim();
     }
+}
+
+/// <summary>エンドレスの決まり（EndlessDirector が使う）</summary>
+public class EndlessData
+{
+    /// <summary>最初の波が始まる秒</summary>
+    public float firstDelay = 4f;
+
+    /// <summary>波と波の間（秒）。波ごとに intervalShrink 秒ずつ短くなり、minInterval より短くはならない</summary>
+    public float interval = 24f;
+    public float intervalShrink = 0.2f;
+    public float minInterval = 16f;
+
+    /// <summary>波ごとに敵の体力・攻撃力が何倍ずつ上がるか（0.08 なら 1 波ごとに +8%）</summary>
+    public float hpGrowth = 0.08f;
+    public float atkGrowth = 0.03f;
+
+    /// <summary>この波ごとにボス（bosses を順に）</summary>
+    public int bossEvery = 10;
+    public List<string> bosses = new List<string>();
+
+    /// <summary>1つの波の敵の組の数の上限（波が進むと 3 波ごとに 1 組増える）</summary>
+    public int maxGroups = 4;
+
+    /// <summary>敵の量（課題なら何体ぶん）。波ごとに pointsPerWave ずつ増える</summary>
+    public float basePoints = 4f;
+    public float pointsPerWave = 0.5f;
+
+    /// <summary>出てくる敵の組。from 波目から出る</summary>
+    public List<EndlessPool> pools = new List<EndlessPool>();
+}
+
+public class EndlessPool
+{
+    public int from = 1;
+    public List<string> enemies = new List<string>();
 }
 
 /// <summary>出撃の1グループ。time 秒に1体目が出て、interval 秒ごとに count 体出る</summary>

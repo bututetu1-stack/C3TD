@@ -33,6 +33,14 @@
       "english": "EXTRA",
       "clearText": "番外編クリア！　院試合格おめでとう！",
       "stages": ["stage_21", "stage_22", "stage_23", "stage_24", "stage_25"]
+    },
+    {
+      // エンドレス（敵の波が終わらない。守りきった波の数を競う）。1-5 をクリアすると開く
+      "id": "endless",
+      "name": "エンドレス",
+      "english": "ENDLESS",
+      "unlockAfter": "stage_05",
+      "stages": ["endless_01"]
     }
   ]
 }

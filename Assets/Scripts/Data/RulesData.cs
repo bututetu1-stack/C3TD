@@ -58,6 +58,10 @@ public class RulesData
 
     /// <summary>次の敵までこの秒以上あるときだけ、早く呼べる</summary>
     public float callEarlyMinGap = 4f;
+
+    /// <summary>強襲（アークナイツの強襲作戦）：敵の体力・攻撃力の倍率。ライフは 1</summary>
+    public float hardHpScale = 1.3f;
+    public float hardAtkScale = 1.2f;
 }
 
 /// <summary>出撃する部員（Resources/Data/squad.json）。M4 で編成画面に置き換える</summary>

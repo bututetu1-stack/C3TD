@@ -28,6 +28,7 @@ public class StageSelectScreen
     private readonly Label detailEnemyTotal;
     private readonly VisualElement detailEnemies;
     private readonly Label detailLock;
+    private readonly Label hardToggle;
     private readonly C3Button goButton;
     private readonly Label unlockToggle;
 
@@ -100,6 +101,16 @@ public class StageSelectScreen
 
         detailLock = UIFactory.Text("前の作戦をクリアすると開きます", UIFont.Body, "detail-lock");
         detail.Add(detailLock);
+        // 強襲（アークナイツの強襲作戦）：クリアした作戦だけ。ライフ 1・敵が強い
+        hardToggle = UIFactory.Text("", UIFont.Body, "detail-hard");
+        hardToggle.pickingMode = PickingMode.Position;
+        hardToggle.AddManipulator(new Clickable(() =>
+        {
+            AudioManager.PlaySE("click");
+            bootstrap.SetHard(!bootstrap.Hard);
+            Select(selected);
+        }));
+        detail.Add(hardToggle);
         goButton = new C3Button(IconKind.Next, 30f, "編成へ", () =>
         {
             if (selected != null && Progress.IsUnlocked(selected)) bootstrap.ShowSquad(selected);
@@ -118,9 +129,13 @@ public class StageSelectScreen
     {
         CampaignData campaign = GameData.Campaign;
         // 指定がなければ、開いている中でいちばん先のステージ（の章）
+        // （エンドレスのような、別の条件で開く章は除く）
         if (focus == null)
             foreach (string id in campaign.AllStages())
-                if (Progress.IsUnlocked(id)) focus = id;
+            {
+                ChapterData c = campaign.ChapterOf(id);
+                if (Progress.IsUnlocked(id) && (c == null || string.IsNullOrEmpty(c.unlockAfter))) focus = id;
+            }
         ChapterData chapter = focus != null ? campaign.ChapterOf(focus) : null;
         if (chapter == null && campaign.chapters.Count > 0) chapter = campaign.chapters[0];
 
@@ -150,7 +165,8 @@ public class StageSelectScreen
             if (Progress.IsUnlocked(id)) latest = id;
             if (Progress.IsCleared(id)) cleared++;
         }
-        progressLabel.text = "クリア " + cleared + "/" + chapter.stages.Count;
+        StageData first = chapter.stages.Count > 0 ? GameData.Stage(chapter.stages[0]) : null;
+        progressLabel.text = first != null && first.endless != null ? "最高 WAVE " + Progress.BestWave(first.id) : "クリア " + cleared + "/" + chapter.stages.Count;
         unlockToggle.text = "全作戦を開放（テスト用）：" + (Progress.UnlockAll ? "ON" : "OFF");
 
         // 開いていないステージを指定されたら、その章で開いている中のいちばん先（章ごと閉じていれば、そのステージを見せる）
@@ -201,7 +217,13 @@ public class StageSelectScreen
 
         node.Add(UIFactory.Text(stage.Code, UIFont.Display, "node-code"));
         node.Add(UIFactory.Text(stage.Title, UIFont.Body, "node-name"));
-        if (unlocked)
+        if (Progress.IsHardCleared(id)) node.Add(UIFactory.Text("強襲", UIFont.Body, "node-hard"));
+        if (unlocked && stage.endless != null)
+        {
+            // エンドレスは★の代わりに最高記録
+            node.Add(UIFactory.Text("最高 WAVE " + Progress.BestWave(id), UIFont.Display, "node-best"));
+        }
+        else if (unlocked)
         {
             VisualElement stars = StarRow(20f, "node-stars");
             SetStars(stars, Progress.Stars(id));
@@ -242,6 +264,7 @@ public class StageSelectScreen
         detailName.text = stage.Title;
         detailDesc.text = stage.description ?? "";
         SetStars(detailStars, Progress.Stars(id));
+        UIFactory.SetVisible(detailStars, stage.endless == null);
         detailMap.Clear();
         detailMap.Add(MapPreview.Build(stage, 560f, 210f));
 
@@ -256,7 +279,16 @@ public class StageSelectScreen
         }
         detailLife.text = stage.life.ToString();
         detailDp.text = stage.initialDp.ToString();
-        detailEnemyTotal.text = total.ToString();
+        detailEnemyTotal.text = stage.endless != null ? "∞" : total.ToString();
+        // エンドレスは、出てくる敵の組とボスを並べる（数は決まっていない）
+        if (stage.endless != null)
+        {
+            foreach (EndlessPool pool in stage.endless.pools)
+                foreach (string e in pool.enemies)
+                    if (counts.FindIndex(p => p.Key == e) < 0) counts.Add(new KeyValuePair<string, int>(e, 0));
+            foreach (string e in stage.endless.bosses)
+                if (counts.FindIndex(p => p.Key == e) < 0) counts.Add(new KeyValuePair<string, int>(e, 0));
+        }
 
         detailEnemies.Clear();
         HashSet<string> seenBefore = GameData.EnemiesBefore(id);
@@ -268,7 +300,20 @@ public class StageSelectScreen
             if (enemy != null) detailEnemies.Add(EnemyChip(enemy, kv.Value, !seenBefore.Contains(enemy.id)));
         }
 
+        // 別の条件で開く章（エンドレス）は、どのステージをクリアすれば開くかを書く
+        ChapterData chapterOf = GameData.Campaign.ChapterOf(id);
+        StageData after = chapterOf != null && !string.IsNullOrEmpty(chapterOf.unlockAfter) ? GameData.Stage(chapterOf.unlockAfter) : null;
+        detailLock.text = after != null ? "「" + after.name + "」をクリアすると開きます" : "前の作戦をクリアすると開きます";
         UIFactory.SetVisible(detailLock, !open);
+        bool hardOk = stage.endless == null && Progress.IsCleared(id);
+        UIFactory.SetVisible(hardToggle, hardOk);
+        if (!hardOk && bootstrap.Hard) bootstrap.SetHard(false);
+        int hpPercent = Mathf.RoundToInt((GameData.Rules.hardHpScale - 1f) * 100f);
+        int atkPercent = Mathf.RoundToInt((GameData.Rules.hardAtkScale - 1f) * 100f);
+        hardToggle.text = (bootstrap.Hard ? "■ 強襲：ON" : "□ 強襲：OFF") + "　ライフ 1・敵の体力 +" + hpPercent + "%・攻撃力 +" + atkPercent + "%"
+            + (Progress.IsHardCleared(id) ? "（クリア済み）" : "");
+        hardToggle.EnableInClassList("detail-hard--on", bootstrap.Hard);
+        goButton.Text.text = bootstrap.Hard && hardOk ? "編成へ（強襲）" : "編成へ";
         goButton.Interactable = open;
     }
 
@@ -293,7 +338,7 @@ public class StageSelectScreen
         chip.Add(icon);
         var text = UIFactory.Box("enemy-text");
         text.Add(UIFactory.Text(enemy.name + (enemy.boss ? "（ボス）" : ""), UIFont.Body, "enemy-name"));
-        text.Add(UIFactory.Text("×" + count, UIFont.Display, "enemy-count"));
+        if (count > 0) text.Add(UIFactory.Text("×" + count, UIFont.Display, "enemy-count"));
         chip.Add(text);
         if (isNew) chip.Add(UIFactory.Text("NEW", UIFont.Display, "enemy-new"));
         return chip;

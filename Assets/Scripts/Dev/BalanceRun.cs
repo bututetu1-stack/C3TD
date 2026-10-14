@@ -32,6 +32,7 @@ public class BalanceRun : MonoBehaviour
         {
             int wins = 0, perfect = 0, timeouts = 0;
             var lives = new List<int>();
+            var waves = new List<int>();
             var losses = new StringBuilder();
             for (int seed = 0; seed < Runs; seed++)
             {
@@ -49,6 +50,7 @@ public class BalanceRun : MonoBehaviour
                 while (battle != null && battle.State.Phase == GamePhase.Playing && battle.State.ElapsedTime < MaxTime) yield return null;
                 if (battle == null) break;
                 GameState s = battle.State;
+                if (battle.IsEndless) waves.Add(battle.EndlessSurvived);
                 if (s.Phase == GamePhase.Won)
                 {
                     wins++;
@@ -75,6 +77,7 @@ public class BalanceRun : MonoBehaviour
                 lives.Add(s.Life);
             }
             sb.Append(id + ": 勝ち " + wins + "/" + Runs + "（★3 " + perfect + (timeouts > 0 ? "、時間切れ " + timeouts : "") + "） 残りライフ " + string.Join(",", lives) + "\n");
+            if (waves.Count > 0) sb.Append("  エンドレス：守りきった波 " + string.Join(",", waves) + "\n");
             sb.Append(losses);
         }
         Time.timeScale = 1f;

@@ -24,7 +24,22 @@ public class Enemy : Unit
     /// <summary>経路に沿った、拠点までの残りの距離（狙う順番に使う）</summary>
     public float RemainingDistance { get; private set; }
 
-    protected override float BaseAtk { get { return Data.atk; } }
+    protected override float BaseAtk { get { return Data.atk * AtkScale; } }
+
+    /// <summary>体力・攻撃力の倍率（エンドレスで波が進むと上がる。ふつうは 1）</summary>
+    public float HpScale { get; private set; } = 1f;
+    public float AtkScale { get; private set; } = 1f;
+    private float shieldMax;
+
+    /// <summary>出たときに体力・攻撃力を強くする（盾も同じ倍率）</summary>
+    public void ApplyScale(float hp, float atk)
+    {
+        HpScale = Mathf.Max(0.1f, hp);
+        AtkScale = Mathf.Max(0.1f, atk);
+        InitHealth(Data.hp * HpScale);
+        shieldHp = Data.shield * HpScale;
+        shieldMax = shieldHp;
+    }
     protected override float BaseDef { get { return Data.def; } }
     public override float Res { get { return Data.res; } }
 
@@ -110,6 +125,7 @@ public class Enemy : Unit
         enemy.accelTimer = data.accelerate != null ? data.accelerate.interval : 0f;
         enemy.pulseTimer = data.pulse != null ? data.pulse.firstDelay : 0f;
         enemy.shieldHp = data.shield;
+        enemy.shieldMax = data.shield;
         enemy.healTimer = data.heal != null ? data.heal.interval : 0f;
         enemy.remainingFrom = new float[path.Count];
         for (int i = path.Count - 2; i >= 0; i--)
@@ -443,7 +459,7 @@ public class Enemy : Unit
         float taken = Mathf.Min(shieldHp, damage);
         shieldHp -= taken;
         FloatingText.Damage(Center, taken, Palette.Cyan);
-        if (shieldBar != null) shieldBar.Set(shieldHp / Mathf.Max(1f, Data.shield));
+        if (shieldBar != null) shieldBar.Set(shieldHp / Mathf.Max(1f, shieldMax));
         if (shieldHp <= 0f)
         {
             if (shieldBar != null) Destroy(shieldBar.gameObject);

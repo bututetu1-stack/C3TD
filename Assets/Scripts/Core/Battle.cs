@@ -59,7 +59,21 @@ public class Battle : MonoBehaviour
         public int order;
         public EnemyData enemy;
         public List<Vector3> path;
+
+        /// <summary>エンドレスの波の番号（ふつうは 0）。敵の強さの倍率に使う</summary>
+        public int wave;
     }
+
+    // エンドレス（ステージに endless があるとき）
+    private EndlessDirector endless;
+
+    public bool IsEndless { get { return endless != null; } }
+
+    /// <summary>エンドレスでいま来ている波（1 から。エンドレスでなければ 0）</summary>
+    public int EndlessWave { get { return endless != null ? endless.WaveAt(SpawnClock) : 0; } }
+
+    /// <summary>エンドレスで負けたとき、最高記録を更新したか</summary>
+    public bool EndlessNewBest { get; private set; }
 
     private readonly List<SpawnEntry> schedule = new List<SpawnEntry>();
     private int nextSpawn;
@@ -135,13 +149,17 @@ public class Battle : MonoBehaviour
         Current = null;
     }
 
-    /// <summary>ステージを始める。squadIds は編成バーに並べる部員（null なら squad.json）</summary>
-    public static Battle Create(string stageId, List<string> squadIds)
+    /// <summary>強襲（ライフ 1・敵が強い。エンドレスにはない）</summary>
+    public bool Hard { get; private set; }
+
+    /// <summary>ステージを始める。squadIds は編成バーに並べる部員（null なら squad.json）。hard なら強襲</summary>
+    public static Battle Create(string stageId, List<string> squadIds, bool hard = false)
     {
         StageData data = GameData.Stage(stageId);
         if (data == null) return null;
         var obj = new GameObject("Battle_" + stageId);
         var battle = obj.AddComponent<Battle>();
+        battle.Hard = hard && data.endless == null;
         battle.Init(data, squadIds ?? GameData.Squad.members);
         return battle;
     }
@@ -159,6 +177,14 @@ public class Battle : MonoBehaviour
         AddPaths(data, data.paths, false, worldPaths);
         AddPaths(data, data.airPaths, true, worldPaths);
         BuildSchedule(data, worldPaths);
+        if (data.endless != null)
+        {
+            var ground = new List<List<Vector3>>();
+            var air = new List<List<Vector3>>();
+            foreach (string key in data.paths.Keys) if (worldPaths.ContainsKey(key)) ground.Add(worldPaths[key]);
+            if (data.airPaths != null) foreach (string key in data.airPaths.Keys) if (worldPaths.ContainsKey(key)) air.Add(worldPaths[key]);
+            endless = new EndlessDirector(data.endless, ground, air);
+        }
         BuildSquad(squadIds);
         Stats = new BattleStats(Squad);
 
@@ -167,8 +193,9 @@ public class Battle : MonoBehaviour
         enemyRoot = new GameObject("Enemies").transform;
         enemyRoot.SetParent(transform, false);
 
-        State = new GameState(data.life, schedule.Count, data.initialDp);
-        if (State.MaxLife >= schedule.Count && schedule.Count > 0)
+        State = new GameState(Hard ? 1 : data.life, schedule.Count, data.initialDp);
+        FillEndless();
+        if (endless == null && !Hard && State.MaxLife >= schedule.Count && schedule.Count > 0)
             Debug.LogWarning(data.id + ": ライフ（" + State.MaxLife + "）が敵の数（" + schedule.Count + "）以上なので、まったく防衛しなくても勝てます");
         lastPhase = State.Phase;
         TimeController.ResetForStage(Rules.focusTimeScale);
@@ -253,10 +280,19 @@ public class Battle : MonoBehaviour
             foreach (SquadMember m in Squad)
                 if (m.Cooldown > 0f) m.Cooldown = Mathf.Max(0f, m.Cooldown - dt);
 
+            FillEndless();
             while (nextSpawn < schedule.Count && schedule[nextSpawn].time <= SpawnClock)
             {
                 SpawnEntry entry = schedule[nextSpawn++];
                 Enemy spawned = Enemy.Spawn(entry.enemy, entry.path, this, enemyRoot);
+                float hpScale = entry.wave > 0 ? endless.HpScale(entry.wave) : 1f;
+                float atkScale = entry.wave > 0 ? endless.AtkScale(entry.wave) : 1f;
+                if (Hard)
+                {
+                    hpScale *= Rules.hardHpScale;
+                    atkScale *= Rules.hardAtkScale;
+                }
+                if (hpScale != 1f || atkScale != 1f) spawned.ApplyScale(hpScale, atkScale);
                 Enemies.Add(spawned);
                 if (EnemySpawned != null) EnemySpawned(spawned);
                 // ボスが出たら BGM をステージの bossBgm（省略時は boss）に（ファイルがなければそのまま）
@@ -264,7 +300,8 @@ public class Battle : MonoBehaviour
                 if (entry.enemy.boss && AudioManager.HasBGM(bossKey)) AudioManager.PlayBGM(bossKey);
             }
             WarnUpcoming();
-            State.CheckVictory(nextSpawn >= schedule.Count, Enemies.Count);
+            // エンドレスは終わらない（ライフがなくなるまで）
+            State.CheckVictory(endless == null && nextSpawn >= schedule.Count, Enemies.Count);
         }
 
         if (State.Phase != lastPhase)
@@ -273,10 +310,37 @@ public class Battle : MonoBehaviour
             if (State.Phase == GamePhase.Won)
             {
                 AudioManager.PlaySE("victory");
-                Progress.RecordClear(Stage.id, State.Life, State.MaxLife);
+                Progress.RecordClear(Stage.id, State.Life, State.MaxLife, Hard);
             }
-            if (State.Phase == GamePhase.Lost) AudioManager.PlaySE("defeat");
+            if (State.Phase == GamePhase.Lost)
+            {
+                AudioManager.PlaySE("defeat");
+                // エンドレスは、守りきった波（いまの波のひとつ前）を記録する
+                if (endless != null) EndlessNewBest = Progress.RecordEndless(Stage.id, EndlessSurvived);
+            }
         }
+    }
+
+    /// <summary>エンドレスで守りきった波の数（いまの波のひとつ前まで）</summary>
+    public int EndlessSurvived { get { return Mathf.Max(0, EndlessWave - 1); } }
+
+    /// <summary>エンドレスの波を、40 秒先まで作り足す（あとから足した敵も、倒す敵の数に入れる）</summary>
+    private void FillEndless()
+    {
+        if (endless == null || State == null) return;
+        int before = schedule.Count;
+        endless.Fill(SpawnClock, 40f, (t, e, path, wave) =>
+            schedule.Add(new SpawnEntry { time = t, order = schedule.Count, enemy = e, path = path, wave = wave }));
+        int added = schedule.Count - before;
+        if (added <= 0) return;
+        State.AddEnemies(added);
+        // まだ出ていない敵だけを時刻の順に並べ直す（作り足した波は今より先なので、出た敵・予告した敵の順は変わらない）
+        int start = Mathf.Max(nextSpawn, nextWarn);
+        schedule.Sort(start, schedule.Count - start, Comparer<SpawnEntry>.Create((a, b) =>
+        {
+            int c = a.time.CompareTo(b.time);
+            return c != 0 ? c : a.order.CompareTo(b.order);
+        }));
     }
 
     /// <summary>
@@ -449,6 +513,8 @@ public class Battle : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             Enemy spawned = Enemy.SpawnOnPath(data, summoner.Path, summoner.NextPoint, summoner.transform.position, this, enemyRoot);
+            // 呼んだ敵と同じ強さ（エンドレスで波が進んだぶん）
+            if (summoner.HpScale != 1f || summoner.AtkScale != 1f) spawned.ApplyScale(summoner.HpScale, summoner.AtkScale);
             Enemies.Add(spawned);
             if (EnemySpawned != null) EnemySpawned(spawned);
         }

@@ -19,6 +19,14 @@ public class GameBootstrap : MonoBehaviour
 
     public string StageId { get { return stageId; } }
 
+    /// <summary>強襲で出撃するか（作戦選択で切り替える。クリアしたステージだけ）</summary>
+    public bool Hard { get; private set; }
+
+    public void SetHard(bool value)
+    {
+        Hard = value;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void EnsureExists()
     {
@@ -85,7 +93,7 @@ public class GameBootstrap : MonoBehaviour
     {
         if (string.IsNullOrEmpty(id)) return;
         if (battle != null) Destroy(battle.gameObject);
-        battle = Battle.Create(id, squad);
+        battle = Battle.Create(id, squad, Hard && Progress.IsCleared(id));
         if (battle == null) return;
         stageId = id;
         menu.HideAll();
@@ -101,6 +109,7 @@ public class GameBootstrap : MonoBehaviour
     public void GoToNext()
     {
         string next = NextStageId();
+        Hard = false; // 次の作戦はふつうから
         if (next != null && Progress.IsUnlocked(next)) ShowSquad(next);
         else ShowStageSelect();
     }

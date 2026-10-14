@@ -1,0 +1,54 @@
+{
+  // エンドレス（2026-10-15 未明。オーナー：「他の TD ゲームの要素を入れてもいい」）。Bloons や Kingdom Rush のエンドレスのように、
+  // 敵の波が終わらず、何波まで守れるかを競う。1-5 をクリアすると開く（campaign.json の unlockAfter）。
+  // 波は EndlessDirector が作る（下の endless の決まり）。敵は波が進むほど種類が増え、体力・攻撃力が上がり、数も増える。
+  // 中央で 2 本の道が一度合流し、また上下に分かれて、拠点の手前でもう一度合流する
+  "id": "endless_01",
+  "name": "ENDLESS 部室防衛",
+  "description": "終わらない敵の波から部室を守り続ける。波が進むほど敵は強く、多くなり、10 波ごとにボスが来る。何波まで守れるか、部員どうしで競おう。",
+  "life": 10,
+  "initialDp": 12,
+  "bgm": "battle3",
+  "background": "Battle3",
+  "map": [
+    "XXXXXXXXXXXXX",
+    "S....HHH....X",
+    "XHHH.HHH.HH.X",
+    "XHHH.....HH.B",
+    "XHHH.HHH.HH.X",
+    "S....HHH....X",
+    "XXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "north": [[0,1],[4,1],[4,3],[8,3],[8,1],[11,1],[11,3],[12,3]],
+    "south": [[0,5],[4,5],[4,3],[8,3],[8,5],[11,5],[11,3],[12,3]]
+  },
+  "airPaths": {
+    "airN": [[0,1],[12,3]],
+    "airS": [[0,5],[12,3]]
+  },
+  "waves": [],
+  "endless": {
+    "firstDelay": 5,
+    "interval": 22,
+    "intervalShrink": 0.15,
+    "minInterval": 15,
+    "hpGrowth": 0.09,
+    "atkGrowth": 0.03,
+    "bossEvery": 10,
+    "bosses": ["shimekiri", "kimatsu", "saishu", "sotsuron", "inshi"],
+    "maxGroups": 4,
+    "basePoints": 4,
+    "pointsPerWave": 0.45,
+    "pools": [
+      { "from": 1,  "enemies": ["kadai", "shotest", "report"] },
+      { "from": 4,  "enemies": ["tsuuchi", "ronbun", "suima", "rerishuu", "groupwork"] },
+      { "from": 8,  "enemies": ["es", "mensetsukan", "oinori", "gd"] },
+      { "from": 12, "enemies": ["senkou", "jikken", "saiteishutsu"] },
+      { "from": 16, "enemies": ["kakomon", "eigo", "keikakusho", "senmon", "koutou"] }
+    ]
+  },
+  "hints": [
+    { "time": 2, "duration": 8, "text": "エンドレス：敵の波は終わらない。波が進むほど敵は強くなる。ライフが 0 になるまでに守りきった波の数が記録になる。" }
+  ]
+}

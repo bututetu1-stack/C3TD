@@ -7,5 +7,7 @@
   "focusTimeScale": 0.2,     // ドラッグ中・選択中の時間の速さ
   "squadMax": 8,             // 編成に入れられる人数
   "callEarlyDpPerSecond": 0.5, // 次の敵を早く呼んだとき、早めた1秒あたりにもらえる DP
-  "callEarlyMinGap": 4       // 次の敵までこの秒以上あるときだけ早く呼べる
+  "callEarlyMinGap": 4,      // 次の敵までこの秒以上あるときだけ早く呼べる
+  "hardHpScale": 1.3,        // 強襲：敵の体力の倍率（ライフは 1）
+  "hardAtkScale": 1.2        // 強襲：敵の攻撃力の倍率
 }

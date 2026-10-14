@@ -10,12 +10,24 @@ public class StageRecord
 
     /// <summary>★の数（ライフを減らさずにクリアで3、減らしてクリアで2）</summary>
     public int stars;
+
+    /// <summary>強襲（ライフ 1・敵が強い）でクリアした</summary>
+    public bool hard;
+}
+
+/// <summary>エンドレスの最高記録（守りきった波の数）</summary>
+[Serializable]
+public class EndlessRecord
+{
+    public string id;
+    public int wave;
 }
 
 [Serializable]
 public class ProgressData
 {
     public List<StageRecord> stages = new List<StageRecord>();
+    public List<EndlessRecord> endless = new List<EndlessRecord>();
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -81,6 +93,10 @@ public static class Progress
     public static bool IsUnlocked(string stageId)
     {
         if (Data.unlockAll) return true;
+        // unlockAfter のある章（エンドレス）は、その章の最初のステージを、指定のステージのクリアで開く
+        ChapterData chapter = GameData.Campaign.ChapterOf(stageId);
+        if (chapter != null && !string.IsNullOrEmpty(chapter.unlockAfter) && chapter.stages.Count > 0 && chapter.stages[0] == stageId)
+            return IsCleared(chapter.unlockAfter);
         List<string> order = GameData.Campaign.AllStages();
         int index = order.IndexOf(stageId);
         if (index <= 0) return true;
@@ -97,7 +113,13 @@ public static class Progress
         }
     }
 
-    public static void RecordClear(string stageId, int life, int maxLife)
+    public static bool IsHardCleared(string stageId)
+    {
+        StageRecord r = Record(stageId);
+        return r != null && r.hard;
+    }
+
+    public static void RecordClear(string stageId, int life, int maxLife, bool hard = false)
     {
         StageRecord r = Record(stageId);
         if (r == null)
@@ -107,7 +129,35 @@ public static class Progress
         }
         r.cleared = true;
         r.stars = Mathf.Max(r.stars, life >= maxLife ? 3 : 2);
+        if (hard) r.hard = true;
         Save();
+    }
+
+    /// <summary>エンドレスの最高記録（守りきった波の数。なければ 0）</summary>
+    public static int BestWave(string stageId)
+    {
+        if (Data.endless == null) return 0;
+        foreach (EndlessRecord r in Data.endless)
+            if (r.id == stageId) return r.wave;
+        return 0;
+    }
+
+    /// <summary>エンドレスの記録を残す。最高記録を更新したら true</summary>
+    public static bool RecordEndless(string stageId, int wave)
+    {
+        if (Data.endless == null) Data.endless = new List<EndlessRecord>();
+        EndlessRecord r = null;
+        foreach (EndlessRecord e in Data.endless)
+            if (e.id == stageId) r = e;
+        if (r == null)
+        {
+            r = new EndlessRecord { id = stageId };
+            Data.endless.Add(r);
+        }
+        bool best = wave > r.wave;
+        if (best) r.wave = wave;
+        Save();
+        return best;
     }
 
     /// <summary>前回の編成（なければ squad.json の並び）</summary>

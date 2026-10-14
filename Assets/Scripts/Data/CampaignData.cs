@@ -31,5 +31,8 @@ public class ChapterData
 
     /// <summary>章の最後のステージをクリアしたとき、結果に出すひとこと（省略時は「第1章　前期　クリア！」）</summary>
     public string clearText;
+
+    /// <summary>書けば、この章の最初のステージはこのステージをクリアしたら開く（エンドレスは 1-5 のあと）</summary>
+    public string unlockAfter;
     public List<string> stages = new List<string>();
 }

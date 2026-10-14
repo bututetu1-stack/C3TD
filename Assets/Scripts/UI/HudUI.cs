@@ -21,9 +21,12 @@ public class HudUI : MonoBehaviour
     private Label opCode;
     private VisualElement opSep;
     private Label opName;
+    private Label opHard;
     private Label timeValue;
     private Label enemyValue;
     private Label enemyTotal;
+    private Label enemyCaption;
+    private int shownWave = -1;
     private Label lifeValue;
     private Label lifeMax;
     private ChamferBox lifePlate;
@@ -162,6 +165,8 @@ public class HudUI : MonoBehaviour
         row.Add(opSep);
         opName = UIFactory.Text("", UIFont.Title, "op-name");
         row.Add(opName);
+        opHard = UIFactory.Text("強襲", UIFont.Body, "op-hard");
+        row.Add(opHard);
         op.Add(row);
         bar.Add(op);
 
@@ -171,6 +176,7 @@ public class HudUI : MonoBehaviour
         Label unused;
         AddStat(bar, IconKind.Clock, Palette.TextSub, "TIME", out timeValue, out unused);
         AddStat(bar, IconKind.Paper, Palette.TextSub, "ENEMY", out enemyValue, out enemyTotal);
+        enemyCaption = enemyValue.parent.parent.Q<Label>(className: "stat-caption");
         lifePlate = AddStat(bar, IconKind.Heart, Palette.Crimson, "LIFE", out lifeValue, out lifeMax);
         lifeValue.AddToClassList("life-value");
 
@@ -603,7 +609,19 @@ public class HudUI : MonoBehaviour
             shownSeconds = seconds;
             timeValue.text = UIFactory.FormatTime(state.ElapsedTime);
         }
-        if (state.EnemiesFinished != shownFinished)
+        if (battle.IsEndless)
+        {
+            // エンドレスは倒した数の代わりに、いまの波
+            int wave = battle.EndlessWave;
+            if (wave != shownWave)
+            {
+                shownWave = wave;
+                enemyValue.text = wave.ToString();
+                int best = Progress.BestWave(battle.Stage.id);
+                enemyTotal.text = best > 0 ? " BEST " + best : "";
+            }
+        }
+        else if (state.EnemiesFinished != shownFinished)
         {
             shownFinished = state.EnemiesFinished;
             enemyValue.text = state.EnemiesFinished.ToString();
@@ -659,9 +677,11 @@ public class HudUI : MonoBehaviour
         UIFactory.SetVisible(opCode, !string.IsNullOrEmpty(stage.Code));
         UIFactory.SetVisible(opSep, !string.IsNullOrEmpty(stage.Code));
         opName.text = stage.Title;
+        UIFactory.SetVisible(opHard, battle.Hard);
         lifeMax.text = "/" + battle.State.MaxLife;
 
-        shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = -1;
+        shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = shownWave = -1;
+        if (enemyCaption != null) enemyCaption.text = battle.IsEndless ? "WAVE" : "ENEMY";
         shownPhase = GamePhase.Playing;
         hintIndex = 0;
         hintShown = false;
@@ -713,16 +733,25 @@ public class HudUI : MonoBehaviour
     private void ShowResult(GameState state)
     {
         bool won = state.Phase == GamePhase.Won;
-        Color accent = won ? Palette.Amber : Palette.Crimson;
-        resultEnglish.text = won ? "OPERATION COMPLETE" : "OPERATION FAILED";
+        bool endless = shownBattle != null && shownBattle.IsEndless;
+        Color accent = won || endless ? Palette.Amber : Palette.Crimson;
+        resultEnglish.text = endless ? "ENDLESS RESULT" : won ? "OPERATION COMPLETE" : "OPERATION FAILED";
         resultEnglish.style.color = accent;
-        resultTitle.text = won ? "防衛成功" : "防衛失敗";
+        resultTitle.text = endless ? "WAVE " + shownBattle.EndlessSurvived : won ? "防衛成功" : "防衛失敗";
+        if (shownBattle != null && shownBattle.Hard) resultEnglish.text += "  ／  強襲";
         resultBand.SetFill(Palette.UiBand).SetAccent(accent, 12f);
         resultLife.text = state.Life + "/" + state.MaxLife;
         resultTime.text = UIFactory.FormatTime(state.ElapsedTime);
         resultEnemy.text = state.EnemiesFinished + "/" + state.EnemiesTotal;
         UIFactory.SetVisible(nextButton, won && bootstrap.NextStageId() != null);
         string milestone = won && shownBattle != null ? Milestone(shownBattle.Stage.id) : null;
+        if (won && shownBattle != null && shownBattle.Hard) milestone = "強襲作戦クリア！" + (milestone != null ? "　" + milestone : "");
+        // エンドレス：守りきった波と最高記録
+        if (endless)
+        {
+            int best = Progress.BestWave(shownBattle.Stage.id);
+            milestone = shownBattle.EndlessSurvived + " 波を守りきった" + (shownBattle.EndlessNewBest ? "　最高記録を更新！" : "　（最高 " + best + " 波）");
+        }
         resultMilestone.text = milestone ?? "";
         UIFactory.SetVisible(resultMilestone, milestone != null);
 

@@ -78,7 +78,7 @@ public class SquadScreen
     {
         StageId = stageId;
         StageData stage = GameData.Stage(stageId);
-        stageLabel.text = stage != null ? (stage.Code + "　" + stage.Title) : stageId;
+        stageLabel.text = (stage != null ? (stage.Code + "　" + stage.Title) : stageId) + (bootstrap.Hard && Progress.IsCleared(stageId) ? "　強襲" : "");
         max = Mathf.Max(1, GameData.Rules.squadMax);
 
         roster.Clear();
