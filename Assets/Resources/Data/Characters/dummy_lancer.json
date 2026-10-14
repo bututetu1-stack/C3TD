@@ -1,0 +1,21 @@
+{
+  // テスト用のダミー（実在の部員ではない）。1体だけ止めるが、2マス先まで届く前衛（飛ぶ敵には届かない）
+  "id": "dummy_lancer",
+  "name": "槍ダミー",
+  "class": "Guard",
+  "cost": 12,
+  "redeployTime": 70,
+  "color": "#B8573A",
+  "stats": { "hp": 1700, "atk": 470, "def": 170, "attackInterval": 1.3, "block": 1, "range": 2 },
+  "ultimate": {
+    "name": "テスト：薙ぎ払い",
+    "description": "周り2マスの敵すべてに攻撃力の200%のダメージを与え、1秒スタンさせる（攻撃するたびにSPが溜まる）",
+    "spCost": 9,
+    "spCharge": "OnAttack",
+    "duration": 0,
+    "effects": [
+      { "type": "Damage", "multiplier": 2.0, "target": "AreaAroundSelf", "radius": 2.0 },
+      { "type": "Stun", "duration": 1, "target": "AreaAroundSelf", "radius": 2.0 }
+    ]
+  }
+}

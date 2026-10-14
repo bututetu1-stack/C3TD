@@ -1,0 +1,20 @@
+{
+  // テスト用のダミー（実在の部員ではない）。遅いが、着弾したまわりにも当たる狙撃（固まって来る敵に強い）
+  "id": "dummy_bomber",
+  "name": "爆撃ダミー",
+  "class": "Sniper",
+  "cost": 16,
+  "redeployTime": 80,
+  "color": "#C9A13A",
+  "projectile": "Shell",
+  "splash": 0.9,
+  "stats": { "hp": 1000, "atk": 520, "def": 60, "attackInterval": 2.4, "range": 3.5 },
+  "ultimate": {
+    "name": "テスト：絨毯爆撃",
+    "description": "射程内の敵すべてに攻撃力の180%のダメージ",
+    "spCost": 25,
+    "spCharge": "PerSecond",
+    "duration": 0,
+    "effects": [ { "type": "Damage", "multiplier": 1.8, "target": "EnemiesInRange" } ]
+  }
+}

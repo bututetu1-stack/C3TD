@@ -1,0 +1,28 @@
+{
+  // テスト用のダミー（実在の部員ではない）。回復は弱いが、必殺技で射程内の味方を強くする医療
+  "id": "dummy_cheer",
+  "name": "鼓舞ダミー",
+  "class": "Medic",
+  "cost": 14,
+  "redeployTime": 70,
+  "color": "#3FB58E",
+  "stats": { "hp": 1000, "atk": 230, "def": 70, "attackInterval": 2.6, "range": 2.5 },
+  "trait": {
+    "name": "テスト：差し入れ",
+    "description": "置いたとき DP が 4 戻る",
+    "trigger": "OnDeploy",
+    "effects": [ { "type": "Dp", "value": 4, "target": "Self" } ]
+  },
+  "ultimate": {
+    "name": "テスト：応援",
+    "description": "15秒間、射程内の味方の攻撃力 +40%・防御力 +30%",
+    "spCost": 28,
+    "initialSp": 8,
+    "spCharge": "PerSecond",
+    "duration": 15,
+    "effects": [
+      { "type": "StatModifier", "stat": "atk", "percent": 40, "target": "AlliesInRange" },
+      { "type": "StatModifier", "stat": "def", "percent": 30, "target": "AlliesInRange" }
+    ]
+  }
+}
