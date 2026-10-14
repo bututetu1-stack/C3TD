@@ -1437,3 +1437,20 @@
 .c3-mobile .detail-enemies .enemy-count {
     font-size: 20px;
 }
+
+/* スマホでは、部員・敵の札の説明文を少し大きく（札は広さに余裕がある） */
+.c3-mobile .unit-skill-desc {
+    font-size: 23px;
+}
+
+.c3-mobile .unit-skill-meta {
+    font-size: 19px;
+}
+
+.c3-mobile .enemy-traits {
+    font-size: 23px;
+}
+
+.c3-mobile .book-first {
+    font-size: 22px;
+}
