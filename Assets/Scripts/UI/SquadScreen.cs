@@ -168,7 +168,7 @@ public class SquadScreen
         UIFactory.SetVisible(tipsBox, tips.Count > 0);
         foreach (StageTips.Tip t in tips)
         {
-            string mark = t.Covered == false ? "！ " : t.Covered == true ? "✓ " : "・ ";
+            string mark = t.Covered == false ? "！ " : t.Covered == true ? "○ " : "・ ";
             var chip = UIFactory.Text(mark + t.Text, UIFont.Body, "squad-tip");
             chip.AddToClassList(t.Covered == false ? "squad-tip--warn" : t.Covered == true ? "squad-tip--ok" : "squad-tip--info");
             tipsBox.Add(chip);

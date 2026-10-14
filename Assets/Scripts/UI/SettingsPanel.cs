@@ -60,7 +60,7 @@ public class SettingsPanel
             Refresh();
             if (preview) AudioManager.PlaySE("click");
         };
-        var minus = new C3Button(null, 0f, "－", () => apply(get() - 1f / Steps));
+        var minus = new C3Button(null, 0f, "-", () => apply(get() - 1f / Steps));
         minus.AddToClassList("settings-step");
         row.Add(minus);
         var bar = UIFactory.Box("settings-bar");
