@@ -31,6 +31,9 @@ public class SkillRunner
     private readonly List<EffectData> stackEffects = new List<EffectData>();
     private readonly List<StatModifier> stackModifiers = new List<StatModifier>();
     private int firedIntervals;
+
+    /// <summary>Blocking の特性：敵を止めていた時間（interval 秒ごとに効果を使う）</summary>
+    private float blockTime;
     private bool wasReady;
 
     public SkillRunner(Character owner, Battle battle, SkillData trait, SkillData ultimate)
@@ -87,6 +90,17 @@ public class SkillRunner
                 firedIntervals++;
                 foreach (EffectData e in Trait.effects)
                     if (!stackEffects.Contains(e)) SkillEffects.Apply(e, Context(0f, null, null));
+            }
+        }
+
+        if (Trait != null && Trait.trigger == SkillTrigger.Blocking && owner.Blocked.Count > 0 && !owner.Stunned)
+        {
+            blockTime += dt;
+            float interval = Mathf.Max(0.5f, Trait.Param("interval", 6f));
+            while (blockTime >= interval)
+            {
+                blockTime -= interval;
+                foreach (EffectData e in Trait.effects) SkillEffects.Apply(e, Context(0f, null, null));
             }
         }
 

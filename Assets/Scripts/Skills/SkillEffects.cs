@@ -27,6 +27,8 @@ public class SkillContext
 ///   MultiHit     攻撃が hits 回当たる
 ///   Dp           DP を value 増やす（上限は rules.json の dpMax）
 ///   Random       options の中から1つをランダムに使い、その label を出す（キャロのカードなど）
+///   TeamBuff     味方全員の攻撃力（stat は atk だけ）を percent% 上げる。percent × maxStacks まで。ステージが終わるまで残る（僕）
+///   Confuse      敵を duration 秒混乱させる（止められていなければ来た道を戻り、攻撃しない）
 /// 対象：Self / Target / AreaAroundSelf（半径 radius、省略時 1.5 マス）/ AlliesInRange / EnemiesInRange
 /// </summary>
 public static class SkillEffects
@@ -94,6 +96,30 @@ public static class SkillEffects
                 EffectData pick = e.options[Random.Range(0, e.options.Count)];
                 if (!string.IsNullOrEmpty(pick.label)) FloatingText.Status(caster.Center + new Vector3(0f, 0.45f, 0f), pick.label);
                 Apply(pick, ctx);
+                break;
+            }
+
+            case EffectType.TeamBuff:
+            {
+                if (e.stat != "atk" || e.percent <= 0f) break;
+                float max = e.maxStacks > 0 ? e.percent * e.maxStacks : 100f;
+                if (ctx.Battle.AddTeamAtk(e.percent, max))
+                {
+                    FloatingText.Status(caster.Center + new Vector3(0f, 0.45f, 0f), "全員の攻撃力 +" + ctx.Battle.TeamAtkPercent.ToString("0") + "%");
+                    Fx.Buff(caster.Center);
+                }
+                break;
+            }
+
+            case EffectType.Confuse:
+            {
+                float r = e.target == EffectTarget.AreaAroundSelf ? (e.radius > 0f ? e.radius : DefaultRadius) : caster.Range;
+                Fx.BrainWave(caster.transform.position, r);
+                foreach (Unit u in Targets(e, ctx, true))
+                {
+                    var en = u as Enemy;
+                    if (en != null) en.Confuse(e.duration > 0f ? e.duration : 3f);
+                }
                 break;
             }
 

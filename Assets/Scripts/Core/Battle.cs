@@ -13,6 +13,17 @@ public class Battle : MonoBehaviour
     public static Battle Current { get; private set; }
 
     public StageData Stage { get; private set; }
+
+    /// <summary>味方全員の攻撃力に足す%（僕の「鯖缶のやる気担当」。ステージが終わるまで残り、あとから置いた部員にも効く）</summary>
+    public float TeamAtkPercent { get; private set; }
+
+    /// <summary>味方全員の攻撃力を percent% 上げる（max% まで）。上がったら true</summary>
+    public bool AddTeamAtk(float percent, float max)
+    {
+        float before = TeamAtkPercent;
+        TeamAtkPercent = Mathf.Min(max, TeamAtkPercent + percent);
+        return TeamAtkPercent > before;
+    }
     public StageMap Map { get; private set; }
     public GameState State { get; private set; }
     public MapHighlight Highlight { get; private set; }

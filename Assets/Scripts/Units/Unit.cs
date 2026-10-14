@@ -103,7 +103,14 @@ public abstract class Unit : MonoBehaviour
             percent += m.Percent;
             value += m.Value;
         }
+        percent += ExtraPercent(stat);
         return Mathf.Max(0f, baseValue * (1f + percent / 100f) + value);
+    }
+
+    /// <summary>増減のほかに足す%（部員なら、味方全員に掛かる Battle.TeamAtkPercent）</summary>
+    protected virtual float ExtraPercent(string stat)
+    {
+        return 0f;
     }
 
     public void Stun(float seconds)

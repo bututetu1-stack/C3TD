@@ -262,6 +262,16 @@ public static class Fx
         Shards(position, new Color(1f, 0.35f, 0.25f), new Color(0.3f, 0.05f, 0.05f), 10, 1.5f, 3.5f, 0.16f);
     }
 
+    /// <summary>敵の脳に情報を流し込む（僕の BrainMassage）：紫の波が広がる</summary>
+    public static void BrainWave(Vector3 position, float radius)
+    {
+        Sprite art = Art.Effect("BrainWave");
+        Color c = new Color(0.72f, 0.45f, 1f, 0.9f);
+        if (art != null) FxSprite.Create(art, position, Color.white, 0.8f, radius * 0.6f, radius * 2.2f, Order + 1).Spin(90f);
+        FxSprite.Create(SpriteFactory.Ring, position, c, 0.6f, 0.4f, radius * 2.1f, Order);
+        FxSprite.Create(SpriteFactory.ThinRing, position, Palette.WithAlpha(Color.white, 0.8f), 0.7f, 0.3f, radius * 2.3f, Order).Delay(0.12f);
+    }
+
     /// <summary>敵がまわりを回復した（実験データ）：緑の波</summary>
     public static void HealWave(Vector3 position, float radius)
     {

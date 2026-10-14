@@ -1,0 +1,33 @@
+{
+  // 部員（2026-10-14 夜、オーナーから）。名前は「僕」。希望の職業は重装。特徴：
+  //   「鯖缶のやる気担当」：作業効率は悪いが、長い時間をかけて C3 のインフラに少し貢献している
+  //   必殺技「BrainMassage」：相手の脳にマッサージと称して理解不能な情報を流し込む（混乱と攻撃力ダウン）
+  //   アイコンは本人の Brainf*ck のコード
+  "id": "boku",
+  "name": "僕",
+  "class": "Defender",
+  "cost": 17,
+  "redeployTime": 70,
+  "color": "#5A6B80",
+  "stats": { "hp": 3600, "atk": 300, "def": 600, "attackInterval": 1.4, "block": 3, "range": 1 },
+  "trait": {
+    "name": "鯖缶のやる気担当",
+    "description": "作業効率は悪いが、長い時間をかけて C3 のインフラに少し貢献している。敵を止めて攻撃を耐えた時間6秒ごとに、味方全員の攻撃力+2%（+20%まで。撤退してもステージが終わるまで残る）",
+    "trigger": "Blocking",
+    "params": { "interval": 6 },
+    "effects": [ { "type": "TeamBuff", "stat": "atk", "percent": 2, "maxStacks": 10 } ]
+  },
+  "ultimate": {
+    "name": "BrainMassage",
+    "description": "マッサージと称して、まわり2マスの敵の脳に理解不能な情報を流し込む。5秒間混乱させ（攻撃せず、止められていなければ来た道を戻る）、10秒間攻撃力-40%（攻撃を受けるとSPが溜まる）",
+    "spCost": 16,
+    "initialSp": 6,
+    "line": "脳、ほぐしておきますね",
+    "spCharge": "OnHit",
+    "duration": 0,
+    "effects": [
+      { "type": "Confuse", "duration": 5, "target": "AreaAroundSelf", "radius": 2 },
+      { "type": "StatModifier", "stat": "atk", "percent": -40, "duration": 10, "target": "AreaAroundSelf", "radius": 2 }
+    ]
+  }
+}

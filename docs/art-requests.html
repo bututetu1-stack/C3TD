@@ -336,6 +336,7 @@
       <a href="#m3">必殺技と召喚（M3）</a>
       <a href="#new">追加の依頼（10/13 夜）</a>
       <a href="#fx2">敵の性質のエフェクト（10/14）</a>
+      <a href="#boku">僕の必殺技（10/14 夜）</a>
       <a href="#sounds">効果音・BGM</a>
       <a href="#gemini">Gemini で作る音</a>
     </nav>
@@ -447,6 +448,12 @@
     <h2>敵の性質のエフェクト<span class="tag">2026-10-14</span></h2>
     <p class="section-note">敵が跳ぶ・盾が割れる・起き上がる・ボスの大技・ボスの本気・敵の回復のときに重ねる光です。置かなければ、いまの輪と粒だけで動きます。</p>
     <div class="cards" data-group="fx2"></div>
+  </section>
+
+  <section id="boku">
+    <h2>僕の必殺技<span class="tag">2026-10-14 夜</span></h2>
+    <p class="section-note">部員「僕」の必殺技「BrainMassage」で使う波動と、敵の状態の印（混乱・攻撃力ダウン）です。オーナーに頼まれて Claude が ChatGPT で作り、置いてあります（作り直したいときの文言）。</p>
+    <div class="cards" data-group="boku"></div>
   </section>
 
   <section id="sounds">
@@ -786,6 +793,14 @@
       prompt: "ゲームのエフェクト素材。本気を出す瞬間の赤いオーラの爆発を正面から見たもの。中心から上へ燃え上がる赤と黒の炎のオーラと、四方へ飛ぶ火の粉。円形にまとまった形。" },
     { group: "fx2", path: "Art/Effects/HealWave.png", title: "敵の回復の波", scene: "実験データがまわりの敵を回復するとき（届く範囲いっぱいに広げる）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
       prompt: "ゲームのエフェクト素材。回復の波動を真上から見たもの。中心から外へ広がる、緑に光るやわらかな輪と、輪にそって並ぶ小さな十字の光。やさしい光。円形。" },
+
+    // ---------------- 僕の必殺技（2026-10-14 夜） ----------------
+    { group: "boku", path: "Art/Effects/BrainWave.png", title: "BrainMassage の波動", scene: "僕の必殺技で、まわり2マスの敵の脳に情報を流し込むとき（届く範囲いっぱいに広げて回す。2026-10-14 Claude が作成）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "ゲームのエフェクト素材。相手の脳に理解不能な情報を流し込む、サイケデリックな精神攻撃の波動を真上から見たもの。中心から外へ広がる、紫とマゼンタに光るゆらゆら波打つ輪が何重にも重なり、ところどころシアンの光が混じる。輪のあいだには < > + - [ ] . , のような意味のない記号の形をした小さな光の粒が散らばる。目が回りそうな不思議な光。円形。" },
+    { group: "boku", path: "Art/Effects/StatusConfuse.png", title: "状態の印：混乱", scene: "敵が混乱しているあいだ、頭の上に出る（なければ紫の丸に「混」。2026-10-14 Claude が作成）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）",
+      prompt: "ゲームのアイコン素材。敵が混乱していることを表す小さな印。紫色のぐるぐる渦巻きの上に、黄色いはてなマークと小さな星がひとつ重なっている。小さく表示しても分かるように、太い黒い線で縁取ったシンプルな形と、はっきりした色にする。人物や、はてなマーク以外の文字は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
+    { group: "boku", path: "Art/Effects/StatusAtkDown.png", title: "状態の印：攻撃力ダウン", scene: "敵の攻撃力が下がっているあいだ、体力バーの左に小さく出る（なければ橙の丸に「攻」。2026-10-14 Claude が作成）", bg: "alpha", shape: "sq", style: "none", arrow: "upright", dir: "上下あり（回さない）",
+      prompt: "ゲームのアイコン素材。攻撃力が下がっていることを表す小さな印。刃が折れた銀色の剣に、オレンジ色の太い下向きの矢印が重なっている。小さく表示しても分かるように、太い黒い線で縁取ったシンプルな形と、はっきりした色にする。人物や文字は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
   ];
 
   const NS = "http://www.w3.org/2000/svg";

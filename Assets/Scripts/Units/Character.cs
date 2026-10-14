@@ -36,6 +36,12 @@ public class Character : Unit
     /// <summary>いま止めている敵</summary>
     public readonly List<Enemy> Blocked = new List<Enemy>();
 
+    /// <summary>味方全員に掛かる攻撃力の%（僕の特性）を足す</summary>
+    protected override float ExtraPercent(string stat)
+    {
+        return stat == "atk" && battle != null ? battle.TeamAtkPercent : 0f;
+    }
+
     public int BlockCapacity { get; private set; }
 
     /// <summary>まだ敵を止められるか（地上のマスにいるときだけ止める）</summary>

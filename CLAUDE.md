@@ -192,11 +192,12 @@ Assets/
 各マイルストーンが終わったら、オーナーがテストプレイできる状態にし、**確認してほしい点**をまとめて報告する。
 
 ## 部員データについて
-- 確定している部員：物理鉄人（オーナー）、ファインマン（`feynman`）、キャロ（`kya6`）、ヲツ（`wotsu`）。2026-10-14 夜にオーナーから特徴を受け取って作った。
+- 確定している部員：物理鉄人（オーナー）、ファインマン（`feynman`）、キャロ（`kya6`）、ヲツ（`wotsu`）、僕（`boku`）。2026-10-14 夜にオーナーから特徴を受け取って作った。
   - 物理鉄人：艦これが好き・夜ふかしが好き・だいたい寝不足。艦これは匂わせる程度（艦娘の召喚はオーナーの判断でやめた。`Summons/kanmusu_token.json` と `Art/Icons/kanmusu_token.png` は使っていない）。オーナーの希望で強めの「環境キャラ」の前衛。前衛だが飛ぶ敵も斬れる（部員の JSON の `antiAir`。狙撃から前衛に変えたら、オーナーの編成で飛ぶ敵を落とせなくなったため）。必殺技「夜戦突入」（「我、夜戦に突入す！」）で射程が伸び、2回攻撃、終わると寝落ち。
   - ファインマン：好きなものに深くハマりすぎる・かわいいもの（特にもちもち）とネコが好き・キュートアグレッション。前衛。特性「沼」で攻撃し続けるほど強く、必殺技「もちもちの刑」で3回攻撃、夢中で防御が下がる。アイコンは本人のもの（`Art/Icons/feynman.png`。正方形に切り出しただけ）。
   - キャロ：ポーカーディーラー・人脈が広い・よく課題を出し忘れる（本人の希望で弱点に）。術師。特性「課題の出し忘れ」で25秒ごとに2秒止まる。必殺技「人脈フルハウス」で「知り合い」（`Summons/kya6_friend.json`）を2体呼び、カードを1枚配る（効果の部品 `Random`）。アイコンは本人の写真（ぬいぐるみ）を正方形に切り出したもの。
   - ヲツ（`wotsu`）：分野が Hack で技術力がとても高い先輩だが、謙虚で「自分なんてまだまだ……」と認めない。中華料理が得意で、ときどき突発の飯会「ヲツ亭」を開く。術師。特性「ヲツ亭」で30秒ごとに射程内の味方を25%回復。必殺技「ゼロデイ」で射程内の敵をハッキング（150%のダメージ・3秒動けない・10秒防御 -50%）。カットインの言葉は「いや、自分なんてまだまだ……」。アイコンは本人のドット絵（`Art/Icons/wotsu.png`）。
+  - 僕（`boku`。名前が「僕」）：鯖缶（C3 のサーバー）のやる気担当。作業効率は悪いが、長い時間をかけて C3 のインフラに少し貢献している。本人の希望で重装。特性「鯖缶のやる気担当」で、敵を止めていた時間6秒ごとに味方全員の攻撃力 +2%（+20% まで。ステージが終わるまで残る）。必殺技「BrainMassage」（攻撃を受けると SP が溜まる）でまわり2マスの敵を5秒混乱させ、10秒攻撃力 -40%。アイコンは本人の Brainf*ck のコード（`Art/Icons/boku.png`。動かすと「[hthtv Cyvzz」と出る）。カットインの言葉「脳、ほぐしておきますね」は Claude の仮。
   - セリフは必殺技のカットインの `line` だけ（2026-10-14 夜オーナー：「カットイン以外のセリフは無くしましょう」。終わりの吹き出し `endLine` と `SpeechBubble` は消した）。
 - 他の部員はオーナーから情報（ニックネーム、性格、ネタ）をもらってから作る。**勝手に実在の部員の設定を作らない**。それまではダミーキャラ（`dummy_guard` など）でテストする。
 
@@ -239,11 +240,12 @@ Assets/
 - ステージの JSON の `hints`：`{ "time": 秒, "duration": 秒, "text": "…" }` の配列。その時刻に画面の左下にヒントが出る（1-1 は操作の説明を4つ、1-3 は2つ、1-2・1-4・1-5 は1つずつ）。ヒントの札は編成バーの左の空いたところに収める（幅は最大 960px。部員が多いと編成バーが長くなるので狭くなる）。
 - 部員の JSON の追加項目：`antiAir`（近接でも飛ぶ敵を狙える）、`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る。セリフはこれだけ）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）、`splash`（範囲攻撃の半径。職業の決まりを上書き。艦娘は 0.6）。物理の範囲攻撃の着弾は `Fx.Explosion`、術は `Fx.ArtsBurst`。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
 - スキル（`Skills/SkillRunner`・`Skills/SkillEffects` の先頭に一覧あり）：
-  - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）、Dp（DP を value 増やす）、Random（`options` の中から1つをランダムに使い、その `label` を出す）。
+  - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）、Dp（DP を value 増やす）、Random（`options` の中から1つをランダムに使い、その `label` を出す）、TeamBuff（味方全員の攻撃力を percent% 上げる。percent×maxStacks まで。`Battle.TeamAtkPercent` に足し、`Character` の `ExtraPercent` で全員の攻撃力に掛かる。ステージが終わるまで残り、あとから置いた部員にも効く）、Confuse（敵を duration 秒混乱させる。混乱した敵は攻撃も手下を呼ぶこともせず、止められていなければ来た道を 0.6 倍の速さで戻る（`Enemy.MoveBack`。経路の始まりより前には戻らない）。頭の上に印 `StatusConfuse`、波動は `Fx.BrainWave`）。
   - 能力の増減は足し算で重なり、上限はない。特性の OnAttack で敵を下げるときは、効果の長さを攻撃間隔以下にする（長いと自分の分が重なる）。
   - 対象：Self / Target / AreaAroundSelf / AlliesInRange / EnemiesInRange。Target と AreaAroundSelf は、Damage・Stun・下げる StatModifier なら敵、Heal・上げる StatModifier なら味方。
   - 効果の長さ：effect.duration があればそれ、なければ必殺技の効果時間（特性なら外すまでずっと）。必殺技で付けた増減は終わりに外す。撤退・ダウンでも外す。
-  - 特性の ElapsedTime は「ステージの経過時間」で重なる（遅れて置いても、その時点の重ね数から始まる）。
+  - 特性の ElapsedTime は「ステージの経過時間」で重なる（遅れて置いても、その時点の重ね数から始まる）。特性の Blocking は、敵を止めている（スタンしていない）時間が `params.interval` 秒たまるごとに効果を使う（僕）。
+  - 敵の状態の印：遅くなっている `StatusSlow`「遅」、防御ダウン `StatusDefDown`「防」、攻撃力ダウン `StatusAtkDown`「攻」は体力バーの左、混乱 `StatusConfuse`「混」は頭の上（絵がなければ色付きの丸に字）。
   - SP：PerSecond（`params.spPerSecond`、省略時 1）/ OnAttack / OnHit。発動中・スタン中は溜まらない。必殺技は出撃中だけ使える。
   - 召喚ユニット：周りの8マス（上・右・下・左・斜め）の空いた地上・高台に置く。地上ならブロックする。撤退はできず、時間切れか倒されると消える。
 - 部員を選ぶと、駒の右上に「必殺技」（SP が溜まると琥珀色。溜まるまでは SP の値、発動中は残り秒）と「撤退 +N」のボタンが出る。必殺技を使うと斜めの帯のカットイン（アイコン・技の名前・セリフ）。
@@ -261,7 +263,7 @@ Assets/
 - 本素材の読み込みは `Art`（`ArtTexture` で縮小して読むので、インポート設定は触らなくてよい）。透過のない画像の背景は、光るもの（`Art/Effects`・出撃口）は明るさに応じて透明に、物の絵（敵・拠点）はふちから続く黒だけを透明にする。置き場所は `Resources/` の下：
   - `Art/Icons/{characterId}.png`（マップ上では丸く切り抜く）、`Art/Enemies/{enemyId}.png`
   - `Art/Map/Spawn.png`・`Base.png`、`Art/Background/Battle.png`（章ごとの背景はステージの `background`：第2〜4章 `Battle2`〜`Battle4`、番外編 `BattleEx`。2026-10-14 に Claude が ChatGPT で作った。なければ `Battle`）
-  - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst` `LeakBurst` `Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat`。M3 用に届いている名前：`SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）。2026-10-14 に届いた：`Shell` `Explosion` `DpGain` `StatusSlow` `StatusDefDown`（状態の印。なければ色付きの丸に「遅」「防」）と、タイトルの絵 `Art/Background/Title.png`。2026-10-14 昼に Claude が ChatGPT で作った：`Warp`（敵が跳ぶ）`ShieldBreak`（盾が割れる）`Revive`（起き上がり）`BossPulse`（ボスの大技）`Enrage`（ボスの本気）`HealWave`（敵の回復）。どれも `Fx` の同じ名前の関数で重ねる
+  - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst` `LeakBurst` `Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat`。M3 用に届いている名前：`SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）。2026-10-14 に届いた：`Shell` `Explosion` `DpGain` `StatusSlow` `StatusDefDown`（状態の印。なければ色付きの丸に「遅」「防」）と、タイトルの絵 `Art/Background/Title.png`。2026-10-14 昼に Claude が ChatGPT で作った：`Warp`（敵が跳ぶ）`ShieldBreak`（盾が割れる）`Revive`（起き上がり）`BossPulse`（ボスの大技）`Enrage`（ボスの本気）`HealWave`（敵の回復）。夜に僕の必殺技のぶん：`BrainWave`（脳に流し込む波動）。どれも `Fx` の同じ名前の関数で重ねる。同じ夜に状態の印 `StatusConfuse`（混乱）`StatusAtkDown`（攻撃力ダウン）も作った
   - `Art/CutIn/{characterId}.png`：読み込む仕組みは残っているが**使わない**。カットインは部員のアイコンをそのまま出す（2026-10-14 オーナー）
 - 演出の部品：`Fx`（場面ごとの演出）、`FxSprite`（一度だけ再生して消える）、`PulseRing`、`Spinner`、`PathFlow`（経路の矢印。拠点からの距離で並べるので、終わりが同じ経路は矢印が重なる）、`FloatingText`（ダメージ・回復の数字）、`HealthBar`。ワールドの演出はゲーム時間（一時停止で止まる）、UI のアニメは実時間。
 - エディタは再生のたびにドメインをリロードする設定（C3_shogi と同じ。2026-10-13 に変えた）。「ドメインのリロードなし」にすると、同じエディタで2回目に再生したときから UI の文字が全部消える。実行時に作ったフォント（`GameFonts`）は再生が終わると壊されるのに、UI Toolkit の文字のキャッシュは前の再生のマテリアルを持ったままになるため（`MeshGenerator.DrawText` で NullReference）。static な値を `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]` でリセットするのは、そのまま残す。

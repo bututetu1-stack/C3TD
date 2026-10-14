@@ -18,6 +18,8 @@ public enum SkillTrigger
     OnDeploy,
     OnAttack,
     OnSkillEnd,
+    /// <summary>敵を止めている（攻撃を耐えている）時間が params.interval 秒たまるごと（僕）</summary>
+    Blocking,
 }
 
 /// <summary>SP の溜まり方</summary>
@@ -39,6 +41,8 @@ public enum EffectType
     MultiHit,
     Dp,
     Random,
+    TeamBuff,
+    Confuse,
 }
 
 /// <summary>スキルの効果の対象</summary>

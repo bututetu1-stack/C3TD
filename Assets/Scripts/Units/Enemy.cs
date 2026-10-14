@@ -51,6 +51,18 @@ public class Enemy : Unit
     private Transform stunMark;
     private Transform slowMark;
     private Transform defDownMark;
+    private Transform atkDownMark;
+    private Transform confuseMark;
+
+    /// <summary>混乱の残り秒（僕の BrainMassage）。混乱中は攻撃せず、止められていなければ来た道を戻る</summary>
+    public float ConfuseRemaining { get; private set; }
+    public bool Confused { get { return ConfuseRemaining > 0f; } }
+
+    public void Confuse(float seconds)
+    {
+        if (!Alive || seconds <= 0f) return;
+        ConfuseRemaining = Mathf.Max(ConfuseRemaining, seconds);
+    }
 
     // 特別な性質（EnemyData の flying / range / revive / aura / summon）
     private int revivesLeft;
@@ -193,6 +205,7 @@ public class Enemy : Unit
         float dt = Time.deltaTime;
         age += dt;
         TickStatus(dt);
+        if (ConfuseRemaining > 0f) ConfuseRemaining = Mathf.Max(0f, ConfuseRemaining - dt);
         UpdateStunMark();
         UpdateDebuffMarks();
         CheckEnrage();
@@ -202,6 +215,15 @@ public class Enemy : Unit
         if (Stunned)
         {
             // スタン中は歩かず、攻撃も手下を呼ぶこともしない
+        }
+        else if (Confused)
+        {
+            // 混乱中は攻撃も手下を呼ぶこともせず、止められていなければ来た道をゆっくり戻る
+            if (BlockedBy == null)
+            {
+                MoveBack(ApplyStat("speed", Data.speed) * 0.6f * dt);
+                walkTime += dt;
+            }
         }
         else
         {
@@ -278,6 +300,10 @@ public class Enemy : Unit
         SetMark(ref slowMark, PercentOf("speed") < 0f, "StatusSlow", "遅", Palette.Cyan, new Vector3(x, y, 0f));
         if (slowMark != null) x -= 0.3f;
         SetMark(ref defDownMark, PercentOf("def") < 0f, "StatusDefDown", "防", Palette.Crimson, new Vector3(x, y, 0f));
+        if (defDownMark != null) x -= 0.3f;
+        SetMark(ref atkDownMark, PercentOf("atk") < 0f, "StatusAtkDown", "攻", new Color(0.95f, 0.55f, 0.2f), new Vector3(x, y, 0f));
+        // 混乱しているあいだは、頭の上に印
+        SetMark(ref confuseMark, Confused, "StatusConfuse", "混", new Color(0.72f, 0.45f, 1f), new Vector3(0f, Data.size * 0.8f + 0.1f, 0f));
         // まわりの敵に強くされているあいだは、体力バーの右に「強」
         bool buffed = PercentOf("def") > 0f || PercentOf("atk") > 0f || PercentOf("speed") > 0f;
         SetMark(ref buffMark, buffed, "StatusBuff", "強", Palette.Amber, new Vector3(Mathf.Max(0.5f, Data.size * 1.1f) * 0.5f + 0.18f, y, 0f));
@@ -595,6 +621,34 @@ public class Enemy : Unit
                 pos = target;
                 distance -= d;
                 nextPoint++;
+            }
+            else
+            {
+                pos = Vector3.MoveTowards(pos, target, distance);
+                distance = 0f;
+            }
+        }
+        transform.position = pos;
+        float dx = pos.x - start.x;
+        if (Mathf.Abs(dx) > 0.0001f) facing = Mathf.Sign(dx);
+    }
+
+    /// <summary>混乱：来た道を戻る（経路の始まりより前には戻らない）</summary>
+    private void MoveBack(float distance)
+    {
+        Vector3 pos = transform.position;
+        Vector3 start = pos;
+        while (distance > 0f && nextPoint > 0)
+        {
+            Vector3 target = path[nextPoint - 1];
+            target.z = pos.z;
+            float d = Vector3.Distance(pos, target);
+            if (d <= distance)
+            {
+                pos = target;
+                distance -= d;
+                if (nextPoint - 1 == 0) break;
+                nextPoint--;
             }
             else
             {
