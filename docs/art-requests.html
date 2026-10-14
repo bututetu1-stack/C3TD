@@ -315,6 +315,7 @@
           <span class="got">BGM 3曲（battle・menu・boss）と効果音14種（10/14）</span>
           <span class="got">第2〜4章の敵 17体（10/14。オーナーの ChatGPT で Claude が作成）</span>
           <span class="got">番外編の敵 6体（10/14。同じく Claude が作成）</span>
+          <span class="got">敵の性質のエフェクト 6種（10/14。同じく Claude が作成）</span>
         </div>
         <p class="note" style="margin:4px 0 0">拠点の印は黒背景で届きましたが、ゲーム側でふちから続く黒だけを抜いているので、そのまま使えます。課題とレポートは左向きでしたが、敵のデータに向きを書いて反転させているので、描き直しは要りません。</p>
       </div>
@@ -332,6 +333,7 @@
       <a href="#m2">配置と攻撃（M2）</a>
       <a href="#m3">必殺技と召喚（M3）</a>
       <a href="#new">追加の依頼（10/13 夜）</a>
+      <a href="#fx2">敵の性質のエフェクト（10/14）</a>
       <a href="#sounds">効果音・BGM</a>
       <a href="#gemini">Gemini で作る音</a>
     </nav>
@@ -439,6 +441,12 @@
     <div class="cards" data-group="new"></div>
   </section>
 
+  <section id="fx2">
+    <h2>敵の性質のエフェクト<span class="tag">2026-10-14</span></h2>
+    <p class="section-note">敵が跳ぶ・盾が割れる・起き上がる・ボスの大技・ボスの本気・敵の回復のときに重ねる光です。置かなければ、いまの輪と粒だけで動きます。</p>
+    <div class="cards" data-group="fx2"></div>
+  </section>
+
   <section id="sounds">
     <h2>効果音・BGM<span class="tag">SOUND</span></h2>
     <p>ChatGPT は音を作れないので、効果音はフリー素材サイトなどで探してください（BGM は下の「Gemini で作る」で作れます）。ファイル名を下の表のとおりにして置くと、そのまま鳴ります（mp3・ogg・wav のどれでも可。zip のままでは読めないので、解凍した中身を置いてください）。ない音は鳴らないだけで、エラーにはなりません。</p>
@@ -516,6 +524,66 @@
 ・くり返し流すので、長いイントロやエンディング、フェードアウトは入れず、最初から最後まで緊張を保ち、終わりが曲の頭へ自然につながるようにする。
 ・長さは2分くらい。</pre>
         <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/boss.mp3</code></span><button class="copy" type="button" data-target="g-boss" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>第2章の戦闘 BGM</h3><span class="file">battle2.mp3</span></div>
+        <div class="scene">第2章「後期」の戦闘（2-1〜2-5）。なければ battle が流れます。</div>
+        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <pre class="prompt" id="g-battle2">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
+・大学の後期。秋から冬へ、日が短くなり、課題と試験が増えていく時期。少し寂しげな空気の中で、仲間と踏ん張る熱さがある戦闘曲。
+・テンポは BPM 145 前後。哀愁のあるピアノのリフ、刻むストリングス、タイトなドラム、うねるシンセベース、要所で鳴るブラス。
+・ボーカルなしのインストゥルメンタル。
+・くり返し流すので、長いイントロやエンディング、フェードアウトは入れず、最初から最後まで同じくらいの盛り上がりで続け、終わりが曲の頭へ自然につながるようにする。
+・長さは2分くらい。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/battle2.mp3</code></span><button class="copy" type="button" data-target="g-battle2" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>第3章の戦闘 BGM</h3><span class="file">battle3.mp3</span></div>
+        <div class="scene">第3章「就活」の戦闘（3-1〜3-5）。なければ battle が流れます。</div>
+        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <pre class="prompt" id="g-battle3">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
+・就職活動。スーツ、高層ビル、面接室の張りつめた空気。都会的でクールだが、追い立てられるような緊張感がある戦闘曲。
+・テンポは BPM 150 前後。冷たいシンセのアルペジオ、ファンキーなベース、硬いエレクトロのドラム、鋭いストリングス。
+・ボーカルなしのインストゥルメンタル。
+・くり返し流すので、長いイントロやエンディング、フェードアウトは入れず、最初から最後まで同じくらいの盛り上がりで続け、終わりが曲の頭へ自然につながるようにする。
+・長さは2分くらい。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/battle3.mp3</code></span><button class="copy" type="button" data-target="g-battle3" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>第4章の戦闘 BGM</h3><span class="file">battle4.mp3</span></div>
+        <div class="scene">第4章「卒論」の戦闘（4-1〜4-5）。なければ battle が流れます。</div>
+        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <pre class="prompt" id="g-battle4">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
+・卒業論文の追い込み。深夜の研究室、モニターの光、締切直前の焦りと、最後の力を振り絞る熱さ。
+・テンポは BPM 165 前後。疾走するドラムンベースのビート、切迫したピアノ、重厚なストリングス、ここぞで鳴るブラス。
+・ボーカルなしのインストゥルメンタル。
+・くり返し流すので、長いイントロやエンディング、フェードアウトは入れず、最初から最後まで同じくらいの盛り上がりで続け、終わりが曲の頭へ自然につながるようにする。
+・長さは2分くらい。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/battle4.mp3</code></span><button class="copy" type="button" data-target="g-battle4" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>最後のボス BGM</h3><span class="file">final.mp3</span></div>
+        <div class="scene">4-5 で「卒論審査」が出たら切り替わる。なければ boss が流れます。</div>
+        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <pre class="prompt" id="g-final">2Dタワーディフェンスゲームの最後のボス戦のBGMを作ってください。
+・ボスは「卒論審査」。審査員席にずらりと並ぶ巨大な影の審査員。四年間の集大成に挑む、荘厳で壮大な決戦。
+・テンポは BPM 170 前後。重厚なオーケストラ（ストリングス・ブラス・ティンパニ）に、パイプオルガンと激しいエレクトロのドラムを重ねる。合唱や歌声は入れない。
+・ボーカルなしのインストゥルメンタル。
+・くり返し流すので、長いイントロやエンディング、フェードアウトは入れず、最初から最後まで同じくらいの盛り上がりで続け、終わりが曲の頭へ自然につながるようにする。
+・長さは2分くらい。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/final.mp3</code></span><button class="copy" type="button" data-target="g-final" data-plain="1">コピー</button></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h3>番外編の戦闘 BGM</h3><span class="file">battle_ex.mp3</span></div>
+        <div class="scene">番外編「院試」の戦闘（EX-1〜EX-5）。なければ battle が流れます。</div>
+        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <pre class="prompt" id="g-battle-ex">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
+・番外編。大学院入試に挑む、少し不思議でミステリアスな雰囲気。ワープする敵や、時空がゆがむような演出に合う戦闘曲。
+・テンポは BPM 150 前後。紫がかったシンセパッド、きらめくアルペジオ、変拍子気味のドラム、うねるベース。
+・ボーカルなしのインストゥルメンタル。
+・くり返し流すので、長いイントロやエンディング、フェードアウトは入れず、最初から最後まで同じくらいの盛り上がりで続け、終わりが曲の頭へ自然につながるようにする。
+・長さは2分くらい。</pre>
+        <div class="row"><span class="save">保存先 <code>Assets/Resources/Audio/BGM/battle_ex.mp3</code></span><button class="copy" type="button" data-target="g-battle-ex" data-plain="1">コピー</button></div>
       </article>
       <article class="card">
         <div class="card-head"><h3>勝利のジングル</h3><span class="file">victory.mp3</span></div>
@@ -694,6 +762,20 @@
       prompt: "ゲームのアイコン素材。防御力が下がっていることを表す小さな印。ひびの入った銀色の盾に、赤い下向きの矢印が重なっている。小さく表示しても分かるように、太い線のシンプルな形と、はっきりした色にする。人物や文字は描かない。背景は完全に透過した透過PNG。正方形 1024×1024。" },
     { group: "new", path: "Art/Effects/DpGain.png", title: "DP 獲得", scene: "必殺技などで DP が増えたとき、部員の位置からきらきらと立ちのぼる（いまは先鋒ダミーの「補給」で使う）", bg: "black", shape: "sq", style: "fx", arrow: "upright", dir: "上下あり（回さない）",
       prompt: "配置コストを手に入れたときの光。金色に光る小さなひし形の結晶がいくつも、下から上へきらきらと舞い上がり、中央にやわらかな金色の光の柱が立つ。" }
+
+    // ---------------- 敵の性質のエフェクト（2026-10-14） ----------------
+    { group: "fx2", path: "Art/Effects/Warp.png", title: "ワープ", scene: "過去問や院試が経路の先へ跳ぶとき、跳ぶ前と跳んだ先に出す（回して使う）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "ゲームのエフェクト素材。空間がゆがむワープの渦を正面から見たもの。中心に小さな白い光の点、まわりに紫とマゼンタに光る渦巻きの帯が螺旋状に広がり、細かい光の粒が中心へ吸い込まれていく。円形にまとまった形。" },
+    { group: "fx2", path: "Art/Effects/ShieldBreak.png", title: "盾が割れる", scene: "先行研究の盾（水色のバー）が割れたとき", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "ゲームのエフェクト素材。水色に光るガラスの盾が粉々に割れる瞬間を正面から見たもの。中心から、水色と白に光る鋭いガラスの破片が四方へ勢いよく飛び散り、細い光の線が走る。円形にまとまった形。" },
+    { group: "fx2", path: "Art/Effects/Revive.png", title: "起き上がり", scene: "再履修や再提出が倒されても起き上がるとき", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "ゲームのエフェクト素材。倒れた者が起き上がるときの光。画像の中央を下から上へ立ちのぼる金色とオレンジの光の柱と、まわりで舞い上がる小さな光の粒。下のほうにやわらかな光の輪。" },
+    { group: "fx2", path: "Art/Effects/BossPulse.png", title: "ボスの大技", scene: "最終面接の「圧迫質問」など、ボスがまわりの部員を動けなくする大技（届く範囲いっぱいに広げる）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "ゲームのエフェクト素材。衝撃波を真上から見たもの。中心から外へ広がる、赤く光る太い輪と、その内側の細い輪。輪のふちには赤黒い稲妻のようなひびが走る。円形。" },
+    { group: "fx2", path: "Art/Effects/Enrage.png", title: "ボスの本気", scene: "卒論審査の「追い込み」など、ボスが本気を出して強くなるとき", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "ゲームのエフェクト素材。本気を出す瞬間の赤いオーラの爆発を正面から見たもの。中心から上へ燃え上がる赤と黒の炎のオーラと、四方へ飛ぶ火の粉。円形にまとまった形。" },
+    { group: "fx2", path: "Art/Effects/HealWave.png", title: "敵の回復の波", scene: "実験データがまわりの敵を回復するとき（届く範囲いっぱいに広げる）", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）",
+      prompt: "ゲームのエフェクト素材。回復の波動を真上から見たもの。中心から外へ広がる、緑に光るやわらかな輪と、輪にそって並ぶ小さな十字の光。やさしい光。円形。" },
   ];
 
   const NS = "http://www.w3.org/2000/svg";

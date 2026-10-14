@@ -404,7 +404,7 @@ public class Enemy : Unit
         Vector2Int cell = battle.Map.WorldToCell(transform.position);
         foreach (Character c in battle.Characters)
             if (c.Alive && Combat.InRange(cell, c.Cell, pulse.radius)) c.Stun(pulse.stun);
-        FxSprite.Create(SpriteFactory.Ring, transform.position, Palette.WithAlpha(Palette.Crimson, 0.9f), 0.5f, 0.4f, pulse.radius * 2.2f, 80);
+        Fx.BossPulse(transform.position, pulse.radius);
         FloatingText.Status(Center + new Vector3(0f, 0.4f, 0f), string.IsNullOrEmpty(pulse.name) ? "大技！" : pulse.name);
         CameraFitter.Shake(0.1f, 0.3f);
         AudioManager.PlaySE("boss_warning");
@@ -423,6 +423,7 @@ public class Enemy : Unit
             if (shieldBar != null) Destroy(shieldBar.gameObject);
             shieldBar = null;
             FloatingText.Status(Center, "盾が割れた");
+            Fx.ShieldBreak(Center);
         }
         return damage - taken;
     }
@@ -442,7 +443,7 @@ public class Enemy : Unit
             e.Heal(Mathf.Min(e.MaxHp * h.percent / 100f, h.maxAmount));
             Fx.Heal(e.Center);
         }
-        FxSprite.Create(SpriteFactory.ThinRing, transform.position, Palette.WithAlpha(Palette.HealGlow, 0.8f), 0.6f, 0.4f, h.radius * 2f, 79);
+        Fx.HealWave(transform.position, h.radius);
     }
 
     /// <summary>物理攻撃をかわす敵：dodge% の確率で物理のダメージを受けない（術は当たる）</summary>
@@ -464,9 +465,8 @@ public class Enemy : Unit
         blinkTimer = Mathf.Max(1f, b.interval);
         Vector3 from = transform.position;
         Move(Mathf.Max(0.5f, b.distance));
-        Color c = new Color(0.72f, 0.45f, 1f, 0.9f);
-        FxSprite.Create(SpriteFactory.ThinRing, from, c, 0.5f, 0.4f, 1.4f, 79);
-        FxSprite.Create(SpriteFactory.ThinRing, transform.position, c, 0.5f, 1.4f, 0.4f, 79);
+        Fx.Warp(from, false);
+        Fx.Warp(transform.position, true);
     }
 
     /// <summary>だんだん速くなる敵：interval 秒ごとに速さ +percent%（max% まで）。止められていても上がる</summary>
@@ -493,7 +493,7 @@ public class Enemy : Unit
         if (en.speed != 0f) AddModifier("speed", en.speed, 0f, 0f);
         if (en.def != 0f) AddModifier("def", en.def, 0f, 0f);
         FloatingText.Status(Center + new Vector3(0f, 0.4f, 0f), string.IsNullOrEmpty(en.name) ? "本気！" : en.name);
-        Fx.Buff(Center);
+        Fx.Enrage(Center);
         bodyColor = Color.Lerp(bodyColor, new Color(1f, 0.4f, 0.4f), 0.5f);
         CameraFitter.Shake(0.08f, 0.25f);
     }
@@ -673,7 +673,7 @@ public class Enemy : Unit
             Revive(MaxHp * Data.reviveHpPercent / 100f);
             Stun(1f);
             FloatingText.Status(Center, "復活！");
-            Fx.EnemySpawn(transform.position, Palette.Hex(Data.color, Palette.EnemyFallback));
+            Fx.Revive(transform.position);
             return;
         }
         ClearAura();

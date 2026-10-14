@@ -209,6 +209,67 @@ public static class Fx
         Shards(position, Color.white, Palette.Cyan, 8, 1.5f, 3f, 0.2f);
     }
 
+    // ================= 敵の特別な性質（2026-10-14。画像は Art/Effects に置けば重ねる） =================
+
+    /// <summary>敵が跳んだ（過去問・院試）：跳ぶ前と後に紫の渦</summary>
+    public static void Warp(Vector3 position, bool arrive)
+    {
+        Sprite art = Art.Effect("Warp");
+        Color c = new Color(0.72f, 0.45f, 1f, 0.9f);
+        if (art != null) FxSprite.Create(art, position, Color.white, 0.5f, arrive ? 1.6f : 0.6f, arrive ? 0.6f : 1.6f, Order + 1).Spin(arrive ? -240f : 240f);
+        FxSprite.Create(SpriteFactory.ThinRing, position, c, 0.5f, arrive ? 1.4f : 0.4f, arrive ? 0.4f : 1.4f, Order);
+        FxSprite.Create(SpriteFactory.Glow, position, Palette.WithAlpha(c, 0.6f), 0.4f, 1.2f, 0.3f, Order);
+    }
+
+    /// <summary>敵の盾が割れた（先行研究）：水色の破片</summary>
+    public static void ShieldBreak(Vector3 position)
+    {
+        Sprite art = Art.Effect("ShieldBreak");
+        if (art != null) FxSprite.Create(art, position, Color.white, 0.5f, 0.9f, 1.7f, Order + 1).Rotate(Random.value * 360f);
+        FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(Palette.Cyan, 0.9f), 0.35f, 0.4f, 1.6f, Order);
+        Shards(position, Palette.Cyan, Color.white, 10, 2f, 4f, 0.14f);
+    }
+
+    /// <summary>倒した敵が起き上がった（再履修・再提出）：下から立ちのぼる光</summary>
+    public static void Revive(Vector3 position)
+    {
+        Sprite art = Art.Effect("Revive");
+        if (art != null) FxSprite.Create(art, position + new Vector3(0f, 0.3f, 0f), Color.white, 0.8f, 1.1f, 1.4f, Order + 1);
+        FxSprite.Create(SpriteFactory.Glow, position, new Color(1f, 0.8f, 0.4f, 0.8f), 0.6f, 0.6f, 1.4f, Order);
+        for (int i = 0; i < 6; i++)
+        {
+            Vector3 p = position + new Vector3(Random.Range(-0.35f, 0.35f), Random.Range(-0.3f, 0f), 0f);
+            FxSprite.Create(SpriteFactory.Glow, p, new Color(1f, 0.85f, 0.45f), Random.Range(0.5f, 0.8f), 0.18f, 0.05f, Order)
+                .Move(new Vector3(0f, Random.Range(1.2f, 2f), 0f), 1.4f);
+        }
+    }
+
+    /// <summary>ボスの大技（最終面接の圧迫質問など）：赤い衝撃波</summary>
+    public static void BossPulse(Vector3 position, float radius)
+    {
+        Sprite art = Art.Effect("BossPulse");
+        if (art != null) FxSprite.Create(art, position, Color.white, 0.6f, 0.5f, radius * 2.4f, Order + 1).Rotate(Random.value * 360f);
+        FxSprite.Create(SpriteFactory.Ring, position, Palette.WithAlpha(Palette.Crimson, 0.9f), 0.5f, 0.4f, radius * 2.2f, Order);
+        FxSprite.Create(SpriteFactory.Glow, position, Palette.WithAlpha(Palette.Crimson, 0.5f), 0.4f, radius * 1.6f, radius * 0.6f, Order);
+    }
+
+    /// <summary>ボスが本気になった（卒論審査の追い込みなど）：赤いオーラが燃え上がる</summary>
+    public static void Enrage(Vector3 position)
+    {
+        Sprite art = Art.Effect("Enrage");
+        if (art != null) FxSprite.Create(art, position + new Vector3(0f, 0.2f, 0f), Color.white, 0.9f, 1.3f, 1.9f, Order + 1);
+        FxSprite.Create(SpriteFactory.Glow, position, new Color(1f, 0.25f, 0.2f, 0.85f), 0.6f, 0.8f, 2f, Order);
+        Shards(position, new Color(1f, 0.35f, 0.25f), new Color(0.3f, 0.05f, 0.05f), 10, 1.5f, 3.5f, 0.16f);
+    }
+
+    /// <summary>敵がまわりを回復した（実験データ）：緑の波</summary>
+    public static void HealWave(Vector3 position, float radius)
+    {
+        Sprite art = Art.Effect("HealWave");
+        if (art != null) FxSprite.Create(art, position, Palette.WithAlpha(Color.white, 0.9f), 0.7f, radius * 0.6f, radius * 2.1f, Order);
+        FxSprite.Create(SpriteFactory.ThinRing, position, Palette.WithAlpha(Palette.HealGlow, 0.8f), 0.6f, 0.4f, radius * 2f, Order);
+    }
+
     private static void Shards(Vector3 position, Color a, Color b, int count, float minSpeed, float maxSpeed, float size)
     {
         for (int i = 0; i < count; i++)
