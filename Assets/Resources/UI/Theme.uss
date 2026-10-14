@@ -1050,11 +1050,14 @@
 /* ---------- 編成 ---------- */
 .squad-body {
     flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
     flex-direction: row;
 }
 
 .squad-left {
     flex-grow: 1;
+    min-height: 0;
     padding-top: 10px;
     padding-right: 30px;
 }
@@ -1063,6 +1066,12 @@
     font-size: 21px;
     color: rgb(142, 152, 172);
     margin-bottom: 14px;
+}
+
+.squad-roster-scroll {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
 }
 
 .squad-roster {

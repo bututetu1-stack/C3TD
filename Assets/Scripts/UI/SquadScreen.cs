@@ -54,7 +54,13 @@ public class SquadScreen
         var left = UIFactory.Box("squad-left");
         left.Add(UIFactory.Text("カードを押すと編成に入れる・外す（入れた順に編成バーへ並ぶ）", UIFont.Medium, "squad-help"));
         roster = UIFactory.Box("squad-roster");
-        left.Add(roster);
+        // 部員が増えたり、スマホで UI が大きくなったりしても下の編成バーに重ならないよう、縦に流せるようにする
+        var rosterScroll = new ScrollView(ScrollViewMode.Vertical);
+        rosterScroll.AddToClassList("squad-roster-scroll");
+        rosterScroll.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+        rosterScroll.verticalScrollerVisibility = ScrollerVisibility.Auto;
+        rosterScroll.Add(roster);
+        left.Add(rosterScroll);
         body.Add(left);
 
         var detail = new ChamferBox();
