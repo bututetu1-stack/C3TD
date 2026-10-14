@@ -35,6 +35,7 @@ public class CharacterInfo
     private readonly VisualElement ultBox;
     private readonly Label ultFlavor;
     private readonly Label ultDesc;
+    private readonly Label compactSkills;
     private bool compact;
 
     /// <summary>scroll なら、顔と名前より下を縦に流せるようにする（編成画面の札。説明が長くても潰れない）</summary>
@@ -70,6 +71,11 @@ public class CharacterInfo
         head.Add(names);
         Root.Add(head);
         if (body != Root) Root.Add(body);
+
+        // 小さな札では、特性と必殺技の名前だけを1行で
+        compactSkills = UIFactory.Text("", UIFont.Body, "unit-compact-skills");
+        Root.Add(compactSkills);
+        UIFactory.SetVisible(compactSkills, false);
 
         profileLabel = UIFactory.Text("", UIFont.Medium, "unit-profile");
         body.Add(profileLabel);
@@ -128,6 +134,12 @@ public class CharacterInfo
         UIFactory.SetVisible(ultDesc, !value);
         UIFactory.SetVisible(traitFlavor, !value && traitFlavor.text.Length > 0);
         UIFactory.SetVisible(ultFlavor, !value && ultFlavor.text.Length > 0);
+        if (value)
+        {
+            UIFactory.SetVisible(traitBox, false);
+            UIFactory.SetVisible(ultBox, false);
+        }
+        UIFactory.SetVisible(compactSkills, value && compactSkills.text.Length > 0);
     }
 
     /// <summary>JSON の値で埋める（出撃中の数値は使う側で上書きする）</summary>
@@ -155,6 +167,8 @@ public class CharacterInfo
 
         bool hasTrait = d.trait != null && !string.IsNullOrEmpty(d.trait.name);
         UIFactory.SetVisible(traitBox, hasTrait);
+        bool hasUltName = !summon && d.ultimate != null && !string.IsNullOrEmpty(d.ultimate.name) && d.ultimate.spCost > 0f;
+        compactSkills.text = (hasTrait ? "特性 " + d.trait.name : "") + (hasTrait && hasUltName ? "　／　" : "") + (hasUltName ? "必殺技 " + d.ultimate.name : "");
         if (hasTrait)
         {
             TraitName.text = d.trait.name;

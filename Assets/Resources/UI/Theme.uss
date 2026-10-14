@@ -860,6 +860,21 @@
     padding-top: 6px;
 }
 
+.unit-compact-skills {
+    font-size: 19px;
+    color: rgb(214, 219, 232);
+    margin-top: 8px;
+}
+
+.unit-info--compact .unit-portrait {
+    width: 60px;
+    height: 60px;
+}
+
+.unit-info--compact .unit-name {
+    font-size: 28px;
+}
+
 .unit-actions {
     position: absolute;
     flex-direction: row;
@@ -1783,6 +1798,32 @@
 
 .c3-mobile .unit-skill-meta {
     font-size: 19px;
+}
+
+/* スマホの結果：帯を低くして、部員の活躍とボタンが重ならないように */
+.c3-mobile .result-band {
+    height: 300px;
+}
+
+.c3-mobile .result-title {
+    font-size: 112px;
+}
+
+.c3-mobile .result-team {
+    margin-top: 8px;
+}
+
+.c3-mobile .team-caption {
+    display: none;
+}
+
+.c3-mobile .team-chip {
+    width: 186px;
+    padding: 8px 12px 8px 12px;
+}
+
+.c3-mobile .result-buttons {
+    margin-top: 14px;
 }
 
 /* スマホの出撃中は画面の高さが足りないので、部員の札のひとことは出さない */

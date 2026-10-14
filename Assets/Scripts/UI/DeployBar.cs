@@ -83,6 +83,7 @@ public class DeployBar
     {
         Hovered = null;
         tipFor = null;
+        if (tip != null) UIFactory.SetVisible(tip.Root, false);
         cardRow.Clear();
         cards.Clear();
         shownDp = -1;
@@ -196,6 +197,8 @@ public class DeployBar
         if (tip == null) return;
         bool mobile = Application.isMobilePlatform || UIFactory.Zoom > 1f;
         SquadMember target = mobile ? armed : (dragging == null && armed == null ? Hovered : null);
+        // 勝敗が決まったら（結果の画面の後ろに残らないよう）出さない
+        if (battle.State.Phase != GamePhase.Playing) target = null;
         Card card = null;
         foreach (Card c in cards)
             if (ReferenceEquals(c.Member, target)) { card = c; break; }
