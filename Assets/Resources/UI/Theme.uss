@@ -828,11 +828,6 @@
     flex-shrink: 1;
 }
 
-/* 出撃中の選んだ部員の札は、高さを抑えるためひとことを出さない（編成画面と、カードに重ねた札で見られる） */
-.unit-info .unit-profile {
-    display: none;
-}
-
 /* 編成バーのカードに重ねたときの札（カードの真上に出る。能力値は1行に並べて低くする） */
 .card-tip {
     position: absolute;
@@ -889,6 +884,19 @@
 
 .retreat-button .c3-button-text {
     font-size: 22px;
+}
+
+.auto-button {
+    height: 46px;
+    margin-top: 12px;
+    padding-left: 12px;
+    padding-right: 14px;
+    align-self: flex-start;
+}
+
+.auto-button .c3-button-text {
+    font-size: 18px;
+    margin-left: 8px;
 }
 
 .target-button {
@@ -2093,14 +2101,7 @@
     margin-top: 14px;
 }
 
-/* スマホの出撃中は画面の高さが足りないので、部員の札のひとことは出さない */
-.c3-mobile .unit-info .unit-profile {
-    display: none;
-}
 
-.c3-mobile .unit-info .unit-skill-flavor {
-    display: none;
-}
 
 .c3-mobile .enemy-traits {
     font-size: 23px;

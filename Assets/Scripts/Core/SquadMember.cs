@@ -13,6 +13,9 @@ public class SquadMember
     /// <summary>狙う敵の選び方（部員の札で切り替える。撤退して置き直しても覚えている）</summary>
     public TargetMode Targeting = TargetMode.First;
 
+    /// <summary>必殺技が溜まったら自動で使う（部員の札で切り替える。ふつうは手で使う）</summary>
+    public bool AutoSkill;
+
     public SquadMember(CharacterData data, ClassData classData)
     {
         Data = data;

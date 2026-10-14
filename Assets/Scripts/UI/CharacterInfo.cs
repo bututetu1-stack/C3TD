@@ -38,6 +38,10 @@ public class CharacterInfo
     private readonly Label compactSkills;
     private bool compact;
 
+    /// <summary>ひとこと紹介・技のひとことを出すか（出撃中の札は高さを抑えるため、出さないことがある）</summary>
+    public bool ShowProfile = true;
+    public bool ShowFlavor = true;
+
     /// <summary>scroll なら、顔と名前より下を縦に流せるようにする（編成画面の札。説明が長くても潰れない）</summary>
     public CharacterInfo(bool scroll, params string[] classes)
     {
@@ -129,11 +133,11 @@ public class CharacterInfo
         compact = value;
         Root.EnableInClassList("unit-info--compact", value);
         UIFactory.SetVisible(stats, !value);
-        UIFactory.SetVisible(profileLabel, !value && profileLabel.text.Length > 0);
+        UIFactory.SetVisible(profileLabel, !value && ShowProfile && profileLabel.text.Length > 0);
         UIFactory.SetVisible(traitDesc, !value);
         UIFactory.SetVisible(ultDesc, !value);
-        UIFactory.SetVisible(traitFlavor, !value && traitFlavor.text.Length > 0);
-        UIFactory.SetVisible(ultFlavor, !value && ultFlavor.text.Length > 0);
+        UIFactory.SetVisible(traitFlavor, !value && ShowFlavor && traitFlavor.text.Length > 0);
+        UIFactory.SetVisible(ultFlavor, !value && ShowFlavor && ultFlavor.text.Length > 0);
         if (value)
         {
             UIFactory.SetVisible(traitBox, false);

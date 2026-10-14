@@ -129,6 +129,12 @@ public class SkillRunner
         }
 
         bool ready = Ready;
+        // 自動にしてある部員は、溜まったらすぐ使う
+        if (ready && owner.Member != null && owner.Member.AutoSkill)
+        {
+            Activate();
+            return;
+        }
         if (ready && !wasReady)
         {
             AudioManager.PlaySE("skill_ready");

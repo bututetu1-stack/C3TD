@@ -13,6 +13,7 @@ public class UnitPanel
     private readonly C3Button retreatButton;
     private readonly C3Button skillButton;
     private readonly C3Button targetButton;
+    private readonly C3Button autoButton;
     private Character shown;
     private int shownHp = -1;
     private int shownAtk = -1;
@@ -27,6 +28,10 @@ public class UnitPanel
         card = new CharacterInfo(false, "unit-info");
         info = card.Root;
         info.SetCut(24f, ChamferBox.Corners.TopRight | ChamferBox.Corners.BottomLeft);
+        // 必殺技を自動で使うか（札のいちばん下）
+        autoButton = new C3Button(IconKind.Bolt, 18f, "必殺技を自動で使う：OFF", ToggleAuto);
+        autoButton.AddToClassList("auto-button");
+        info.Add(autoButton);
         root.Add(info);
 
         actions = UIFactory.Box("unit-actions");
@@ -150,9 +155,30 @@ public class UnitPanel
         if (cam != null && root.panel != null)
         {
             Vector2 p = UIFactory.WorldToPanel(root, cam, c.transform.position + new Vector3(0.5f, 0.42f, 0f));
+            // 右端の部員でもボタンが画面からはみ出さないように
+            float width = actions.layout.width;
+            if (!float.IsNaN(width) && width > 0f) p.x = Mathf.Min(p.x, root.layout.width - width - 12f);
             actions.style.left = p.x;
             actions.style.top = p.y - 30f;
         }
+    }
+
+    private void ToggleAuto()
+    {
+        Character c = shown;
+        if (c == null || c.Member == null) return;
+        c.Member.AutoSkill = !c.Member.AutoSkill;
+        RefreshAuto(c);
+        AudioManager.PlaySE("click");
+    }
+
+    private void RefreshAuto(Character c)
+    {
+        bool can = c.Member != null && c.Skills.HasUltimate;
+        UIFactory.SetVisible(autoButton, can);
+        if (!can) return;
+        autoButton.Text.text = "必殺技を自動で使う：" + (c.Member.AutoSkill ? "ON" : "OFF");
+        autoButton.Active = c.Member.AutoSkill;
     }
 
     /// <summary>選んでいる部員の狙い方を次へ（T キーでも）</summary>
@@ -167,11 +193,15 @@ public class UnitPanel
 
     private void Fill(Character c)
     {
+        // 出撃中の札は高さを抑える：ひとこと紹介は出さず、スマホでは技のひとことも出さない
+        card.ShowProfile = false;
+        card.ShowFlavor = !(Application.isMobilePlatform || UIFactory.Zoom > 1f);
         card.Fill(c.Data, c.Class, c.IsSummon);
         card.NameLabel.text = c.DisplayName;
         card.BlockValue.text = c.HasBlockRoom || c.Blocked.Count > 0 ? c.BlockCapacity.ToString() : "-";
         UIFactory.SetVisible(retreatButton, !c.IsSummon);
         if (c.Member != null) retreatButton.Text.text = "撤退 +" + Battle.Current.RefundOf(c.Member);
+        RefreshAuto(c);
         UIFactory.SetVisible(targetButton, c.Member != null && c.Class.attack != AttackKind.Heal);
         targetButton.Text.text = "狙い：" + Combat.TargetName(c.Targeting);
     }
