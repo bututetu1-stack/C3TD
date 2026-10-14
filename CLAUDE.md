@@ -214,7 +214,7 @@ Assets/
 - 雰囲気はアークナイツ寄りの「作戦盤」：暗い紺の盤面、角を斜めに落とした板（`ChamferBox`）、琥珀色の差し色、英字の小見出し（OPERATION / TIME / ENEMY / LIFE / DP）。演出は凝ってよい。
 - 書体の役割（`GameFonts` の `UIFont`）：Body＝Zen角ゴシック New Bold（日本語の本文・ボタン）、Display＝Oswald Bold（数字と英字）、Title＝しっぽり明朝 B1 ExtraBold（作戦名・勝敗・部員名などの日本語の大見出し）。どれも OFL で、`Resources/Fonts/Licenses` にライセンスがある。
 - 文字は UI もマップ上も SDF のフォントアセットを実行時に作って描く（縮小しても荒れない）。大きさは 1920x1080 基準で、日本語の本文は 20px 前後、英字の小見出しも 16px 以上にする（オーナーに「小さくて見づらい」と言われた）。
-- 画像はオーナーが ChatGPT で作る。頼むときは素材依頼帳（https://claude.ai/artifact/GQmWJRGEXxumur5f64Mfoo 、元は `docs/art-requests.html`）にカードを足して文言を用意する。光るものは黒背景（ゲーム側で黒を透明にする）、物体とキャラは透過PNG、敵は右向き。素材は `Assets/Resources/Art` に直接置かれるので、作業前に `git status` で新しいファイルを確かめる。
+- 画像はオーナーが ChatGPT で作る（2026-10-14 からは、オーナーに頼まれれば Claude がオーナーのブラウザの ChatGPT で作る。手順は `docs/snippets/README.md`。文言だけで頼み、ゲームの画像は添付しない）。頼むときは素材依頼帳（https://claude.ai/artifact/GQmWJRGEXxumur5f64Mfoo 、元は `docs/art-requests.html`）にカードを足して文言を用意する。光るものは黒背景（ゲーム側で黒を透明にする）、物体とキャラは透過PNG、敵は右向き。素材は `Assets/Resources/Art` に直接置かれるので、作業前に `git status` で新しいファイルを確かめる。
 
 ### 決めたこと・実装の約束
 - マス座標は `[列, 行]`、行は**上から0**（マップの文字列と同じ向き）。ワールド座標は1マス=1ユニットで、左下のマスの中心が (0, 0)（`StageMap.CellToWorld`）。
