@@ -21,6 +21,7 @@ public class CameraFitter : MonoBehaviour
     private bool hasTarget;
     private int lastWidth;
     private int lastHeight;
+    private float lastZoom = 1f;
     private Vector3 basePosition;
     private float shakeTime;
     private float shakeDuration;
@@ -75,7 +76,7 @@ public class CameraFitter : MonoBehaviour
 
     void LateUpdate()
     {
-        if (cam.pixelWidth != lastWidth || cam.pixelHeight != lastHeight) Apply();
+        if (cam.pixelWidth != lastWidth || cam.pixelHeight != lastHeight || UIFactory.Zoom != lastZoom) Apply();
 
         if (shakeTime > 0f)
         {
@@ -94,16 +95,20 @@ public class CameraFitter : MonoBehaviour
     {
         lastWidth = cam.pixelWidth;
         lastHeight = cam.pixelHeight;
+        lastZoom = UIFactory.Zoom;
         if (!hasTarget || lastWidth <= 0 || lastHeight <= 0) return;
 
-        // UI は高さに合わせて拡大縮小する（UIFactory の PanelSettings と同じ）
-        float uiScale = lastHeight / UIFactory.ReferenceHeight;
-        float top = TopReserve * uiScale;
-        float bottom = BottomReserve * uiScale;
+        // UI は高さに合わせて拡大縮小する（UIFactory の PanelSettings と同じ。スマホでは UI が Zoom 倍大きい）
+        float uiScale = lastHeight / UIFactory.PanelHeight;
+        // スマホでは UI が大きいぶんマップが小さくなるので、マップの外側（壁の列）が上下の UI の下に少し入ってよいことにする
+        bool mobile = UIFactory.Zoom > 1f;
+        float top = TopReserve * uiScale * (mobile ? 0.6f : 1f);
+        float bottom = BottomReserve * uiScale * (mobile ? 0.8f : 1f);
         float available = Mathf.Max(1f, lastHeight - top - bottom);
 
-        float w = target.width + Margin * 2f;
-        float h = target.height + Margin * 2f;
+        float margin = mobile ? 0.1f : Margin;
+        float w = target.width + margin * 2f;
+        float h = target.height + margin * 2f;
         float sizeForHeight = h * lastHeight / (2f * available);
         float sizeForWidth = w * lastHeight / (2f * lastWidth);
         cam.orthographicSize = Mathf.Max(sizeForHeight, sizeForWidth);

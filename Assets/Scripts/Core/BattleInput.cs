@@ -27,6 +27,24 @@ public class BattleInput : MonoBehaviour
     private readonly List<SpriteRenderer> ghostRenderers = new List<SpriteRenderer>();
     private Battle shownBattle;
 
+    // 押した・離したは InputAction で読む。ボタンの状態をフレームの終わりに見るだけだと、
+    // 1 フレームのうちに押して離した短いタップ（重いスマホや自動操作で起きる）を取りこぼすため
+    private InputAction pressAction;
+
+    void OnEnable()
+    {
+        pressAction = new InputAction("Press", InputActionType.Button, "<Pointer>/press");
+        pressAction.Enable();
+    }
+
+    void OnDisable()
+    {
+        if (pressAction == null) return;
+        pressAction.Disable();
+        pressAction.Dispose();
+        pressAction = null;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
     {
@@ -39,17 +57,37 @@ public class BattleInput : MonoBehaviour
         this.hud = hud;
     }
 
+    /// <summary>
+    /// カードを押して、マップに出さずに離したときの編成メンバー（いなければ null）。
+    /// このあと置けるマスを押すと、そこに置く（スマホで小さなマスまでドラッグしなくてよいように）
+    /// </summary>
+    public SquadMember Armed { get; private set; }
+
     /// <summary>編成バーのカードを押した</summary>
     public void BeginDrag(SquadMember member)
     {
         Battle battle = Battle.Current;
         if (battle == null || battle.State.Phase != GamePhase.Playing) return;
+        // 選んでおいたカードをもう一度押したら、選ぶのをやめる
+        if (ReferenceEquals(Armed, member))
+        {
+            Disarm();
+            return;
+        }
+        Disarm();
         if (!member.Ready || !battle.CanAfford(member)) return;
         Select(null);
         Inspect(null);
         Dragging = member;
         CreateGhost(member);
         TimeController.SetFocus(true);
+    }
+
+    private void Disarm()
+    {
+        if (Armed == null) return;
+        Armed = null;
+        TimeController.SetFocus(Selected != null || Dragging != null);
     }
 
     public void Select(Character c)
@@ -115,6 +153,7 @@ public class BattleInput : MonoBehaviour
         {
             shownBattle = battle;
             CancelDrag();
+            Armed = null;
             Selected = null;
             Inspected = null;
             inspectRing = null;
@@ -125,6 +164,7 @@ public class BattleInput : MonoBehaviour
         if (battle.State.Phase != GamePhase.Playing)
         {
             CancelDrag();
+            Disarm();
             if (Selected != null) Select(null);
             Inspect(null);
             battle.Highlight.Clear();
@@ -134,16 +174,20 @@ public class BattleInput : MonoBehaviour
         if (!ReferenceEquals(Selected, null) && (Selected == null || !Selected.Alive)) Select(null);
         if (!ReferenceEquals(Inspected, null) && (Inspected == null || !Inspected.Alive)) Inspect(null);
 
+        // マウスでもタッチでも動くよう、いちばん最近使ったポインター（マウス・タッチ・ペン）で読む
+        Pointer pointer = Pointer.current;
         Mouse mouse = Mouse.current;
         Keyboard kb = Keyboard.current;
-        bool cancel = (kb != null && kb.escapeKey.wasPressedThisFrame) || (mouse != null && mouse.rightButton.wasPressedThisFrame);
-        if (mouse == null)
+        bool cancel = (kb != null && kb.escapeKey.wasPressedThisFrame) || (mouse != null && ReferenceEquals(pointer, mouse) && mouse.rightButton.wasPressedThisFrame);
+        if (pointer == null)
         {
             battle.Highlight.Clear();
             return;
         }
 
-        Vector2 screen = mouse.position.ReadValue();
+        Vector2 screen = pointer.position.ReadValue();
+        bool pressed = pressAction != null ? pressAction.WasPressedThisFrame() : pointer.press.wasPressedThisFrame;
+        bool released = pressAction != null ? pressAction.WasReleasedThisFrame() || !pressAction.IsPressed() : !pointer.press.isPressed;
         Vector3 world = ScreenToWorld(screen);
         Vector2Int cell = battle.Map.WorldToCell(world);
 
@@ -162,14 +206,46 @@ public class BattleInput : MonoBehaviour
             {
                 CancelDrag();
             }
-            else if (mouse.leftButton.wasReleasedThisFrame || !mouse.leftButton.isPressed)
+            else if (released)
             {
                 // 離したフレームを取りこぼしても（ウィンドウの切り替えなど）、押されていなければ離したとみなす
                 SquadMember member = Dragging;
                 CancelDrag();
                 if (valid) battle.Deploy(member, cell);
+                // マップに出さずにカードの上（UI の上）で離したら、カードを選んだままにして、次に押したマスに置く
+                else if (overUi) Arm(member);
             }
             return;
+        }
+
+        if (Armed != null)
+        {
+            if (!Armed.Ready || !battle.CanAfford(Armed))
+            {
+                Disarm();
+            }
+            else
+            {
+                // マウスなら指しているマスに射程を出す（タッチは指していないので、置けるマスだけ）
+                bool hover = ReferenceEquals(pointer, mouse) && !(hud != null && hud.IsOverUI(screen)) && battle.Map.InBounds(cell);
+                bool hoverValid = hover && battle.CanPlace(Armed, cell);
+                battle.Highlight.Show(
+                    battle.PlaceableCells(Armed),
+                    hoverValid ? Combat.CellsInRange(battle.Map, cell, Armed.Data.stats.range) : null,
+                    hover ? cell : (Vector2Int?)null,
+                    hoverValid);
+                if (cancel)
+                {
+                    Disarm();
+                }
+                else if (pressed && (hud == null || !hud.IsOverUI(screen)))
+                {
+                    SquadMember member = Armed;
+                    Disarm();
+                    if (battle.CanPlace(member, cell)) battle.Deploy(member, cell);
+                }
+                return;
+            }
         }
 
         if (cancel)
@@ -177,7 +253,7 @@ public class BattleInput : MonoBehaviour
             Select(null);
             Inspect(null);
         }
-        if (mouse.leftButton.wasPressedThisFrame && (hud == null || !hud.IsOverUI(screen)))
+        if (pressed && (hud == null || !hud.IsOverUI(screen)))
         {
             // 部員がいればその部員を、いなければ敵を選ぶ（どちらか一方の札だけが出る）
             Character c = battle.CharacterAt(cell);
@@ -187,6 +263,15 @@ public class BattleInput : MonoBehaviour
 
         if (Selected != null) battle.Highlight.Show(null, Combat.CellsInRange(battle.Map, Selected.Cell, Selected.Range), null, true);
         else battle.Highlight.Clear();
+    }
+
+    /// <summary>カードを選んだままにする（次に押したマスに置く）</summary>
+    private void Arm(SquadMember member)
+    {
+        Armed = member;
+        Select(null);
+        Inspect(null);
+        TimeController.SetFocus(true);
     }
 
     private void CancelDrag()

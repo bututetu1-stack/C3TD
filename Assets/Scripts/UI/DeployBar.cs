@@ -114,6 +114,7 @@ public class DeployBar
         dpFill.style.width = Length.Percent(Mathf.Clamp01(progress) * 100f);
 
         SquadMember dragging = BattleInput.Instance != null ? BattleInput.Instance.Dragging : null;
+        SquadMember armed = BattleInput.Instance != null ? BattleInput.Instance.Armed : null;
         foreach (Card c in cards)
         {
             SquadMember m = c.Member;
@@ -141,7 +142,7 @@ public class DeployBar
                 c.ShownAffordable = affordable;
                 c.Box.EnableInClassList("deploy-card--short", affordable == 0);
             }
-            int isDragging = dragging == m ? 1 : 0;
+            int isDragging = dragging == m || armed == m ? 1 : 0;
             if (isDragging != c.ShownDragging)
             {
                 c.ShownDragging = isDragging;

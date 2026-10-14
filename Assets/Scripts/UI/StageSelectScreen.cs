@@ -90,9 +90,14 @@ public class StageSelectScreen
 
         detail.Add(UIFactory.Text("出てくる敵", UIFont.Body, "detail-section"));
         detailEnemies = UIFactory.Box("detail-enemies");
-        detail.Add(detailEnemies);
+        // 敵の種類が多いとき（とスマホで UI が大きいとき）は、下の「編成へ」に隠れないよう縦に流せるようにする
+        var enemiesScroll = new ScrollView(ScrollViewMode.Vertical);
+        enemiesScroll.AddToClassList("detail-enemies-scroll");
+        enemiesScroll.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+        enemiesScroll.verticalScrollerVisibility = ScrollerVisibility.Auto;
+        enemiesScroll.Add(detailEnemies);
+        detail.Add(enemiesScroll);
 
-        detail.Add(UIFactory.Box("top-spacer"));
         detailLock = UIFactory.Text("前の作戦をクリアすると開きます", UIFont.Body, "detail-lock");
         detail.Add(detailLock);
         goButton = new C3Button(IconKind.Next, 30f, "編成へ", () =>

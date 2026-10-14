@@ -7,7 +7,8 @@ using UnityEngine;
 /// <summary>
 /// ブラウザ版を Builds/WebGL に作る（C3_shogi の WebBuild と同じ形）。
 /// unityroom などに置くときは Builds/WebGL/Build の4つ（.loader.js・.data.gz・.framework.js.gz・.wasm.gz）を上げる。
-/// 圧縮は Gzip（Brotli の .br を読めないサーバーがある）、解凍のフォールバックはなし。画面は 1280x720（16:9）。
+/// 圧縮は Gzip（Brotli の .br を読めないサーバーがある）、解凍のフォールバックはなし。
+/// ページは Assets/WebGLTemplates/C3TD（窓いっぱいに出す。スマホは横向きの案内と、描く解像度を2倍までに）。
 /// 手元では node server/web-preview.js で開く。作ると、エディタの向き先は Web のままになる。
 /// </summary>
 public static class WebBuild
@@ -28,6 +29,7 @@ public static class WebBuild
         PlayerSettings.WebGL.decompressionFallback = false;
         PlayerSettings.defaultWebScreenWidth = 1280;
         PlayerSettings.defaultWebScreenHeight = 720;
+        PlayerSettings.WebGL.template = "PROJECT:C3TD";
         ShrinkTexturesForWeb();
         CompressMusicForWeb();
 

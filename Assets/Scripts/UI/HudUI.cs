@@ -299,7 +299,8 @@ public class HudUI : MonoBehaviour
         band.SetFill(Palette.UiBand).SetCut(0f, ChamferBox.Corners.None).SetStripes(Palette.UiStripe, 22f);
         band.pickingMode = PickingMode.Ignore;
         band.Add(UIFactory.Text("PAUSE", UIFont.Display, "pause-title"));
-        band.Add(UIFactory.Text("一時停止中　Space で再開", UIFont.Body, "pause-sub"));
+        // スマホにはキーボードがないので、キーの案内は出さない
+        band.Add(UIFactory.Text(Application.isMobilePlatform ? "一時停止中" : "一時停止中　Space で再開", UIFont.Body, "pause-sub"));
         pauseLayer.Add(band);
 
         // 一時停止中はメニュー（後ろのマップは触れない）

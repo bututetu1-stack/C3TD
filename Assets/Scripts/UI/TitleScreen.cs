@@ -23,7 +23,7 @@ public class TitleScreen
         book.AddToClassList("title-button");
         book.AddToClassList("title-button--sub");
         block.Add(book);
-        block.Add(UIFactory.Text("Space・Enter でも始められます", UIFont.Medium, "title-hint"));
+        if (!UnityEngine.Application.isMobilePlatform) block.Add(UIFactory.Text("Space・Enter でも始められます", UIFont.Medium, "title-hint"));
         Root.Add(block);
 
         parent.Add(Root);

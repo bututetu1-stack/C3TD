@@ -11,6 +11,17 @@ public static class UIFactory
     public const float ReferenceWidth = 1920f;
     public const float ReferenceHeight = 1080f;
 
+    /// <summary>スマホ（ブラウザ版をスマホで開いたとき）で UI を大きくする倍率。画面が小さいと文字が読めないため</summary>
+    public const float MobileZoom = 1.35f;
+
+    /// <summary>UI の拡大率。1 なら 1920x1080 の大きさで、スマホでは MobileZoom（UI の高さは 1080 / Zoom になる）</summary>
+    public static float Zoom { get; private set; } = 1f;
+
+    /// <summary>UI の高さ（参照解像度の高さ）。CameraFitter が上下に空ける帯を計算するのに使う</summary>
+    public static float PanelHeight { get { return ReferenceHeight / Zoom; } }
+
+    private static readonly System.Collections.Generic.List<VisualElement> roots = new System.Collections.Generic.List<VisualElement>();
+
     private static PanelSettings panelSettings;
     private static StyleSheet theme;
     private static Texture2D vignette;
@@ -21,6 +32,8 @@ public static class UIFactory
     private static void ResetStatics()
     {
         panelSettings = null;
+        Zoom = 1f;
+        roots.Clear();
         theme = null;
         vignette = null;
         fadeDown = null;
@@ -37,7 +50,8 @@ public static class UIFactory
                 panelSettings.name = "RuntimePanelSettings";
                 panelSettings.themeStyleSheet = Resources.Load<ThemeStyleSheet>("UI/DefaultTheme");
                 panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
-                panelSettings.referenceResolution = new Vector2Int((int)ReferenceWidth, (int)ReferenceHeight);
+                if (Application.isMobilePlatform) Zoom = MobileZoom;
+                panelSettings.referenceResolution = new Vector2Int(Mathf.RoundToInt(ReferenceWidth / Zoom), Mathf.RoundToInt(ReferenceHeight / Zoom));
                 panelSettings.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight;
                 panelSettings.match = 1f; // 高さに合わせる（CameraFitter と同じ）
             }
@@ -48,6 +62,16 @@ public static class UIFactory
     private static StyleSheet Theme
     {
         get { return theme != null ? theme : (theme = Resources.Load<StyleSheet>("UI/Theme")); }
+    }
+
+    /// <summary>UI の拡大率を変える（開発用：エディタでスマホの見た目を確かめる）。作ってある画面にもすぐ効く</summary>
+    public static void SetZoom(float zoom)
+    {
+        Zoom = Mathf.Max(1f, zoom);
+        PanelSettings ps = SharedPanelSettings;
+        ps.referenceResolution = new Vector2Int(Mathf.RoundToInt(ReferenceWidth / Zoom), Mathf.RoundToInt(ReferenceHeight / Zoom));
+        roots.RemoveAll(r => r == null || r.panel == null);
+        foreach (VisualElement r in roots) r.EnableInClassList("c3-mobile", Zoom > 1f);
     }
 
     /// <summary>画面全体を覆う UIDocument を作り、そのルートを返す。sortingOrder が大きいほど手前</summary>
@@ -64,6 +88,8 @@ public static class UIFactory
         VisualElement root = doc.rootVisualElement;
         if (Theme != null) root.styleSheets.Add(Theme);
         root.AddToClassList("c3-root");
+        root.EnableInClassList("c3-mobile", Zoom > 1f);
+        roots.Add(root);
         root.style.unityFontDefinition = GameFonts.UI(UIFont.Body);
         root.style.position = Position.Absolute;
         root.style.left = 0;

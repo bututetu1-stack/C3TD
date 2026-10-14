@@ -10,7 +10,7 @@ public class EnemyBookScreen
 {
     public readonly VisualElement Root;
 
-    private readonly VisualElement groups;
+    private readonly ScrollView groups;
     private readonly Label countLabel;
     private readonly VisualElement portrait;
     private readonly Label portraitInitial;
@@ -35,7 +35,11 @@ public class EnemyBookScreen
         var body = UIFactory.Box("squad-body");
         var left = UIFactory.Box("squad-left");
         left.Add(UIFactory.Text("敵を押すと、能力と特別な性質が右に出る", UIFont.Medium, "squad-help"));
-        groups = UIFactory.Box("book-groups");
+        // 敵が増えたり、スマホで UI が大きくなったりしても切れないよう、縦に流せるようにする
+        groups = new ScrollView(ScrollViewMode.Vertical);
+        groups.AddToClassList("book-groups");
+        groups.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+        groups.verticalScrollerVisibility = ScrollerVisibility.Auto;
         left.Add(groups);
         body.Add(left);
 
