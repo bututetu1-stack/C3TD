@@ -15,6 +15,13 @@ public class StageRecord
     public bool hard;
 }
 
+/// <summary>編成の控え（編成1〜4）</summary>
+[Serializable]
+public class SquadPreset
+{
+    public List<string> members = new List<string>();
+}
+
 /// <summary>部員ごとの記録（出撃した回数と MVP の回数）</summary>
 [Serializable]
 public class MemberRecord
@@ -38,6 +45,10 @@ public class ProgressData
     public List<StageRecord> stages = new List<StageRecord>();
     public List<EndlessRecord> endless = new List<EndlessRecord>();
     public List<MemberRecord> members = new List<MemberRecord>();
+
+    /// <summary>編成1〜4（アークナイツの編成の控え）と、いま使っている番号</summary>
+    public List<SquadPreset> presets = new List<SquadPreset>();
+    public int preset;
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -197,12 +208,41 @@ public static class Progress
         return best;
     }
 
-    /// <summary>前回の編成（なければ squad.json の並び）</summary>
+    public const int PresetCount = 4;
+
+    /// <summary>編成の控えを 4 つにそろえる（はじめは、これまでの編成を編成1に）</summary>
+    private static void EnsurePresets()
+    {
+        if (Data.presets == null) Data.presets = new List<SquadPreset>();
+        if (Data.presets.Count == 0)
+            Data.presets.Add(new SquadPreset { members = new List<string>(Data.squad.Count > 0 ? Data.squad : GameData.Squad.members) });
+        while (Data.presets.Count < PresetCount) Data.presets.Add(new SquadPreset());
+        Data.preset = Mathf.Clamp(Data.preset, 0, PresetCount - 1);
+    }
+
+    /// <summary>いま使っている編成の番号（0〜3）。変えると、その控えの編成が Squad になる</summary>
+    public static int Preset
+    {
+        get
+        {
+            EnsurePresets();
+            return Data.preset;
+        }
+        set
+        {
+            EnsurePresets();
+            Data.preset = Mathf.Clamp(value, 0, PresetCount - 1);
+            Save();
+        }
+    }
+
+    /// <summary>いまの編成（編成1〜4のうち使っているもの。空のこともある）</summary>
     public static List<string> Squad
     {
         get
         {
-            var list = new List<string>(Data.squad.Count > 0 ? Data.squad : GameData.Squad.members);
+            EnsurePresets();
+            var list = new List<string>(Data.presets[Data.preset].members ?? new List<string>());
             // もう無い部員は外す
             List<string> all = GameData.CharacterIds();
             list.RemoveAll(id => !all.Contains(id));
@@ -210,6 +250,8 @@ public static class Progress
         }
         set
         {
+            EnsurePresets();
+            Data.presets[Data.preset].members = new List<string>(value);
             Data.squad = new List<string>(value);
             Save();
         }

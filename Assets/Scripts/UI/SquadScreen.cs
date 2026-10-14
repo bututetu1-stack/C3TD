@@ -17,6 +17,7 @@ public class SquadScreen
     private readonly VisualElement tipsBox;
     private readonly VisualElement slots;
     private readonly Label countLabel;
+    private readonly List<Label> presetTabs = new List<Label>();
     private readonly C3Button goButton;
 
     // 右の説明
@@ -59,6 +60,26 @@ public class SquadScreen
         // 下の帯：編成の並び・人数・出撃
         var footer = UIFactory.Box("squad-footer");
         footer.Add(UIFactory.Text("SQUAD", UIFont.Display, "squad-footer-caption"));
+        // 編成1〜4（アークナイツの編成の控え）。押すと、いまの編成を残して切り替える
+        var tabs = UIFactory.Box("preset-tabs");
+        for (int i = 0; i < Progress.PresetCount; i++)
+        {
+            int index = i;
+            var tab = UIFactory.Text((i + 1).ToString(), UIFont.Display, "preset-tab");
+            tab.pickingMode = PickingMode.Position;
+            tab.AddManipulator(new Clickable(() =>
+            {
+                AudioManager.PlaySE("click");
+                List<string> next = bootstrap.SwitchPreset(squad, index);
+                squad.Clear();
+                foreach (string id in next) if (squad.Count < max) squad.Add(id);
+                Refresh();
+                if (squad.Count > 0) ShowDetail(squad[0]);
+            }));
+            tabs.Add(tab);
+            presetTabs.Add(tab);
+        }
+        footer.Add(tabs);
         slots = UIFactory.Box("squad-slots");
         footer.Add(slots);
         countLabel = UIFactory.Text("", UIFont.Display, "squad-count");
@@ -157,6 +178,7 @@ public class SquadScreen
             slots.Add(slot);
         }
         countLabel.text = squad.Count + "/" + max;
+        for (int i = 0; i < presetTabs.Count; i++) presetTabs[i].EnableInClassList("preset-tab--on", i == Progress.Preset);
         RefreshTips();
         goButton.Interactable = squad.Count > 0;
     }

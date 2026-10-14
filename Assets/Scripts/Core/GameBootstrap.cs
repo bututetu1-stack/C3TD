@@ -100,6 +100,15 @@ public class GameBootstrap : MonoBehaviour
         menu.ShowSquad(id, squad);
     }
 
+    /// <summary>編成1〜4を切り替える（いまの編成は、切り替える前の番号に残す）</summary>
+    public List<string> SwitchPreset(List<string> current, int index)
+    {
+        Progress.Squad = current;
+        Progress.Preset = index;
+        squad = Progress.Squad;
+        return new List<string>(squad);
+    }
+
     /// <summary>編成画面で決めた編成を覚える</summary>
     public void SetSquad(List<string> ids)
     {

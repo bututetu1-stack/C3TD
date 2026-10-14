@@ -1531,6 +1531,30 @@
     padding-top: 14px;
 }
 
+/* 編成1〜4 */
+.preset-tabs {
+    flex-direction: row;
+    margin-right: 16px;
+}
+
+.preset-tab {
+    width: 46px;
+    height: 46px;
+    margin-right: 6px;
+    font-size: 24px;
+    color: rgb(178, 186, 204);
+    background-color: rgba(255, 255, 255, 0.06);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.16);
+    -unity-text-align: middle-center;
+}
+
+.preset-tab--on {
+    color: rgb(20, 17, 10);
+    background-color: rgb(244, 182, 63);
+    border-color: rgb(255, 210, 122);
+}
+
 .squad-footer-caption {
     font-size: 19px;
     letter-spacing: 8px;
