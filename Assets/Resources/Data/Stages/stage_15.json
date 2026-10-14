@@ -6,6 +6,7 @@
   "life": 3,
   "initialDp": 18,
   "bgm": "battle3",
+  "background": "Battle3",
   "map": [
     "XXXXXXXXXXXXXX",
     "S......HHHHHHX",

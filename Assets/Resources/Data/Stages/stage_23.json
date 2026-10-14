@@ -6,6 +6,7 @@
   "life": 3,
   "initialDp": 14,
   "bgm": "battle_ex",
+  "background": "BattleEx",
   "map": [
     "XXXXXXXXXXXXXXX",
     "XHHHHHHHHHHHHHX",

@@ -13,6 +13,9 @@ public class StageData
     /// <summary>ボスが出たときに切り替える BGM のキー（省略時は boss。ファイルがなければ切り替えない）</summary>
     public string bossBgm;
 
+    /// <summary>戦闘の背景のキー（Art/Background/{background}.png。省略やファイルがなければ Battle）</summary>
+    public string background;
+
     /// <summary>作戦選択に出す説明</summary>
     public string description;
 

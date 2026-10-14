@@ -22,11 +22,11 @@ public static class MapBuilder
     private const float HighLift = 0.09f;      // 高台の上面を持ち上げる量（マス）
     private const float BoardPadding = 0.28f;  // 盤のふちの幅（マス）
 
-    public static Transform Build(StageMap map, Transform parent)
+    public static Transform Build(StageMap map, Transform parent, string background = null)
     {
         var root = new GameObject("Map").transform;
         root.SetParent(parent, false);
-        BuildBackdrop(map, root);
+        BuildBackdrop(map, root, background);
 
         foreach (var tile in map.AllTiles())
         {
@@ -99,12 +99,14 @@ public static class MapBuilder
     }
 
     /// <summary>背景（絵があれば）・方眼・盤・四隅の飾り</summary>
-    private static void BuildBackdrop(StageMap map, Transform root)
+    private static void BuildBackdrop(StageMap map, Transform root, string background)
     {
         Rect r = map.WorldRect;
         Vector3 center = new Vector3(r.center.x, r.center.y, 0f);
 
-        Sprite art = Art.Background("Battle");
+        // ステージ（章）ごとの背景（Art/Background/{background}.png）。なければふつうの戦闘の背景
+        Sprite art = !string.IsNullOrEmpty(background) ? Art.Background(background) : null;
+        if (art == null) art = Art.Background("Battle");
         if (art != null)
         {
             var bg = Add(root, "BackgroundArt", art, new Color(0.5f, 0.52f, 0.58f), center, Vector2.one, OrderBackground);

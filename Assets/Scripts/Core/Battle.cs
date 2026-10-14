@@ -79,7 +79,7 @@ public class Battle : MonoBehaviour
         Stage = data;
         Rules = GameData.Rules;
         Map = StageMap.FromText(data.map, data.id);
-        MapBuilder.Build(Map, transform);
+        MapBuilder.Build(Map, transform, data.background);
         Highlight = new MapHighlight(Map, transform);
 
         var worldPaths = new Dictionary<string, List<Vector3>>();

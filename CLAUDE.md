@@ -255,7 +255,7 @@ Assets/
 - 描く順番：マス 0〜9、部員 24（敵より手前。大きな敵に止められていても駒が見える）、敵 20、弾 70、演出 80、数字 90、ドラッグ中の影 95。
 - 本素材の読み込みは `Art`（`ArtTexture` で縮小して読むので、インポート設定は触らなくてよい）。透過のない画像の背景は、光るもの（`Art/Effects`・出撃口）は明るさに応じて透明に、物の絵（敵・拠点）はふちから続く黒だけを透明にする。置き場所は `Resources/` の下：
   - `Art/Icons/{characterId}.png`（マップ上では丸く切り抜く）、`Art/Enemies/{enemyId}.png`
-  - `Art/Map/Spawn.png`・`Base.png`、`Art/Background/Battle.png`
+  - `Art/Map/Spawn.png`・`Base.png`、`Art/Background/Battle.png`（章ごとの背景はステージの `background`：第2〜4章 `Battle2`〜`Battle4`、番外編 `BattleEx`。2026-10-14 に Claude が ChatGPT で作った。なければ `Battle`）
   - `Art/Effects/{名前}.png`。使っている名前：`SpawnBurst` `LeakBurst` `Deploy` `Retreat` `Slash` `Hit` `Arrow` `MagicOrb` `MagicBurst` `Heal` `EnemyDefeat`。M3 用に届いている名前：`SkillReady` `SkillActivate` `BuffAtk` `Sleep` `SummonSplash`（召喚ユニットのアイコンは `Art/Icons/kanmusu_token.png`）。2026-10-14 に届いた：`Shell` `Explosion` `DpGain` `StatusSlow` `StatusDefDown`（状態の印。なければ色付きの丸に「遅」「防」）と、タイトルの絵 `Art/Background/Title.png`。2026-10-14 昼に Claude が ChatGPT で作った：`Warp`（敵が跳ぶ）`ShieldBreak`（盾が割れる）`Revive`（起き上がり）`BossPulse`（ボスの大技）`Enrage`（ボスの本気）`HealWave`（敵の回復）。どれも `Fx` の同じ名前の関数で重ねる
   - `Art/CutIn/{characterId}.png`：読み込む仕組みは残っているが**使わない**。カットインは部員のアイコンをそのまま出す（2026-10-14 オーナー）
 - 演出の部品：`Fx`（場面ごとの演出）、`FxSprite`（一度だけ再生して消える）、`PulseRing`、`Spinner`、`PathFlow`（経路の矢印。拠点からの距離で並べるので、終わりが同じ経路は矢印が重なる）、`FloatingText`（ダメージ・回復の数字）、`HealthBar`。ワールドの演出はゲーム時間（一時停止で止まる）、UI のアニメは実時間。
