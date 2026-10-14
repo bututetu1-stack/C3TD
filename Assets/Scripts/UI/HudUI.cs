@@ -232,7 +232,8 @@ public class HudUI : MonoBehaviour
         if (hints[hintIndex].time > state.ElapsedTime) return;
 
         HintData hint = hints[hintIndex++];
-        hintText.text = hint.text;
+        // スマホでは「クリック」を「タップ」と読み替える
+        hintText.text = Application.isMobilePlatform && hint.text != null ? hint.text.Replace("クリック", "タップ") : hint.text;
         hintRemaining = Mathf.Max(1f, hint.duration);
         hintShown = true;
         UIFactory.SetVisible(hintPlate, true);
