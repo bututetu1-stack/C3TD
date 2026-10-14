@@ -4,6 +4,7 @@
   //   中華料理が得意で、ときどき「ヲツ亭」という突発の飯会を開く（マジでおいしい）
   "id": "wotsu",
   "name": "ヲツ",
+  "profile": "Hack の技術力がとても高い先輩。中華料理が得意",
   "class": "Caster",
   "cost": 17,
   "redeployTime": 70,
@@ -11,14 +12,16 @@
   "stats": { "hp": 1100, "atk": 600, "def": 80, "attackInterval": 1.5, "range": 2.5 },
   "trait": {
     "name": "ヲツ亭",
-    "description": "ときどき突発の飯会を開く（マジでおいしい）。ステージの経過時間30秒ごとに、射程内の味方の体力を25%回復",
+    "flavor": "ときどき突発の飯会を開く。マジでおいしい",
+    "description": "30秒ごとに、射程内の味方の体力を25%回復",
     "trigger": "ElapsedTime",
     "params": { "interval": 30 },
     "effects": [ { "type": "Heal", "percent": 25, "target": "AlliesInRange" } ]
   },
   "ultimate": {
     "name": "ゼロデイ",
-    "description": "射程内の敵すべてをハッキングし、攻撃力の150%のダメージを与えて3秒動けなくし、10秒間、防御力-50%（本人は「まだまだ」と言い張る）",
+    "flavor": "本人は「自分なんてまだまだ」と言い張る",
+    "description": "射程内の敵すべてをハッキング\n攻撃力の150%のダメージを与え、3秒動けなくする\n10秒間、防御力-50%",
     "spCost": 30,
     "initialSp": 10,
     "line": "いや、自分なんてまだまだ……",

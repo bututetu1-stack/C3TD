@@ -78,6 +78,9 @@ public class CharacterData
     /// <summary>近接（前衛・重装）でも飛ぶ敵を狙える（物理鉄人）</summary>
     public bool antiAir;
 
+    /// <summary>部員のひとこと紹介（札の名前の下に出す。オーナーから聞いた特徴だけを書く）</summary>
+    public string profile;
+
     public CharacterStats stats = new CharacterStats();
     public SkillData trait;
     public SkillData ultimate;
@@ -107,7 +110,12 @@ public class CharacterStats
 public class SkillData
 {
     public string name;
+
+    /// <summary>効果の説明。改行を書けばその行で、なければ文ごとに改行して出す（SkillText）</summary>
     public string description;
+
+    /// <summary>部員らしさのひとこと（効果の説明の上に薄く出す。なくてよい）</summary>
+    public string flavor;
     public SkillTrigger trigger;
     [JsonKey("params")] public Dictionary<string, object> parameters = new Dictionary<string, object>();
     public float spCost;

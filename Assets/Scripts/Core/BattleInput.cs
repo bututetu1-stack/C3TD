@@ -261,7 +261,21 @@ public class BattleInput : MonoBehaviour
             Select(c);
         }
 
-        if (Selected != null) battle.Highlight.Show(null, Combat.CellsInRange(battle.Map, Selected.Cell, Selected.Range), null, true);
+        if (Selected != null)
+        {
+            battle.Highlight.Show(null, Combat.CellsInRange(battle.Map, Selected.Cell, Selected.Range), null, true);
+            return;
+        }
+        // マウスでカードに重ねたら、その部員を置けるマスを薄く出す
+        SquadMember hoveredCard = hud != null ? hud.HoveredCard : null;
+        if (hoveredCard != null)
+        {
+            battle.Highlight.Show(battle.PlaceableCells(hoveredCard), null, null, false);
+            return;
+        }
+        // マウスで置いてある部員に重ねたら、その射程を出す（タッチは指していないので出さない）
+        Character hovered = ReferenceEquals(pointer, mouse) && !(hud != null && hud.IsOverUI(screen)) ? battle.CharacterAt(cell) : null;
+        if (hovered != null) battle.Highlight.Show(null, Combat.CellsInRange(battle.Map, hovered.Cell, hovered.Range), null, true);
         else battle.Highlight.Clear();
     }
 

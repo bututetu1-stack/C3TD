@@ -2,36 +2,20 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// 選択中の部員の情報（左の札）と、駒の横に出る撤退ボタン。
-/// 必殺技のボタンは M3 で足す。
+/// 選択中の部員の情報（左の札。中身は CharacterInfo）と、駒の横に出る必殺技・撤退のボタン。
 /// </summary>
 public class UnitPanel
 {
     private readonly VisualElement root;
+    private readonly CharacterInfo card;
     private readonly ChamferBox info;
-    private readonly VisualElement portrait;
-    private readonly Label portraitInitial;
-    private readonly Label nameLabel;
-    private readonly Label classLabel;
-    private readonly Label hpValue;
-    private readonly Label atkValue;
-    private readonly Label defValue;
-    private readonly Label blockValue;
-    private readonly Label rangeValue;
-    private readonly Label costValue;
-    private readonly VisualElement traitBox;
-    private readonly Label traitName;
-    private readonly Label traitDesc;
-    private readonly VisualElement ultBox;
-    private readonly Label ultName;
-    private readonly Label ultMeta;
-    private readonly Label ultDesc;
     private readonly VisualElement actions;
     private readonly C3Button retreatButton;
     private readonly C3Button skillButton;
     private Character shown;
     private int shownHp = -1;
     private int shownAtk = -1;
+    private int shownDef = -1;
     private string shownTrait;
     private string shownSkill;
 
@@ -39,40 +23,9 @@ public class UnitPanel
     {
         this.root = root;
 
-        info = new ChamferBox();
-        info.AddToClassList("unit-info");
-        info.SetFill(Palette.UiBand).SetStroke(Palette.UiPanelLine, 1f)
-            .SetCut(24f, ChamferBox.Corners.TopRight | ChamferBox.Corners.BottomLeft)
-            .SetStripes(Palette.UiStripe, 18f);
-        info.pickingMode = PickingMode.Position;
-
-        var head = UIFactory.Box("unit-head");
-        portrait = UIFactory.Box("unit-portrait");
-        portraitInitial = UIFactory.Text("", UIFont.Title, "unit-portrait-initial");
-        portrait.Add(portraitInitial);
-        head.Add(portrait);
-        var names = UIFactory.Box("unit-names");
-        classLabel = UIFactory.Text("", UIFont.Body, "unit-class");
-        names.Add(classLabel);
-        nameLabel = UIFactory.Text("", UIFont.Title, "unit-name");
-        names.Add(nameLabel);
-        head.Add(names);
-        info.Add(head);
-
-        var stats = UIFactory.Box("unit-stats");
-        hpValue = AddStat(stats, "HP");
-        atkValue = AddStat(stats, "ATK");
-        defValue = AddStat(stats, "DEF");
-        blockValue = AddStat(stats, "BLOCK");
-        rangeValue = AddStat(stats, "RANGE");
-        costValue = AddStat(stats, "COST");
-        info.Add(stats);
-
-        Label traitMeta;
-        traitBox = AddSkill(info, "特性", out traitName, out traitMeta, out traitDesc);
-        UIFactory.SetVisible(traitMeta, false);
-        ultBox = AddSkill(info, "必殺技", out ultName, out ultMeta, out ultDesc);
-
+        card = new CharacterInfo(false, "unit-info");
+        info = card.Root;
+        info.SetCut(24f, ChamferBox.Corners.TopRight | ChamferBox.Corners.BottomLeft);
         root.Add(info);
 
         actions = UIFactory.Box("unit-actions");
@@ -93,33 +46,6 @@ public class UnitPanel
         UIFactory.SetVisible(info, false);
         UIFactory.SetVisible(actions, false);
     }
-
-    private Label AddStat(VisualElement parent, string caption)
-    {
-        var item = UIFactory.Box("unit-stat");
-        item.Add(UIFactory.Text(caption, UIFont.Display, "unit-stat-caption"));
-        var value = UIFactory.Text("", UIFont.Display, "unit-stat-value");
-        item.Add(value);
-        parent.Add(item);
-        return value;
-    }
-
-    private VisualElement AddSkill(VisualElement parent, string kind, out Label name, out Label meta, out Label desc)
-    {
-        var box = UIFactory.Box("unit-skill");
-        var head = UIFactory.Box("unit-skill-head");
-        head.Add(UIFactory.Text(kind, UIFont.Body, "unit-skill-kind"));
-        name = UIFactory.Text("", UIFont.Body, "unit-skill-name");
-        head.Add(name);
-        box.Add(head);
-        meta = UIFactory.Text("", UIFont.Body, "unit-skill-meta");
-        box.Add(meta);
-        desc = UIFactory.Text("", UIFont.Medium, "unit-skill-desc");
-        box.Add(desc);
-        parent.Add(box);
-        return box;
-    }
-
 
     /// <summary>
     /// 札を、選んだものと反対の側に寄せる（左にいれば右に出す）。左端の出撃口を隠さないため。
@@ -143,7 +69,7 @@ public class UnitPanel
         if (!ReferenceEquals(c, shown))
         {
             shown = c;
-            shownHp = shownAtk = -1;
+            shownHp = shownAtk = shownDef = -1;
             shownTrait = shownSkill = null;
             if (c != null)
             {
@@ -159,25 +85,38 @@ public class UnitPanel
         if (hp != shownHp)
         {
             shownHp = hp;
-            hpValue.text = hp + "/" + Mathf.CeilToInt(c.MaxHp);
+            card.HpValue.text = hp + "/" + Mathf.CeilToInt(c.MaxHp);
         }
         int atk = Mathf.RoundToInt(c.Atk);
         if (atk != shownAtk)
         {
             shownAtk = atk;
-            atkValue.text = atk.ToString();
-            atkValue.EnableInClassList("unit-stat-value--up", c.PercentOf("atk") > 0.01f);
+            card.AtkValue.text = atk.ToString();
+            // 上がっていれば色を変える（味方全員に掛かる分も含む）
+            float atkPercent = c.PercentOf("atk") + (Battle.Current != null ? Battle.Current.TeamAtkPercent : 0f);
+            card.AtkValue.EnableInClassList("unit-stat-value--up", atkPercent > 0.01f);
+            card.AtkValue.EnableInClassList("unit-stat-value--down", atkPercent < -0.01f);
         }
+        int def = Mathf.RoundToInt(c.Def);
+        if (def != shownDef)
+        {
+            shownDef = def;
+            card.DefValue.text = def.ToString();
+            card.DefValue.EnableInClassList("unit-stat-value--up", c.PercentOf("def") > 0.01f);
+            card.DefValue.EnableInClassList("unit-stat-value--down", c.PercentOf("def") < -0.01f);
+        }
+        string range = c.Range.ToString("0.#");
+        if (card.RangeValue.text != range) card.RangeValue.text = range;
 
         // 改装すると名前が変わる（物理鉄人改二）
-        if (nameLabel.text != c.DisplayName) nameLabel.text = c.DisplayName;
+        if (card.NameLabel.text != c.DisplayName) card.NameLabel.text = c.DisplayName;
 
         // 特性の重ね数
         string trait = c.Skills.Trait != null ? c.Skills.Trait.name + (c.Skills.TraitStatus.Length > 0 ? "　" + c.Skills.TraitStatus : "") : "";
         if (trait != shownTrait)
         {
             shownTrait = trait;
-            traitName.text = trait;
+            card.TraitName.text = trait;
         }
 
         // 必殺技のボタン：SP が溜まるまでは押せない。発動中は残り時間
@@ -196,8 +135,9 @@ public class UnitPanel
             skillButton.Interactable = c.Skills.Ready || c.IsSummon; // 召喚ユニットは残り時間の表示なので暗くしない（押しても何もしない）
             skillButton.Active = c.Skills.Ready || c.Skills.Active;
             if (c.Skills.HasUltimate)
-                ultMeta.text = (c.Skills.Active ? "発動中" : c.Skills.Ready ? "使えます" : "SP " + Mathf.FloorToInt(c.Skills.Sp) + "/" + Mathf.RoundToInt(c.Skills.SpCost))
-                    + "　効果 " + c.Skills.Ultimate.duration.ToString("0.#") + "秒";
+                card.UltMeta.text = (c.Skills.Active ? "発動中" : c.Skills.Ready ? "使えます" : "SP " + Mathf.FloorToInt(c.Skills.Sp) + "/" + Mathf.RoundToInt(c.Skills.SpCost))
+                    + "（" + MenuUI.SpChargeName(c.Skills.Ultimate.spCharge) + "）"
+                    + (c.Skills.Ultimate.duration > 0f ? "　効果 " + c.Skills.Ultimate.duration.ToString("0.#") + "秒" : "　すぐに効く");
         }
 
         // ボタンを駒の右上に置く
@@ -212,36 +152,10 @@ public class UnitPanel
 
     private void Fill(Character c)
     {
-        CharacterData d = c.Data;
-        Color classColor = c.ClassColor;
-
-        Sprite icon = Art.Icon(d.id);
-        portrait.style.backgroundImage = icon != null ? new StyleBackground(icon) : new StyleBackground(StyleKeyword.None);
-        portrait.style.backgroundColor = icon != null ? Color.clear : Palette.Hex(d.color, classColor);
-        portraitInitial.text = icon != null ? "" : d.Initial;
-        portrait.style.borderLeftColor = portrait.style.borderRightColor = portrait.style.borderTopColor = portrait.style.borderBottomColor = classColor;
-
-        nameLabel.text = c.DisplayName;
-        classLabel.text = c.IsSummon ? c.Class.name + "・召喚" : c.Class.name;
-        classLabel.style.backgroundColor = classColor;
-        defValue.text = Mathf.RoundToInt(c.Def).ToString();
-        blockValue.text = c.HasBlockRoom || c.Blocked.Count > 0 ? c.BlockCapacity.ToString() : "-";
-        rangeValue.text = c.Range.ToString("0.#");
-        costValue.text = c.IsSummon ? "-" : d.cost.ToString();
+        card.Fill(c.Data, c.Class, c.IsSummon);
+        card.NameLabel.text = c.DisplayName;
+        card.BlockValue.text = c.HasBlockRoom || c.Blocked.Count > 0 ? c.BlockCapacity.ToString() : "-";
         UIFactory.SetVisible(retreatButton, !c.IsSummon);
-
-        bool hasTrait = c.Skills.Trait != null;
-        UIFactory.SetVisible(traitBox, hasTrait);
-        if (hasTrait) traitDesc.text = c.Skills.Trait.description;
-
-        bool hasUlt = c.Skills.HasUltimate;
-        UIFactory.SetVisible(ultBox, hasUlt);
-        if (hasUlt)
-        {
-            ultName.text = c.Skills.Ultimate.name;
-            ultDesc.text = c.Skills.Ultimate.description;
-        }
-
         if (c.Member != null) retreatButton.Text.text = "撤退 +" + Battle.Current.RefundOf(c.Member);
     }
 }

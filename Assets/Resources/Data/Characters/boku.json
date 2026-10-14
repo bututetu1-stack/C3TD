@@ -5,6 +5,7 @@
   //   アイコンは本人の Brainf*ck のコード
   "id": "boku",
   "name": "僕",
+  "profile": "鯖缶のやる気担当",
   "class": "Defender",
   "cost": 17,
   "redeployTime": 70,
@@ -12,14 +13,16 @@
   "stats": { "hp": 3600, "atk": 300, "def": 600, "attackInterval": 1.4, "block": 3, "range": 1 },
   "trait": {
     "name": "鯖缶のやる気担当",
-    "description": "作業効率は悪いが、長い時間をかけて C3 のインフラに少し貢献している。敵を止めて攻撃を耐えた時間6秒ごとに、味方全員の攻撃力+2%（+20%まで。撤退してもステージが終わるまで残る）",
+    "flavor": "作業効率は悪いが、長い時間をかけて C3 のインフラに少し貢献している",
+    "description": "敵を止めて攻撃を耐えた時間6秒ごとに、味方全員の攻撃力+2%\n+20%まで。撤退しても、ステージが終わるまで残る",
     "trigger": "Blocking",
     "params": { "interval": 6 },
     "effects": [ { "type": "TeamBuff", "stat": "atk", "percent": 2, "maxStacks": 10 } ]
   },
   "ultimate": {
     "name": "BrainMassage",
-    "description": "マッサージと称して、まわり2マスの敵の脳に理解不能な情報を流し込む。5秒間混乱させ（攻撃せず、止められていなければ来た道を戻る）、10秒間攻撃力-40%（攻撃を受けるとSPが溜まる）",
+    "flavor": "マッサージと称して、敵の脳に理解不能な情報を流し込む",
+    "description": "まわり2マスの敵を5秒間混乱させる\n混乱した敵は攻撃せず、止められていなければ来た道を戻る\n10秒間、その敵の攻撃力-40%",
     "spCost": 16,
     "initialSp": 6,
     "line": "脳、ほぐしておきますね",

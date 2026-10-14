@@ -4,6 +4,7 @@
   //   かわいいものへの気持ちが抑えきれず、うっかり攻撃性が出てしまう（キュートアグレッション。もちもちほっぺを引っ張る）
   "id": "feynman",
   "name": "ファインマン",
+  "profile": "好きなものに深くハマる。かわいいもの（特にもちもち）とネコが好き",
   "class": "Guard",
   "cost": 12,
   "redeployTime": 60,
@@ -11,14 +12,16 @@
   "stats": { "hp": 1900, "atk": 520, "def": 210, "attackInterval": 0.9, "block": 2, "range": 1 },
   "trait": {
     "name": "沼",
-    "description": "好きなものにハマりすぎてしまう。攻撃するたびに攻撃力+8%（3秒。攻撃し続けると重なる）",
+    "flavor": "好きなものにハマりすぎてしまう",
+    "description": "攻撃するたびに、3秒間 攻撃力+8%\n攻撃し続けると重なる",
     "trigger": "OnAttack",
     // わざと攻撃間隔より長くして、攻撃し続けると重なる（3〜4段）ようにしている
     "effects": [ { "type": "StatModifier", "stat": "atk", "percent": 8, "duration": 3, "target": "Self" } ]
   },
   "ultimate": {
     "name": "もちもちの刑",
-    "description": "かわいさに我慢できない。発動した瞬間、目の前の敵を2秒動けなくし、10秒間、攻撃が3回当たる。夢中になりすぎて、そのあいだ防御力-30%（攻撃するたびにSPが溜まる）",
+    "flavor": "かわいさに我慢できない",
+    "description": "発動した瞬間、目の前の敵を2秒動けなくする\n10秒間、攻撃が3回当たる\n夢中になりすぎて、そのあいだ防御力-30%",
     "spCost": 12,
     "spCharge": "OnAttack",
     "duration": 10,

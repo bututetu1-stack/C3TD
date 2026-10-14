@@ -110,6 +110,7 @@ public class HudUI : MonoBehaviour
         unitPanel = new UnitPanel(root);
         enemyPanel = new EnemyPanel(root);
         cutIn = new CutIn(root);
+        deployBar.AttachTooltip(root);
         BuildIntro();
         BuildPause();
         BuildResult();
@@ -568,6 +569,12 @@ public class HudUI : MonoBehaviour
             float pop = 1f + 0.35f * k * k;
             lifeValue.style.scale = new Scale(new Vector3(pop, pop, 1f));
         });
+    }
+
+    /// <summary>マウスを重ねている編成バーのカードの部員（いなければ null）</summary>
+    public SquadMember HoveredCard
+    {
+        get { return deployBar != null ? deployBar.Hovered : null; }
     }
 
     /// <summary>画面のこの位置（Input System の座標：左下が原点）に、クリックを受ける UI があるか</summary>

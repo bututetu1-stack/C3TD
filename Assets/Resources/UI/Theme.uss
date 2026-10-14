@@ -570,6 +570,73 @@
     color: rgb(214, 219, 232);
     margin-top: 4px;
     white-space: normal;
+    -unity-paragraph-spacing: 5px;
+}
+
+/* 技のひとこと（部員らしさ。効果の説明の上に薄く） */
+.unit-skill-flavor {
+    font-size: 17px;
+    color: rgb(142, 152, 172);
+    margin-top: 4px;
+    white-space: normal;
+}
+
+/* 部員のひとこと紹介（名前の下） */
+.unit-profile {
+    font-size: 18px;
+    color: rgb(178, 186, 204);
+    margin-top: 12px;
+    white-space: normal;
+}
+
+/* 名前の下の状態（配置中・再配置まで・DP 不足） */
+.unit-status {
+    font-size: 19px;
+    margin-top: 2px;
+}
+
+/* 札の中身は潰さない（入りきらないときは編成画面なら流す） */
+.unit-head, .unit-profile, .unit-stats, .unit-skill {
+    flex-shrink: 0;
+}
+
+.info-scroll {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+/* 出撃中の選んだ部員の札は、高さを抑えるためひとことを出さない（編成画面と、カードに重ねた札で見られる） */
+.unit-info .unit-profile {
+    display: none;
+}
+
+/* 編成バーのカードに重ねたときの札（カードの真上に出る。能力値は1行に並べて低くする） */
+.card-tip {
+    position: absolute;
+    width: 600px;
+    padding: 18px 24px 18px 24px;
+}
+
+.card-tip .unit-stat {
+    width: 16.6%;
+}
+
+.card-tip .unit-stats {
+    margin-top: 10px;
+}
+
+.card-tip .unit-portrait {
+    width: 76px;
+    height: 76px;
+}
+
+.card-tip .unit-name {
+    font-size: 34px;
+}
+
+.unit-info--compact .unit-skill {
+    margin-top: 8px;
+    padding-top: 6px;
 }
 
 .unit-actions {
@@ -599,6 +666,10 @@
 
 .unit-stat-value--up {
     color: rgb(255, 179, 107);
+}
+
+.unit-stat-value--down {
+    color: rgb(255, 110, 120);
 }
 
 /* ---------- カットイン ---------- */
@@ -1114,7 +1185,7 @@
 }
 
 .squad-detail {
-    width: 560px;
+    width: 620px;
     padding: 24px 30px 26px 30px;
 }
 
@@ -1269,6 +1340,7 @@
     color: rgb(214, 219, 232);
     margin-top: 10px;
     white-space: normal;
+    -unity-paragraph-spacing: 5px;
 }
 
 /* ---------- 作戦選択の章のタブ ---------- */
@@ -1445,6 +1517,15 @@
 
 .c3-mobile .unit-skill-meta {
     font-size: 19px;
+}
+
+/* スマホの出撃中は画面の高さが足りないので、部員の札のひとことは出さない */
+.c3-mobile .unit-info .unit-profile {
+    display: none;
+}
+
+.c3-mobile .unit-info .unit-skill-flavor {
+    display: none;
 }
 
 .c3-mobile .enemy-traits {

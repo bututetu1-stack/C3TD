@@ -124,7 +124,7 @@ public class EnemyPanel
         speedValue.text = d.speed.ToString("0.0#");
         lifeValue.text = "-" + d.lifeDamage;
         string traits = Traits(d);
-        traitsLabel.text = traits;
+        traitsLabel.text = SkillText.Format(traits);
         UIFactory.SetVisible(traitsLabel, traits.Length > 0);
     }
 

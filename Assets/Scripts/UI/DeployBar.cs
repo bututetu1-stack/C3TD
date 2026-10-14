@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 /// <summary>
 /// 画面下の編成バー。DP の札と、部員のカード（アイコン・コスト・職業）。
 /// カードを押してマップへドラッグすると配置できる。配置中・再配置待ち・DP 不足はカードの見た目で分かる。
+/// マウスをカードに重ねると、カードの上に部員の札（CharacterInfo）が出る。スマホではカードを選んだとき小さな札が出る。
 /// </summary>
 public class DeployBar
 {
@@ -18,6 +19,15 @@ public class DeployBar
     private readonly VisualElement dpFill;
     private readonly List<Card> cards = new List<Card>();
     private int shownDp = -1;
+
+    // カードに重ねたときの札
+    private VisualElement tipLayer;
+    private CharacterInfo tip;
+    private SquadMember tipFor;
+    private string shownTipStatus;
+
+    /// <summary>マウスを重ねているカードの部員（いなければ null）。BattleInput が置けるマスを薄く出すのに使う</summary>
+    public SquadMember Hovered { get; private set; }
 
     private class Card
     {
@@ -58,8 +68,21 @@ public class DeployBar
         bar.Add(cardRow);
     }
 
+    /// <summary>カードに重ねたときの札を作る（ほかの札より手前に出すため、HUD を組み終えてから呼ぶ）</summary>
+    public void AttachTooltip(VisualElement root)
+    {
+        tipLayer = root;
+        tip = new CharacterInfo(false, "card-tip");
+        tip.Root.SetCut(20f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetStroke(Palette.WithAlpha(Palette.Amber, 0.45f), 1.5f);
+        tip.Root.pickingMode = PickingMode.Ignore;
+        UIFactory.SetVisible(tip.Root, false);
+        root.Add(tip.Root);
+    }
+
     public void Rebuild(Battle battle)
     {
+        Hovered = null;
+        tipFor = null;
         cardRow.Clear();
         cards.Clear();
         shownDp = -1;
@@ -86,6 +109,15 @@ public class DeployBar
         box.RegisterCallback<PointerDownEvent>(e =>
         {
             if (e.button == 0 && BattleInput.Instance != null) BattleInput.Instance.BeginDrag(member);
+        });
+        // タッチでは「重ねる」がないので、マウスのときだけ札を出す
+        box.RegisterCallback<PointerEnterEvent>(e =>
+        {
+            if (e.pointerType == UnityEngine.UIElements.PointerType.mouse) Hovered = member;
+        });
+        box.RegisterCallback<PointerLeaveEvent>(e =>
+        {
+            if (ReferenceEquals(Hovered, member)) Hovered = null;
         });
 
         card.Box = box;
@@ -149,5 +181,60 @@ public class DeployBar
                 c.Box.EnableInClassList("deploy-card--dragging", isDragging == 1);
             }
         }
+        RefreshTooltip(battle, dragging, armed);
+    }
+
+    /// <summary>
+    /// マウスなら重ねているカード（ドラッグ中・カードを選んでいるときは出さない）、
+    /// スマホなら選んでいるカード（小さな札）の上に、部員の札を出す
+    /// </summary>
+    private void RefreshTooltip(Battle battle, SquadMember dragging, SquadMember armed)
+    {
+        if (tip == null) return;
+        bool mobile = Application.isMobilePlatform || UIFactory.Zoom > 1f;
+        SquadMember target = mobile ? armed : (dragging == null && armed == null ? Hovered : null);
+        Card card = null;
+        foreach (Card c in cards)
+            if (ReferenceEquals(c.Member, target)) { card = c; break; }
+        if (card == null) target = null;
+
+        if (!ReferenceEquals(target, tipFor))
+        {
+            tipFor = target;
+            shownTipStatus = null;
+            UIFactory.SetVisible(tip.Root, target != null);
+            if (target != null)
+            {
+                tip.SetCompact(mobile);
+                tip.Fill(target.Data, target.Class);
+            }
+        }
+        if (target == null) return;
+
+        // 置けるかどうか（配置中・再配置待ち・DP 不足）を名前の下に
+        string status;
+        Color color = Palette.AmberBright;
+        if (target.Deployed != null) status = "配置中";
+        else if (target.Cooldown > 0f) status = "再配置まで " + Mathf.CeilToInt(target.Cooldown) + "秒";
+        else if (battle.State.DpInt < target.Cost)
+        {
+            status = "DP があと " + (target.Cost - battle.State.DpInt) + " 足りない";
+            color = Palette.Crimson;
+        }
+        else status = mobile ? "置くマスを押す" : "ドラッグしてマップに置く";
+        if (status != shownTipStatus)
+        {
+            shownTipStatus = status;
+            tip.SetStatus(status, color);
+        }
+
+        // カードの真上に。画面の端からははみ出さない
+        Rect r = card.Box.worldBound;
+        float width = float.IsNaN(tip.Root.resolvedStyle.width) || tip.Root.resolvedStyle.width <= 0f ? 600f : tip.Root.resolvedStyle.width;
+        float panelWidth = tipLayer.layout.width;
+        float panelHeight = tipLayer.layout.height;
+        float left = Mathf.Clamp(r.center.x - width * 0.5f, 16f, Mathf.Max(16f, panelWidth - width - 16f));
+        tip.Root.style.left = left;
+        tip.Root.style.bottom = panelHeight - r.yMin + 14f;
     }
 }

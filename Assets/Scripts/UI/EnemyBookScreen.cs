@@ -191,7 +191,7 @@ public class EnemyBookScreen
         lifeValue.text = "-" + d.lifeDamage;
 
         string traits = EnemyPanel.Traits(d);
-        traitsLabel.text = traits.Length > 0 ? traits : "特別な性質はない";
+        traitsLabel.text = traits.Length > 0 ? SkillText.Format(traits) : "特別な性質はない";
         string stage;
         firstLabel.text = firstStage.TryGetValue(d.id, out stage) ? "初めて出る作戦：" + stage : "";
     }
