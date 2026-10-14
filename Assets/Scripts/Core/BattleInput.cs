@@ -170,6 +170,12 @@ public class BattleInput : MonoBehaviour
             battle.Highlight.Clear();
             return;
         }
+        // 説明の札を読んでいるあいだは何もしない（札が後ろを押させないが、キーのカード選びも止める）
+        if (TimeController.Held)
+        {
+            battle.Highlight.Clear();
+            return;
+        }
         // 倒された部員は破棄されて Unity では null と等しくなるので、参照が残っていれば外す
         if (!ReferenceEquals(Selected, null) && (Selected == null || !Selected.Alive)) Select(null);
         if (!ReferenceEquals(Inspected, null) && (Inspected == null || !Inspected.Alive)) Inspect(null);

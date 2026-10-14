@@ -37,6 +37,12 @@ public class ClassData
     public string projectile;
 
     public string color;
+
+    /// <summary>「職業の説明」に出す文：何をするか・得意・苦手・置き方のコツ</summary>
+    public string role;
+    public string strong;
+    public string weak;
+    public string tip;
 }
 
 /// <summary>全体のルール（Resources/Data/rules.json）</summary>

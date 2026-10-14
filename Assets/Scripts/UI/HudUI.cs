@@ -11,9 +11,6 @@ public class HudUI : MonoBehaviour
 {
     private const float IntroDuration = 2.0f;
 
-    /// <summary>ヒントの札と編成バーのあいだ</summary>
-    private const float HintGap = 24f;
-
     private GameBootstrap bootstrap;
     private VisualElement root;
 
@@ -45,19 +42,9 @@ public class HudUI : MonoBehaviour
     private int shownNextSeconds = -2;
     private int shownCallBonus = -1;
 
-    // 初めて出る敵の知らせ（Kingdom Rush の新しい敵の札）
-    private VisualElement newEnemyLayer;
-    private ChamferBox newEnemyPlate;
-    private VisualElement newEnemyIcon;
-    private Label newEnemyIconLabel;
-    private Label newEnemyName;
-    private Label newEnemyTraits;
-    private Enemy newEnemyShown;
-    private float newEnemyRemaining;
-    private IVisualElementScheduledItem newEnemyTween;
-    private readonly System.Collections.Generic.Queue<Enemy> newEnemyQueue = new System.Collections.Generic.Queue<Enemy>();
-    private System.Collections.Generic.HashSet<string> knownEnemies = new System.Collections.Generic.HashSet<string>();
-    private const float NewEnemyDuration = 7f;
+    // 時間を止めて読む説明（作戦のヒント・初めて会う敵）
+    private BriefingDialog briefing;
+    private bool showHints;
 
     // ボスの体力（ボスが場にいるあいだだけ出す）
     private VisualElement bossLayer;
@@ -67,14 +54,8 @@ public class HudUI : MonoBehaviour
     private Enemy shownBoss;
     private IVisualElementScheduledItem bossTween;
 
-    // 操作のヒント（ステージに hints があるときだけ）
-    private ChamferBox hintPlate;
-    private Label hintText;
+    // 作戦のヒント（ステージの hints）の次の番号
     private int hintIndex;
-    // 消えるまでの残り秒。2倍速でも読めるよう実時間で数え、一時停止中は減らさない
-    private float hintRemaining;
-    private bool hintShown;
-    private IVisualElementScheduledItem hintTween;
 
     // 全面の演出
     private VisualElement damageFlash;
@@ -135,12 +116,7 @@ public class HudUI : MonoBehaviour
 
         BuildTopBar();
         BuildBossBar();
-        BuildHint();
-        BuildNewEnemy();
         deployBar = new DeployBar(root);
-        // ヒントの札は編成バーの左の空いたところに収める（幅の上限は USS の max-width）
-        deployBar.Root.RegisterCallback<GeometryChangedEvent>(e =>
-            hintPlate.style.right = root.layout.width - deployBar.Root.layout.xMin + HintGap);
         unitPanel = new UnitPanel(root);
         enemyPanel = new EnemyPanel(root);
         cutIn = new CutIn(root);
@@ -148,6 +124,7 @@ public class HudUI : MonoBehaviour
         BuildIntro();
         BuildPause();
         BuildResult();
+        briefing = new BriefingDialog(root);
         settings = new SettingsPanel(root);
     }
 
@@ -266,84 +243,50 @@ public class HudUI : MonoBehaviour
         }
     }
 
-    /// <summary>初めて出る敵の札（画面の上のまん中。押すとその敵の札を開く）</summary>
-    private void BuildNewEnemy()
-    {
-        newEnemyLayer = UIFactory.Box("new-enemy-layer");
-        newEnemyPlate = new ChamferBox();
-        newEnemyPlate.AddToClassList("new-enemy");
-        newEnemyPlate.SetFill(Palette.UiBand).SetStroke(Palette.WithAlpha(Palette.Crimson, 0.7f), 1.5f)
-            .SetCut(16f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetAccent(Palette.Crimson, 6f).SetStripes(Palette.UiStripe, 18f);
-        newEnemyPlate.pickingMode = PickingMode.Position;
-        newEnemyIcon = UIFactory.Box("new-enemy-icon");
-        newEnemyIconLabel = UIFactory.Text("", UIFont.Title, "new-enemy-icon-label");
-        newEnemyIcon.Add(newEnemyIconLabel);
-        newEnemyPlate.Add(newEnemyIcon);
-        var text = UIFactory.Box("new-enemy-text");
-        var head = UIFactory.Box("new-enemy-head");
-        head.Add(UIFactory.Text("NEW ENEMY", UIFont.Display, "new-enemy-caption"));
-        newEnemyName = UIFactory.Text("", UIFont.Title, "new-enemy-name");
-        head.Add(newEnemyName);
-        text.Add(head);
-        newEnemyTraits = UIFactory.Text("", UIFont.Medium, "new-enemy-traits");
-        text.Add(newEnemyTraits);
-        newEnemyPlate.Add(text);
-        newEnemyPlate.AddManipulator(new Clickable(() =>
-        {
-            if (newEnemyShown != null && newEnemyShown.Alive && BattleInput.Instance != null) BattleInput.Instance.Inspect(newEnemyShown);
-            HideNewEnemy();
-        }));
-        newEnemyLayer.Add(newEnemyPlate);
-        UIFactory.SetVisible(newEnemyLayer, false);
-        root.Add(newEnemyLayer);
-    }
-
+    /// <summary>初めて会う敵：時間を止めて、性質と倒し方の札を出す（Kingdom Rush の新しい敵の札のように。会うのは一度だけ）</summary>
     private void OnEnemySpawned(Enemy e)
     {
-        if (e == null || e.Data == null || knownEnemies.Contains(e.Data.id)) return;
-        knownEnemies.Add(e.Data.id);
-        newEnemyQueue.Enqueue(e);
-    }
-
-    private void RefreshNewEnemy(Battle battle)
-    {
-        if (UIFactory.IsVisible(newEnemyLayer))
-        {
-            if (!TimeController.Paused) newEnemyRemaining -= Time.unscaledDeltaTime;
-            if (newEnemyRemaining <= 0f || battle.State.Phase != GamePhase.Playing) HideNewEnemy();
-        }
-        // ボスの体力バーが出ていれば、その下に
-        newEnemyLayer.style.top = shownBoss != null ? 196f : 104f;
-        if (UIFactory.IsVisible(newEnemyLayer) || newEnemyQueue.Count == 0 || battle.State.Phase != GamePhase.Playing) return;
-
-        Enemy e = newEnemyQueue.Dequeue();
+        if (e == null || e.Data == null || Progress.HasSeenEnemy(e.Data.id)) return;
+        Progress.MarkSeenEnemy(e.Data.id);
+        if (!GameSettings.HintsOn) return;
         EnemyData d = e.Data;
-        newEnemyShown = e;
-        newEnemyRemaining = NewEnemyDuration;
-        Sprite art = Art.Enemy(d.id);
-        newEnemyIcon.style.backgroundImage = art != null ? new StyleBackground(art) : new StyleBackground(StyleKeyword.None);
-        newEnemyIcon.style.backgroundColor = art != null ? new Color(1f, 1f, 1f, 0.06f) : Palette.Hex(d.color, Palette.Crimson);
-        newEnemyIconLabel.text = art != null ? "" : d.Label;
-        newEnemyName.text = d.name + (d.boss ? "（ボス）" : "");
         string traits = EnemyPanel.Traits(d);
-        newEnemyTraits.text = traits.Length > 0 ? SkillText.Format(traits) : "特別な性質はない";
-        UIFactory.SetVisible(newEnemyLayer, true);
-        UITween.Stop(ref newEnemyTween);
-        newEnemyTween = UITween.Run(newEnemyPlate, 0.35f, t =>
+        briefing.Enqueue(new BriefingDialog.Entry
         {
-            float k = Ease.OutCubic(t);
-            newEnemyPlate.style.opacity = k;
-            newEnemyPlate.style.translate = new Translate(0f, (1f - k) * -20f);
+            Caption = "NEW ENEMY",
+            Title = d.name + (d.boss ? "（ボス）" : ""),
+            Body = (traits.Length > 0 ? traits : "特別な性質はない") + "\n倒し方：" + StageTips.Advice(d),
+            Icon = Art.Enemy(d.id),
+            IconLabel = d.Label,
+            IconColor = Palette.Hex(d.color, Palette.Crimson),
+            Warning = true,
         });
-        AudioManager.PlaySE("skill_ready");
     }
 
-    private void HideNewEnemy()
+    /// <summary>作戦のヒント（時刻が来たもの。同じときに来たものは1枚にまとめる）と、待っている説明の札を出す</summary>
+    private void RefreshBriefings(Battle battle)
     {
-        newEnemyShown = null;
-        newEnemyRemaining = 0f;
-        UITween.Stop(ref newEnemyTween);
-        UIFactory.SetVisible(newEnemyLayer, false);
+        GameState state = battle.State;
+        if (state.Phase != GamePhase.Playing)
+        {
+            if (briefing.IsOpen) briefing.Clear();
+            return;
+        }
+        var hints = battle.Stage.hints;
+        if (hints != null && hintIndex < hints.Count && hints[hintIndex].time <= state.ElapsedTime)
+        {
+            var lines = new System.Collections.Generic.List<string>();
+            while (hintIndex < hints.Count && hints[hintIndex].time <= state.ElapsedTime)
+            {
+                string text = hints[hintIndex++].text ?? "";
+                // スマホでは「クリック」を「タップ」と読み替える
+                if (Application.isMobilePlatform) text = text.Replace("クリック", "タップ");
+                lines.Add(text);
+            }
+            if (showHints)
+                briefing.Enqueue(new BriefingDialog.Entry { Caption = "HINT", Title = "作戦のヒント", Body = string.Join("\n", lines) });
+        }
+        briefing.Update();
     }
 
     private void BuildBossBar()
@@ -395,48 +338,6 @@ public class HudUI : MonoBehaviour
         float rate = Mathf.Clamp01(boss.Hp / boss.MaxHp);
         bossFill.style.width = Length.Percent(rate * 100f);
         bossHp.text = Mathf.CeilToInt(boss.Hp).ToString("N0") + " / " + Mathf.CeilToInt(boss.MaxHp).ToString("N0");
-    }
-
-    private void BuildHint()
-    {
-        hintPlate = new ChamferBox();
-        hintPlate.AddToClassList("hint-plate");
-        hintPlate.SetFill(Palette.UiPanel).SetCut(14f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetAccent(Palette.Amber, 5f);
-        hintPlate.Add(UIFactory.Text("HINT", UIFont.Display, "hint-caption"));
-        hintText = UIFactory.Text("", UIFont.Body, "hint-text");
-        hintPlate.Add(hintText);
-        UIFactory.SetVisible(hintPlate, false);
-        root.Add(hintPlate);
-    }
-
-    /// <summary>ステージの hints を時刻どおりに1つずつ出す</summary>
-    private void RefreshHint(Battle battle)
-    {
-        GameState state = battle.State;
-        if (hintShown && !TimeController.Paused) hintRemaining -= Time.unscaledDeltaTime;
-        if (hintShown && (hintRemaining <= 0f || state.Phase != GamePhase.Playing))
-        {
-            hintShown = false;
-            UITween.Stop(ref hintTween);
-            UIFactory.SetVisible(hintPlate, false);
-        }
-        var hints = battle.Stage.hints;
-        if (state.Phase != GamePhase.Playing || hints == null || hintIndex >= hints.Count) return;
-        if (hints[hintIndex].time > state.ElapsedTime) return;
-
-        HintData hint = hints[hintIndex++];
-        // スマホでは「クリック」を「タップ」と読み替える
-        hintText.text = Application.isMobilePlatform && hint.text != null ? hint.text.Replace("クリック", "タップ") : hint.text;
-        hintRemaining = Mathf.Max(1f, hint.duration);
-        hintShown = true;
-        UIFactory.SetVisible(hintPlate, true);
-        UITween.Stop(ref hintTween);
-        hintTween = UITween.Run(hintPlate, 0.35f, t =>
-        {
-            float e = Ease.OutCubic(t);
-            hintPlate.style.opacity = e;
-            hintPlate.style.translate = new Translate((1f - e) * -30f, 0f);
-        });
     }
 
     private ChamferBox AddStat(VisualElement bar, IconKind icon, Color iconColor, string caption, out Label value, out Label sub)
@@ -609,9 +510,8 @@ public class HudUI : MonoBehaviour
         unitPanel.Refresh(BattleInput.Instance != null ? BattleInput.Instance.Selected : null);
         enemyPanel.Refresh(BattleInput.Instance != null ? BattleInput.Instance.Inspected : null);
         RefreshBoss(battle);
-        RefreshHint(battle);
         RefreshNext(battle);
-        RefreshNewEnemy(battle);
+        RefreshBriefings(battle);
 
         int seconds = Mathf.FloorToInt(state.ElapsedTime);
         if (seconds != shownSeconds)
@@ -687,9 +587,9 @@ public class HudUI : MonoBehaviour
         battle.EnemyLeaked += OnEnemyLeaked;
         battle.SkillActivated += c => cutIn.Play(c);
         battle.EnemySpawned += OnEnemySpawned;
-        knownEnemies = GameData.EnemiesBefore(battle.Stage.id);
-        newEnemyQueue.Clear();
-        HideNewEnemy();
+        briefing.Clear();
+        // 作戦のヒントは、その作戦をクリアするまで（設定で出さないこともできる）
+        showHints = GameSettings.HintsOn && !Progress.IsCleared(battle.Stage.id);
         shownNextEnemy = null;
         shownNextCount = shownNextSeconds = shownCallBonus = -1;
 
@@ -707,10 +607,6 @@ public class HudUI : MonoBehaviour
         shownPhase = GamePhase.Playing;
         hintIndex = 0;
         leakCounts.Clear();
-        advised.Clear();
-        hintShown = false;
-        UITween.Stop(ref hintTween);
-        UIFactory.SetVisible(hintPlate, false);
         UITween.Stop(ref resultTween);
         UIFactory.SetVisible(resultLayer, false);
         deployBar.Rebuild(battle);
@@ -886,29 +782,6 @@ public class HudUI : MonoBehaviour
     /// <summary>拠点に着かれた：画面のふちが赤く光り、ライフの札が揺れる</summary>
     // 拠点に着かれた敵の種類ごとの数（負けたときの助言）と、助言を出した種類
     private readonly System.Collections.Generic.Dictionary<string, int> leakCounts = new System.Collections.Generic.Dictionary<string, int>();
-    private readonly System.Collections.Generic.HashSet<string> advised = new System.Collections.Generic.HashSet<string>();
-
-    /// <summary>突破された敵の種類ごとに一度だけ、ヒントの札に倒し方を出す（Kingdom Rush のヒントのように）</summary>
-    private void Advise(Enemy enemy)
-    {
-        if (enemy == null || enemy.Data == null) return;
-        string id = enemy.Data.id;
-        int n;
-        leakCounts.TryGetValue(id, out n);
-        leakCounts[id] = n + 1;
-        if (!advised.Add(id) || shownBattle == null || shownBattle.State.Phase != GamePhase.Playing) return;
-        hintText.text = SkillText.Format(StageTips.Advice(enemy.Data));
-        hintRemaining = 7f;
-        hintShown = true;
-        UIFactory.SetVisible(hintPlate, true);
-        UITween.Stop(ref hintTween);
-        hintTween = UITween.Run(hintPlate, 0.35f, t =>
-        {
-            float e = Ease.OutCubic(t);
-            hintPlate.style.opacity = e;
-            hintPlate.style.translate = new Translate((1f - e) * -30f, 0f);
-        });
-    }
 
     /// <summary>いちばん多く突破された敵への助言（なければ null）</summary>
     private string LossAdvice()
@@ -922,7 +795,13 @@ public class HudUI : MonoBehaviour
 
     private void OnEnemyLeaked(Enemy enemy)
     {
-        Advise(enemy);
+        // 倒し方は、出撃中には出さず（配置で忙しいので）、負けたときの結果に出す
+        if (enemy != null && enemy.Data != null)
+        {
+            int n;
+            leakCounts.TryGetValue(enemy.Data.id, out n);
+            leakCounts[enemy.Data.id] = n + 1;
+        }
         UITween.Stop(ref flashTween);
         flashTween = UITween.Run(damageFlash, 0.7f, t => damageFlash.style.opacity = 0.9f * (1f - Ease.OutCubic(t)));
         UITween.Stop(ref shakeTween);
@@ -968,6 +847,13 @@ public class HudUI : MonoBehaviour
         if (settings.IsOpen)
         {
             if (kb.escapeKey.wasPressedThisFrame) settings.Hide();
+            return;
+        }
+        // 説明の札を読んでいるあいだは、Space・Enter・Esc で次へ（一時停止はしない）
+        if (briefing.IsOpen)
+        {
+            if (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame || kb.escapeKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame)
+                briefing.Next();
             return;
         }
         if (kb.spaceKey.wasPressedThisFrame) TimeController.TogglePause();

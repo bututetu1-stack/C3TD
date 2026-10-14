@@ -93,6 +93,15 @@ public class GameBootstrap : MonoBehaviour
         menu.ShowUpgrades();
     }
 
+    /// <summary>職業の説明。fromSquad なら戻ると編成画面、でなければ遊び方</summary>
+    public void ShowClassGuide(bool fromSquad)
+    {
+        EndBattle();
+        string back = stageId;
+        if (fromSquad) menu.ShowClassGuide(() => ShowSquad(back));
+        else menu.ShowClassGuide(ShowHelp);
+    }
+
     /// <summary>設定の札（タイトルの上に重ねる）</summary>
     public void ShowSettings()
     {

@@ -212,70 +212,6 @@
     margin-left: 6px;
 }
 
-/* 初めて出る敵の知らせ（画面の上のまん中） */
-.new-enemy-layer {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 104px;
-    align-items: center;
-}
-
-.new-enemy {
-    flex-direction: row;
-    align-items: center;
-    max-width: 980px;
-    padding: 12px 26px 14px 24px;
-}
-
-.new-enemy-icon {
-    width: 76px;
-    height: 76px;
-    border-radius: 38px;
-    border-width: 2px;
-    border-color: rgb(239, 74, 85);
-    margin-right: 18px;
-    flex-shrink: 0;
-    -unity-background-scale-mode: scale-to-fit;
-    align-items: center;
-    justify-content: center;
-}
-
-.new-enemy-icon-label {
-    font-size: 30px;
-    color: rgb(255, 255, 255);
-    -unity-text-align: middle-center;
-}
-
-.new-enemy-text {
-    flex-shrink: 1;
-}
-
-.new-enemy-head {
-    flex-direction: row;
-    align-items: flex-end;
-}
-
-.new-enemy-caption {
-    font-size: 19px;
-    letter-spacing: 5px;
-    color: rgb(239, 74, 85);
-    margin-right: 14px;
-    margin-bottom: 4px;
-}
-
-.new-enemy-name {
-    font-size: 32px;
-    color: rgb(255, 255, 255);
-}
-
-.new-enemy-traits {
-    font-size: 19px;
-    color: rgb(214, 219, 232);
-    white-space: normal;
-    -unity-paragraph-spacing: 3px;
-}
-
 /* ---------- 作戦開始 ---------- */
 .intro-layer {
     justify-content: center;
@@ -1653,29 +1589,6 @@
     background-color: rgb(239, 74, 85);
 }
 
-/* ---------- 操作のヒント ---------- */
-.hint-plate {
-    position: absolute;
-    left: 40px;
-    right: 40px; /* 編成バーの左に合わせてコード（HudUI）で書き換える */
-    bottom: 40px;
-    max-width: 960px;
-    padding: 12px 26px 16px 30px;
-}
-
-.hint-caption {
-    font-size: 19px;
-    letter-spacing: 6px;
-    color: rgb(244, 182, 63);
-    margin-bottom: 2px;
-}
-
-.hint-text {
-    font-size: 26px;
-    color: rgb(238, 241, 246);
-    white-space: normal;
-}
-
 /* ---------- 敵の情報 ---------- */
 .enemy-portrait {
     -unity-background-scale-mode: scale-to-fit;
@@ -1856,6 +1769,88 @@
     margin-right: 14px;
 }
 
+/* ---------- 説明の札（時間を止めて読む） ---------- */
+.briefing-layer {
+    background-color: rgba(3, 5, 10, 0.55);
+    justify-content: center;
+    align-items: center;
+}
+
+.briefing-card {
+    width: 960px;
+    padding: 26px 34px 24px 34px;
+}
+
+.briefing-head {
+    flex-direction: row;
+    align-items: center;
+}
+
+.briefing-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 48px;
+    border-width: 3px;
+    margin-right: 22px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: scale-to-fit;
+    align-items: center;
+    justify-content: center;
+}
+
+.briefing-icon-label {
+    font-size: 38px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.briefing-titles {
+    flex-shrink: 1;
+}
+
+.briefing-caption {
+    font-size: 20px;
+    letter-spacing: 6px;
+}
+
+.briefing-title {
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+}
+
+.briefing-body {
+    font-size: 23px;
+    color: rgb(226, 230, 240);
+    margin-top: 16px;
+    white-space: normal;
+    -unity-paragraph-spacing: 8px;
+}
+
+.briefing-footer {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 22px;
+}
+
+.briefing-note {
+    font-size: 17px;
+    color: rgb(142, 152, 172);
+}
+
+.briefing-ok {
+    width: 260px;
+    height: 62px;
+}
+
+.briefing-ok .c3-button-text {
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+.c3-mobile .briefing-card {
+    width: 1100px;
+}
+
 /* ---------- 設定（音量） ---------- */
 .settings-layer {
     background-color: rgba(3, 5, 10, 0.8);
@@ -1928,6 +1923,16 @@
     margin-top: 6px;
     margin-bottom: 18px;
     white-space: normal;
+}
+
+.settings-toggle {
+    height: 52px;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.settings-toggle .c3-button-text {
+    font-size: 20px;
 }
 
 .settings-close {
@@ -2149,6 +2154,217 @@
 
 .title-subrow .title-button.title-button--sub {
     width: 150px;
+}
+
+/* ---------- 職業の説明 ---------- */
+.class-intro {
+    font-size: 20px;
+    color: rgb(178, 186, 204);
+    margin-bottom: 12px;
+    white-space: normal;
+}
+
+.class-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-bottom: 30px;
+}
+
+.class-card {
+    width: 32%;
+    margin-right: 1.2%;
+    margin-bottom: 16px;
+    padding: 18px 22px 20px 26px;
+}
+
+.class-head {
+    flex-direction: row;
+    align-items: center;
+}
+
+.class-badge {
+    width: 76px;
+    height: 76px;
+    margin-right: 16px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.class-badge-label {
+    font-size: 44px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.class-names {
+    flex-shrink: 1;
+}
+
+.class-name {
+    font-size: 36px;
+    color: rgb(255, 255, 255);
+}
+
+.class-chips {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.class-chip {
+    font-size: 16px;
+    padding: 1px 8px 1px 8px;
+    margin-right: 6px;
+    margin-top: 4px;
+    color: rgb(214, 219, 232);
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.class-role {
+    font-size: 20px;
+    color: rgb(238, 241, 246);
+    margin-top: 12px;
+    white-space: normal;
+}
+
+.class-body {
+    flex-direction: row;
+    margin-top: 12px;
+}
+
+.class-lines {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.class-line {
+    font-size: 18px;
+    color: rgb(214, 219, 232);
+    margin-bottom: 6px;
+    white-space: normal;
+}
+
+.class-diagram {
+    width: 126px;
+    margin-left: 14px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.class-grid-row {
+    flex-direction: row;
+}
+
+.class-cell {
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.class-cell--range {
+    background-color: rgba(244, 182, 63, 0.55);
+}
+
+.class-diagram-caption {
+    font-size: 15px;
+    color: rgb(142, 152, 172);
+    margin-top: 6px;
+    -unity-text-align: middle-center;
+}
+
+.class-tile-row {
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.class-tile {
+    font-size: 15px;
+    padding: 3px 8px 3px 8px;
+    margin-right: 6px;
+    -unity-text-align: middle-center;
+}
+
+.class-tile--ground {
+    color: rgb(238, 241, 246);
+    background-color: rgb(82, 92, 112);
+}
+
+.class-tile--high {
+    color: rgb(20, 24, 34);
+    background-color: rgb(163, 174, 195);
+}
+
+.class-tile--off {
+    opacity: 0.25;
+}
+
+.class-members {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.class-member {
+    flex-direction: row;
+    align-items: center;
+    margin-right: 12px;
+    margin-bottom: 6px;
+}
+
+.class-member .team-portrait {
+    width: 34px;
+    height: 34px;
+    margin-right: 6px;
+}
+
+.class-member-name {
+    font-size: 16px;
+    color: rgb(214, 219, 232);
+}
+
+.help-class-button {
+    height: 60px;
+    align-self: flex-start;
+    padding-left: 18px;
+    padding-right: 22px;
+    margin-bottom: 14px;
+}
+
+.help-class-button .c3-button-text {
+    font-size: 22px;
+    margin-left: 10px;
+}
+
+.squad-help-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.squad-help-row .squad-help {
+    margin-bottom: 0;
+    margin-right: 16px;
+}
+
+.squad-class-button {
+    height: 44px;
+    padding-left: 12px;
+    padding-right: 16px;
+}
+
+.squad-class-button .c3-button-text {
+    font-size: 18px;
+    margin-left: 8px;
+}
+
+.c3-mobile .class-card {
+    width: 48.5%;
 }
 
 /* ---------- 遊び方 ---------- */

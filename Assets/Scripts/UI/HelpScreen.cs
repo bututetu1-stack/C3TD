@@ -16,6 +16,12 @@ public class HelpScreen
         MenuUI.Header(Root, "HOW TO PLAY", "遊び方", () => bootstrap.ShowTitle(), out sub);
         sub.text = "アークナイツ風のタワーディフェンス";
 
+        // 職業がいちばん分かりにくいので、くわしい説明へのボタンを上に
+        var classButton = new C3Button(IconKind.Next, 24f, "職業をくわしく見る（前衛・重装・狙撃・術師・医療）", () => bootstrap.ShowClassGuide(false));
+        classButton.AddToClassList("help-class-button");
+        classButton.Active = true;
+        Root.Add(classButton);
+
         var scroll = new ScrollView(ScrollViewMode.Vertical);
         scroll.AddToClassList("help-scroll");
         scroll.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
@@ -30,7 +36,8 @@ public class HelpScreen
         Card(grid, "GOAL", "勝ち負け",
             "敵は赤い出撃口から矢印に沿って歩き、青い拠点を目指す\n" +
             "拠点に着かれるとライフが減り、0 になったら負け\n" +
-            "全部の敵を倒せば勝ち。ライフを減らさずに勝つと★3");
+            "全部の敵を倒せば勝ち。ライフを減らさずに勝つと★3\n" +
+            "初めての作戦のヒントと、初めて会う敵の説明が出るあいだは、時間が止まる（設定で出さないこともできる）");
         Card(grid, "DEPLOY", "部員を置く",
             "下のカードをマスまでドラッグして置く（カードを" + press + "してから置くマスを" + press + "してもよい" + (mobile ? "" : "。1〜9 のキーでもカードを選べる") + "）\n" +
             "置くには DP を使う。DP は 1 秒に 1 たまる\n" +
@@ -61,7 +68,7 @@ public class HelpScreen
         Card(grid, "NEXT", "次の敵",
             "右上の NEXT に、次に来る敵とあと何秒かが出る\n" +
             "間があいているときに「呼ぶ」を押すと、すぐ呼ぶ代わりに、早めた分だけ DP がもらえる\n" +
-            "初めて出る敵は、画面の上に NEW ENEMY の札が出る。敵を" + press + "すると性質が見られる");
+            "敵を" + press + "すると性質が見られる。負けたときは、結果の画面に倒し方のヒントが出る");
         Card(grid, "MORE", "やりこみ",
             "強襲：クリアした作戦は、作戦選択で「強襲」にできる。ライフ 1・敵が強い\n" +
             "エンドレス：1-5 をクリアすると開く。何波まで守れるかを競う\n" +

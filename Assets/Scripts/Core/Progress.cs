@@ -62,6 +62,10 @@ public class ProgressData
     /// <summary>取った実績の id と、出撃した回数（勝ち負けが決まった回）</summary>
     public List<string> achievements = new List<string>();
     public int battles;
+
+    /// <summary>会ったことのある敵（初めて会ったときだけ説明の札を出す）。seenSeeded：前のセーブからの引き継ぎを済ませた</summary>
+    public List<string> seenEnemies = new List<string>();
+    public bool seenSeeded;
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -231,6 +235,42 @@ public static class Progress
         if (Data.achievements == null) Data.achievements = new List<string>();
         if (Data.achievements.Contains(id)) return;
         Data.achievements.Add(id);
+        Save();
+    }
+
+    /// <summary>その敵に会ったことがあるか（はじめて呼ばれたとき、クリアした作戦の敵を会ったことにする）</summary>
+    public static bool HasSeenEnemy(string id)
+    {
+        if (Data.seenEnemies == null) Data.seenEnemies = new List<string>();
+        if (!Data.seenSeeded)
+        {
+            Data.seenSeeded = true;
+            foreach (string stageId in GameData.Campaign.AllStages())
+            {
+                if (!IsCleared(stageId)) continue;
+                StageData s = GameData.Stage(stageId);
+                if (s == null) continue;
+                foreach (WaveData w in s.waves) SeedEnemy(w.enemy);
+            }
+            Save();
+        }
+        return Data.seenEnemies.Contains(id);
+    }
+
+    private static void SeedEnemy(string id)
+    {
+        if (string.IsNullOrEmpty(id) || Data.seenEnemies.Contains(id)) return;
+        Data.seenEnemies.Add(id);
+        EnemyData e = GameData.Enemy(id);
+        if (e == null) return;
+        if (e.summon != null) SeedEnemy(e.summon.enemy);
+        if (e.split != null) SeedEnemy(e.split.enemy);
+    }
+
+    public static void MarkSeenEnemy(string id)
+    {
+        if (HasSeenEnemy(id)) return;
+        Data.seenEnemies.Add(id);
         Save();
     }
 

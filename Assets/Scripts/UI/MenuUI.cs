@@ -19,6 +19,8 @@ public class MenuUI : MonoBehaviour
     private HelpScreen help;
     private RecordsScreen records;
     private UpgradeScreen upgrade;
+    private ClassGuideScreen classGuide;
+    private Action classGuideBack;
     private SettingsPanel settings;
     private VisualElement current;
     private IVisualElementScheduledItem showTween;
@@ -36,6 +38,7 @@ public class MenuUI : MonoBehaviour
         help = new HelpScreen(root, bootstrap);
         records = new RecordsScreen(root, bootstrap);
         upgrade = new UpgradeScreen(root, bootstrap);
+        classGuide = new ClassGuideScreen(root, () => { if (classGuideBack != null) classGuideBack(); });
         settings = new SettingsPanel(root);
         HideAll();
     }
@@ -97,6 +100,14 @@ public class MenuUI : MonoBehaviour
         Show(upgrade.Root);
     }
 
+    /// <summary>職業の説明（遊び方・編成画面から）。back は「戻る」と Esc で戻る先</summary>
+    public void ShowClassGuide(Action back)
+    {
+        classGuideBack = back;
+        classGuide.Open();
+        Show(classGuide.Root);
+    }
+
     public void ShowSettings()
     {
         settings.Show();
@@ -113,7 +124,7 @@ public class MenuUI : MonoBehaviour
     private void Show(VisualElement screen)
     {
         root.style.display = DisplayStyle.Flex;
-        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root, help.Root, records.Root, upgrade.Root }) UIFactory.SetVisible(s, s == screen);
+        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root, help.Root, records.Root, upgrade.Root, classGuide.Root }) UIFactory.SetVisible(s, s == screen);
         current = screen;
         AudioManager.PlayBGM("menu");
         UITween.Stop(ref showTween);
@@ -135,6 +146,7 @@ public class MenuUI : MonoBehaviour
             // 設定の札が開いていれば、先にそれを閉じる
             if (settings.IsOpen) settings.Hide();
             else if (current == squad.Root) bootstrap.ShowStageSelect(squad.StageId);
+            else if (current == classGuide.Root) { if (classGuideBack != null) classGuideBack(); }
             else if (current == select.Root || current == book.Root || current == help.Root || current == records.Root || current == upgrade.Root) bootstrap.ShowTitle();
             return;
         }

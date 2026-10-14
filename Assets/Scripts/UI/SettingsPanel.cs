@@ -15,6 +15,7 @@ public class SettingsPanel
     private readonly List<VisualElement> seCells = new List<VisualElement>();
     private readonly Label bgmValue;
     private readonly Label seValue;
+    private readonly C3Button hintButton;
 
     public bool IsOpen { get { return UIFactory.IsVisible(Layer); } }
 
@@ -33,6 +34,19 @@ public class SettingsPanel
 
         bgmValue = AddRow(panel, "BGM", bgmCells, v => AudioManager.BgmLevel = v, () => AudioManager.BgmLevel, false);
         seValue = AddRow(panel, "効果音", seCells, v => AudioManager.SeLevel = v, () => AudioManager.SeLevel, true);
+
+        // 出撃中の説明（作戦のヒント・初めて会う敵）を出すか。出すあいだは時間が止まる
+        var hintRow = UIFactory.Box("settings-row");
+        hintRow.Add(UIFactory.Text("説明", UIFont.Body, "settings-caption"));
+        hintButton = new C3Button(null, 0f, "", () =>
+        {
+            GameSettings.HintsOn = !GameSettings.HintsOn;
+            Refresh();
+            AudioManager.PlaySE("click");
+        });
+        hintButton.AddToClassList("settings-toggle");
+        hintRow.Add(hintButton);
+        panel.Add(hintRow);
 
         if (!Application.isMobilePlatform)
             panel.Add(UIFactory.Text("出撃中のキー：1〜9 カードを選ぶ　S 必殺技　T 狙い方　Space 一時停止　Esc・右クリック 取り消し", UIFont.Medium, "settings-keys"));
@@ -97,6 +111,8 @@ public class SettingsPanel
     {
         Fill(bgmCells, bgmValue, AudioManager.BgmLevel);
         Fill(seCells, seValue, AudioManager.SeLevel);
+        hintButton.Text.text = GameSettings.HintsOn ? "出す（作戦をクリアするまで・初めての敵）　時間が止まる" : "出さない";
+        hintButton.Active = GameSettings.HintsOn;
     }
 
     private static void Fill(List<VisualElement> cells, Label value, float level)
