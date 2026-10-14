@@ -691,6 +691,8 @@ public class HudUI : MonoBehaviour
         if (enemyCaption != null) enemyCaption.text = battle.IsEndless ? "WAVE" : "ENEMY";
         shownPhase = GamePhase.Playing;
         hintIndex = 0;
+        leakCounts.Clear();
+        advised.Clear();
         hintShown = false;
         UITween.Stop(ref hintTween);
         UIFactory.SetVisible(hintPlate, false);
@@ -753,6 +755,8 @@ public class HudUI : MonoBehaviour
         UIFactory.SetVisible(nextButton, won && bootstrap.NextStageId() != null);
         string milestone = won && shownBattle != null ? Milestone(shownBattle.Stage.id) : null;
         if (won && shownBattle != null && shownBattle.Hard) milestone = "強襲作戦クリア！" + (milestone != null ? "　" + milestone : "");
+        // 負けたときは、いちばん多く突破された敵の倒し方
+        if (!won && !endless) milestone = LossAdvice();
         // エンドレス：守りきった波と最高記録
         if (endless)
         {
@@ -865,8 +869,45 @@ public class HudUI : MonoBehaviour
     }
 
     /// <summary>拠点に着かれた：画面のふちが赤く光り、ライフの札が揺れる</summary>
+    // 拠点に着かれた敵の種類ごとの数（負けたときの助言）と、助言を出した種類
+    private readonly System.Collections.Generic.Dictionary<string, int> leakCounts = new System.Collections.Generic.Dictionary<string, int>();
+    private readonly System.Collections.Generic.HashSet<string> advised = new System.Collections.Generic.HashSet<string>();
+
+    /// <summary>突破された敵の種類ごとに一度だけ、ヒントの札に倒し方を出す（Kingdom Rush のヒントのように）</summary>
+    private void Advise(Enemy enemy)
+    {
+        if (enemy == null || enemy.Data == null) return;
+        string id = enemy.Data.id;
+        int n;
+        leakCounts.TryGetValue(id, out n);
+        leakCounts[id] = n + 1;
+        if (!advised.Add(id) || shownBattle == null || shownBattle.State.Phase != GamePhase.Playing) return;
+        hintText.text = SkillText.Format(StageTips.Advice(enemy.Data));
+        hintRemaining = 7f;
+        hintShown = true;
+        UIFactory.SetVisible(hintPlate, true);
+        UITween.Stop(ref hintTween);
+        hintTween = UITween.Run(hintPlate, 0.35f, t =>
+        {
+            float e = Ease.OutCubic(t);
+            hintPlate.style.opacity = e;
+            hintPlate.style.translate = new Translate((1f - e) * -30f, 0f);
+        });
+    }
+
+    /// <summary>いちばん多く突破された敵への助言（なければ null）</summary>
+    private string LossAdvice()
+    {
+        string worst = null;
+        int most = 0;
+        foreach (var kv in leakCounts)
+            if (kv.Value > most) { most = kv.Value; worst = kv.Key; }
+        return worst != null ? "ヒント：" + StageTips.Advice(GameData.Enemy(worst)) : null;
+    }
+
     private void OnEnemyLeaked(Enemy enemy)
     {
+        Advise(enemy);
         UITween.Stop(ref flashTween);
         flashTween = UITween.Run(damageFlash, 0.7f, t => damageFlash.style.opacity = 0.9f * (1f - Ease.OutCubic(t)));
         UITween.Stop(ref shakeTween);

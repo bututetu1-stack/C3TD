@@ -374,6 +374,8 @@
 }
 
 .result-milestone {
+    white-space: normal;
+    max-width: 1500px;
     font-size: 30px;
     color: rgb(244, 182, 63);
     margin-bottom: 8px;

@@ -55,6 +55,21 @@ public static class StageTips
         tips.Add(new Tip { Text = what + "（" + string.Join("・", names) + "）：" + advice, Covered = covered });
     }
 
+    /// <summary>拠点に着かれた敵への助言（出撃中のヒントと、負けたときの結果に出す）</summary>
+    public static string Advice(EnemyData e)
+    {
+        if (e == null) return "";
+        if (e.boss) return e.name + "はとても硬いボス。必殺技を取っておき、ボスが来たら重ねて使おう";
+        if (e.flying) return e.name + "は空を飛ぶので、前衛・重装では止められない。狙撃・術師を飛ぶ道（水色の矢印）の近くに置こう";
+        if (e.dodge > 0f) return e.name + "は物理攻撃をかわす。術師の術なら必ず当たる";
+        if (e.def >= 300) return e.name + "は防御が高い。術師の術なら防御が効かない";
+        if (e.res >= 40f) return e.name + "は術が効きにくい。狙撃・前衛の物理で";
+        if (e.blink != null) return e.name + "は止められていないと先へ跳ぶ。前衛・重装で止めよう";
+        if (e.speed >= 1.5f) return e.name + "は足が速い。前衛・重装で止めてから攻撃しよう";
+        if (e.range > 0f) return e.name + "は離れた部員を撃つ。医療で回復しながら、狙撃・術師で先に倒そう";
+        return e.name + "に突破された。道に前衛・重装を置いて止め、まわりの高台から攻撃しよう";
+    }
+
     /// <summary>ステージに出てくる敵（ウェーブ・エンドレスの組とボス・呼ばれて分かれて出る敵）</summary>
     private static List<EnemyData> Enemies(StageData stage)
     {
