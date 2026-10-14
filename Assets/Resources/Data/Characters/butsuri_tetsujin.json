@@ -1,7 +1,9 @@
 {
   // オーナー（部員）。2026-10-14 夜、オーナーの希望で作り直した：
   //   艦娘の召喚はやめて、艦これは匂わせる程度に（必殺技の言葉「我、夜戦に突入す！」）。職業は狙撃→前衛、強めの「環境キャラ」に
-  //   特徴：艦これが好き・夜ふかしが好き・だいたい寝不足（必殺技が終わると寝落ちする）
+  //   特徴：艦これが好き・夜ふかしが好き・だいたい寝不足
+  //   同じ夜にもう一度：特性「夜戦主義」と必殺技のあとの寝落ちはやめた（オーナー：「寝落ちしたこと無いからいらない」）。
+  //   艦これの案（羅針盤・キラ付け・先制攻撃・ダメコン・改二）を全部入れて、羅針盤から出る3つと、必殺技2回目の改二にまとめた
   "id": "butsuri_tetsujin",
   "name": "物理鉄人",
   "class": "Guard",
@@ -11,29 +13,37 @@
   "antiAir": true,
   "stats": { "hp": 2600, "atk": 620, "def": 260, "attackInterval": 1.05, "block": 2, "range": 1 },
   "trait": {
-    "name": "夜戦主義",
-    "description": "夜ふかしするほど調子が出る。ステージの経過時間20秒ごとに攻撃力+10%（5段まで）。前衛だが飛ぶ敵も攻撃できる",
+    "name": "羅針盤",
+    "description": "ステージの経過時間20秒ごとに羅針盤が回り、どれか1つが起きる。キラ付け：20秒間 攻撃力+30%／先制攻撃：まわり2マスの敵に攻撃力の200%／ダメコン：次に倒れるとき一度だけ、体力50%で踏みとどまる。前衛だが飛ぶ敵も攻撃できる",
     "trigger": "ElapsedTime",
     "params": { "interval": 20 },
-    "effects": [ { "type": "StatModifier", "stat": "atk", "percentPerStack": 10, "maxStacks": 5, "target": "Self" } ]
+    "effects": [
+      { "type": "Random", "options": [
+        { "type": "StatModifier", "stat": "atk", "percent": 30, "duration": 20, "target": "Self", "label": "羅針盤：キラ付け（攻撃力 +30%）" },
+        { "type": "Damage", "multiplier": 2.0, "target": "AreaAroundSelf", "radius": 2, "label": "羅針盤：先制攻撃" },
+        { "type": "DamageControl", "percent": 50, "target": "Self", "label": "羅針盤：ダメコン装備" }
+      ] }
+    ]
   },
   "ultimate": {
     "name": "夜戦突入",
-    "description": "15秒間、攻撃力+60%・射程+1.5マス・攻撃が2回当たる。発動した瞬間、射程内の敵すべてに攻撃力の200%。終わると寝不足で寝落ちして3秒動けない",
+    "description": "15秒間、攻撃力+60%・射程+1.5マス・攻撃が2回当たる。発動した瞬間、射程内の敵すべてに攻撃力の200%。2回目の発動で「改二」になり、撤退するまで攻撃力・防御+30%",
     "spCost": 28,
     "initialSp": 10,
     "line": "我、夜戦に突入す！",
     "spCharge": "PerSecond",
     "duration": 15,
     "effects": [
+      // 2回目の発動で改二（ずっと続く）。先に強くしてから下の効果を使う
+      { "type": "Remodel", "count": 2, "label": "改二", "effects": [
+        { "type": "StatModifier", "stat": "atk", "percent": 30, "target": "Self" },
+        { "type": "StatModifier", "stat": "def", "percent": 30, "target": "Self" }
+      ] },
       // 先に射程を伸ばしてから、伸びた射程の中の敵に一撃
       { "type": "StatModifier", "stat": "range", "value": 1.5, "target": "Self" },
       { "type": "StatModifier", "stat": "atk", "percent": 60, "target": "Self" },
       { "type": "MultiHit", "hits": 2 },
       { "type": "Damage", "multiplier": 2.0, "target": "EnemiesInRange" }
-    ],
-    "onEnd": [
-      { "type": "Stun", "duration": 3, "target": "Self" }
     ]
   }
 }

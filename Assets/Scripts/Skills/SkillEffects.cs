@@ -29,6 +29,8 @@ public class SkillContext
 ///   Random       options の中から1つをランダムに使い、その label を出す（キャロのカードなど）
 ///   TeamBuff     味方全員の攻撃力（stat は atk だけ）を percent% 上げる。percent × maxStacks まで。ステージが終わるまで残る（僕）
 ///   Confuse      敵を duration 秒混乱させる（止められていなければ来た道を戻り、攻撃しない）
+///   DamageControl 次に倒れるとき一度だけ、体力 percent%（省略時 50）で踏みとどまる（物理鉄人のダメコン。重ねない）
+///   Remodel      必殺技を count 回使ったときに一度だけ、effects をずっと続く効果として使い、名前の後ろに label を付ける（物理鉄人の改二）
 /// 対象：Self / Target / AreaAroundSelf（半径 radius、省略時 1.5 マス）/ AlliesInRange / EnemiesInRange
 /// </summary>
 public static class SkillEffects
@@ -120,6 +122,34 @@ public static class SkillEffects
                     var en = u as Enemy;
                     if (en != null) en.Confuse(e.duration > 0f ? e.duration : 3f);
                 }
+                break;
+            }
+
+            case EffectType.DamageControl:
+            {
+                foreach (Unit u in Targets(e, ctx, false))
+                {
+                    var ch = u as Character;
+                    if (ch == null) continue;
+                    ch.GiveDamageControl(e.percent > 0f ? e.percent : 50f);
+                    Fx.Buff(ch.Center);
+                }
+                break;
+            }
+
+            case EffectType.Remodel:
+            {
+                SkillRunner skills = caster.Skills;
+                if (skills == null || skills.Remodeled || skills.UseCount != Mathf.Max(1, e.count)) break;
+                skills.MarkRemodeled(e.label);
+                // 改装の強化は必殺技が終わっても外さない（撤退・ダウンまで続く）
+                var permanent = new SkillContext { Caster = caster, Battle = ctx.Battle, Target = ctx.Target, DefaultDuration = 0f, Collected = null };
+                if (e.effects != null)
+                    foreach (EffectData sub in e.effects) Apply(sub, permanent);
+                Fx.Revive(caster.transform.position);
+                Fx.Buff(caster.Center);
+                FloatingText.Status(caster.Center + new Vector3(0f, 0.45f, 0f), caster.DisplayName + "！");
+                AudioManager.PlaySE("buff");
                 break;
             }
 

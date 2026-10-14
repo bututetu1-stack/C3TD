@@ -36,6 +36,32 @@ public class Character : Unit
     /// <summary>いま止めている敵</summary>
     public readonly List<Enemy> Blocked = new List<Enemy>();
 
+    /// <summary>名前（改装したら「物理鉄人改二」のように後ろに付く）</summary>
+    public string DisplayName
+    {
+        get { return Data.name + (Skills != null && Skills.Remodeled ? Skills.RemodelName : ""); }
+    }
+
+    /// <summary>ダメコン（物理鉄人の羅針盤）：次に倒れるとき一度だけ、体力のこの%で踏みとどまる。0 ならなし</summary>
+    public float DamageControlPercent { get; private set; }
+
+    public void GiveDamageControl(float percent)
+    {
+        DamageControlPercent = Mathf.Max(DamageControlPercent, percent);
+    }
+
+    protected override bool SurviveLethal()
+    {
+        if (DamageControlPercent <= 0f) return false;
+        float percent = DamageControlPercent;
+        DamageControlPercent = 0f;
+        Revive(MaxHp * percent / 100f);
+        Fx.Revive(transform.position);
+        FloatingText.Status(Center + new Vector3(0f, 0.45f, 0f), "ダメコン発動！");
+        AudioManager.PlaySE("buff");
+        return true;
+    }
+
     /// <summary>味方全員に掛かる攻撃力の%（僕の特性）を足す</summary>
     protected override float ExtraPercent(string stat)
     {

@@ -169,6 +169,9 @@ public class UnitPanel
             atkValue.EnableInClassList("unit-stat-value--up", c.PercentOf("atk") > 0.01f);
         }
 
+        // 改装すると名前が変わる（物理鉄人改二）
+        if (nameLabel.text != c.DisplayName) nameLabel.text = c.DisplayName;
+
         // 特性の重ね数
         string trait = c.Skills.Trait != null ? c.Skills.Trait.name + (c.Skills.TraitStatus.Length > 0 ? "　" + c.Skills.TraitStatus : "") : "";
         if (trait != shownTrait)
@@ -218,7 +221,7 @@ public class UnitPanel
         portraitInitial.text = icon != null ? "" : d.Initial;
         portrait.style.borderLeftColor = portrait.style.borderRightColor = portrait.style.borderTopColor = portrait.style.borderBottomColor = classColor;
 
-        nameLabel.text = d.name;
+        nameLabel.text = c.DisplayName;
         classLabel.text = c.IsSummon ? c.Class.name + "・召喚" : c.Class.name;
         classLabel.style.backgroundColor = classColor;
         defValue.text = Mathf.RoundToInt(c.Def).ToString();

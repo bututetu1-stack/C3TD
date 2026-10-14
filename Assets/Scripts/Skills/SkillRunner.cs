@@ -27,6 +27,19 @@ public class SkillRunner
     /// <summary>ElapsedTime の特性の重ね数</summary>
     public int TraitStacks { get; private set; }
 
+    /// <summary>この出撃で必殺技を使った回数（Remodel が見る）</summary>
+    public int UseCount { get; private set; }
+
+    /// <summary>改装した（物理鉄人の改二）。名前の後ろに RemodelName が付く</summary>
+    public bool Remodeled { get; private set; }
+    public string RemodelName { get; private set; }
+
+    public void MarkRemodeled(string name)
+    {
+        Remodeled = true;
+        RemodelName = name ?? "";
+    }
+
     private readonly List<KeyValuePair<Unit, StatModifier>> ultimateModifiers = new List<KeyValuePair<Unit, StatModifier>>();
     private readonly List<EffectData> stackEffects = new List<EffectData>();
     private readonly List<StatModifier> stackModifiers = new List<StatModifier>();
@@ -172,14 +185,19 @@ public class SkillRunner
     {
         get
         {
-            if (stackEffects.Count == 0) return "";
-            var parts = new List<string>();
-            for (int i = 0; i < stackEffects.Count; i++)
+            string s = "";
+            if (stackEffects.Count > 0)
             {
-                StatModifier m = stackModifiers[i];
-                if (Mathf.Abs(m.Percent) > 0.01f) parts.Add(StatName(m.Stat) + (m.Percent >= 0f ? " +" : " ") + m.Percent.ToString("0") + "%");
+                var parts = new List<string>();
+                for (int i = 0; i < stackEffects.Count; i++)
+                {
+                    StatModifier m = stackModifiers[i];
+                    if (Mathf.Abs(m.Percent) > 0.01f) parts.Add(StatName(m.Stat) + (m.Percent >= 0f ? " +" : " ") + m.Percent.ToString("0") + "%");
+                }
+                s = "×" + TraitStacks + (parts.Count > 0 ? "（" + string.Join("・", parts) + "）" : "");
             }
-            return "×" + TraitStacks + (parts.Count > 0 ? "（" + string.Join("・", parts) + "）" : "");
+            if (owner.DamageControlPercent > 0f) s += (s.Length > 0 ? "　" : "") + "ダメコンあり";
+            return s;
         }
     }
 
@@ -190,6 +208,7 @@ public class SkillRunner
         if (!Ready) return false;
         Sp = 0f;
         wasReady = false;
+        UseCount++;
         ultimateModifiers.Clear();
         var ctx = Context(Ultimate.duration, null, ultimateModifiers);
         foreach (EffectData e in Ultimate.effects) SkillEffects.Apply(e, ctx);

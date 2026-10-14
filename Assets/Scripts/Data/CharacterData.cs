@@ -43,6 +43,8 @@ public enum EffectType
     Random,
     TeamBuff,
     Confuse,
+    DamageControl,
+    Remodel,
 }
 
 /// <summary>スキルの効果の対象</summary>
@@ -150,6 +152,9 @@ public class EffectData
     /// <summary>Random のとき、この中から1つをランダムに使う</summary>
     public List<EffectData> options;
 
-    /// <summary>Random で選ばれたときに出す言葉（「ストレート：一斉攻撃」など）</summary>
+    /// <summary>Random で選ばれたときに出す言葉（「ストレート：一斉攻撃」など）。Remodel では名前に付く言葉（「改二」）</summary>
     public string label;
+
+    /// <summary>Remodel のとき、改装したときに使う効果（ずっと続く）</summary>
+    public List<EffectData> effects;
 }

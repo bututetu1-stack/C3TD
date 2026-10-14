@@ -57,7 +57,7 @@ public class CutIn
         SkillData ult = c.Skills.Ultimate;
         Color classColor = c.ClassColor;
 
-        caption.text = "ULTIMATE  /  " + c.Data.name;
+        caption.text = "ULTIMATE  /  " + c.DisplayName;
         skillName.text = ult.name;
         line.text = string.IsNullOrEmpty(ult.line) ? "" : "「" + ult.line + "」";
         UIFactory.SetVisible(line, !string.IsNullOrEmpty(ult.line));

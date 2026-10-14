@@ -149,7 +149,7 @@ public abstract class Unit : MonoBehaviour
         if (healthBar != null) healthBar.Set(Hp / MaxHp);
         FloatingText.Damage(Center, damage, DamageColor(type));
         OnDamaged();
-        if (Hp <= 0f)
+        if (Hp <= 0f && !SurviveLethal())
         {
             Alive = false;
             OnDeath();
@@ -188,6 +188,12 @@ public abstract class Unit : MonoBehaviour
     protected virtual float Absorb(float damage)
     {
         return damage;
+    }
+
+    /// <summary>体力が 0 になったとき、倒れずに踏みとどまるか（部員のダメコン）。踏みとどまるなら体力を戻して true</summary>
+    protected virtual bool SurviveLethal()
+    {
+        return false;
     }
 
     /// <summary>攻撃をかわすか（かわしたらダメージを受けない）。敵の dodge で使う</summary>
