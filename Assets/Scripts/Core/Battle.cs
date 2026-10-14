@@ -75,6 +75,9 @@ public class Battle : MonoBehaviour
     /// <summary>エンドレスで負けたとき、最高記録を更新したか</summary>
     public bool EndlessNewBest { get; private set; }
 
+    /// <summary>この出撃が終わって新しく取った実績（結果の画面に出す）</summary>
+    public readonly List<Achievements.Entry> NewAchievements = new List<Achievements.Entry>();
+
     private readonly List<SpawnEntry> schedule = new List<SpawnEntry>();
     private int nextSpawn;
     private int nextWarn;
@@ -318,6 +321,12 @@ public class Battle : MonoBehaviour
                 AudioManager.PlaySE("defeat");
                 // エンドレスは、守りきった波（いまの波のひとつ前）を記録する
                 if (endless != null) EndlessNewBest = Progress.RecordEndless(Stage.id, EndlessSurvived);
+            }
+            // 記録を書き終えてから、新しく取った実績を調べる
+            if (State.Phase != GamePhase.Playing)
+            {
+                Progress.RecordBattle();
+                NewAchievements.AddRange(Achievements.CheckNew());
             }
         }
     }

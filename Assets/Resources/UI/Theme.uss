@@ -1977,6 +1977,46 @@
     flex-shrink: 1;
 }
 
+.records-subtitle {
+    font-size: 26px;
+    color: rgb(255, 255, 255);
+    margin-top: 18px;
+    margin-bottom: 4px;
+}
+
+.achievement-row {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.achievement-row--locked {
+    opacity: 0.45;
+}
+
+.achievement-text {
+    margin-left: 12px;
+    flex-shrink: 1;
+}
+
+.achievement-name {
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+}
+
+.achievement-desc {
+    font-size: 16px;
+    color: rgb(178, 186, 204);
+}
+
+.result-achievements {
+    font-size: 24px;
+    color: rgb(255, 210, 122);
+    margin-bottom: 6px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    max-width: 1500px;
+}
+
 .records-row {
     flex-direction: row;
     align-items: center;
@@ -2008,6 +2048,10 @@
     width: 40px;
     font-size: 26px;
     color: rgb(244, 182, 63);
+}
+
+.records-member .records-value {
+    margin-right: 16px;
 }
 
 .records-member .records-name {

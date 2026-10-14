@@ -11,6 +11,8 @@ public class RecordsScreen
     private readonly Label totalLabel;
     private readonly VisualElement chapters;
     private readonly VisualElement members;
+    private readonly Label achievementTitle;
+    private readonly VisualElement achievements;
 
     public RecordsScreen(VisualElement parent, GameBootstrap bootstrap)
     {
@@ -25,6 +27,16 @@ public class RecordsScreen
         left.Add(UIFactory.Text("作戦", UIFont.Title, "help-title"));
         chapters = UIFactory.Box("records-list");
         left.Add(chapters);
+        // 実績（取ったものは明るく、まだのものは薄く）
+        achievementTitle = UIFactory.Text("", UIFont.Title, "records-subtitle");
+        left.Add(achievementTitle);
+        var achievementScroll = new ScrollView(ScrollViewMode.Vertical);
+        achievementScroll.AddToClassList("records-scroll");
+        achievementScroll.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+        achievementScroll.verticalScrollerVisibility = ScrollerVisibility.Auto;
+        achievements = UIFactory.Box("records-list");
+        achievementScroll.Add(achievements);
+        left.Add(achievementScroll);
         body.Add(left);
 
         var right = new ChamferBox();
@@ -72,6 +84,23 @@ public class RecordsScreen
                 hard > 0 ? "強襲 " + hard : null));
         }
         totalLabel.text = "★ " + stars + " / " + maxStars;
+
+        // 前の出撃のあとに条件を満たしたもの（強化をそろえた、など）もここで記録する
+        Achievements.CheckNew();
+        achievements.Clear();
+        achievementTitle.text = "実績 " + Achievements.UnlockedCount() + " / " + Achievements.All.Count;
+        foreach (Achievements.Entry e in Achievements.All)
+        {
+            bool done = Progress.HasAchievement(e.Id);
+            var row = UIFactory.Box("records-row", "achievement-row");
+            row.EnableInClassList("achievement-row--locked", !done);
+            row.Add(new IconView(IconKind.Star, 22f, done ? Palette.AmberBright : new Color(1f, 1f, 1f, 0.2f)));
+            var text = UIFactory.Box("achievement-text");
+            text.Add(UIFactory.Text(e.Name, UIFont.Body, "achievement-name"));
+            text.Add(UIFactory.Text(e.Description, UIFont.Medium, "achievement-desc"));
+            row.Add(text);
+            achievements.Add(row);
+        }
 
         members.Clear();
         var list = new List<CharacterData>();

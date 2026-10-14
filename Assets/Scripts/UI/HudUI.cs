@@ -96,6 +96,8 @@ public class HudUI : MonoBehaviour
     private Label resultEnemy;
     private VisualElement resultStars;
     private VisualElement resultTeam;
+    private Label resultAchievements;
+    private int shownAchievements = -1;
     private C3Button nextButton;
 
     // 編成バーと選択中の部員
@@ -543,6 +545,9 @@ public class HudUI : MonoBehaviour
 
         resultMilestone = UIFactory.Text("", UIFont.Body, "result-milestone");
         resultContent.Add(resultMilestone);
+        resultAchievements = UIFactory.Text("", UIFont.Body, "result-achievements");
+        resultContent.Add(resultAchievements);
+        UIFactory.SetVisible(resultAchievements, false);
 
         var stats = UIFactory.Box("result-stats");
         resultLife = AddResultStat(stats, "LIFE");
@@ -665,6 +670,15 @@ public class HudUI : MonoBehaviour
             shownPhase = state.Phase;
             if (state.Phase != GamePhase.Playing) ShowResult(state);
         }
+        // 実績は Battle が記録を書いたあとに決まるので、結果を出してから届いた分を足す
+        if (state.Phase != GamePhase.Playing && battle.NewAchievements.Count != shownAchievements)
+        {
+            shownAchievements = battle.NewAchievements.Count;
+            var names = new System.Collections.Generic.List<string>();
+            foreach (Achievements.Entry e in battle.NewAchievements) names.Add("「" + e.Name + "」");
+            resultAchievements.text = "実績を取った：" + string.Join("", names);
+            UIFactory.SetVisible(resultAchievements, names.Count > 0);
+        }
     }
 
     private void OnBattleChanged(Battle battle)
@@ -687,7 +701,8 @@ public class HudUI : MonoBehaviour
         UIFactory.SetVisible(opHard, battle.Hard);
         lifeMax.text = "/" + battle.State.MaxLife;
 
-        shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = shownWave = -1;
+        shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = shownWave = shownAchievements = -1;
+        UIFactory.SetVisible(resultAchievements, false);
         if (enemyCaption != null) enemyCaption.text = battle.IsEndless ? "WAVE" : "ENEMY";
         shownPhase = GamePhase.Playing;
         hintIndex = 0;

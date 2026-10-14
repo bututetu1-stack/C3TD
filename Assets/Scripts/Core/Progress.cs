@@ -58,6 +58,10 @@ public class ProgressData
     public List<SquadPreset> presets = new List<SquadPreset>();
     public int preset;
     public List<UpgradeLevelRecord> upgrades = new List<UpgradeLevelRecord>();
+
+    /// <summary>取った実績の id と、出撃した回数（勝ち負けが決まった回）</summary>
+    public List<string> achievements = new List<string>();
+    public int battles;
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -215,6 +219,28 @@ public static class Progress
         if (best) r.wave = wave;
         Save();
         return best;
+    }
+
+    public static bool HasAchievement(string id)
+    {
+        return Data.achievements != null && Data.achievements.Contains(id);
+    }
+
+    public static void AddAchievement(string id)
+    {
+        if (Data.achievements == null) Data.achievements = new List<string>();
+        if (Data.achievements.Contains(id)) return;
+        Data.achievements.Add(id);
+        Save();
+    }
+
+    /// <summary>勝ち負けが決まった出撃の回数</summary>
+    public static int Battles { get { return Data.battles; } }
+
+    public static void RecordBattle()
+    {
+        Data.battles++;
+        Save();
     }
 
     /// <summary>強化の段（なければ 0）</summary>
