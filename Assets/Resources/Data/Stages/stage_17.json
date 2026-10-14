@@ -5,7 +5,7 @@
   "description": "実験データがまわりの敵を回復し続ける。緑の輪が見えたら、まず実験データから倒そう。",
   "life": 3,
   "initialDp": 12,
-  "bgm": "battle",
+  "bgm": "battle4",
   "map": [
     "XXXXXXXXXXXXX",
     "S....HHHHHHHX",

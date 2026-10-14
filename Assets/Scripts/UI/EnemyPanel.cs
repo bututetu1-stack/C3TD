@@ -160,6 +160,9 @@ public class EnemyPanel
             lines.Add("攻撃した部員の" + StatName(d.hitModifier.stat) + "を " + d.hitModifier.duration.ToString("0.#") + " 秒 " + d.hitModifier.percent.ToString("+0;-0") + "%");
         if (d.dpDrain > 0f) lines.Add("場にいるあいだ、DP の回復を 1 秒あたり " + d.dpDrain.ToString("0.0#") + " 減らす");
         if (d.shield > 0f) lines.Add("体力より先に減る盾 " + d.shield.ToString("0"));
+        if (d.dodge > 0f) lines.Add("物理攻撃を " + d.dodge.ToString("0") + "% の確率でかわす（術は当たる）");
+        if (d.blink != null) lines.Add("止められていないとき、" + d.blink.interval.ToString("0.#") + " 秒ごとに " + d.blink.distance.ToString("0.#") + " マス先へ跳ぶ");
+        if (d.accelerate != null) lines.Add(d.accelerate.interval.ToString("0.#") + " 秒ごとに速さ +" + d.accelerate.percent.ToString("0") + "%（+" + d.accelerate.max.ToString("0") + "% まで）");
         if (d.heal != null && d.heal.percent > 0f)
             lines.Add(d.heal.interval.ToString("0.#") + " 秒ごとに、まわり " + d.heal.radius.ToString("0.#") + " マスの敵の体力を " + d.heal.percent.ToString("0") + "%（" + d.heal.maxAmount.ToString("0") + " まで）回復");
         if (d.enrage != null)

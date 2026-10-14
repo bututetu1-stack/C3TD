@@ -5,7 +5,7 @@
   "description": "面接官の鋭い質問が飛んでくる。撃たれた部員は防御が下がり、倒れやすくなる。",
   "life": 3,
   "initialDp": 12,
-  "bgm": "battle",
+  "bgm": "battle3",
   "map": [
     "XXXXXXXXXXXXXX",
     "S....HHHH....B",

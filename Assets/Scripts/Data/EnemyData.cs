@@ -96,6 +96,15 @@ public class EnemyData
     /// <summary>体力が hpPercent% 以下になったら、一度だけ能力が上がる（ボスの本気）。なければ null</summary>
     public EnemyEnrage enrage;
 
+    /// <summary>物理攻撃をかわす確率（%）。術は必ず当たる（0 ならかわさない）</summary>
+    public float dodge;
+
+    /// <summary>止められていないとき、interval 秒ごとに経路の先へ distance マス跳ぶ。なければ null</summary>
+    public EnemyBlink blink;
+
+    /// <summary>場にいるあいだ interval 秒ごとに速さが percent% ずつ上がる（max% まで）。なければ null</summary>
+    public EnemyAccelerate accelerate;
+
     public string Label
     {
         get
@@ -157,6 +166,22 @@ public class EnemyHeal
 
     /// <summary>1回に回復する量の上限（ボスのように体力の多い敵が回復しすぎないように）</summary>
     public float maxAmount = 400f;
+}
+
+/// <summary>経路の先へ跳ぶ。firstDelay 秒後に初めて跳び、あとは interval 秒ごと。distance はマス</summary>
+public class EnemyBlink
+{
+    public float interval = 8f;
+    public float firstDelay = 4f;
+    public float distance = 2f;
+}
+
+/// <summary>だんだん速くなる。interval 秒ごとに速さ +percent%、max% まで</summary>
+public class EnemyAccelerate
+{
+    public float interval = 5f;
+    public float percent = 15f;
+    public float max = 90f;
 }
 
 /// <summary>体力が hpPercent% 以下になったら、一度だけ atk・speed・def を、それぞれの %だけ上げる。name は出す言葉</summary>

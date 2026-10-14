@@ -6,7 +6,7 @@
   "description": "去年落とした単位が、何度でもよみがえる。再履修は一度倒しても起き上がるので、止める部員を長く持たせよう。",
   "life": 3,
   "initialDp": 12,
-  "bgm": "battle",
+  "bgm": "battle2",
   "map": [
     "XXXXXXXXXXXXX",
     "S........HHHX",

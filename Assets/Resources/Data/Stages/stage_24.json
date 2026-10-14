@@ -1,0 +1,38 @@
+{
+  // 出撃口が3つ。上下の道はまん中に合流する。攻撃力を下げる「口頭試問」と、これまでの番外編の敵
+  "id": "stage_24",
+  "name": "EX-4 口頭試問",
+  "description": "研究内容を問いただされる。口頭試問に撃たれた部員は攻撃力が下がるので、医療で支えながら押し返そう。",
+  "life": 3,
+  "initialDp": 16,
+  "bgm": "battle_ex",
+  "map": [
+    "XXXXXXXXXXXXXX",
+    "S....HHHHHHHHX",
+    "XHHH.HHHHHHHHX",
+    "S............B",
+    "XHHH.HHHHHHHHX",
+    "S....HHHHHHHHX",
+    "XXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[4,1],[4,3],[13,3]],
+    "p2": [[0,3],[13,3]],
+    "p3": [[0,5],[4,5],[4,3],[13,3]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",      "path": "p2", "count": 3, "interval": 2.5 },
+    { "time": 12, "enemy": "koutou",     "path": "p1", "count": 2, "interval": 4 },
+    { "time": 22, "enemy": "eigo",       "path": "p3", "count": 3, "interval": 2.5 },
+    { "time": 30, "enemy": "kakomon",    "path": "p2", "count": 3, "interval": 3 },
+    { "time": 38, "enemy": "koutou",     "path": "p3", "count": 3, "interval": 3.5 },
+    { "time": 48, "enemy": "keikakusho", "path": "p1", "count": 3, "interval": 3 },
+    { "time": 58, "enemy": "senmon",     "path": "p2", "count": 2, "interval": 6 },
+    { "time": 66, "enemy": "eigo",       "path": "p1", "count": 4, "interval": 1.5 },
+    { "time": 70, "enemy": "koutou",     "path": "p3", "count": 3, "interval": 3 },
+    { "time": 84, "enemy": "kakomon",    "path": "p2", "count": 4, "interval": 2.5 }
+  ],
+  "hints": [
+    { "time": 10, "duration": 9, "text": "口頭試問は 2.5 マス先の部員を術で撃ち、攻撃力を 3 秒 30% 下げる。止めている部員の後ろに医療を置こう。" }
+  ]
+}

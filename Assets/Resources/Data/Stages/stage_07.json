@@ -5,7 +5,7 @@
   "description": "論文の山と、群れて守りを固めるグループワーク。術だけに頼らず、物理の攻撃も用意しよう。",
   "life": 3,
   "initialDp": 12,
-  "bgm": "battle",
+  "bgm": "battle2",
   "map": [
     "XXXXXXXXXXXXX",
     "S.....HHHHHHX",

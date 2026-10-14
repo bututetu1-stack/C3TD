@@ -506,8 +506,11 @@ public class HudUI : MonoBehaviour
         if (chapter == null || chapter.stages[chapter.stages.Count - 1] != stageId) return null;
         var chapters = GameData.Campaign.chapters;
         int index = chapters.IndexOf(chapter);
-        if (index == chapters.Count - 1) return "全作戦クリア！　四年間おつかれさま。卒業おめでとう！";
-        return chapter.name + "　クリア！　次の章「" + chapters[index + 1].name + "」が開いた";
+        ChapterData next = index + 1 < chapters.Count ? chapters[index + 1] : null;
+        // 章の clearText があればそれ（4-5 の卒業など）。次の章があれば、開いたことを添える
+        string text = !string.IsNullOrEmpty(chapter.clearText) ? chapter.clearText : chapter.name + "　クリア！";
+        if (next != null) text += "　次の章「" + next.name + "」が開いた";
+        return text;
     }
 
     /// <summary>勝敗の帯</summary>

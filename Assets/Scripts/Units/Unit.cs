@@ -131,6 +131,7 @@ public abstract class Unit : MonoBehaviour
     public float TakeDamage(float atk, DamageType type)
     {
         if (!Alive) return 0f;
+        if (Evade(type)) return 0f;
         float damage = Absorb(Combat.Mitigate(atk, type, Def, Res));
         if (damage <= 0f)
         {
@@ -180,6 +181,12 @@ public abstract class Unit : MonoBehaviour
     protected virtual float Absorb(float damage)
     {
         return damage;
+    }
+
+    /// <summary>攻撃をかわすか（かわしたらダメージを受けない）。敵の dodge で使う</summary>
+    protected virtual bool Evade(DamageType type)
+    {
+        return false;
     }
 
     protected abstract Color DamageColor(DamageType type);

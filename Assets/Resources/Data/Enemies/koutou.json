@@ -1,0 +1,19 @@
+{
+  // 番外編の敵。2.5 マス先の部員を術で撃ち、攻撃力を 3 秒 30% 下げる（口頭試問。重ならない）
+  "id": "koutou",
+  "name": "口頭試問",
+  "label": "口",
+  "shape": "Circle",
+  "color": "#8C3B5E",
+  "size": 0.58,
+  "hp": 2300,
+  "atk": 260,
+  "def": 120,
+  "res": 30,
+  "attackInterval": 2.6,
+  "speed": 0.7,
+  "lifeDamage": 1,
+  "range": 2.5,
+  "damageType": "Arts",
+  "hitModifier": { "stat": "atk", "percent": -30, "duration": 3 }
+}

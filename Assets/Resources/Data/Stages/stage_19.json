@@ -5,7 +5,7 @@
   "description": "締切までの徹夜続き。眠気も通知も、これまでの敵がまとめて押し寄せる。",
   "life": 3,
   "initialDp": 14,
-  "bgm": "battle",
+  "bgm": "battle4",
   "map": [
     "SXXXXXXXXXXXXX",
     "XHHHH.....HHHX",

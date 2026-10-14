@@ -5,7 +5,7 @@
   "description": "就活が始まった。エントリーシートは倒しても「下書き」に分かれて走ってくる。止める部員を厚めに置こう。",
   "life": 3,
   "initialDp": 12,
-  "bgm": "battle",
+  "bgm": "battle3",
   "map": [
     "XXXXXXXXXXXXX",
     "S.......HHHHX",

@@ -5,7 +5,7 @@
   "description": "後期最後の山場。これまでの敵が総出で押し寄せ、最後に「期末試験」が小テストを呼びながら迫ってくる。",
   "life": 3,
   "initialDp": 18,
-  "bgm": "battle",
+  "bgm": "battle2",
   "map": [
     "XXXXXXXXXXXXXX",
     "S.....HHHHHHHX",

@@ -1,0 +1,16 @@
+{
+  // 番外編の敵。とても硬く、術も効きにくい重い敵（専門科目）
+  "id": "senmon",
+  "name": "専門科目",
+  "label": "専",
+  "shape": "Hexagon",
+  "color": "#4E5A6E",
+  "size": 0.74,
+  "hp": 8500,
+  "atk": 650,
+  "def": 560,
+  "res": 40,
+  "attackInterval": 2.6,
+  "speed": 0.4,
+  "lifeDamage": 1
+}

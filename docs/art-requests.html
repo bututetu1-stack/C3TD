@@ -325,6 +325,7 @@
       <a href="#enemies2">第2章の敵</a>
       <a href="#enemies3">第3章の敵</a>
       <a href="#enemies4">第4章の敵</a>
+      <a href="#enemiesEx">番外編の敵</a>
       <a href="#map">出撃口・拠点・背景</a>
       <a href="#m1fx">出現と突破</a>
       <a href="#m2">配置と攻撃（M2）</a>
@@ -399,6 +400,12 @@
     <h2>第4章の敵<span class="tag">ENEMIES 4</span></h2>
     <p class="section-note">第4章「卒論」で出てくる5体です。先行研究の盾（水色のバー）や、実験データの回復の輪は、ゲーム側で付けます。</p>
     <div class="cards" data-group="enemies4"></div>
+  </section>
+
+  <section id="enemiesEx">
+    <h2>番外編の敵<span class="tag">ENEMIES EX</span></h2>
+    <p class="section-note">番外編「院試」（4-5 のあと）で出てくる6体です。跳ぶときの紫の輪や「回避」「加速」の文字は、ゲーム側で付けます。</p>
+    <div class="cards" data-group="enemiesEx"></div>
   </section>
 
   <section id="map">
@@ -610,6 +617,20 @@
       prompt: "何度も突き返された卒論の原稿が、ふらふらになっても立ち上がるモンスターになったもの。体は赤ペンの書き込みとバツ印だらけの原稿の束で（読める文字は描かない）、付箋が何枚も貼られ、絆創膏をしている。目は涙目だが、しぶとく前を向いて歩く。色は淡いピンクと生成り色、アクセントは赤。" },
     { group: "enemies4", path: "Art/Enemies/sotsuron.png", title: "卒論審査（ボス）", scene: "最後のボス。赤ペンを呼び、体力が半分を切ると「追い込み」で速く・強くなる。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", priority: true,
       prompt: "「卒論審査」を擬人化した、最後の大きなボスモンスター。審査員席の長机と、その上に並ぶ3人の巨大な影の審査員が一体になった怪物で、真ん中の審査員の目が赤く光っている。机の上には分厚い卒業論文が置かれ、まわりを赤ペンが何本も飛び回る。背後に大学の講堂のシルエットと、赤黒いオーラ。威圧感があり、これまでのどの敵よりも大きく堂々と描く。読める文字や数字は描かない。色は深い赤茶と黒、アクセントは金。" },
+
+    // ---------------- 番外編の敵（2026-10-14） ----------------
+    { group: "enemiesEx", path: "Art/Enemies/kakomon.png", title: "過去問", scene: "止められていないと、経路の先へ跳ぶ敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き",
+      prompt: "何年分もの過去問の束が、瞬間移動してくるモンスターになったもの。体は綴じられた古い問題冊子（読める文字は描かない）で、角が少し黄ばんでいる。体のまわりに紫の残像と、ワープするような光の線。不敵な笑み。色は紫と生成り色、アクセントはマゼンタ。" },
+    { group: "enemiesEx", path: "Art/Enemies/eigo.png", title: "英語試験", scene: "物理攻撃を半分の確率でかわす身軽な敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き",
+      prompt: "英語の試験問題の用紙が、ひらりと身をかわす身軽なモンスターになったもの。体は細長い用紙（アルファベット風の細い線の模様だけで、読める文字は描かない）、首にヘッドホンをかけ、軽やかにステップを踏む。体のまわりに残像。余裕のある笑顔。色は水色と白、アクセントは黄色。" },
+    { group: "enemiesEx", path: "Art/Enemies/keikakusho.png", title: "研究計画書", scene: "だんだん速くなる敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き",
+      prompt: "分厚い研究計画書が、ロケットのように加速していくモンスターになったもの。体はクリップで留めた書類の束（読める文字は描かない）、背中に小さなロケットエンジンが付いて炎を噴き、前のめりで突き進む。必死な顔。色はオレンジと白、アクセントは赤い炎。" },
+    { group: "enemiesEx", path: "Art/Enemies/senmon.png", title: "専門科目", scene: "とても硬い重い敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き",
+      prompt: "専門科目の分厚い教科書が積み重なってできた、重戦車のような大きなモンスター。体は辞書のような分厚い本の山（読める文字は描かない）、鉄の鎧のような表紙、重々しい足取り。目つきは鋭く威圧的。色は鉛色と紺、アクセントは銀。" },
+    { group: "enemiesEx", path: "Art/Enemies/koutou.png", title: "口頭試問", scene: "離れたところから部員を撃ち、攻撃力を下げる敵", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き",
+      prompt: "マイクを持った試験官の影のようなモンスター。体は黒いローブで、顔は光る丸眼鏡だけ。手に持ったマイクから、紫の音波のような術を放っている。威圧感があるが、少しコミカル。色は深い赤紫と黒、アクセントは紫の光。" },
+    { group: "enemiesEx", path: "Art/Enemies/inshi.png", title: "院試（ボス）", scene: "番外編のボス。跳んで距離を詰め、過去問を呼び、体力が減ると「本番」で強くなる。足元で赤い気配が脈打つ（ゲーム側で付ける）", bg: "alpha", shape: "sq", style: "chara", arrow: "face", dir: "体は右向き", priority: true,
+      prompt: "「院試」を擬人化した、大きなボスモンスター。大学院の重厚な門と、そびえる試験問題の塔が合体した巨人で、門の奥に光る2つの目。まわりを過去問の紙が渦を巻いて飛び、紫の稲妻が走る。威圧感があり、ほかの敵より大きく堂々と描く。読める文字や数字は描かない。色は深い藍色と紫、アクセントは金。" },
 
     // ---------------- 出撃口・拠点・背景 ----------------
     { group: "map", path: "Art/Map/Spawn.png", title: "出撃口の印", scene: "出撃口（S）のマスの上で、ゆっくり回る", bg: "black", shape: "sq", style: "fx", arrow: "spin", dir: "向きなし（回して使う）", now: true,

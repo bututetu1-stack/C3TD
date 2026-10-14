@@ -5,7 +5,8 @@
   "description": "四年間の集大成。最後に立ちはだかる「卒論審査」は、追い込まれるほど本気を出す。部員の力を合わせて乗り越えろ。",
   "life": 3,
   "initialDp": 18,
-  "bgm": "battle",
+  "bgm": "battle4",
+  "bossBgm": "final",
   "map": [
     "XXXXXXXXXXXXXXX",
     "S.......HHHHHHX",

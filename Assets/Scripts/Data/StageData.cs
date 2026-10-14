@@ -10,6 +10,9 @@ public class StageData
     public int initialDp;
     public string bgm;
 
+    /// <summary>ボスが出たときに切り替える BGM のキー（省略時は boss。ファイルがなければ切り替えない）</summary>
+    public string bossBgm;
+
     /// <summary>作戦選択に出す説明</summary>
     public string description;
 

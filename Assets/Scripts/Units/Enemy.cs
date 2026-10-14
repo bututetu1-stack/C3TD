@@ -56,6 +56,10 @@ public class Enemy : Unit
     private int revivesLeft;
     private float rangedTimer;
     private float summonTimer;
+    private float blinkTimer;
+    private float accelTimer;
+    private int accelStacks;
+    private StatModifier accelModifier;
     private float auraTimer;
     private float pulseTimer;
     private bool pulseWarned;
@@ -90,6 +94,8 @@ public class Enemy : Unit
         enemy.revivesLeft = data.revive;
         enemy.rangedTimer = data.attackInterval * 0.5f;
         enemy.summonTimer = data.summon != null ? data.summon.firstDelay : 0f;
+        enemy.blinkTimer = data.blink != null ? data.blink.firstDelay : 0f;
+        enemy.accelTimer = data.accelerate != null ? data.accelerate.interval : 0f;
         enemy.pulseTimer = data.pulse != null ? data.pulse.firstDelay : 0f;
         enemy.shieldHp = data.shield;
         enemy.healTimer = data.heal != null ? data.heal.interval : 0f;
@@ -202,8 +208,10 @@ public class Enemy : Unit
             TickSummon(dt);
             TickPulse(dt);
             TickHeal(dt);
+            TickAccelerate(dt);
             if (BlockedBy == null)
             {
+                TickBlink(dt);
                 Move(ApplyStat("speed", Data.speed) * dt);
                 walkTime += dt;
                 TryBeBlocked();
@@ -435,6 +443,44 @@ public class Enemy : Unit
             Fx.Heal(e.Center);
         }
         FxSprite.Create(SpriteFactory.ThinRing, transform.position, Palette.WithAlpha(Palette.HealGlow, 0.8f), 0.6f, 0.4f, h.radius * 2f, 79);
+    }
+
+    /// <summary>物理攻撃をかわす敵：dodge% の確率で物理のダメージを受けない（術は当たる）</summary>
+    protected override bool Evade(DamageType type)
+    {
+        if (Data.dodge <= 0f || type != DamageType.Physical) return false;
+        if (Random.value * 100f >= Data.dodge) return false;
+        FloatingText.Status(Center + new Vector3(0f, 0.3f, 0f), "回避");
+        return true;
+    }
+
+    /// <summary>跳ぶ敵：止められていないとき、interval 秒ごとに経路の先へ distance マス跳ぶ（跳ぶ前と後に紫の輪）</summary>
+    private void TickBlink(float dt)
+    {
+        EnemyBlink b = Data.blink;
+        if (b == null) return;
+        blinkTimer -= dt;
+        if (blinkTimer > 0f) return;
+        blinkTimer = Mathf.Max(1f, b.interval);
+        Vector3 from = transform.position;
+        Move(Mathf.Max(0.5f, b.distance));
+        Color c = new Color(0.72f, 0.45f, 1f, 0.9f);
+        FxSprite.Create(SpriteFactory.ThinRing, from, c, 0.5f, 0.4f, 1.4f, 79);
+        FxSprite.Create(SpriteFactory.ThinRing, transform.position, c, 0.5f, 1.4f, 0.4f, 79);
+    }
+
+    /// <summary>だんだん速くなる敵：interval 秒ごとに速さ +percent%（max% まで）。止められていても上がる</summary>
+    private void TickAccelerate(float dt)
+    {
+        EnemyAccelerate a = Data.accelerate;
+        if (a == null || accelStacks * a.percent >= a.max) return;
+        accelTimer -= dt;
+        if (accelTimer > 0f) return;
+        accelTimer = Mathf.Max(0.5f, a.interval);
+        accelStacks++;
+        if (accelModifier != null) RemoveModifier(accelModifier);
+        accelModifier = AddModifier("speed", Mathf.Min(a.max, accelStacks * a.percent), 0f, 0f);
+        FloatingText.Status(Center + new Vector3(0f, 0.3f, 0f), "加速");
     }
 
     /// <summary>本気になる敵（ボス）：体力が hpPercent% 以下になったら、一度だけ能力が上がり、体が赤みを帯びる</summary>

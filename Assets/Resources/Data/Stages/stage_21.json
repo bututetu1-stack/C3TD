@@ -1,0 +1,36 @@
+{
+  // 番外編のはじめ。折れ曲がる一本道。止められていないと先へ跳ぶ「過去問」
+  "id": "stage_21",
+  "name": "EX-1 過去問演習",
+  "description": "院試に向けて過去問を解きまくる。過去問は止められていないと先へ跳んでくるので、道の手前で止めよう。",
+  "life": 3,
+  "initialDp": 14,
+  "bgm": "battle_ex",
+  "map": [
+    "XXXXXXXXXXXXXX",
+    "S.......HHHHHX",
+    "XHHHHHH.HHHHHX",
+    "XHH.....HHHHHX",
+    "XHH.HHHHHHHHHX",
+    "XHH..........B",
+    "XXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[7,1],[7,3],[3,3],[3,5],[13,5]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",    "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 12, "enemy": "kakomon",  "path": "p1", "count": 3, "interval": 3.5 },
+    { "time": 24, "enemy": "shotest",  "path": "p1", "count": 4, "interval": 1.2 },
+    { "time": 32, "enemy": "kakomon",  "path": "p1", "count": 4, "interval": 2.5 },
+    { "time": 44, "enemy": "report",   "path": "p1", "count": 3, "interval": 3.5 },
+    { "time": 52, "enemy": "kadai",    "path": "p1", "count": 5, "interval": 1.5 },
+    { "time": 62, "enemy": "kakomon",  "path": "p1", "count": 5, "interval": 2 },
+    { "time": 76, "enemy": "senkou",   "path": "p1", "count": 2, "interval": 4 },
+    { "time": 84, "enemy": "kakomon",  "path": "p1", "count": 6, "interval": 1.8 },
+    { "time": 96, "enemy": "senmon",   "path": "p1", "count": 1, "interval": 0 }
+  ],
+  "hints": [
+    { "time": 10, "duration": 9, "text": "過去問は、止められていないとき 8 秒ごとに 2 マス先へ跳ぶ（紫の輪）。道の手前のほうで止めておこう。" }
+  ]
+}

@@ -23,7 +23,16 @@
       "id": "ch4",
       "name": "第4章　卒論",
       "english": "CHAPTER 4",
+      "clearText": "全作戦クリア！　四年間おつかれさま。卒業おめでとう！",
       "stages": ["stage_16", "stage_17", "stage_18", "stage_19", "stage_20"]
+    },
+    {
+      // 4-5 のあとの番外編（クリアしたあとのやりこみ）。新しい敵：過去問（跳ぶ）・英語試験（物理をかわす）・研究計画書（だんだん速く）・専門科目・口頭試問・院試（ボス）
+      "id": "ex",
+      "name": "番外編　院試",
+      "english": "EXTRA",
+      "clearText": "番外編クリア！　院試合格おめでとう！",
+      "stages": ["stage_21", "stage_22", "stage_23", "stage_24", "stage_25"]
     }
   ]
 }

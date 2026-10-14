@@ -98,7 +98,8 @@ public class Battle : MonoBehaviour
             Debug.LogWarning(data.id + ": ライフ（" + State.MaxLife + "）が敵の数（" + schedule.Count + "）以上なので、まったく防衛しなくても勝てます");
         lastPhase = State.Phase;
         TimeController.ResetForStage(Rules.focusTimeScale);
-        AudioManager.PlayBGM(data.bgm);
+        // 章ごとの曲（battle2 など）がまだ置かれていなければ、ふつうの戦闘曲を流す
+        AudioManager.PlayBGM(!string.IsNullOrEmpty(data.bgm) && AudioManager.HasBGM(data.bgm) ? data.bgm : "battle");
     }
 
     /// <summary>経路を検査してワールド座標にし、矢印を描く（飛ぶ敵の経路は水色）</summary>
@@ -182,8 +183,9 @@ public class Battle : MonoBehaviour
             {
                 SpawnEntry entry = schedule[nextSpawn++];
                 Enemies.Add(Enemy.Spawn(entry.enemy, entry.path, this, enemyRoot));
-                // ボスが出たら BGM を boss に（ファイルがなければそのまま）
-                if (entry.enemy.boss && AudioManager.HasBGM("boss")) AudioManager.PlayBGM("boss");
+                // ボスが出たら BGM をステージの bossBgm（省略時は boss）に（ファイルがなければそのまま）
+                string bossKey = string.IsNullOrEmpty(Stage.bossBgm) ? "boss" : Stage.bossBgm;
+                if (entry.enemy.boss && AudioManager.HasBGM(bossKey)) AudioManager.PlayBGM(bossKey);
             }
             WarnUpcoming();
             State.CheckVictory(nextSpawn >= schedule.Count, Enemies.Count);

@@ -1,0 +1,43 @@
+{
+  // 番外編の最後。曲がりくねった上の道と、まっすぐな下の道が合流し、まん中を飛ぶ道。最後に院試（ボス）
+  "id": "stage_25",
+  "name": "EX-5 院試",
+  "description": "大学院入試、本番。院試は跳んで距離を詰め、過去問を呼び、追い込まれると「本番」で強くなる。",
+  "life": 3,
+  "initialDp": 18,
+  "bgm": "battle_ex",
+  "map": [
+    "XXXXXXXXXXXXXXX",
+    "S......HHHHHHHX",
+    "XHHHHH.H.....HX",
+    "SHHHHH...HHH..B",
+    "XHHHHHHH.HHHHHX",
+    "S........HHHHHX",
+    "XXXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,1],[6,1],[6,3],[8,3],[8,2],[12,2],[12,3],[14,3]],
+    "p2": [[0,5],[8,5],[8,2],[12,2],[12,3],[14,3]]
+  },
+  "airPaths": {
+    "a1": [[0,3],[14,3]]
+  },
+  "waves": [
+    { "time": 3,   "enemy": "kadai",      "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 10,  "enemy": "eigo",       "path": "p2", "count": 3, "interval": 2.5 },
+    { "time": 20,  "enemy": "keikakusho", "path": "p1", "count": 2, "interval": 4 },
+    { "time": 28,  "enemy": "kakomon",    "path": "p2", "count": 3, "interval": 3 },
+    { "time": 36,  "enemy": "tsuuchi",    "path": "a1", "count": 2, "interval": 3.5 },
+    { "time": 42,  "enemy": "koutou",     "path": "p1", "count": 2, "interval": 4 },
+    { "time": 50,  "enemy": "senmon",     "path": "p2", "count": 1, "interval": 0 },
+    { "time": 56,  "enemy": "eigo",       "path": "p1", "count": 4, "interval": 1.6 },
+    { "time": 70,  "enemy": "inshi",      "path": "p1", "count": 1, "interval": 0 },
+    { "time": 78,  "enemy": "kadai",      "path": "p2", "count": 5, "interval": 2 },
+    { "time": 90,  "enemy": "oinori",     "path": "a1", "count": 2, "interval": 4 },
+    { "time": 98,  "enemy": "kadai",      "path": "p2", "count": 3, "interval": 3 },
+    { "time": 110, "enemy": "eigo",       "path": "p2", "count": 3, "interval": 2 }
+  ],
+  "hints": [
+    { "time": 64, "duration": 10, "text": "院試（ボス）が来る！ 止められていないと跳んで距離を詰め、24 秒ごとに過去問を呼ぶ。体力が 40% を切ると「本番」で強くなる。拠点に着かれるとライフが 2 減る。" }
+  ]
+}

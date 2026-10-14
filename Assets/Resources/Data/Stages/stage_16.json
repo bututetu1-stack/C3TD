@@ -5,7 +5,7 @@
   "description": "研究室に入ったとたん、先行研究の山が立ちはだかる。盾（水色のバー）を割ってから、本体を削ろう。",
   "life": 3,
   "initialDp": 12,
-  "bgm": "battle",
+  "bgm": "battle4",
   "map": [
     "XXXXXXXXXXXXX",
     "XH.....HHHHHX",

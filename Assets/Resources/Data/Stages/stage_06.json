@@ -5,7 +5,7 @@
   "description": "後期が始まった。空から届く「通知」は前衛では止められない。狙撃と術師で撃ち落とそう。",
   "life": 3,
   "initialDp": 12,
-  "bgm": "battle",
+  "bgm": "battle2",
   "map": [
     "XXXXXXXXXXXXX",
     "S...HHHHH...B",

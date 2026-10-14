@@ -28,5 +28,8 @@ public class ChapterData
     public string id;
     public string name;     // 第1章　前期
     public string english;  // CHAPTER 1
+
+    /// <summary>章の最後のステージをクリアしたとき、結果に出すひとこと（省略時は「第1章　前期　クリア！」）</summary>
+    public string clearText;
     public List<string> stages = new List<string>();
 }

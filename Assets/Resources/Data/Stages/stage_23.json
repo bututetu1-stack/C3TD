@@ -1,0 +1,39 @@
+{
+  // 長い一本道と、まっすぐ飛ぶ道。だんだん速くなる「研究計画書」
+  "id": "stage_23",
+  "name": "EX-3 研究計画書",
+  "description": "締切が近づくほど、研究計画書が迫ってくる。研究計画書はだんだん速くなるので、早めに倒そう。",
+  "life": 3,
+  "initialDp": 14,
+  "bgm": "battle_ex",
+  "map": [
+    "XXXXXXXXXXXXXXX",
+    "XHHHHHHHHHHHHHX",
+    "S.....HHH.....B",
+    "XHHHH.HHH.HHHHX",
+    "XHHHH.....HHHHX",
+    "XHHHHHHHHHHHHHX",
+    "XXXXXXXXXXXXXXX"
+  ],
+  "paths": {
+    "p1": [[0,2],[5,2],[5,4],[9,4],[9,2],[14,2]]
+  },
+  "airPaths": {
+    "a1": [[0,2],[14,2]]
+  },
+  "waves": [
+    { "time": 3,  "enemy": "kadai",      "path": "p1", "count": 3, "interval": 2.5 },
+    { "time": 12, "enemy": "keikakusho", "path": "p1", "count": 3, "interval": 4 },
+    { "time": 24, "enemy": "tsuuchi",    "path": "a1", "count": 2, "interval": 3 },
+    { "time": 30, "enemy": "keikakusho", "path": "p1", "count": 4, "interval": 3 },
+    { "time": 44, "enemy": "eigo",       "path": "p1", "count": 4, "interval": 2 },
+    { "time": 54, "enemy": "oinori",     "path": "a1", "count": 2, "interval": 4 },
+    { "time": 60, "enemy": "keikakusho", "path": "p1", "count": 5, "interval": 2.5 },
+    { "time": 74, "enemy": "kakomon",    "path": "p1", "count": 3, "interval": 3 },
+    { "time": 70, "enemy": "senmon",     "path": "p1", "count": 1, "interval": 0 },
+    { "time": 84, "enemy": "keikakusho", "path": "p1", "count": 5, "interval": 2 }
+  ],
+  "hints": [
+    { "time": 10, "duration": 9, "text": "研究計画書は、場にいるあいだ 5 秒ごとに速くなる（最大で +90%）。止めていても速くなるので、長く放っておかないように。" }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  // 番外編の敵。止められていないとき、8 秒ごとに経路の先へ 2 マス跳ぶ（出題範囲を先回りしてくる）
+  "id": "kakomon",
+  "name": "過去問",
+  "label": "過",
+  "shape": "Square",
+  "color": "#7A5BB8",
+  "size": 0.6,
+  "hp": 2400,
+  "atk": 300,
+  "def": 150,
+  "res": 10,
+  "attackInterval": 2.0,
+  "speed": 0.85,
+  "lifeDamage": 1,
+  "blink": { "interval": 8, "firstDelay": 4, "distance": 2 }
+}

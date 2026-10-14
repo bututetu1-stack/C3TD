@@ -1,0 +1,17 @@
+{
+  // 番外編の敵。はじめは遅いが、5 秒ごとに速さ +15%（+90% まで）。止められていても速くなる
+  "id": "keikakusho",
+  "name": "研究計画書",
+  "label": "計",
+  "shape": "Square",
+  "color": "#C07A2A",
+  "size": 0.64,
+  "hp": 3600,
+  "atk": 360,
+  "def": 220,
+  "res": 15,
+  "attackInterval": 2.2,
+  "speed": 0.55,
+  "lifeDamage": 1,
+  "accelerate": { "interval": 5, "percent": 15, "max": 90 }
+}

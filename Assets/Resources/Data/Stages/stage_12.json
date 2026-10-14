@@ -5,7 +5,7 @@
   "description": "説明会をはしごする日々。お祈りメールが届くと DP の回復が遅くなる。早めに撃ち落とそう。",
   "life": 3,
   "initialDp": 12,
-  "bgm": "battle",
+  "bgm": "battle3",
   "map": [
     "XXXXXXXXXXXXX",
     "S..........HX",
