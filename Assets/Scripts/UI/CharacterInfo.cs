@@ -153,7 +153,9 @@ public class CharacterInfo
         portrait.style.borderLeftColor = portrait.style.borderRightColor = portrait.style.borderTopColor = portrait.style.borderBottomColor = classColor;
 
         NameLabel.text = d.name;
-        ClassLabel.text = summon ? cls.name + "・召喚" : cls.name;
+        // 職業と攻撃の種類（物理は防御で減り、術は術耐性で減る）
+        string kind = cls.attack == AttackKind.Heal ? "" : cls.damageType == DamageType.Arts ? "・術" : "・物理";
+        ClassLabel.text = cls.name + kind + (summon ? "・召喚" : "");
         ClassLabel.style.backgroundColor = classColor;
         profileLabel.text = d.profile ?? "";
 

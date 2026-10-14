@@ -173,6 +173,9 @@ public class EnemyPanel
             if (d.enrage.def != 0f) ups.Add("防御力 " + d.enrage.def.ToString("+0;-0") + "%");
             lines.Add("体力が " + d.enrage.hpPercent.ToString("0") + "% を切ると「" + (string.IsNullOrEmpty(d.enrage.name) ? "本気" : d.enrage.name) + "」：" + string.Join("・", ups));
         }
+        // 弱点（硬い・術が効きにくい）
+        if (!d.boss && d.def >= 300) lines.Add("防御が高い：術師の術なら防御が効かない");
+        if (!d.boss && d.res >= 40f) lines.Add("術が効きにくい：狙撃・前衛の物理で");
         if (d.pulse != null)
             lines.Add(d.pulse.interval.ToString("0") + " 秒ごとに「" + (string.IsNullOrEmpty(d.pulse.name) ? "大技" : d.pulse.name) + "」：まわり " + d.pulse.radius.ToString("0.#") + " マスの部員を " + d.pulse.stun.ToString("0.#") + " 秒動けなくする");
         return string.Join("\n", lines);
