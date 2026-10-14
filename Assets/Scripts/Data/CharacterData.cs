@@ -111,11 +111,8 @@ public class SkillData
     public List<EffectData> effects = new List<EffectData>();
     public List<EffectData> onEnd = new List<EffectData>();
 
-    /// <summary>必殺技を発動したときのセリフ（カットインに出す）</summary>
+    /// <summary>必殺技を発動したときのセリフ（カットインに出す。セリフはこれだけ：2026-10-14 オーナー）</summary>
     public string line;
-
-    /// <summary>必殺技が終わったときのセリフ（駒の上に吹き出しで出す）</summary>
-    public string endLine;
 
     /// <summary>params の数値を読む（なければ fallback）</summary>
     public float Param(string key, float fallback)

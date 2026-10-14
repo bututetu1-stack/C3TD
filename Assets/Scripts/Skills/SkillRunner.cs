@@ -203,7 +203,6 @@ public class SkillRunner
         foreach (EffectData e in Ultimate.onEnd) SkillEffects.Apply(e, Context(0f, null, null));
         if (Trait != null && Trait.trigger == SkillTrigger.OnSkillEnd)
             foreach (EffectData e in Trait.effects) SkillEffects.Apply(e, Context(0f, null, null));
-        if (!string.IsNullOrEmpty(Ultimate.endLine)) SpeechBubble.Show(owner.transform, Ultimate.endLine);
     }
 
     /// <summary>撤退・ダウンで場を離れる：必殺技でほかの味方に掛けた増減を外す（終わりの効果は使わない）</summary>

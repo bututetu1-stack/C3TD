@@ -23,7 +23,6 @@
     "spCost": 28,
     "initialSp": 10,
     "line": "我、夜戦に突入す！",
-    "endLine": "……むにゃ。もう朝……？",
     "spCharge": "PerSecond",
     "duration": 15,
     "effects": [

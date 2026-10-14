@@ -23,7 +23,6 @@
     "spCharge": "OnAttack",
     "duration": 10,
     "line": "かわいい……！ そのほっぺ、もちもちさせて！",
-    "endLine": "はっ……つい夢中に……。ネコ吸いたい……",
     "effects": [
       { "type": "Stun", "duration": 2, "target": "Target" },
       { "type": "MultiHit", "hits": 3 },

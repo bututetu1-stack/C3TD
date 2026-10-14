@@ -1,5 +1,5 @@
 {
   // 出撃する部員。M4 で編成画面を作るまでは、ここに書いた順に編成バーへ並ぶ
-  // dummy_ で始まるのはテスト用（実在の部員の情報をもらったら置き換える）。部員：物理鉄人・ファインマン（feynman）・キャロ（kya6）
-  "members": ["butsuri_tetsujin", "feynman", "kya6", "dummy_guard", "dummy_defender", "dummy_caster", "dummy_medic"]
+  // dummy_ で始まるのはテスト用（実在の部員の情報をもらったら置き換える）。部員：物理鉄人・ファインマン（feynman）・キャロ（kya6）・ヲツ（wotsu）
+  "members": ["butsuri_tetsujin", "feynman", "kya6", "wotsu", "dummy_guard", "dummy_defender", "dummy_caster", "dummy_medic"]
 }

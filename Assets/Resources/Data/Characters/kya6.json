@@ -22,7 +22,6 @@
     "spCost": 30,
     "initialSp": 8,
     "line": "知り合い、呼んどいたよ。さ、カードを配ろうか",
-    "endLine": "あ、課題……出したっけ……？",
     "spCharge": "PerSecond",
     "duration": 15,
     "effects": [
