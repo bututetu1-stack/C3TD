@@ -904,7 +904,7 @@ public class HudUI : MonoBehaviour
             TimeController.SetPaused(true);
     }
 
-    /// <summary>Space：一時停止、R：やり直し、N：次のステージ（テスト用）</summary>
+    /// <summary>Space：一時停止、S：必殺技、T：狙い方、Shift+R：やり直し、Shift+N：次のステージ（テスト用）</summary>
     private void HandleKeys()
     {
         Keyboard kb = Keyboard.current;
@@ -915,7 +915,15 @@ public class HudUI : MonoBehaviour
             return;
         }
         if (kb.spaceKey.wasPressedThisFrame) TimeController.TogglePause();
-        if (kb.rKey.wasPressedThisFrame) bootstrap.Retry();
-        if (kb.nKey.wasPressedThisFrame) bootstrap.StartBattle(bootstrap.NextStageId(true));
+        // 選んでいる部員：S で必殺技、T で狙い方
+        if (BattleInput.Instance != null && BattleInput.Instance.Selected != null)
+        {
+            if (kb.sKey.wasPressedThisFrame) BattleInput.Instance.ActivateSelected();
+            else if (kb.tKey.wasPressedThisFrame) unitPanel.CycleTarget();
+        }
+        // テスト用（遊んでいるときにうっかり押さないよう Shift と一緒に）
+        bool shift = kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed;
+        if (shift && kb.rKey.wasPressedThisFrame) bootstrap.Retry();
+        if (shift && kb.nKey.wasPressedThisFrame) bootstrap.StartBattle(bootstrap.NextStageId(true));
     }
 }

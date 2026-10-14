@@ -1,9 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>狙う敵の選び方（Bloons の First / Last / Strong / Close）。止めている敵がいれば、どれでもその敵が先</summary>
+public enum TargetMode
+{
+    First,  // 先頭：いちばん拠点に近い敵（ふつう）
+    Last,   // 最後尾：いちばん拠点から遠い敵
+    Strong, // 強い：いまの体力がいちばん多い敵
+    Close,  // 近い：自分にいちばん近い敵
+}
+
 /// <summary>ダメージの計算と、狙う相手の選び方、射程のマス</summary>
 public static class Combat
 {
+    /// <summary>狙い方の日本語（部員の札のボタン）</summary>
+    public static string TargetName(TargetMode mode)
+    {
+        switch (mode)
+        {
+            case TargetMode.Last: return "最後尾";
+            case TargetMode.Strong: return "強い敵";
+            case TargetMode.Close: return "近い敵";
+            default: return "先頭";
+        }
+    }
+
     /// <summary>
     /// 物理：攻撃力 − 防御力、術：攻撃力 ×（1 − 術耐性%）。
     /// どちらも攻撃力の minDamageRate（5%）より小さくはならない（アークナイツと同じ）。
@@ -39,23 +60,37 @@ public static class Combat
         return cells;
     }
 
-    /// <summary>攻撃する敵：自分が止めている敵を先に、なければ射程内でいちばん拠点に近い敵。近接の部員は飛ぶ敵を狙えない（antiAir の部員は狙える）</summary>
+    /// <summary>
+    /// 攻撃する敵：自分が止めている敵を先に、なければ射程内から狙い方（Targeting）で選ぶ（ふつうはいちばん拠点に近い敵）。
+    /// 近接の部員は飛ぶ敵を狙えない（antiAir の部員は狙える）
+    /// </summary>
     public static Enemy FindEnemyTarget(Battle battle, Character c)
     {
         foreach (Enemy e in c.Blocked)
             if (e != null && e.Alive) return e;
 
         bool melee = c.Class.attack == AttackKind.Melee && !c.Data.antiAir;
+        TargetMode mode = c.Targeting;
         Enemy best = null;
-        float bestRemaining = float.MaxValue;
+        float bestScore = float.MaxValue;
+        Vector3 at = c.transform.position;
         foreach (Enemy e in battle.Enemies)
         {
             if (!e.Alive) continue;
             if (melee && e.Data.flying) continue;
             if (!InRange(c.Cell, battle.Map.WorldToCell(e.transform.position), c.Range)) continue;
-            if (e.RemainingDistance < bestRemaining)
+            // 小さいほど狙う。同じなら拠点に近い敵
+            float score;
+            switch (mode)
             {
-                bestRemaining = e.RemainingDistance;
+                case TargetMode.Last: score = -e.RemainingDistance; break;
+                case TargetMode.Strong: score = -e.Hp * 1000f + e.RemainingDistance; break;
+                case TargetMode.Close: score = (e.transform.position - at).sqrMagnitude * 1000f + e.RemainingDistance; break;
+                default: score = e.RemainingDistance; break;
+            }
+            if (score < bestScore)
+            {
+                bestScore = score;
                 best = e;
             }
         }

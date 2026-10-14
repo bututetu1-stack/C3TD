@@ -36,6 +36,12 @@ public class Character : Unit
     /// <summary>いま止めている敵</summary>
     public readonly List<Enemy> Blocked = new List<Enemy>();
 
+    /// <summary>狙う敵の選び方（編成の部員の設定。召喚ユニットは先頭）</summary>
+    public TargetMode Targeting
+    {
+        get { return Member != null ? Member.Targeting : TargetMode.First; }
+    }
+
     /// <summary>名前（改装したら「物理鉄人改二」のように後ろに付く）</summary>
     public string DisplayName
     {

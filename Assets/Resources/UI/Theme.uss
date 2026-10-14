@@ -889,6 +889,16 @@
     font-size: 22px;
 }
 
+.target-button {
+    width: 170px;
+    height: 56px;
+    margin-left: 10px;
+}
+
+.target-button .c3-button-text {
+    font-size: 20px;
+}
+
 /* ---------- 必殺技 ---------- */
 .skill-button {
     width: 168px;

@@ -12,6 +12,7 @@ public class UnitPanel
     private readonly VisualElement actions;
     private readonly C3Button retreatButton;
     private readonly C3Button skillButton;
+    private readonly C3Button targetButton;
     private Character shown;
     private int shownHp = -1;
     private int shownAtk = -1;
@@ -41,6 +42,10 @@ public class UnitPanel
         });
         retreatButton.AddToClassList("retreat-button");
         actions.Add(retreatButton);
+        // 狙い方（先頭 → 最後尾 → 強い敵 → 近い敵）。攻撃する部員だけ
+        targetButton = new C3Button(null, 0f, "狙い：先頭", CycleTarget);
+        targetButton.AddToClassList("target-button");
+        actions.Add(targetButton);
         root.Add(actions);
 
         UIFactory.SetVisible(info, false);
@@ -150,6 +155,16 @@ public class UnitPanel
         }
     }
 
+    /// <summary>選んでいる部員の狙い方を次へ（T キーでも）</summary>
+    public void CycleTarget()
+    {
+        Character c = shown;
+        if (c == null || c.Member == null || c.Class.attack == AttackKind.Heal) return;
+        c.Member.Targeting = (TargetMode)(((int)c.Member.Targeting + 1) % 4);
+        targetButton.Text.text = "狙い：" + Combat.TargetName(c.Targeting);
+        AudioManager.PlaySE("click");
+    }
+
     private void Fill(Character c)
     {
         card.Fill(c.Data, c.Class, c.IsSummon);
@@ -157,5 +172,7 @@ public class UnitPanel
         card.BlockValue.text = c.HasBlockRoom || c.Blocked.Count > 0 ? c.BlockCapacity.ToString() : "-";
         UIFactory.SetVisible(retreatButton, !c.IsSummon);
         if (c.Member != null) retreatButton.Text.text = "撤退 +" + Battle.Current.RefundOf(c.Member);
+        UIFactory.SetVisible(targetButton, c.Member != null && c.Class.attack != AttackKind.Heal);
+        targetButton.Text.text = "狙い：" + Combat.TargetName(c.Targeting);
     }
 }

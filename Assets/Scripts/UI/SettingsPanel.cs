@@ -35,7 +35,7 @@ public class SettingsPanel
         seValue = AddRow(panel, "効果音", seCells, v => AudioManager.SeLevel = v, () => AudioManager.SeLevel, true);
 
         if (!Application.isMobilePlatform)
-            panel.Add(UIFactory.Text("出撃中のキー：1〜9 カードを選ぶ　Space 一時停止　Esc・右クリック 取り消し", UIFont.Medium, "settings-keys"));
+            panel.Add(UIFactory.Text("出撃中のキー：1〜9 カードを選ぶ　S 必殺技　T 狙い方　Space 一時停止　Esc・右クリック 取り消し", UIFont.Medium, "settings-keys"));
 
         var close = new C3Button(IconKind.Back, 26f, "閉じる", Hide);
         close.AddToClassList("settings-close");

@@ -10,6 +10,9 @@ public class SquadMember
     /// <summary>配置中ならそのキャラ（いなければ null）</summary>
     public Character Deployed;
 
+    /// <summary>狙う敵の選び方（部員の札で切り替える。撤退して置き直しても覚えている）</summary>
+    public TargetMode Targeting = TargetMode.First;
+
     public SquadMember(CharacterData data, ClassData classData)
     {
         Data = data;
