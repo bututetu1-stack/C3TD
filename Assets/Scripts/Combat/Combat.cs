@@ -39,13 +39,13 @@ public static class Combat
         return cells;
     }
 
-    /// <summary>攻撃する敵：自分が止めている敵を先に、なければ射程内でいちばん拠点に近い敵。近接の部員は飛ぶ敵を狙えない</summary>
+    /// <summary>攻撃する敵：自分が止めている敵を先に、なければ射程内でいちばん拠点に近い敵。近接の部員は飛ぶ敵を狙えない（antiAir の部員は狙える）</summary>
     public static Enemy FindEnemyTarget(Battle battle, Character c)
     {
         foreach (Enemy e in c.Blocked)
             if (e != null && e.Alive) return e;
 
-        bool melee = c.Class.attack == AttackKind.Melee;
+        bool melee = c.Class.attack == AttackKind.Melee && !c.Data.antiAir;
         Enemy best = null;
         float bestRemaining = float.MaxValue;
         foreach (Enemy e in battle.Enemies)

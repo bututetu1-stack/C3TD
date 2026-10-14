@@ -1,32 +1,37 @@
 {
-  // 2026-10-13：オーナーに「もう少し改良できないか」と言われて強くした
-  //   夜戦主義を30秒ごと→20秒ごとに（ステージの中で5段まで届くように）
-  //   深夜出撃に一斉射撃を足し、最初の SP を10に。艦娘の砲撃は範囲攻撃（Summons/kanmusu_token.json の splash）、引き継ぎは50%→60%
+  // オーナー（部員）。2026-10-14 夜、オーナーの希望で作り直した：
+  //   艦娘の召喚はやめて、艦これは匂わせる程度に（必殺技の言葉「我、夜戦に突入す！」）。職業は狙撃→前衛、強めの「環境キャラ」に
+  //   特徴：艦これが好き・夜ふかしが好き・だいたい寝不足（必殺技が終わると寝落ちする）
   "id": "butsuri_tetsujin",
   "name": "物理鉄人",
-  "class": "Sniper",
-  "cost": 12,
+  "class": "Guard",
+  "cost": 15,
   "redeployTime": 60,
-  "stats": { "hp": 1200, "atk": 400, "def": 80, "attackInterval": 1.0, "block": 1, "range": 3 },
+  // 前衛だが飛ぶ敵も斬れる（環境キャラなので。必殺技で射程が伸びると届きやすい）
+  "antiAir": true,
+  "stats": { "hp": 2600, "atk": 620, "def": 260, "attackInterval": 1.05, "block": 2, "range": 1 },
   "trait": {
     "name": "夜戦主義",
-    "description": "ステージの経過時間20秒ごとに攻撃力+10%（5段まで）",
+    "description": "夜ふかしするほど調子が出る。ステージの経過時間20秒ごとに攻撃力+10%（5段まで）。前衛だが飛ぶ敵も攻撃できる",
     "trigger": "ElapsedTime",
     "params": { "interval": 20 },
     "effects": [ { "type": "StatModifier", "stat": "atk", "percentPerStack": 10, "maxStacks": 5, "target": "Self" } ]
   },
   "ultimate": {
-    "name": "深夜出撃",
-    "description": "射程内の敵すべてに攻撃力の250%で一斉射撃し、周りの空きマスに艦娘を3体呼ぶ（艦娘の砲撃は範囲攻撃）。終わると寝落ちして3秒動けない",
-    "spCost": 30,
+    "name": "夜戦突入",
+    "description": "15秒間、攻撃力+60%・射程+1.5マス・攻撃が2回当たる。発動した瞬間、射程内の敵すべてに攻撃力の200%。終わると寝不足で寝落ちして3秒動けない",
+    "spCost": 28,
     "initialSp": 10,
-    "line": "夜戦の時間だ。全艦、抜錨！",
+    "line": "我、夜戦に突入す！",
     "endLine": "……むにゃ。もう朝……？",
     "spCharge": "PerSecond",
     "duration": 15,
     "effects": [
-      { "type": "Damage", "multiplier": 2.5, "target": "EnemiesInRange" },
-      { "type": "Summon", "unitId": "kanmusu_token", "count": 3, "target": "AreaAroundSelf", "inheritStatsPercent": 60 }
+      // 先に射程を伸ばしてから、伸びた射程の中の敵に一撃
+      { "type": "StatModifier", "stat": "range", "value": 1.5, "target": "Self" },
+      { "type": "StatModifier", "stat": "atk", "percent": 60, "target": "Self" },
+      { "type": "MultiHit", "hits": 2 },
+      { "type": "Damage", "multiplier": 2.0, "target": "EnemiesInRange" }
     ],
     "onEnd": [
       { "type": "Stun", "duration": 3, "target": "Self" }

@@ -26,6 +26,7 @@ public class SkillContext
 ///   Summon       周りの空きマスに unitId を count 体置く（inheritStatsPercent で召喚者の能力を引き継ぐ）
 ///   MultiHit     攻撃が hits 回当たる
 ///   Dp           DP を value 増やす（上限は rules.json の dpMax）
+///   Random       options の中から1つをランダムに使い、その label を出す（キャロのカードなど）
 /// 対象：Self / Target / AreaAroundSelf（半径 radius、省略時 1.5 マス）/ AlliesInRange / EnemiesInRange
 /// </summary>
 public static class SkillEffects
@@ -84,6 +85,15 @@ public static class SkillEffects
             {
                 StatModifier m = caster.AddModifier("hits", 0f, Mathf.Max(0, e.hits - 1), duration);
                 if (ctx.Collected != null && e.duration <= 0f) ctx.Collected.Add(new KeyValuePair<Unit, StatModifier>(caster, m));
+                break;
+            }
+
+            case EffectType.Random:
+            {
+                if (e.options == null || e.options.Count == 0) break;
+                EffectData pick = e.options[Random.Range(0, e.options.Count)];
+                if (!string.IsNullOrEmpty(pick.label)) FloatingText.Status(caster.Center + new Vector3(0f, 0.45f, 0f), pick.label);
+                Apply(pick, ctx);
                 break;
             }
 

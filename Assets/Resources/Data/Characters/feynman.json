@@ -1,0 +1,33 @@
+{
+  // 部員（2026-10-14 夜、オーナーから）。特徴：
+  //   好きなものに深くハマりすぎてしまう／かわいいもの、特にもちもちしてそうなものが好き（ネコも大好き）
+  //   かわいいものへの気持ちが抑えきれず、うっかり攻撃性が出てしまう（キュートアグレッション。もちもちほっぺを引っ張る）
+  "id": "feynman",
+  "name": "ファインマン",
+  "class": "Guard",
+  "cost": 12,
+  "redeployTime": 60,
+  "color": "#E58FB0",
+  "stats": { "hp": 1900, "atk": 520, "def": 210, "attackInterval": 0.9, "block": 2, "range": 1 },
+  "trait": {
+    "name": "沼",
+    "description": "好きなものにハマりすぎてしまう。攻撃するたびに攻撃力+8%（3秒。攻撃し続けると重なる）",
+    "trigger": "OnAttack",
+    // わざと攻撃間隔より長くして、攻撃し続けると重なる（3〜4段）ようにしている
+    "effects": [ { "type": "StatModifier", "stat": "atk", "percent": 8, "duration": 3, "target": "Self" } ]
+  },
+  "ultimate": {
+    "name": "もちもちの刑",
+    "description": "かわいさに我慢できない。発動した瞬間、目の前の敵を2秒動けなくし、10秒間、攻撃が3回当たる。夢中になりすぎて、そのあいだ防御力-30%（攻撃するたびにSPが溜まる）",
+    "spCost": 12,
+    "spCharge": "OnAttack",
+    "duration": 10,
+    "line": "かわいい……！ そのほっぺ、もちもちさせて！",
+    "endLine": "はっ……つい夢中に……。ネコ吸いたい……",
+    "effects": [
+      { "type": "Stun", "duration": 2, "target": "Target" },
+      { "type": "MultiHit", "hits": 3 },
+      { "type": "StatModifier", "stat": "def", "percent": -30, "target": "Self" }
+    ]
+  }
+}

@@ -38,6 +38,7 @@ public enum EffectType
     Summon,
     MultiHit,
     Dp,
+    Random,
 }
 
 /// <summary>スキルの効果の対象</summary>
@@ -67,6 +68,9 @@ public class CharacterData
 
     /// <summary>範囲攻撃の半径（マス）。0 なら単体。省略時（-1）は職業の決まり</summary>
     public float splash = -1f;
+
+    /// <summary>近接（前衛・重装）でも飛ぶ敵を狙える（物理鉄人）</summary>
+    public bool antiAir;
 
     public CharacterStats stats = new CharacterStats();
     public SkillData trait;
@@ -141,4 +145,10 @@ public class EffectData
 
     /// <summary>AreaAroundSelf の半径（マス）。0 なら 1.5</summary>
     public float radius;
+
+    /// <summary>Random のとき、この中から1つをランダムに使う</summary>
+    public List<EffectData> options;
+
+    /// <summary>Random で選ばれたときに出す言葉（「ストレート：一斉攻撃」など）</summary>
+    public string label;
 }

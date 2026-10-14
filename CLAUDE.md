@@ -109,7 +109,7 @@ MCP経由のシーン・Prefab操作は失敗しやすいので、**コードと
 ## データ例
 
 ### キャラクター（`Data/Characters/butsuri_tetsujin.json`）
-※数値は仮の値。
+※数値は仮の値。下は最初の仕様の例（艦娘を召喚する狙撃）。2026-10-14 夜に、艦娘の召喚をやめて前衛に作り直した（いまの中身は JSON を見る）。
 ```json
 {
   "id": "butsuri_tetsujin",
@@ -192,7 +192,10 @@ Assets/
 各マイルストーンが終わったら、オーナーがテストプレイできる状態にし、**確認してほしい点**をまとめて報告する。
 
 ## 部員データについて
-- 現時点で確定しているのは「物理鉄人」だけ。
+- 確定している部員：物理鉄人（オーナー）、ファインマン（`feynman`）、キャロ（`kya6`）。2026-10-14 夜にオーナーから特徴を受け取って作った。
+  - 物理鉄人：艦これが好き・夜ふかしが好き・だいたい寝不足。艦これは匂わせる程度（艦娘の召喚はオーナーの判断でやめた。`Summons/kanmusu_token.json` と `Art/Icons/kanmusu_token.png` は使っていない）。オーナーの希望で強めの「環境キャラ」の前衛。前衛だが飛ぶ敵も斬れる（部員の JSON の `antiAir`。狙撃から前衛に変えたら、オーナーの編成で飛ぶ敵を落とせなくなったため）。必殺技「夜戦突入」（「我、夜戦に突入す！」）で射程が伸び、2回攻撃、終わると寝落ち。
+  - ファインマン：好きなものに深くハマりすぎる・かわいいもの（特にもちもち）とネコが好き・キュートアグレッション。前衛。特性「沼」で攻撃し続けるほど強く、必殺技「もちもちの刑」で3回攻撃、夢中で防御が下がる。アイコンは本人のもの（`Art/Icons/feynman.png`。正方形に切り出しただけ）。
+  - キャロ：ポーカーディーラー・人脈が広い・よく課題を出し忘れる（本人の希望で弱点に）。術師。特性「課題の出し忘れ」で25秒ごとに2秒止まる。必殺技「人脈フルハウス」で「知り合い」（`Summons/kya6_friend.json`）を2体呼び、カードを1枚配る（効果の部品 `Random`）。アイコンはまだない。
 - 他の部員はオーナーから情報（ニックネーム、性格、ネタ）をもらってから作る。**勝手に実在の部員の設定を作らない**。それまではダミーキャラ（`dummy_guard` など）でテストする。
 
 ## 作業メモ（Claude Code が更新する）
@@ -232,9 +235,9 @@ Assets/
 - 敵の特別な性質（`EnemyData`、どれも省略できる）：`flying`（止められず、近接の部員は狙えない。ステージの `airPaths` を飛ぶ。少し浮かせて描き、影は地面に残す）、`range`（0 より大きければ、歩きながら射程内のいちばん近い部員を撃つ）と `damageType`（Arts なら部員の防御が効かない）・`stunOnHit`（当たった部員を眠らせる秒。止められているときの攻撃にも効く）、`revive`・`reviveHpPercent`（倒されても起き上がる回数と体力%。起き上がると1秒動けない）、`aura`（`stat`・`percent`・`radius`：まわりの敵の能力を上げる。琥珀色の輪。強くされた敵の体力バーの右に「強」）、`summon`（`enemy`・`count`・`interval`・`firstDelay`：自分の位置から同じ経路の続きへ手下を出す。倒す敵の数も増える）。`split`（`enemy`・`count`：倒されたら、その場から出す）、`hitModifier`（`stat`・`percent`・`duration`：当てた部員の能力を下げる。`Unit.AddOrRefreshModifier` で、同じ敵の種類からは重ねず長さを戻す）、`dpDrain`（場にいるあいだ DP の回復を減らす。DP は 0 より下がらず、DP の数字が赤くなって「DP ▼」）、`pulse`（`interval`・`firstDelay`・`radius`・`stun`・`name`：ボスの大技。1 秒前に赤い輪で知らせ、まわりの部員を動けなくする）。`shield`（体力より先に減る盾。`Unit.Absorb` で受け止め、体力バーの上に水色のバー）、`heal`（`interval`・`radius`・`percent`・`maxAmount`：まわりの敵（自分も）を回復。ボスが回復しすぎないよう 1 回の量に上限）、`enrage`（`hpPercent`・`atk`・`speed`・`def`・`name`：体力が下がったら一度だけ能力が上がり、体が赤みを帯びる）。`dodge`（物理攻撃をかわす確率%。`Unit.Evade` で「回避」と出す）、`blink`（`interval`・`firstDelay`・`distance`：止められていないとき経路の先へ跳ぶ。紫の輪）、`accelerate`（`interval`・`percent`・`max`：だんだん速くなる。「加速」）。敵の札（`EnemyPanel`）に性質の説明が出る。
 - ステージの `airPaths`：飛ぶ敵の経路（`paths` と同じ書き方。壁や高台の上も通れ、歩けるかは調べない。水色の矢印。作戦選択の小さなマップでは水色）。ウェーブの `path` には paths と airPaths のどちらの名前も書ける（名前は重ねない）。
 - ステージの JSON の `hints`：`{ "time": 秒, "duration": 秒, "text": "…" }` の配列。その時刻に画面の左下にヒントが出る（1-1 は操作の説明を4つ、1-3 は2つ、1-2・1-4・1-5 は1つずつ）。ヒントの札は編成バーの左の空いたところに収める（幅は最大 960px。部員が多いと編成バーが長くなるので狭くなる）。
-- 部員の JSON の追加項目：`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る）・`endLine`（終わったときのセリフ。吹き出し）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）、`splash`（範囲攻撃の半径。職業の決まりを上書き。艦娘は 0.6）。物理の範囲攻撃の着弾は `Fx.Explosion`、術は `Fx.ArtsBurst`。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
+- 部員の JSON の追加項目：`antiAir`（近接でも飛ぶ敵を狙える）、`projectile`（弾の画像。職業の決まりを上書き）、スキルの `line`（発動時のセリフ。カットインに出る）・`endLine`（終わったときのセリフ。吹き出し）、効果の `radius`（AreaAroundSelf の半径。省略時 1.5）、`splash`（範囲攻撃の半径。職業の決まりを上書き。艦娘は 0.6）。物理の範囲攻撃の着弾は `Fx.Explosion`、術は `Fx.ArtsBurst`。召喚ユニットは `Data/Summons/{id}.json`（部員と同じ書き方）。
 - スキル（`Skills/SkillRunner`・`Skills/SkillEffects` の先頭に一覧あり）：
-  - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）、Dp（DP を value 増やす）。
+  - 効果の部品：Damage（攻撃力×multiplier）、Heal（value・multiplier・percent を足す）、StatModifier（stat は atk / def / attackInterval / range / speed / hits。percent と value）、Stun、Summon、MultiHit（hits 回当たる）、Dp（DP を value 増やす）、Random（`options` の中から1つをランダムに使い、その `label` を出す）。
   - 能力の増減は足し算で重なり、上限はない。特性の OnAttack で敵を下げるときは、効果の長さを攻撃間隔以下にする（長いと自分の分が重なる）。
   - 対象：Self / Target / AreaAroundSelf / AlliesInRange / EnemiesInRange。Target と AreaAroundSelf は、Damage・Stun・下げる StatModifier なら敵、Heal・上げる StatModifier なら味方。
   - 効果の長さ：effect.duration があればそれ、なければ必殺技の効果時間（特性なら外すまでずっと）。必殺技で付けた増減は終わりに外す。撤退・ダウンでも外す。

@@ -1,0 +1,8 @@
+{
+  // キャロの「人脈フルハウス」で呼ばれる知り合い。どこに出ても戦えるよう、離れて撃つ（狙撃）
+  "id": "kya6_friend",
+  "name": "知り合い",
+  "class": "Sniper",
+  "color": "#5BA88A",
+  "stats": { "hp": 900, "atk": 330, "def": 60, "attackInterval": 1.2, "block": 1, "range": 2.5 }
+}
