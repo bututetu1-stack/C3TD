@@ -4,6 +4,18 @@ using UnityEngine;
 public static class GameSettings
 {
     private const string HintsKey = "c3td.hints";
+    private const string GachaShortKey = "c3td.gacha.short";
+
+    /// <summary>ガチャの演出を短くするか（ためと「押して開ける」を飛ばし、すぐ開いて速くめくる。★3 のスポットライトは残す）</summary>
+    public static bool GachaShort
+    {
+        get { return PlayerPrefs.GetInt(GachaShortKey, 0) != 0; }
+        set
+        {
+            PlayerPrefs.SetInt(GachaShortKey, value ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+    }
 
     /// <summary>
     /// 出撃中の説明（作戦のヒントと、初めて会う敵）を出すか。出すときも、ヒントはその作戦をクリアするまで、

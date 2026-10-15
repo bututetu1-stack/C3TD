@@ -16,6 +16,7 @@ public class SettingsPanel
     private readonly Label bgmValue;
     private readonly Label seValue;
     private readonly C3Button hintButton;
+    private readonly C3Button gachaButton;
 
     public bool IsOpen { get { return UIFactory.IsVisible(Layer); } }
 
@@ -47,6 +48,19 @@ public class SettingsPanel
         hintButton.AddToClassList("settings-toggle");
         hintRow.Add(hintButton);
         panel.Add(hintRow);
+
+        // ガチャの演出の長さ
+        var gachaRow = UIFactory.Box("settings-row");
+        gachaRow.Add(UIFactory.Text("ガチャ", UIFont.Body, "settings-caption"));
+        gachaButton = new C3Button(null, 0f, "", () =>
+        {
+            GameSettings.GachaShort = !GameSettings.GachaShort;
+            Refresh();
+            AudioManager.PlaySE("click");
+        });
+        gachaButton.AddToClassList("settings-toggle");
+        gachaRow.Add(gachaButton);
+        panel.Add(gachaRow);
 
         if (!Application.isMobilePlatform)
             panel.Add(UIFactory.Text("出撃中のキー：1〜9 カードを選ぶ　S 必殺技　T 狙い方　Space 一時停止　Esc・右クリック 取り消し", UIFont.Medium, "settings-keys"));
@@ -113,6 +127,8 @@ public class SettingsPanel
         Fill(seCells, seValue, AudioManager.SeLevel);
         hintButton.Text.text = GameSettings.HintsOn ? "出す（作戦をクリアするまで・初めての敵）　時間が止まる" : "出さない";
         hintButton.Active = GameSettings.HintsOn;
+        gachaButton.Text.text = GameSettings.GachaShort ? "演出を短く（すぐ開く。★3 は大きく見せる）" : "演出をぜんぶ見る（箱をためて、押して開ける）";
+        gachaButton.Active = !GameSettings.GachaShort;
     }
 
     private static void Fill(List<VisualElement> cells, Label value, float level)

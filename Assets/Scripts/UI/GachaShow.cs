@@ -232,6 +232,9 @@ public class GachaShow
         bool upgrade = false;
         if (best == 3 && Random.value < 0.45f) { shown = 2; upgrade = true; }
         else if (best == 2 && Random.value < 0.25f) { shown = 1; upgrade = true; }
+        // 演出を短く（設定）：ためは 1 回だけ、押さずに開き、カードは速くめくる（★3 のスポットライトは残す）
+        bool quick = GameSettings.GachaShort;
+        if (quick) { shown = best; upgrade = false; }
 
         // 1. 背景と、備品箱が落ちてくる
         dim.style.opacity = 0f;
@@ -268,7 +271,7 @@ public class GachaShow
             Spin(circle, 16f);
         }
         // 確定演出：★3 があるとき、まれに（15%）金の光の柱が落ちてきて、箱がはじめから金色に光る
-        bool omen = best >= 3 && Random.value < OmenChance;
+        bool omen = !quick && best >= 3 && Random.value < OmenChance;
         if (omen)
         {
             shown = 3;
@@ -314,7 +317,7 @@ public class GachaShow
         // 2. 箱がふくらんで光る（3 回。だんだん強く）
         Color color = RarityColor(shown);
         SetHint("");
-        for (int i = 0; i < 3; i++)
+        for (int i = quick ? 2 : 0; i < 3; i++)
         {
             if (skip) break;
             float k = (i + 1) / 3f;
@@ -369,7 +372,7 @@ public class GachaShow
         }
 
         // 押すまで待つ（箱はふるえつづける）
-        SetHint(rainbow ? "押して開ける……！！" : best >= 3 ? "押して開ける……！" : "押して開ける");
+        if (!quick) SetHint(rainbow ? "押して開ける……！！" : best >= 3 ? "押して開ける……！" : "押して開ける");
         float nextBeat = Time.unscaledTime;
         var shiver = Loop(box, () =>
         {
@@ -384,7 +387,8 @@ public class GachaShow
             glow.style.opacity = 0.65f + 0.2f * Mathf.Sin(t * 6f);
             if (circle != null && !rainbow) circle.style.unityBackgroundImageTintColor = Palette.WithAlpha(color, 0.7f + 0.25f * Mathf.Sin(t * 6f));
         });
-        yield return WaitTap(8f);
+        if (quick) yield return Wait(0.3f);
+        else yield return WaitTap(8f);
         shiver.Pause();
         SetHint("");
         if (skip) { yield return Summary(results); yield break; }
@@ -469,7 +473,7 @@ public class GachaShow
         yield return Wait(0.45f);
         SetHint(cards.Count > 1 ? "押すと早くめくる" : "");
 
-        bool fast = false;
+        bool fast = quick;
         advance = false;
         foreach (CardView c in cards)
         {
