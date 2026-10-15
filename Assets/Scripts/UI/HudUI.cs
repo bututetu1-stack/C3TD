@@ -861,7 +861,8 @@ public class HudUI : MonoBehaviour
         int most = 0;
         foreach (var kv in leakCounts)
             if (kv.Value > most) { most = kv.Value; worst = kv.Key; }
-        return worst != null ? "ヒント：" + StageTips.Advice(GameData.Enemy(worst)) : null;
+        EnemyData data = worst != null ? GameData.Enemy(worst) : null;
+        return data != null ? "ヒント：いちばん多く突破したのは「" + data.name + "」。" + StageTips.Advice(data) : null;
     }
 
     private void OnEnemyLeaked(Enemy enemy)

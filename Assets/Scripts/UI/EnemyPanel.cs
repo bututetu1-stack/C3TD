@@ -132,6 +132,7 @@ public class EnemyPanel
     public static string Traits(EnemyData d)
     {
         var lines = new System.Collections.Generic.List<string>();
+        if (d.lifeDamage > 1) lines.Add("拠点に着くとライフが " + d.lifeDamage + " 減る");
         if (d.flying) lines.Add("飛行：止められず、前衛・重装は攻撃できない");
         if (d.range > 0f)
         {
@@ -145,7 +146,7 @@ public class EnemyPanel
         }
         if (d.revive > 0) lines.Add("倒されても " + d.revive + " 回起き上がる（体力 " + d.reviveHpPercent.ToString("0") + "%）");
         if (d.aura != null && !string.IsNullOrEmpty(d.aura.stat))
-            lines.Add("まわり " + d.aura.radius.ToString("0.#") + " マスの敵の" + StatName(d.aura.stat) + "を " + d.aura.percent.ToString("+0;-0") + "%");
+            lines.Add("まわり " + d.aura.radius.ToString("0.#") + " マスの敵の" + StatName(d.aura.stat) + " " + d.aura.percent.ToString("+0;-0") + "%");
         if (d.summon != null && !string.IsNullOrEmpty(d.summon.enemy))
         {
             EnemyData minion = GameData.Enemy(d.summon.enemy);
@@ -157,7 +158,7 @@ public class EnemyPanel
             lines.Add("倒すと" + (piece != null ? piece.name : d.split.enemy) + " " + d.split.count + " 体に分かれる");
         }
         if (d.hitModifier != null && !string.IsNullOrEmpty(d.hitModifier.stat))
-            lines.Add("攻撃した部員の" + StatName(d.hitModifier.stat) + "を " + d.hitModifier.duration.ToString("0.#") + " 秒 " + d.hitModifier.percent.ToString("+0;-0") + "%");
+            lines.Add("攻撃した部員の" + StatName(d.hitModifier.stat) + " " + d.hitModifier.percent.ToString("+0;-0") + "%（" + d.hitModifier.duration.ToString("0.#") + " 秒）");
         if (d.dpDrain > 0f) lines.Add("場にいるあいだ、DP の回復を 1 秒あたり " + d.dpDrain.ToString("0.0#") + " 減らす");
         if (d.shield > 0f) lines.Add("体力より先に減る盾 " + d.shield.ToString("0"));
         if (d.dodge > 0f) lines.Add("物理攻撃を " + d.dodge.ToString("0") + "% の確率でかわす（術は当たる）");

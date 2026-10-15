@@ -1,0 +1,1872 @@
+fileFormatVersion: 2
+guid: 91bd4eaeec2ac8f4cac537c83f0b52f1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6864705659591406222
+    second: monitor_0
+  - first:
+      213: -3417607063087646462
+    second: monitor_1
+  - first:
+      213: 1807344774621437631
+    second: monitor_2
+  - first:
+      213: 5461445652213762030
+    second: monitor_3
+  - first:
+      213: 6148751797447312015
+    second: monitor_4
+  - first:
+      213: -4728222880895444575
+    second: monitor_5
+  - first:
+      213: 3672760693870582148
+    second: monitor_6
+  - first:
+      213: 540718729847682578
+    second: monitor_7
+  - first:
+      213: -2932002123043004417
+    second: monitor_8
+  - first:
+      213: 3039849613383597307
+    second: monitor_9
+  - first:
+      213: 7532039146792607533
+    second: monitor_10
+  - first:
+      213: 7708564596511020763
+    second: monitor_11
+  - first:
+      213: -5528571628367602979
+    second: monitor_12
+  - first:
+      213: -5045770036710734007
+    second: monitor_13
+  - first:
+      213: 7405359106284847276
+    second: monitor_14
+  - first:
+      213: 1625316984234448622
+    second: monitor_15
+  - first:
+      213: 7944655645475576387
+    second: monitor_16
+  - first:
+      213: 8083539388037031576
+    second: monitor_17
+  - first:
+      213: 2256539760863923825
+    second: monitor_18
+  - first:
+      213: -7950252595012941031
+    second: monitor_19
+  - first:
+      213: -7534608101277468503
+    second: monitor_20
+  - first:
+      213: -9084073563826063350
+    second: monitor_21
+  - first:
+      213: 2401586167957392710
+    second: monitor_22
+  - first:
+      213: 9194543834362563603
+    second: monitor_23
+  - first:
+      213: -7956351709475851874
+    second: monitor_24
+  - first:
+      213: 1464257052786618020
+    second: monitor_25
+  - first:
+      213: 7449666410397862167
+    second: monitor_26
+  - first:
+      213: -2561870422349156613
+    second: monitor_27
+  - first:
+      213: 2957841750677004238
+    second: monitor_28
+  - first:
+      213: -7805286303793526925
+    second: monitor_29
+  - first:
+      213: 1331817786944535794
+    second: monitor_30
+  - first:
+      213: -8506478527899223478
+    second: monitor_31
+  - first:
+      213: 1258802716224193472
+    second: monitor_32
+  - first:
+      213: 1649825803426555185
+    second: monitor_33
+  - first:
+      213: 436164963526728625
+    second: monitor_34
+  - first:
+      213: -7961116669113859681
+    second: monitor_35
+  - first:
+      213: -5791318778265644136
+    second: monitor_36
+  - first:
+      213: -7369812591779297934
+    second: monitor_37
+  - first:
+      213: 3412494733210126365
+    second: monitor_38
+  - first:
+      213: 6593583964825180335
+    second: monitor_39
+  - first:
+      213: -2048836183233407350
+    second: monitor_40
+  - first:
+      213: -6277132455446609709
+    second: monitor_41
+  - first:
+      213: 479866968147553709
+    second: monitor_42
+  - first:
+      213: 6272057276210592148
+    second: monitor_43
+  - first:
+      213: -9044987854881788265
+    second: monitor_44
+  - first:
+      213: 7754140691860690625
+    second: monitor_45
+  - first:
+      213: -502888398096341225
+    second: monitor_46
+  - first:
+      213: 4573245087941436220
+    second: monitor_47
+  - first:
+      213: -6297045952418434532
+    second: monitor_48
+  - first:
+      213: 466567372753456169
+    second: monitor_49
+  - first:
+      213: -6872486383954926200
+    second: monitor_50
+  - first:
+      213: 7006178977193112932
+    second: monitor_51
+  - first:
+      213: -7250732492483549310
+    second: monitor_52
+  - first:
+      213: 2122595730876664869
+    second: monitor_53
+  - first:
+      213: -5290649217466822310
+    second: monitor_54
+  - first:
+      213: -7510162578619254019
+    second: monitor_55
+  - first:
+      213: 7661993080468290776
+    second: monitor_56
+  - first:
+      213: -2188969452085923292
+    second: monitor_57
+  - first:
+      213: -4648893436886003183
+    second: monitor_58
+  - first:
+      213: -5664255065832713062
+    second: monitor_59
+  - first:
+      213: -603526330762514539
+    second: monitor_60
+  - first:
+      213: 158922791436904054
+    second: monitor_61
+  - first:
+      213: 4009230132085305999
+    second: monitor_62
+  - first:
+      213: -7303595708495675338
+    second: monitor_63
+  - first:
+      213: -4209320398265017334
+    second: monitor_64
+  - first:
+      213: -7417523529300569303
+    second: monitor_65
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: monitor_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1185
+        width: 63
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e823f873d65544f50800000000000000
+      internalID: 6864705659591406222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1254
+        height: 1246
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2097bcebb783290d0800000000000000
+      internalID: -3417607063087646462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_2
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 1243
+        width: 34
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbe18fd2f7af41910800000000000000
+      internalID: 1807344774621437631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_3
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 1218
+        width: 37
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee78d4c72e3facb40800000000000000
+      internalID: 5461445652213762030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_4
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 1245
+        width: 13
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8244eaae21c45550800000000000000
+      internalID: 6148751797447312015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_5
+      rect:
+        serializedVersion: 2
+        x: 534
+        y: 1240
+        width: 30
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a95a5d475af16eb0800000000000000
+      internalID: -4728222880895444575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_6
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 1239
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4895c27546448f230800000000000000
+      internalID: 3672760693870582148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_7
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 1245
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 216b8f7e1d4018700800000000000000
+      internalID: 540718729847682578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_8
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 1135
+        width: 90
+        height: 111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fff945f7a9f6f47d0800000000000000
+      internalID: -2932002123043004417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_9
+      rect:
+        serializedVersion: 2
+        x: 818
+        y: 1243
+        width: 23
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfc76581e17bf2a20800000000000000
+      internalID: 3039849613383597307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_10
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 1209
+        width: 19
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2fd8e292bd278860800000000000000
+      internalID: 7532039146792607533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_11
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 1200
+        width: 41
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd61137a8a25afa60800000000000000
+      internalID: 7708564596511020763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_12
+      rect:
+        serializedVersion: 2
+        x: 492
+        y: 1220
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dda98d745619643b0800000000000000
+      internalID: -5528571628367602979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_13
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 1223
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9470c8f92e2d9f9b0800000000000000
+      internalID: -5045770036710734007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_14
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 1221
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca000543fde15c660800000000000000
+      internalID: 7405359106284847276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_15
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 1221
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee614b49f294e8610800000000000000
+      internalID: 1625316984234448622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1180
+        width: 6
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34a9f5b8736114e60800000000000000
+      internalID: 7944655645475576387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_17
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 1197
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89663d7be308e2070800000000000000
+      internalID: 8083539388037031576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_18
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 1189
+        width: 45
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17ec6d3f4f6d05f10800000000000000
+      internalID: 2256539760863923825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_19
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 1207
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91b40a713670ba190800000000000000
+      internalID: -7950252595012941031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_20
+      rect:
+        serializedVersion: 2
+        x: 553
+        y: 1197
+        width: 13
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a873991ad1bf6790800000000000000
+      internalID: -7534608101277468503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_21
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 1207
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0871a22933eee180800000000000000
+      internalID: -9084073563826063350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_22
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 1184
+        width: 11
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64d879645e5245120800000000000000
+      internalID: 2401586167957392710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_23
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 1193
+        width: 21
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31c40fe07e4999f70800000000000000
+      internalID: 9194543834362563603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_24
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 1188
+        width: 25
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e91be98564c559190800000000000000
+      internalID: -7956351709475851874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_25
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 1204
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4aee4331806125410800000000000000
+      internalID: 1464257052786618020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_26
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 1193
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7198ce65128826760800000000000000
+      internalID: 7449666410397862167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_27
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 1188
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfe6c4b9c68627cd0800000000000000
+      internalID: -2561870422349156613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_28
+      rect:
+        serializedVersion: 2
+        x: 703
+        y: 1159
+        width: 24
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecf1ce2a66d5c0920800000000000000
+      internalID: 2957841750677004238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_29
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 1184
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3774a2cf57d0ea390800000000000000
+      internalID: -7805286303793526925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_30
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 1191
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fc306098319b7210800000000000000
+      internalID: 1331817786944535794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_31
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1122
+        width: 13
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4a341f19dae2f980800000000000000
+      internalID: -8506478527899223478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1030
+        width: 7
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c307d6a66a287110800000000000000
+      internalID: 1258802716224193472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_33
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1080
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 135638ab3db55e610800000000000000
+      internalID: 1649825803426555185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_34
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 781
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bb5b7239b19d0600800000000000000
+      internalID: 436164963526728625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_35
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 634
+        width: 16
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f91070ab19e648190800000000000000
+      internalID: -7961116669113859681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 590
+        width: 17
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8935d60414a11afa0800000000000000
+      internalID: -5791318778265644136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_37
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 619
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2754bc5ae7a29b990800000000000000
+      internalID: -7369812591779297934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_38
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 598
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1881e231ed9b5f20800000000000000
+      internalID: 3412494733210126365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_39
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 535
+        width: 36
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa8dd148ead118b50800000000000000
+      internalID: 6593583964825180335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_40
+      rect:
+        serializedVersion: 2
+        x: 1220
+        y: 505
+        width: 34
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a86d767b8521193e0800000000000000
+      internalID: -2048836183233407350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_41
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 405
+        width: 84
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d087091a4523e8a0800000000000000
+      internalID: -6277132455446609709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_42
+      rect:
+        serializedVersion: 2
+        x: 1222
+        y: 443
+        width: 32
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dade0ef0774d8a600800000000000000
+      internalID: 479866968147553709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_43
+      rect:
+        serializedVersion: 2
+        x: 1246
+        y: 414
+        width: 8
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 499bf67acd2da0750800000000000000
+      internalID: 6272057276210592148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_44
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 337
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79e6c08e77fb97280800000000000000
+      internalID: -9044987854881788265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_45
+      rect:
+        serializedVersion: 2
+        x: 1238
+        y: 338
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c612c440ed3c9b60800000000000000
+      internalID: 7754140691860690625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_46
+      rect:
+        serializedVersion: 2
+        x: 1238
+        y: 304
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7176dc59aa16509f0800000000000000
+      internalID: -502888398096341225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_47
+      rect:
+        serializedVersion: 2
+        x: 1246
+        y: 308
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c33ac896d2e677f30800000000000000
+      internalID: 4573245087941436220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_48
+      rect:
+        serializedVersion: 2
+        x: 1237
+        y: 286
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c12b9c7c1166c98a0800000000000000
+      internalID: -6297045952418434532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_49
+      rect:
+        serializedVersion: 2
+        x: 1238
+        y: 168
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92cc1c4bd84997600800000000000000
+      internalID: 466567372753456169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_50
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 12
+        width: 94
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88568a8bb0600a0a0800000000000000
+      internalID: -6872486383954926200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_51
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 29
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 465b760d8a2fa3160800000000000000
+      internalID: 7006178977193112932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_52
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 0
+        width: 140
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 287a220d639306b90800000000000000
+      internalID: -7250732492483549310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_53
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 21
+        width: 26
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52c0aac3299f47d10800000000000000
+      internalID: 2122595730876664869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_54
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 28
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5111b95196d396b0800000000000000
+      internalID: -5290649217466822310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_55
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 39
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfab7ffdcea86c790800000000000000
+      internalID: -7510162578619254019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_56
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 35
+        width: 17
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dc30d89c1ed45a60800000000000000
+      internalID: 7661993080468290776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_57
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 7
+        width: 49
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 422bc3881e73f91e0800000000000000
+      internalID: -2188969452085923292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_58
+      rect:
+        serializedVersion: 2
+        x: 926
+        y: 33
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 112d3cfcc00db7fb0800000000000000
+      internalID: -4648893436886003183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_59
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 42
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9495d337068461b0800000000000000
+      internalID: -5664255065832713062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_60
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 17
+        width: 42
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59f2e42fff7df97f0800000000000000
+      internalID: -603526330762514539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_61
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 7
+        width: 30
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6766f42df6b943200800000000000000
+      internalID: 158922791436904054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_62
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 24
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f82bcb53095a3a730800000000000000
+      internalID: 4009230132085305999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_63
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 17
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6304c04366a64aa90800000000000000
+      internalID: -7303595708495675338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_64
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 12
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0c9b93566d7595c0800000000000000
+      internalID: -4209320398265017334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: monitor_65
+      rect:
+        serializedVersion: 2
+        x: 926
+        y: 12
+        width: 40
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92310fa56a9af0990800000000000000
+      internalID: -7417523529300569303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      monitor_0: 6864705659591406222
+      monitor_1: -3417607063087646462
+      monitor_10: 7532039146792607533
+      monitor_11: 7708564596511020763
+      monitor_12: -5528571628367602979
+      monitor_13: -5045770036710734007
+      monitor_14: 7405359106284847276
+      monitor_15: 1625316984234448622
+      monitor_16: 7944655645475576387
+      monitor_17: 8083539388037031576
+      monitor_18: 2256539760863923825
+      monitor_19: -7950252595012941031
+      monitor_2: 1807344774621437631
+      monitor_20: -7534608101277468503
+      monitor_21: -9084073563826063350
+      monitor_22: 2401586167957392710
+      monitor_23: 9194543834362563603
+      monitor_24: -7956351709475851874
+      monitor_25: 1464257052786618020
+      monitor_26: 7449666410397862167
+      monitor_27: -2561870422349156613
+      monitor_28: 2957841750677004238
+      monitor_29: -7805286303793526925
+      monitor_3: 5461445652213762030
+      monitor_30: 1331817786944535794
+      monitor_31: -8506478527899223478
+      monitor_32: 1258802716224193472
+      monitor_33: 1649825803426555185
+      monitor_34: 436164963526728625
+      monitor_35: -7961116669113859681
+      monitor_36: -5791318778265644136
+      monitor_37: -7369812591779297934
+      monitor_38: 3412494733210126365
+      monitor_39: 6593583964825180335
+      monitor_4: 6148751797447312015
+      monitor_40: -2048836183233407350
+      monitor_41: -6277132455446609709
+      monitor_42: 479866968147553709
+      monitor_43: 6272057276210592148
+      monitor_44: -9044987854881788265
+      monitor_45: 7754140691860690625
+      monitor_46: -502888398096341225
+      monitor_47: 4573245087941436220
+      monitor_48: -6297045952418434532
+      monitor_49: 466567372753456169
+      monitor_5: -4728222880895444575
+      monitor_50: -6872486383954926200
+      monitor_51: 7006178977193112932
+      monitor_52: -7250732492483549310
+      monitor_53: 2122595730876664869
+      monitor_54: -5290649217466822310
+      monitor_55: -7510162578619254019
+      monitor_56: 7661993080468290776
+      monitor_57: -2188969452085923292
+      monitor_58: -4648893436886003183
+      monitor_59: -5664255065832713062
+      monitor_6: 3672760693870582148
+      monitor_60: -603526330762514539
+      monitor_61: 158922791436904054
+      monitor_62: 4009230132085305999
+      monitor_63: -7303595708495675338
+      monitor_64: -4209320398265017334
+      monitor_65: -7417523529300569303
+      monitor_7: 540718729847682578
+      monitor_8: -2932002123043004417
+      monitor_9: 3039849613383597307
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

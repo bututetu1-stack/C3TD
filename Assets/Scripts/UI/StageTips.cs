@@ -55,19 +55,33 @@ public static class StageTips
         tips.Add(new Tip { Text = what + "（" + string.Join("・", names) + "）：" + advice, Covered = covered });
     }
 
-    /// <summary>拠点に着かれた敵への助言（出撃中のヒントと、負けたときの結果に出す）</summary>
+    /// <summary>
+    /// その敵の倒し方（初めて会った敵の札の「倒し方」と、負けたときの結果のヒントに出す）。
+    /// どちらでも読めるよう、起きたことではなく、することを書く
+    /// </summary>
     public static string Advice(EnemyData e)
     {
         if (e == null) return "";
-        if (e.boss) return e.name + "はとても硬いボス。必殺技を取っておき、ボスが来たら重ねて使おう";
+        if (e.boss)
+        {
+            string extra = e.summon != null ? "。呼ばれた手下も止められるよう、道に前衛・重装を置こう" : "";
+            return e.name + "はとても硬いボス。必殺技を取っておき、ボスが来たら重ねて使おう" + extra;
+        }
         if (e.flying) return e.name + "は空を飛ぶので、前衛・重装では止められない。狙撃・術師を飛ぶ道（水色の矢印）の近くに置こう";
+        if (e.aura != null) return e.name + "はまわりの敵を強くする。狙撃・術師で先に倒すと、ほかの敵が弱くなる";
+        if (e.heal != null) return e.name + "はまわりの敵を回復する。先に倒すか、術師の範囲攻撃でまとめて削ろう";
+        if (e.shield > 0f) return e.name + "は体力より先に盾が減る。攻撃力の高い部員や必殺技で一気に盾を割ろう";
+        if (e.split != null) return e.name + "は倒すと小さな敵に分かれる。分かれた敵も止められるよう、道に前衛・重装を置こう";
+        if (e.revive > 0) return e.name + "は倒しても起き上がる。止めたまま、起き上がったところをもう一度倒そう";
         if (e.dodge > 0f) return e.name + "は物理攻撃をかわす。術師の術なら必ず当たる";
         if (e.def >= 300) return e.name + "は防御が高い。術師の術なら防御が効かない";
         if (e.res >= 40f) return e.name + "は術が効きにくい。狙撃・前衛の物理で";
         if (e.blink != null) return e.name + "は止められていないと先へ跳ぶ。前衛・重装で止めよう";
+        if (e.accelerate != null) return e.name + "はだんだん速くなる。出てきたら早めに止めよう";
         if (e.speed >= 1.5f) return e.name + "は足が速い。前衛・重装で止めてから攻撃しよう";
         if (e.range > 0f) return e.name + "は離れた部員を撃つ。医療で回復しながら、狙撃・術師で先に倒そう";
-        return e.name + "に突破された。道に前衛・重装を置いて止め、まわりの高台から攻撃しよう";
+        if (e.dpDrain > 0f) return e.name + "がいるあいだは DP がたまりにくい。早めに倒そう";
+        return e.name + "は、道に前衛・重装を置いて止め、まわりの高台から攻撃しよう";
     }
 
     /// <summary>ステージに出てくる敵（ウェーブ・エンドレスの組とボス・呼ばれて分かれて出る敵）</summary>
