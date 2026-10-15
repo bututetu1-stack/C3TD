@@ -12,6 +12,9 @@ public static class Achievements
         public string Name;
         public string Description;
         public System.Func<bool> Done;
+
+        /// <summary>取ったときにもらえる部費</summary>
+        public int Reward = 100;
     }
 
     private static List<Entry> all;
@@ -43,6 +46,7 @@ public static class Achievements
             catch (System.Exception) { done = false; }
             if (!done) continue;
             Progress.AddAchievement(e.Id);
+            if (e.Reward > 0) Progress.AddCoins(e.Reward);
             found.Add(e);
         }
         return found;
@@ -59,7 +63,7 @@ public static class Achievements
     {
         var list = new List<Entry>();
         System.Action<string, string, string, System.Func<bool>> add = (id, name, desc, done) =>
-            list.Add(new Entry { Id = id, Name = name, Description = desc, Done = done });
+            list.Add(new Entry { Id = id, Name = name, Description = desc, Done = done, Reward = RewardFor(id) });
 
         add("first_clear", "はじめての防衛", "作戦を 1 つクリアする", () => CountStages(id => Progress.IsCleared(id)) >= 1);
         add("ch1", "前期おわり", "第1章をすべてクリアする", () => ChapterCleared("ch1"));
@@ -83,6 +87,18 @@ public static class Achievements
         add("promotion2", "幹部", "部員を 1 人 2 回昇進させる", () => AnyMember(r => r.promotion >= 2));
         add("rare_equip", "掘り出し物", "★3 の備品を手に入れる", () => Progress.OwnedEquipment.Exists(e => { EquipmentData d = Growth.Equipment(e.id); return d != null && d.rarity >= 3; }));
         return list;
+    }
+
+    /// <summary>実績の部費（むずかしいものほど多く）</summary>
+    private static int RewardFor(string id)
+    {
+        switch (id)
+        {
+            case "all_perfect": case "endless30": case "real_mvp": case "upgrades_max": return 1000;
+            case "ch3": case "ch4": case "ex": case "hard10": case "endless20": case "mvp10": case "promotion2": return 500;
+            case "ch1": case "ch2": case "ch1_perfect": case "endless10": case "battles50": case "all_members": case "rare_equip": return 300;
+            default: return 150;
+        }
     }
 
     private static int CountStages(System.Func<string, bool> match)

@@ -226,6 +226,7 @@ public class SkillRunner
         Sp = 0f;
         wasReady = false;
         UseCount++;
+        if (owner.Member != null) Daily.Count("skill");
         ultimateModifiers.Clear();
         var ctx = Context(Ultimate.duration, null, ultimateModifiers);
         foreach (EffectData e in Ultimate.effects) SkillEffects.Apply(e, ctx);

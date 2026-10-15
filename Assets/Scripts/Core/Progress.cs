@@ -100,6 +100,12 @@ public class ProgressData
 
     /// <summary>無料の 1 回を引いた日（yyyy-MM-dd）</summary>
     public string freePullDate;
+
+    /// <summary>毎日のこと（Daily）：数えている日・任務ごとの数・受け取った任務・ログインボーナスを渡した日</summary>
+    public string dailyDate;
+    public List<ItemStack> dailyCounts = new List<ItemStack>();
+    public List<string> dailyClaimed = new List<string>();
+    public string loginDate;
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -437,6 +443,61 @@ public static class Progress
         set
         {
             Data.gachaPity = Mathf.Max(0, value);
+            Save();
+        }
+    }
+
+    // ================= 毎日のこと =================
+
+    public static string DailyDate { get { return Data.dailyDate; } }
+
+    public static void ResetDaily(string date)
+    {
+        Data.dailyDate = date;
+        Data.dailyCounts = new List<ItemStack>();
+        Data.dailyClaimed = new List<string>();
+        Save();
+    }
+
+    public static int DailyCount(string id)
+    {
+        if (Data.dailyCounts == null) return 0;
+        foreach (ItemStack s in Data.dailyCounts) if (s.id == id) return s.count;
+        return 0;
+    }
+
+    public static void AddDailyCount(string id, int amount)
+    {
+        if (Data.dailyCounts == null) Data.dailyCounts = new List<ItemStack>();
+        ItemStack stack = null;
+        foreach (ItemStack s in Data.dailyCounts) if (s.id == id) stack = s;
+        if (stack == null)
+        {
+            stack = new ItemStack { id = id };
+            Data.dailyCounts.Add(stack);
+        }
+        stack.count += amount;
+        Save();
+    }
+
+    public static bool DailyClaimed(string id)
+    {
+        return Data.dailyClaimed != null && Data.dailyClaimed.Contains(id);
+    }
+
+    public static void SetDailyClaimed(string id)
+    {
+        if (Data.dailyClaimed == null) Data.dailyClaimed = new List<string>();
+        if (!Data.dailyClaimed.Contains(id)) Data.dailyClaimed.Add(id);
+        Save();
+    }
+
+    public static string LoginDate
+    {
+        get { return Data.loginDate; }
+        set
+        {
+            Data.loginDate = value;
             Save();
         }
     }

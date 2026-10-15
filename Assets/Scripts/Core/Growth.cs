@@ -351,6 +351,7 @@ public static class Growth
         }
         Progress.GachaPity = pity;
         Progress.GachaPulls += count;
+        Daily.Count("gacha", count);
         return results;
     }
 

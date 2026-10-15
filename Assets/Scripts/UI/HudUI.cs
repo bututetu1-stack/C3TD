@@ -589,8 +589,13 @@ public class HudUI : MonoBehaviour
         {
             shownAchievements = battle.NewAchievements.Count;
             var names = new System.Collections.Generic.List<string>();
-            foreach (Achievements.Entry e in battle.NewAchievements) names.Add("「" + e.Name + "」");
-            resultAchievements.text = "実績を取った：" + string.Join("", names);
+            int achievementCoins = 0;
+            foreach (Achievements.Entry e in battle.NewAchievements)
+            {
+                names.Add("「" + e.Name + "」");
+                achievementCoins += e.Reward;
+            }
+            resultAchievements.text = "実績を取った：" + string.Join("", names) + (achievementCoins > 0 ? "　部費 +" + achievementCoins : "");
             UIFactory.SetVisible(resultAchievements, names.Count > 0);
         }
     }

@@ -97,7 +97,7 @@ public class RecordsScreen
             row.Add(new IconView(IconKind.Star, 22f, done ? Palette.AmberBright : new Color(1f, 1f, 1f, 0.2f)));
             var text = UIFactory.Box("achievement-text");
             text.Add(UIFactory.Text(e.Name, UIFont.Body, "achievement-name"));
-            text.Add(UIFactory.Text(e.Description, UIFont.Medium, "achievement-desc"));
+            text.Add(UIFactory.Text(e.Description + "　（部費 " + e.Reward + "）", UIFont.Medium, "achievement-desc"));
             row.Add(text);
             achievements.Add(row);
         }

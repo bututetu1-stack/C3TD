@@ -335,6 +335,8 @@ public class Battle : MonoBehaviour
                     bool won = State.Phase == GamePhase.Won;
                     int stars = !won ? 0 : State.Life >= State.MaxLife ? 3 : 2;
                     Rewards.AddRange(Growth.GrantBattle(Stage, won, stars, Hard, EndlessSurvived));
+                    if (won) Daily.Count("clear");
+                    if (won && stars >= 3) Daily.Count("star3");
                 }
                 NewAchievements.AddRange(Achievements.CheckNew());
             }
