@@ -36,7 +36,9 @@ public class StageSelectScreen
     private string selected;
     // 「出てくる敵」に重ねる（押す）と出る敵の札
     private ChamferBox enemyTip;
+    private VisualElement detailPanel;
     private string tipEnemy;
+    private VisualElement tipChip;
 
     public StageSelectScreen(VisualElement parent, GameBootstrap bootstrap)
     {
@@ -69,6 +71,7 @@ public class StageSelectScreen
         body.Add(left);
 
         var detail = new ChamferBox();
+        detailPanel = detail;
         detail.AddToClassList("select-detail");
         detail.SetFill(Palette.UiBand).SetStroke(Palette.UiPanelLine, 1f)
             .SetCut(28f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetStripes(Palette.UiStripe, 20f);
@@ -126,11 +129,16 @@ public class StageSelectScreen
 
         enemyTip = new ChamferBox();
         enemyTip.AddToClassList("enemy-tip");
-        enemyTip.SetFill(new Color(0.05f, 0.06f, 0.1f, 0.97f)).SetStroke(Palette.WithAlpha(Palette.Crimson, 0.8f), 1.5f)
+        enemyTip.SetFill(new Color(0.05f, 0.06f, 0.1f, 1f)).SetStroke(Palette.WithAlpha(Palette.Crimson, 0.8f), 1.5f)
             .SetCut(14f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetAccent(Palette.Crimson, 5f);
         enemyTip.pickingMode = PickingMode.Ignore;
         UIFactory.SetVisible(enemyTip, false);
         Root.Add(enemyTip);
+        // 画面の大きさが変わったら（スマホを回したときなど）、出ている札を置き直す
+        Root.RegisterCallback<GeometryChangedEvent>(e =>
+        {
+            if (tipEnemy != null && tipChip != null && UIFactory.IsVisible(enemyTip)) ShowEnemyTip(GameData.Enemy(tipEnemy), tipChip);
+        });
         parent.Add(Root);
     }
 
@@ -386,6 +394,7 @@ public class StageSelectScreen
     private void ShowEnemyTip(EnemyData d, VisualElement chip)
     {
         tipEnemy = d.id;
+        tipChip = chip;
         enemyTip.Clear();
         enemyTip.Add(UIFactory.Text(d.name + (d.boss ? "（ボス）" : ""), UIFont.Title, "enemy-tip-name"));
         enemyTip.Add(UIFactory.Text("体力 " + d.hp + "　攻撃 " + d.atk + "　防御 " + d.def + (d.res > 0f ? "　術耐性 " + d.res.ToString("0") + "%" : "") + "　速さ " + d.speed.ToString("0.0#"), UIFont.Body, "enemy-tip-stats"));
@@ -393,17 +402,24 @@ public class StageSelectScreen
         enemyTip.Add(UIFactory.Text(SkillText.Format(traits.Length > 0 ? traits : "特別な性質はない"), UIFont.Body, "enemy-tip-traits"));
         enemyTip.Add(UIFactory.Text("<color=#FFD27A>倒し方</color>　" + StageTips.Advice(d, false), UIFont.Body, "enemy-tip-advice"));
         Rect root = Root.worldBound, at = chip.worldBound;
-        float panelLeft = detailEnemies.worldBound.xMin;
-        enemyTip.style.right = root.xMax - panelLeft + 24f;
+        // 右の作戦の札にかぶらないよう、札の左端のさらに左に
+        float panelLeft = detailPanel.worldBound.xMin;
+        enemyTip.style.right = root.xMax - panelLeft + 12f;
         enemyTip.style.top = Mathf.Clamp(at.yMin - root.yMin - 20f, 20f, Mathf.Max(20f, root.height - 330f));
         UIFactory.SetVisible(enemyTip, true);
-        enemyTip.style.opacity = 0f;
-        UITween.Run(enemyTip, 0.12f, t => enemyTip.style.opacity = t);
+        // 画面のふちの余白（スマホで大きい）で位置がずれるので、並んだあとに測って、作戦の札にかぶった分だけ左へ
+        float right = root.xMax - panelLeft + 12f;
+        enemyTip.schedule.Execute(() =>
+        {
+            float over = enemyTip.worldBound.xMax - (detailPanel.worldBound.xMin - 12f);
+            if (over > 1f) enemyTip.style.right = right + over;
+        });
     }
 
     private void HideEnemyTip()
     {
         tipEnemy = null;
+        tipChip = null;
         UIFactory.SetVisible(enemyTip, false);
     }
 
