@@ -61,7 +61,7 @@ public static class StageTips
     /// その敵の倒し方（初めて会った敵の札の「倒し方」と、負けたときの結果のヒントに出す）。
     /// どちらでも読めるよう、起きたことではなく、することを書く
     /// </summary>
-    public static string Advice(EnemyData e, bool withName = true)
+    public static string Advice(EnemyData e, bool withName = false)
     {
         if (e == null) return "";
         string core = Core(e);
@@ -73,15 +73,17 @@ public static class StageTips
     {
         if (e.boss)
             return "とても硬いボス。必殺技を取っておき、ボスが来たら重ねて使おう" + (e.summon != null ? "。呼ばれた手下も止められるよう、道に前衛・重装を置こう" : "");
+        if (e.flying && e.res >= 40f) return "空を飛ぶうえ、術が効きにくい。狙撃を飛ぶ道（水色の矢印）の近くに置こう";
         if (e.flying) return "空を飛ぶので、前衛・重装では止められない。狙撃・術師を飛ぶ道（水色の矢印）の近くに置こう";
         if (e.aura != null) return "まわりの敵を強くする。狙撃・術師で先に倒すと、ほかの敵が弱くなる";
         if (e.heal != null) return "まわりの敵を回復する。先に倒すか、術師の範囲攻撃でまとめて削ろう";
         if (e.shield > 0f) return "体力より先に盾が減る。攻撃力の高い部員や必殺技で一気に盾を割ろう";
         if (e.split != null) return "倒すと小さな敵に分かれる。分かれた敵も止められるよう、道に前衛・重装を置こう";
         if (e.revive > 0) return "倒しても起き上がる。止めたまま、起き上がったところをもう一度倒そう";
-        if (e.dodge > 0f) return "物理攻撃をかわす。術師の術なら必ず当たる";
-        if (e.def >= 300) return "防御が高い。術師の術なら防御が効かない";
-        if (e.res >= 40f) return "術が効きにくい。狙撃・前衛の物理で";
+        if (e.dodge > 0f) return "術師を道の近くの高台に置こう。術はかわされない";
+        if (e.def >= 300 && e.res >= 40f) return "とても硬い。重装で長く止めて、まわりの部員みんなで攻撃しよう";
+        if (e.def >= 300) return "止め役のそばの高台に術師を置こう。狙撃・前衛の攻撃はあまり通らない";
+        if (e.res >= 40f) return "狙撃・前衛の物理で削ろう。術師の術はあまり効かない";
         if (e.blink != null) return "止められていないと先へ跳ぶ。前衛・重装で止めよう";
         if (e.accelerate != null) return "だんだん速くなる。出てきたら早めに止めよう";
         if (e.speed >= 1.5f) return "足が速い。前衛・重装で止めてから攻撃しよう";
