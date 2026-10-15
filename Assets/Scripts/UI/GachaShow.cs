@@ -337,12 +337,23 @@ public class GachaShow
         Ring(cx, cy, color, boxSize * 0.4f, W * 0.9f, 0.7f);
         Ring(cx, cy, Color.white, boxSize * 0.2f, W * 0.6f, 0.5f);
         Burst(cx, cy, color, best >= 3 ? 70 : 40, H * 0.75f);
-        UITween.Run(box, 0.25f, t =>
+        // 箱の絵があれば、上と下の半分に割れて飛んでいく（なければふくらんで消える）
+        Sprite boxArt = Art.Gacha("Box");
+        if (boxArt != null)
         {
-            float s = 1f + 0.5f * t;
-            box.style.scale = new Scale(new Vector3(s, s, 1f));
-            box.style.opacity = 1f - t;
-        }, () => box.RemoveFromHierarchy());
+            box.RemoveFromHierarchy();
+            BoxHalf(boxArt, cx, cy, boxSize, true);
+            BoxHalf(boxArt, cx, cy, boxSize, false);
+        }
+        else
+        {
+            UITween.Run(box, 0.25f, t =>
+            {
+                float s = 1f + 0.5f * t;
+                box.style.scale = new Scale(new Vector3(s, s, 1f));
+                box.style.opacity = 1f - t;
+            }, () => box.RemoveFromHierarchy());
+        }
         UITween.Run(glow, 0.8f, t => glow.style.opacity = (1f - t) * 0.8f);
         if (best >= 3) rays.style.opacity = 0.45f;
         else
@@ -789,7 +800,38 @@ public class GachaShow
         return box;
     }
 
-    private VisualElement Image(Sprite sprite, float cx, float cy, float w, float h, VisualElement parent)
+/// <summary>箱の上か下の半分（はじけたときに飛んでいく）</summary>
+    private void BoxHalf(Sprite art, float cx, float cy, float size, bool top)
+    {
+        var clip = UIFactory.Box();
+        clip.style.position = Position.Absolute;
+        clip.style.left = cx - size * 0.5f;
+        clip.style.top = cy - size * 0.5f + (top ? 0f : size * 0.5f);
+        clip.style.width = size;
+        clip.style.height = size * 0.5f;
+        clip.style.overflow = Overflow.Hidden;
+        var img = UIFactory.Box("gacha-img");
+        img.style.position = Position.Absolute;
+        img.style.left = 0f;
+        img.style.top = top ? 0f : -size * 0.5f;
+        img.style.width = size;
+        img.style.height = size;
+        img.style.backgroundImage = new StyleBackground(art);
+        clip.Add(img);
+        stage.Add(clip);
+        float dx = Random.Range(-90f, 90f) * S;
+        float dy = (top ? -H * 0.55f : H * 0.35f);
+        float spin = top ? Random.Range(-40f, -15f) : Random.Range(10f, 30f);
+        UITween.Run(clip, 0.7f, t =>
+        {
+            float e = Ease.OutCubic(t);
+            clip.style.translate = new Translate(dx * e, dy * e + (top ? 0f : 200f * S * t * t));
+            clip.style.rotate = new Rotate(new Angle(spin * e, AngleUnit.Degree));
+            clip.style.opacity = 1f - t * t;
+        }, () => clip.RemoveFromHierarchy());
+    }
+
+        private VisualElement Image(Sprite sprite, float cx, float cy, float w, float h, VisualElement parent)
     {
         var e = UIFactory.Box("gacha-img");
         e.style.position = Position.Absolute;

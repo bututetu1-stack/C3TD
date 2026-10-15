@@ -2426,9 +2426,10 @@
     margin-right: 6px;
 }
 
-.gacha-hint--top {
-    top: 26px;
+.gacha-hint.gacha-hint--top {
+    top: 30px;
     bottom: auto;
+    height: 50px;
 }
 
 .c3-mobile .gacha-side {

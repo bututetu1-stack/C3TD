@@ -190,6 +190,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File docs/snippets/to_mp3.ps1 -sr
 - 1枚に 60〜90 秒。`chatgpt/grab.js` をページで1回流しておき、送ったら `await window.c3tdGrab2('id', '文言の一部', 30000)` を出るまで呼ぶ（古い画像はページから消えるので、数ではなく「送った文言より後ろの画像」で見つける）。
 - Brave は毎回「保存」の窓を出し、最後に使ったフォルダ（いまは `Assets/Resources/Audio/SE`）に保存する。`chatgpt/click_save.ps1` で「保存」を押し、すぐ作業用フォルダへ移す（プロジェクトに残すと Unity が取り込む）。ファイル名の指定は窓が受け付けないので、ダウンロード名（`c3td_{id}.png`）のまま保存される。
 - まとめて見るときは `chatgpt/sheet.ps1`（縮小した一覧の画像を作る）。
+- たくさん作るとき（2026-10-15〜）：`chatgpt/grab.js` のあとに `chatgpt/queue.js` をページで流し、`window.c3tdQueue([{ id, marker, prompt }, …])` で順に送る（前の生成が終わるのを待って文言を入れて送り、できたら `c3td_{id}.png` でダウンロード。進み具合は `window.__queue`。送信ボタンは aria-label「送信」。流している途中で `window.__items` の配列に足すと、それも送る）。シェルでは `for id in …; do bash fetch_one.sh $id 420; done` を背面で流し、保存の窓を押してファイルを作業用フォルダへ移す（保存先は最後に使ったフォルダなので、`fetch_one.sh` は Audio/SE と Audio/BGM の両方を探す）。1 枚 1 分半〜2 分。
 
 ## 番外編「院試」の結果（2026-10-14 昼）
 
