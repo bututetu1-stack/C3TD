@@ -127,7 +127,7 @@ public class SettingsPanel
         Fill(seCells, seValue, AudioManager.SeLevel);
         hintButton.Text.text = GameSettings.HintsOn ? "出す（作戦をクリアするまで・初めての敵）　時間が止まる" : "出さない";
         hintButton.Active = GameSettings.HintsOn;
-        gachaButton.Text.text = GameSettings.GachaShort ? "演出を短く（すぐ開く。★3 は大きく見せる）" : "演出をぜんぶ見る（箱をためて、押して開ける）";
+        gachaButton.Text.text = GameSettings.GachaShort ? "演出を短く（すぐ開き、★3 は大きく見せる）" : "演出をぜんぶ見る（箱をためて、押して開ける）";
         gachaButton.Active = !GameSettings.GachaShort;
     }
 

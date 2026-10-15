@@ -105,7 +105,7 @@ public class StageSelectScreen
         enemiesScroll.Add(detailEnemies);
         detail.Add(enemiesScroll);
 
-        detailLock = UIFactory.Text("前の作戦をクリアすると開く", UIFont.Body, "detail-lock");
+        detailLock = UIFactory.Text("前の作戦をクリアすると開く。", UIFont.Body, "detail-lock");
         detail.Add(detailLock);
         // 強襲（アークナイツの強襲作戦）：クリアした作戦だけ。ライフ 1・敵が強い
         hardToggle = UIFactory.Text("", UIFont.Body, "detail-hard");
@@ -322,7 +322,7 @@ public class StageSelectScreen
         // 別の条件で開く章（エンドレス）は、どのステージをクリアすれば開くかを書く
         ChapterData chapterOf = GameData.Campaign.ChapterOf(id);
         StageData after = chapterOf != null && !string.IsNullOrEmpty(chapterOf.unlockAfter) ? GameData.Stage(chapterOf.unlockAfter) : null;
-        detailLock.text = after != null ? "「" + after.name + "」をクリアすると開く" : "前の作戦をクリアすると開く";
+        detailLock.text = after != null ? "「" + after.name + "」をクリアすると開く。" : "前の作戦をクリアすると開く。";
         UIFactory.SetVisible(detailLock, !open);
         bool hardOk = stage.endless == null && Progress.IsCleared(id);
         UIFactory.SetVisible(hardToggle, hardOk);
@@ -399,7 +399,7 @@ public class StageSelectScreen
         enemyTip.Add(UIFactory.Text(d.name + (d.boss ? "（ボス）" : ""), UIFont.Title, "enemy-tip-name"));
         enemyTip.Add(UIFactory.Text("体力 " + d.hp + "　攻撃 " + d.atk + "　防御 " + d.def + (d.res > 0f ? "　術耐性 " + d.res.ToString("0") + "%" : "") + "　速さ " + d.speed.ToString("0.0#"), UIFont.Body, "enemy-tip-stats"));
         string traits = EnemyPanel.Traits(d);
-        enemyTip.Add(UIFactory.Text(SkillText.Format(traits.Length > 0 ? traits : "特別な性質はない"), UIFont.Body, "enemy-tip-traits"));
+        enemyTip.Add(UIFactory.Text(SkillText.Format(traits.Length > 0 ? traits : "特別な性質はない。"), UIFont.Body, "enemy-tip-traits"));
         enemyTip.Add(UIFactory.Text("<color=#FFD27A>倒し方</color>　" + StageTips.Advice(d, false), UIFont.Body, "enemy-tip-advice"));
         Rect root = Root.worldBound, at = chip.worldBound;
         // 右の作戦の札にかぶらないよう、札の左端のさらに左に

@@ -17,7 +17,7 @@ public class UpgradeScreen
         Root = UIFactory.Box("full", "menu-screen");
         MenuUI.Header(Root, "UPGRADES", "強化", () => bootstrap.ShowTitle(), out starsLabel);
 
-        Root.Add(UIFactory.Text("作戦でもらった★（★3 なら 3 つ。強襲でクリアするともう 1 つ）で、部室の設備をととのえて部員を少し強くする。「元に戻す」で★はすべて戻るので、何度でも選び直せる",
+        Root.Add(UIFactory.Text("作戦でもらった★（★3 なら 3 つ。強襲でクリアするともう 1 つ）で、部室の設備をととのえて部員を少し強くする。「元に戻す」で★はすべて戻るので、何度でも選び直せる。",
             UIFont.Medium, "upgrade-help"));
 
         var panel = new ChamferBox();

@@ -9,7 +9,7 @@
   "stats": { "hp": 1800, "atk": 520, "def": 250, "attackInterval": 1.2, "range": 1 },
   "ultimate": {
     "name": "テスト：三連撃",
-    "description": "10秒間、攻撃が3回当たり、攻撃力が30%上がる（攻撃するたびにSPが溜まる）",
+    "description": "10秒間、攻撃が3回当たり、攻撃力が30%上がる（攻撃するたびにSPが溜まる）。",
     "spCost": 6,
     "spCharge": "OnAttack",
     "duration": 10,

@@ -19,16 +19,18 @@ public static class SkillText
     {
         if (string.IsNullOrEmpty(text)) return "";
         string body = text.Replace("\r", "");
-        if (!body.Contains("\n")) body = body.Replace("。", "\n");
+        // 改行がなければ「。」ごとに行を分ける（「。」は残す）
+        if (!body.Contains("\n")) body = body.Replace("。", "。\n");
         var sb = new StringBuilder();
         foreach (string raw in body.Split('\n'))
         {
             string line = raw.Trim();
-            if (line.EndsWith("。")) line = line.Substring(0, line.Length - 1);
             if (line.Length == 0) continue;
             if (sb.Length > 0) sb.Append('\n');
             if (line.StartsWith("・"))
             {
+                // 句読点の決まり：箇条書きには「。」を付けない（文の行は「。」で終える）
+                if (line.EndsWith("。")) line = line.Substring(0, line.Length - 1);
                 sb.Append("<color=").Append(BulletColor).Append(">・</color>");
                 line = line.Substring(1);
             }

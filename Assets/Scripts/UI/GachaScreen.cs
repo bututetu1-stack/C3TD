@@ -94,7 +94,7 @@ public class GachaScreen
         bannerText.Add(pickupEffect);
         pickupTimer = UIFactory.Text("", UIFont.Body, "gacha-banner-timer");
         bannerText.Add(pickupTimer);
-        bannerText.Add(UIFactory.Text("★3 が出たら " + g.pickupRate.ToString("0") + "% でこの備品。ピックアップは毎日かわる", UIFont.Medium, "gacha-banner-note"));
+        bannerText.Add(UIFactory.Text("★3 が出たら " + g.pickupRate.ToString("0") + "% でこの備品。ピックアップは毎日かわる。", UIFont.Medium, "gacha-banner-note"));
         banner.Add(bannerText);
         body.Add(banner);
 
@@ -105,8 +105,8 @@ public class GachaScreen
             .SetCut(24f, ChamferBox.Corners.TopRight | ChamferBox.Corners.BottomLeft).SetStripes(Palette.UiStripe, 20f);
         side.Add(UIFactory.Text("部室の備品", UIFont.Title, "gacha-title"));
         string rates = g.rates.Count >= 3 ? "★3 " + g.rates[2].ToString("0.#") + "%　★2 " + g.rates[1].ToString("0.#") + "%　★1 " + g.rates[0].ToString("0.#") + "%" : "";
-        side.Add(UIFactory.Text("作戦でもらった部費で備品を引き、育成の画面で部員に 1 つ付ける。同じ物は重ねて強くなる（4 回まで）\n"
-            + rates + "　10 回引くと最後の 1 回は★2 以上", UIFont.Medium, "gacha-desc"));
+        side.Add(UIFactory.Text("作戦でもらった部費で備品を引き、育成の画面で部員に 1 つ付ける。同じ物は重ねて強くなる（4 回まで）。10 回引くと、最後の 1 回は★2 以上が出る。\n出る割合　"
+            + rates + "", UIFont.Medium, "gacha-desc"));
 
         freeButton = new C3Button(IconKind.Star, 26f, "今日の無料 1 回", () => Pull(1, true));
         freeButton.AddToClassList("gacha-button");
@@ -210,7 +210,7 @@ public class GachaScreen
         tenButton.Interactable = Progress.Coins >= g.cost10;
         tenButton.Active = tenButton.Interactable;
         int need = Progress.Coins < g.cost ? g.cost - Progress.Coins : Progress.Coins < g.cost10 ? g.cost10 - Progress.Coins : 0;
-        needLabel.text = need <= 0 ? "" : "あと部費 <color=#FFD27A>" + need + "</color> で" + (Progress.Coins < g.cost ? " 1 回" : " 10 回") + "引ける（作戦・今日の任務・実績でもらえる）";
+        needLabel.text = need <= 0 ? "" : "あと部費 <color=#FFD27A>" + need + "</color> で" + (Progress.Coins < g.cost ? " 1 回" : " 10 回") + "引ける（作戦・今日の任務・実績でもらえる）。";
         UIFactory.SetVisible(needLabel, need > 0);
         ownedLabel.text = "持っている備品 " + Progress.OwnedEquipment.Count + " / " + GameData.Items.equipment.Count + " 種類　引いた回数 " + Progress.GachaPulls;
 
@@ -231,7 +231,7 @@ public class GachaScreen
             Sprite art = Art.Item(pickup.id);
             pickupArt.style.backgroundImage = art != null ? new StyleBackground(art) : new StyleBackground(StyleKeyword.None);
             pickupName.text = pickup.name;
-            pickupEffect.text = Growth.Describe(pickup, 0) + "　" + (pickup.description ?? "");
+            pickupEffect.text = Growth.Describe(pickup, 0) + (string.IsNullOrEmpty(pickup.description) ? "" : "　「" + pickup.description + "」");
         }
     }
 
@@ -315,7 +315,7 @@ public class GachaScreen
             text.Add(UIFactory.Text(Growth.Describe(e, stacks) + (stacks > 0 ? "（重ね " + stacks + "）" : ""), UIFont.Body, "gacha-tile-info-effect"));
             if (!string.IsNullOrEmpty(e.description)) text.Add(UIFactory.Text("「" + e.description + "」", UIFont.Body, "gacha-tile-info-flavor"));
         }
-        else text.Add(UIFactory.Text("まだ持っていない。ガチャで出ると、ここに絵と効き目が出る", UIFont.Body, "gacha-tile-info-flavor"));
+        else text.Add(UIFactory.Text("まだ持っていない。ガチャで出ると、ここに絵と効き目が出る。", UIFont.Body, "gacha-tile-info-flavor"));
         collectionInfo.Add(text);
         UIFactory.SetVisible(collectionInfo, true);
         // 画面が小さいときは、札が見えるところまで流す

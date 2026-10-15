@@ -9,14 +9,14 @@
   "stats": { "hp": 1100, "atk": 260, "def": 80, "attackInterval": 2.85, "range": 2.5 },
   "trait": {
     "name": "テスト：癒しの場",
-    "description": "置いてから6秒ごとに、射程内の味方全員のHPを150回復する",
+    "description": "置いてから6秒ごとに、射程内の味方全員のHPを150回復する。",
     "trigger": "ElapsedTime",
     "params": { "interval": 6 },
     "effects": [ { "type": "Heal", "value": 150, "target": "AlliesInRange" } ]
   },
   "ultimate": {
     "name": "テスト：守りの祈り",
-    "description": "射程内の味方全員のHPを30%回復し、10秒間防御力を30%上げる",
+    "description": "射程内の味方全員のHPを30%回復し、10秒間防御力を30%上げる。",
     "spCost": 30,
     "spCharge": "PerSecond",
     "duration": 10,

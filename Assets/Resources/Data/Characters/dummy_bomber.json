@@ -11,7 +11,7 @@
   "stats": { "hp": 1000, "atk": 520, "def": 60, "attackInterval": 2.4, "range": 3.5 },
   "ultimate": {
     "name": "テスト：絨毯爆撃",
-    "description": "射程内の敵すべてに攻撃力の180%のダメージ",
+    "description": "射程内の敵すべてに攻撃力の180%のダメージ。",
     "spCost": 25,
     "spCharge": "PerSecond",
     "duration": 0,

@@ -5,11 +5,11 @@
 
   // 素材。label：アイコンの丸に入れる字。rarity：1〜3（枠の色）
   "materials": [
-    { "id": "paper",    "name": "コピー用紙",   "label": "紙", "rarity": 1, "color": "#9FB4CF", "description": "第1章でよく落ちる。部員のレベル上げ（Lv9 まで）に使う" },
-    { "id": "energy",   "name": "エナドリ",     "label": "缶", "rarity": 1, "color": "#62D08A", "description": "第2章でよく落ちる。部員のレベル上げ（Lv10 から）に使う" },
-    { "id": "suit",     "name": "リクルートスーツ", "label": "服", "rarity": 2, "color": "#5C6E96", "description": "第3章でよく落ちる。1 回目の昇進に使う" },
-    { "id": "labnote",  "name": "実験ノート",   "label": "帳", "rarity": 2, "color": "#C9A15A", "description": "第4章でよく落ちる。2 回目の昇進に使う" },
-    { "id": "pastexam", "name": "過去問の束",   "label": "問", "rarity": 3, "color": "#D06A8C", "description": "番外編でよく落ちる。2 回目の昇進に使う" }
+    { "id": "paper",    "name": "コピー用紙",   "label": "紙", "rarity": 1, "color": "#9FB4CF", "description": "第1章でよく落ちる。部員のレベル上げ（Lv9 まで）に使う。" },
+    { "id": "energy",   "name": "エナドリ",     "label": "缶", "rarity": 1, "color": "#62D08A", "description": "第2章でよく落ちる。部員のレベル上げ（Lv10 から）に使う。" },
+    { "id": "suit",     "name": "リクルートスーツ", "label": "服", "rarity": 2, "color": "#5C6E96", "description": "第3章でよく落ちる。1 回目の昇進に使う。" },
+    { "id": "labnote",  "name": "実験ノート",   "label": "帳", "rarity": 2, "color": "#C9A15A", "description": "第4章でよく落ちる。2 回目の昇進に使う。" },
+    { "id": "pastexam", "name": "過去問の束",   "label": "問", "rarity": 3, "color": "#D06A8C", "description": "番外編でよく落ちる。2 回目の昇進に使う。" }
   ],
 
   // 章ごとに落ちる素材。エンドレスは守りきった波に応じて、それまでの章の素材がまざって落ちる
@@ -33,7 +33,7 @@
     // 昇進（アークナイツの昇進）。at：その Lv になったら昇進できる
     "promotions": [
       { "at": 10, "coin": 300, "items": [ { "id": "suit", "count": 4 } ],
-        "initialSp": 5, "description": "Lv20 まで上げられる。必殺技の最初の SP +5" },
+        "initialSp": 5, "description": "Lv20 まで上げられる・必殺技の最初の SP +5" },
       { "at": 20, "coin": 800, "items": [ { "id": "labnote", "count": 4 }, { "id": "pastexam", "count": 2 } ],
         "spCostPercent": -15, "atkPercent": 5, "description": "必殺技の SP -15%・攻撃力 +5%" }
     ]

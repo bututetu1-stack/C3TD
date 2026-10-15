@@ -34,7 +34,7 @@ public class EnemyBookScreen
 
         var body = UIFactory.Box("squad-body");
         var left = UIFactory.Box("squad-left");
-        left.Add(UIFactory.Text("敵を押すと、能力と特別な性質が右に出る", UIFont.Medium, "squad-help"));
+        left.Add(UIFactory.Text("敵を押すと、能力と特別な性質が右に出る。", UIFont.Medium, "squad-help"));
         // 敵が増えたり、スマホで UI が大きくなったりしても切れないよう、縦に流せるようにする
         groups = new ScrollView(ScrollViewMode.Vertical);
         groups.AddToClassList("book-groups");
@@ -191,7 +191,7 @@ public class EnemyBookScreen
         lifeValue.text = "-" + d.lifeDamage;
 
         string traits = EnemyPanel.Traits(d);
-        traitsLabel.text = traits.Length > 0 ? SkillText.Format(traits) : "特別な性質はない";
+        traitsLabel.text = traits.Length > 0 ? SkillText.Format(traits) : "特別な性質はない。";
         string stage;
         firstLabel.text = firstStage.TryGetValue(d.id, out stage) ? "初めて出る作戦：" + stage : "";
     }

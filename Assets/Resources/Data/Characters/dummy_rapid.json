@@ -9,7 +9,7 @@
   "stats": { "hp": 900, "atk": 250, "def": 50, "attackInterval": 0.5, "range": 2.5 },
   "ultimate": {
     "name": "テスト：連射",
-    "description": "8秒間、攻撃間隔が40%短くなる（攻撃するたびにSPが溜まる）",
+    "description": "8秒間、攻撃間隔が40%短くなる（攻撃するたびにSPが溜まる）。",
     "spCost": 25,
     "spCharge": "OnAttack",
     "duration": 8,

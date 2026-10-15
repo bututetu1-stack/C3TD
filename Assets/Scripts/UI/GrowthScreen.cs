@@ -63,7 +63,7 @@ public class GrowthScreen
 
     public void Open(int pastCoins)
     {
-        notice.text = pastCoins > 0 ? "これまでにクリアした作戦のぶんとして、部費 " + pastCoins.ToString("N0") + " と素材を受け取りました" : "";
+        notice.text = pastCoins > 0 ? "これまでにクリアした作戦のぶんとして、部費 " + pastCoins.ToString("N0") + " と素材を受け取った。" : "";
         UIFactory.SetVisible(notice, pastCoins > 0);
         choosingEquip = false;
         if (selected == null || GameData.Character(selected) == null)

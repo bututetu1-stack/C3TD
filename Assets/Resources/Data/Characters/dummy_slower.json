@@ -9,14 +9,14 @@
   "stats": { "hp": 950, "atk": 330, "def": 60, "attackInterval": 1.8, "range": 2.5 },
   "trait": {
     "name": "テスト：遅延",
-    "description": "攻撃した敵の移動速度を1.8秒間40%下げる",
+    "description": "攻撃した敵の移動速度を1.8秒間40%下げる。",
     "trigger": "OnAttack",
     // 攻撃間隔より長くすると自分の分が重なるので、攻撃間隔と同じにしている
     "effects": [ { "type": "StatModifier", "stat": "speed", "percent": -40, "duration": 1.8, "target": "Target" } ]
   },
   "ultimate": {
     "name": "テスト：凍結",
-    "description": "射程内の敵すべてを2.5秒スタンさせ、そのあと8秒間移動速度を50%下げる",
+    "description": "射程内の敵すべてを2.5秒スタンさせ、そのあと8秒間移動速度を50%下げる。",
     "spCost": 30,
     "spCharge": "PerSecond",
     "duration": 0,

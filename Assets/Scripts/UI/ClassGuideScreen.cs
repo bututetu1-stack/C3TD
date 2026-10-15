@@ -23,7 +23,7 @@ public class ClassGuideScreen
         sub.text = "5 つの職業";
 
         Root.Add(UIFactory.Text("部員には 5 つの職業がある。置ける場所（暗いマス＝地上、明るいマス＝高台）と、やることが違う。" +
-            "地上の前衛・重装で敵を止めて、高台の狙撃・術師で倒し、医療で回復するのが基本", UIFont.Medium, "class-intro"));
+            "地上の前衛・重装で敵を止めて、高台の狙撃・術師で倒し、医療で回復するのが基本。", UIFont.Medium, "class-intro"));
 
         var scroll = new ScrollView(ScrollViewMode.Vertical);
         scroll.AddToClassList("help-scroll");

@@ -65,6 +65,7 @@ public static class StageTips
     {
         if (e == null) return "";
         string core = Core(e);
+        if (!core.EndsWith("。")) core += "。";
         if (!withName) return core;
         return e.name + (core.StartsWith("道に") ? "は、" : "は") + core;
     }

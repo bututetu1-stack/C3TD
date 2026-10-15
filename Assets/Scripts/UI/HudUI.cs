@@ -257,7 +257,7 @@ public class HudUI : MonoBehaviour
         {
             Caption = "NEW ENEMY",
             Title = d.name + (d.boss ? "（ボス）" : ""),
-            Body = (traits.Length > 0 ? traits : "特別な性質はない") + "\n倒し方：" + StageTips.Advice(d, false),
+            Body = (traits.Length > 0 ? traits : "特別な性質はない。") + "\n倒し方：" + StageTips.Advice(d, false),
             Icon = Art.Enemy(d.id),
             IconLabel = d.Label,
             IconColor = Palette.Hex(d.color, Palette.Crimson),
@@ -662,7 +662,7 @@ public class HudUI : MonoBehaviour
         ChapterData next = index + 1 < chapters.Count ? chapters[index + 1] : null;
         // 章の clearText があればそれ（4-5 の卒業など）。次の章があれば、開いたことを添える
         string text = !string.IsNullOrEmpty(chapter.clearText) ? chapter.clearText : chapter.name + "　クリア！";
-        if (next != null) text += "　次の章「" + next.name + "」が開いた";
+        if (next != null) text += "　次の章「" + next.name + "」が開いた。";
         return text;
     }
 

@@ -9,7 +9,7 @@
   "stats": { "hp": 1700, "atk": 470, "def": 170, "attackInterval": 1.3, "block": 1, "range": 2 },
   "ultimate": {
     "name": "テスト：薙ぎ払い",
-    "description": "周り2マスの敵すべてに攻撃力の200%のダメージを与え、1秒スタンさせる（攻撃するたびにSPが溜まる）",
+    "description": "周り2マスの敵すべてに攻撃力の200%のダメージを与え、1秒スタンさせる（攻撃するたびにSPが溜まる）。",
     "spCost": 9,
     "spCharge": "OnAttack",
     "duration": 0,

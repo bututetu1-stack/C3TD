@@ -179,6 +179,8 @@ public class EnemyPanel
         if (!d.boss && d.res >= 40f) lines.Add("術が効きにくい：狙撃・前衛の物理で");
         if (d.pulse != null)
             lines.Add(d.pulse.interval.ToString("0") + " 秒ごとに「" + (string.IsNullOrEmpty(d.pulse.name) ? "大技" : d.pulse.name) + "」：まわり " + d.pulse.radius.ToString("0.#") + " マスの部員を " + d.pulse.stun.ToString("0.#") + " 秒動けなくする");
+        // 性質は「・」の箇条書きにする（句読点の決まり：箇条書きには「。」を付けない）
+        for (int i = 0; i < lines.Count; i++) lines[i] = "・" + lines[i];
         return string.Join("\n", lines);
     }
 

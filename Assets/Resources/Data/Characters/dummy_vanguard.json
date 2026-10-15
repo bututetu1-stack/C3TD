@@ -9,7 +9,7 @@
   "stats": { "hp": 1300, "atk": 340, "def": 160, "attackInterval": 1.0, "block": 1, "range": 1 },
   "ultimate": {
     "name": "テスト：補給",
-    "description": "DPを10増やす",
+    "description": "DPを10増やす。",
     "spCost": 24,
     "initialSp": 12,
     "spCharge": "PerSecond",

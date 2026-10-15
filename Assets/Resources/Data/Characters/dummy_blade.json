@@ -9,7 +9,7 @@
   "stats": { "hp": 2000, "atk": 680, "def": 200, "attackInterval": 1.4, "block": 1, "range": 1 },
   "ultimate": {
     "name": "テスト：旋風",
-    "description": "周りの敵すべてに攻撃力の220%のダメージ（攻撃するたびにSPが溜まる）",
+    "description": "周りの敵すべてに攻撃力の220%のダメージ（攻撃するたびにSPが溜まる）。",
     "spCost": 7,
     "spCharge": "OnAttack",
     "duration": 0,

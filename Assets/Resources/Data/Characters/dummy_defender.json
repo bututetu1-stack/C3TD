@@ -9,13 +9,13 @@
   "stats": { "hp": 3200, "atk": 320, "def": 560, "attackInterval": 1.2, "range": 1 },
   "trait": {
     "name": "テスト：鉄壁",
-    "description": "防御力がずっと20%高い",
+    "description": "防御力がずっと20%高い。",
     "trigger": "Always",
     "effects": [ { "type": "StatModifier", "stat": "def", "percent": 20, "target": "Self" } ]
   },
   "ultimate": {
     "name": "テスト：盾打ち",
-    "description": "HPを30%回復し、射程内の敵を2秒スタンさせる（攻撃を受けるとSPが溜まる）",
+    "description": "HPを30%回復し、射程内の敵を2秒スタンさせる（攻撃を受けるとSPが溜まる）。",
     "spCost": 8,
     "spCharge": "OnHit",
     "duration": 0,

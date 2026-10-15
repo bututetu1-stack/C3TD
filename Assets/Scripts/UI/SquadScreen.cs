@@ -39,7 +39,7 @@ public class SquadScreen
         var body = UIFactory.Box("squad-body");
         var left = UIFactory.Box("squad-left");
         var helpRow = UIFactory.Box("squad-help-row");
-        helpRow.Add(UIFactory.Text("カードを押すと編成に入れる・外す（入れた順に編成バーへ並ぶ）", UIFont.Medium, "squad-help"));
+        helpRow.Add(UIFactory.Text("カードを押すと編成に入れる・外す（入れた順に編成バーへ並ぶ）。", UIFont.Medium, "squad-help"));
         var classButton = new C3Button(IconKind.Next, 20f, "職業の説明", () => bootstrap.ShowClassGuide(true));
         classButton.AddToClassList("squad-class-button");
         helpRow.Add(classButton);

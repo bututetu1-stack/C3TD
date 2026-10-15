@@ -165,7 +165,7 @@ public class TitleScreen
         settings.AddToClassList("title-button--sub");
         subRow.Add(settings);
         block.Add(subRow);
-        if (!UnityEngine.Application.isMobilePlatform) block.Add(UIFactory.Text("Space・Enter でも始められます", UIFont.Medium, "title-hint"));
+        if (!UnityEngine.Application.isMobilePlatform) block.Add(UIFactory.Text("Space・Enter でも始められる", UIFont.Medium, "title-hint"));
         Root.Add(block);
 
         // 右下：今日のピックアップ（押すとガチャへ）と、今日の任務・部費
