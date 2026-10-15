@@ -9,6 +9,9 @@ public class TitleScreen
     private readonly Label coinLabel;
     private readonly VisualElement missionList;
     private readonly Label toast;
+    private readonly VisualElement pickupArt;
+    private readonly Label pickupName;
+    private readonly Label pickupTimer;
     private IVisualElementScheduledItem toastTween;
 
     /// <summary>タイトルを出すたびに：ログインボーナス、今日の無料ガチャの「無料」、今日の任務、部費</summary>
@@ -17,6 +20,19 @@ public class TitleScreen
         int login = Daily.Login();
         if (login > 0) Toast("ログインボーナス　部費 +" + login);
         RefreshMissions();
+        RefreshPickup();
+    }
+
+    /// <summary>右下の今日のピックアップ：絵・名前・入れかわりまでの時間</summary>
+    private void RefreshPickup()
+    {
+        EquipmentData pickup = Growth.Pickup();
+        if (pickup == null) return;
+        Sprite art = Art.Item(pickup.id);
+        pickupArt.style.backgroundImage = art != null ? new StyleBackground(art) : new StyleBackground(StyleKeyword.None);
+        pickupName.text = pickup.name;
+        System.TimeSpan left = System.DateTime.Now.Date.AddDays(1) - System.DateTime.Now;
+        pickupTimer.text = "入れかわりまで あと " + left.Hours + ":" + left.Minutes.ToString("00") + ":" + left.Seconds.ToString("00");
     }
 
     /// <summary>ガチャのボタンの札：今日の無料があれば「無料」、部費で 10 回引ければ「10回OK」、1 回なら「引ける」</summary>
@@ -152,7 +168,42 @@ public class TitleScreen
         if (!UnityEngine.Application.isMobilePlatform) block.Add(UIFactory.Text("Space・Enter でも始められます", UIFont.Medium, "title-hint"));
         Root.Add(block);
 
-        // 右下：今日の任務と部費
+        // 右下：今日のピックアップ（押すとガチャへ）と、今日の任務・部費
+        var right = UIFactory.Box("title-right");
+        var pick = new ChamferBox();
+        pick.AddToClassList("title-pickup");
+        pick.SetFill(new Color(0.07f, 0.06f, 0.03f, 0.92f)).SetStroke(Palette.WithAlpha(Palette.AmberBright, 0.8f), 1.5f)
+            .SetCut(16f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetAccent(Palette.AmberBright, 5f);
+        pick.style.overflow = Overflow.Hidden;
+        pick.pickingMode = PickingMode.Position;
+        pick.RegisterCallback<ClickEvent>(e => { AudioManager.PlaySE("click"); bootstrap.ShowGacha(); });
+        var pickRays = UIFactory.Box("title-pickup-rays", "gacha-img");
+        pickRays.style.backgroundImage = new StyleBackground(GachaShow.RaysTexture());
+        pickRays.style.unityBackgroundImageTintColor = new Color(1f, 0.78f, 0.35f, 0.5f);
+        pickRays.pickingMode = PickingMode.Ignore;
+        pick.Add(pickRays);
+        pickupArt = UIFactory.Box("title-pickup-art", "gacha-img");
+        pickupArt.pickingMode = PickingMode.Ignore;
+        pick.Add(pickupArt);
+        var pickText = UIFactory.Box("title-pickup-text");
+        pickText.pickingMode = PickingMode.Ignore;
+        pickText.Add(UIFactory.Text("PICK UP　★★★", UIFont.Body, "title-pickup-caption"));
+        pickupName = UIFactory.Text("", UIFont.Title, "title-pickup-name");
+        pickText.Add(pickupName);
+        pickupTimer = UIFactory.Text("", UIFont.Body, "title-pickup-timer");
+        pickText.Add(pickupTimer);
+        pick.Add(pickText);
+        pick.Add(UIFactory.Text("ガチャへ", UIFont.Body, "title-pickup-go"));
+        right.Add(pick);
+        pick.schedule.Execute(() =>
+        {
+            if (!UIFactory.IsVisible(Root)) return;
+            float t = Time.unscaledTime;
+            pickRays.style.rotate = new Rotate(new Angle(t * 12f, AngleUnit.Degree));
+            pickupArt.style.translate = new Translate(0f, Mathf.Sin(t * 2f) * 4f);
+        }).Every(0);
+        pick.schedule.Execute(() => { if (UIFactory.IsVisible(Root)) RefreshPickup(); }).Every(1000);
+
         var panel = new ChamferBox();
         panel.AddToClassList("mission-panel");
         panel.SetFill(Palette.UiBand).SetStroke(Palette.UiPanelLine, 1f)
@@ -166,7 +217,8 @@ public class TitleScreen
         panel.Add(head);
         missionList = UIFactory.Box("mission-list");
         panel.Add(missionList);
-        Root.Add(panel);
+        right.Add(panel);
+        Root.Add(right);
 
         toast = UIFactory.Text("", UIFont.Body, "title-toast");
         UIFactory.SetVisible(toast, false);

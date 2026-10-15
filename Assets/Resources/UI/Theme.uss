@@ -2646,6 +2646,10 @@
     background-color: rgb(255, 210, 122);
 }
 
+.gacha-pity-fill.gacha-pity-fill--near {
+    background-color: rgb(255, 110, 100);
+}
+
 .gacha-collection {
     flex-direction: row;
     flex-wrap: wrap;
@@ -2703,10 +2707,77 @@
 }
 
 /* ---------- タイトル：今日の任務 ---------- */
-.mission-panel {
+.title-right {
     position: absolute;
     right: 40px;
     bottom: 40px;
+    align-items: flex-end;
+}
+
+.c3-mobile .title-right {
+    right: 20px;
+    bottom: 20px;
+}
+
+/* タイトル：今日のピックアップ（押すとガチャへ） */
+.title-pickup {
+    width: 600px;
+    height: 112px;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 0 22px 0 12px;
+}
+
+.title-pickup:hover {
+    background-color: rgba(255, 210, 122, 0.08);
+}
+
+.title-pickup-rays {
+    position: absolute;
+    left: -90px;
+    top: -94px;
+    width: 300px;
+    height: 300px;
+}
+
+.title-pickup-art {
+    width: 104px;
+    height: 104px;
+    flex-shrink: 0;
+}
+
+.title-pickup-text {
+    flex-grow: 1;
+    margin-left: 16px;
+}
+
+.title-pickup-caption {
+    font-size: 17px;
+    color: rgb(255, 210, 122);
+    letter-spacing: 2px;
+}
+
+.title-pickup-name {
+    font-size: 32px;
+    color: rgb(255, 255, 255);
+}
+
+.title-pickup-timer {
+    font-size: 17px;
+    color: rgb(255, 138, 128);
+}
+
+.title-pickup-go {
+    font-size: 20px;
+    color: rgb(255, 210, 122);
+}
+
+.c3-mobile .title-pickup {
+    width: 640px;
+}
+
+.mission-panel {
     width: 600px;
     padding: 16px 22px 16px 24px;
 }
@@ -2796,8 +2867,6 @@
 }
 
 .c3-mobile .mission-panel {
-    right: 20px;
-    bottom: 20px;
     width: 640px;
 }
 

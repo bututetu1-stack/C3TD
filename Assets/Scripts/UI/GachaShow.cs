@@ -136,6 +136,7 @@ public class GachaShow
         if (running != null) host.StopCoroutine(running);
         lastCount = results.Count;
         Reset();
+        AudioManager.Duck(0.3f);
         UIFactory.SetVisible(Layer, true);
         running = host.StartCoroutine(Run(results));
     }
@@ -155,6 +156,7 @@ public class GachaShow
     {
         if (running != null) host.StopCoroutine(running);
         running = null;
+        AudioManager.Duck(1f);
         Reset();
         UIFactory.SetVisible(Layer, false);
         if (onClosed != null) onClosed();

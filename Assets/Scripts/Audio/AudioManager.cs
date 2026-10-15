@@ -37,7 +37,7 @@ public class AudioManager : MonoBehaviour
             PlayerPrefs.Save();
             var self = Instance;
             // 重ねてつないでいる最中でなければ、いま鳴っている曲にすぐ効かせる
-            if (self.fadeElapsed < 0f) self.bgm[self.bgmIndex].volume = self.bgmVolume * Mathf.Clamp01(value);
+            if (self.fadeElapsed < 0f) self.bgm[self.bgmIndex].volume = self.bgmVolume * Mathf.Clamp01(value) * self.duck;
         }
     }
 
@@ -74,6 +74,9 @@ public class AudioManager : MonoBehaviour
     private float bgmStart;
     private float bgmEnd;
     private float fadeElapsed = -1f;
+    // 演出のあいだ BGM を小さくする（ガチャ・昇進。効果音を立たせる）
+    private float duck = 1f;
+    private float duckTarget = 1f;
     private float fadeLength;
     private AudioEntry bgmEntry;
     private bool boundsPending;
@@ -223,6 +226,12 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>BGM を切り替える（頭から鳴らす）。key が空かファイルがなければ止める</summary>
+    /// <summary>BGM を一時的に小さくする（1 で元に戻す。少しずつ変わる）</summary>
+    public static void Duck(float level)
+    {
+        Instance.duckTarget = Mathf.Clamp01(level);
+    }
+
     public static void PlayBGM(string key)
     {
         var self = Instance;
@@ -242,7 +251,7 @@ public class AudioManager : MonoBehaviour
         self.bgmEntry = entry;
         self.bgmVolume = entry != null ? entry.volume : 1f;
         current.clip = clip;
-        current.volume = self.bgmVolume * BgmLevel;
+        current.volume = self.bgmVolume * BgmLevel * self.duck;
         // 読み込み済みなら使う部分を決めてから鳴らす。ブラウザ版の BGM は鳴らし始めてから読み込まれるので、決めるのは Update で
         self.boundsPending = true;
         if (clip.loadState == AudioDataLoadState.Loaded) self.ResolveBounds(current);
@@ -277,6 +286,11 @@ public class AudioManager : MonoBehaviour
             if (boundsPending) return;
         }
         AudioSource next = bgm[1 - bgmIndex];
+        if (duck != duckTarget)
+        {
+            duck = Mathf.MoveTowards(duck, duckTarget, Time.unscaledDeltaTime * 2f);
+            if (fadeElapsed < 0f) current.volume = bgmVolume * BgmLevel * duck;
+        }
 
         if (fadeElapsed < 0f)
         {
@@ -293,7 +307,7 @@ public class AudioManager : MonoBehaviour
 
         fadeElapsed += Time.unscaledDeltaTime;
         float t = fadeLength > 0f ? Mathf.Clamp01(fadeElapsed / fadeLength) : 1f;
-        float level = bgmVolume * BgmLevel;
+        float level = bgmVolume * BgmLevel * duck;
         current.volume = level * (1f - t);
         next.volume = level * t;
         if (t >= 1f)

@@ -67,6 +67,7 @@ public class Celebration
         openedAt = Time.unscaledTime;
         UIFactory.SetVisible(layer, true);
 
+        AudioManager.Duck(0.35f);
         GachaSound.Play("burst", 0.9f);
         GachaSound.Play("rare3", 0.7f);
         UITween.Run(layer, 0.5f, t =>
@@ -115,6 +116,7 @@ public class Celebration
         if (loop != null) loop.Pause();
         loop = null;
         sparks.Clear();
+        AudioManager.Duck(1f);
         UIFactory.SetVisible(layer, false);
     }
 }

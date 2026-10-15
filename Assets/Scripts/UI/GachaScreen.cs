@@ -28,6 +28,7 @@ public class GachaScreen
     private readonly VisualElement pickupRays;
     private readonly Label pickupTimer;
     private int timerSecond = -1;
+    private bool pityNear;
     private string pickupId;
     private HashSet<string> freshIds;
     private readonly GachaShow show;
@@ -150,6 +151,7 @@ public class GachaScreen
             if (freeButton.Interactable) freeButton.style.opacity = pulse;
             if (tenButton.Interactable) tenButton.style.scale = new Scale(new Vector3(1f + 0.015f * Mathf.Sin(t * 4f), 1f + 0.015f * Mathf.Sin(t * 4f), 1f));
             if (Random.value < 0.06f) BannerSpark();
+            pityFill.style.opacity = pityNear ? 0.6f + 0.4f * Mathf.Sin(t * 8f) : 1f;
             UpdateTimer();
         }).Every(0);
 
@@ -189,7 +191,9 @@ public class GachaScreen
         ownedLabel.text = "持っている備品 " + Progress.OwnedEquipment.Count + " / " + GameData.Items.equipment.Count + " 種類　引いた回数 " + Progress.GachaPulls;
 
         int left = Growth.PityLeft();
-        pityLabel.text = left > 0 ? "天井：あと <color=#FFD27A>" + left + " 回</color>で★3 確定" : "";
+        pityNear = left > 0 && left <= 5;
+        pityLabel.text = left <= 0 ? "" : pityNear ? "もうすぐ天井！ あと <color=#FF8A80>" + left + " 回</color>で★3 確定" : "天井：あと <color=#FFD27A>" + left + " 回</color>で★3 確定";
+        pityFill.EnableInClassList("gacha-pity-fill--near", pityNear);
         UIFactory.SetVisible(pityLabel, left > 0);
         float rate = g.pity > 0 ? Mathf.Clamp01(Progress.GachaPity / (float)g.pity) : 0f;
         pityFill.style.width = Length.Percent(rate * 100f);
