@@ -627,12 +627,46 @@
 }
 
 .result-rewards {
-    font-size: 22px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.reward-caption {
+    font-size: 20px;
+    color: rgb(178, 186, 204);
+    margin-right: 12px;
+}
+
+.reward-chip {
+    flex-direction: row;
+    align-items: center;
+    margin-left: 6px;
+    margin-right: 6px;
+    padding: 2px 12px 2px 8px;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-width: 1px;
+    border-color: rgba(255, 210, 122, 0.4);
+}
+
+.reward-coin {
+    font-size: 20px;
+    color: rgb(255, 210, 122);
+    margin-right: 6px;
+}
+
+.reward-count {
+    font-size: 26px;
+    color: rgb(255, 255, 255);
+    margin-left: 4px;
+}
+
+.reward-name {
+    font-size: 17px;
     color: rgb(214, 219, 232);
-    margin-bottom: 6px;
-    -unity-text-align: middle-center;
-    white-space: normal;
-    max-width: 1500px;
+    margin-left: 6px;
 }
 
 /* キーボードの数字（1〜9 でカードを選べる。スマホでは出さない） */

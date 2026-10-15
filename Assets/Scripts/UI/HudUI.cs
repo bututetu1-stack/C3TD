@@ -79,7 +79,7 @@ public class HudUI : MonoBehaviour
     private VisualElement resultTeam;
     private Label resultAchievements;
     private int shownAchievements = -1;
-    private Label resultRewards;
+    private VisualElement resultRewards;
     private int shownRewards = -1;
     private C3Button nextButton;
 
@@ -451,7 +451,7 @@ public class HudUI : MonoBehaviour
         resultAchievements = UIFactory.Text("", UIFont.Body, "result-achievements");
         resultContent.Add(resultAchievements);
         UIFactory.SetVisible(resultAchievements, false);
-        resultRewards = UIFactory.Text("", UIFont.Body, "result-rewards");
+        resultRewards = UIFactory.Box("result-rewards");
         resultContent.Add(resultRewards);
         UIFactory.SetVisible(resultRewards, false);
 
@@ -579,10 +579,7 @@ public class HudUI : MonoBehaviour
         if (state.Phase != GamePhase.Playing && battle.Rewards.Count != shownRewards)
         {
             shownRewards = battle.Rewards.Count;
-            var parts = new System.Collections.Generic.List<string>();
-            foreach (Reward r in battle.Rewards) parts.Add(r.id == Growth.CoinId ? "部費 +" + r.count : r.Name + " ×" + r.count);
-            resultRewards.text = "手に入れた：" + string.Join("　", parts);
-            UIFactory.SetVisible(resultRewards, parts.Count > 0);
+            FillRewards(battle.Rewards);
         }
         // 実績は Battle が記録を書いたあとに決まるので、結果を出してから届いた分を足す
         if (state.Phase != GamePhase.Playing && battle.NewAchievements.Count != shownAchievements)
@@ -797,6 +794,41 @@ public class HudUI : MonoBehaviour
             row.Add(chip);
         }
         resultTeam.Add(row);
+    }
+
+    /// <summary>手に入れた物：絵と数の札を 1 つずつ出し、部費は数え上げる</summary>
+    private void FillRewards(System.Collections.Generic.List<Reward> rewards)
+    {
+        resultRewards.Clear();
+        UIFactory.SetVisible(resultRewards, rewards.Count > 0);
+        if (rewards.Count == 0) return;
+        resultRewards.Add(UIFactory.Text("手に入れた", UIFont.Body, "reward-caption"));
+        for (int i = 0; i < rewards.Count; i++)
+        {
+            Reward r = rewards[i];
+            var chip = UIFactory.Box("reward-chip");
+            bool coin = r.id == Growth.CoinId;
+            if (coin) chip.Add(UIFactory.Text("部費", UIFont.Body, "reward-coin"));
+            else chip.Add(GrowthScreen.ItemIcon(Growth.Material(r.id), 34f));
+            var count = UIFactory.Text(coin ? "+0" : "×" + r.count, UIFont.Display, "reward-count");
+            chip.Add(count);
+            if (!coin) chip.Add(UIFactory.Text(r.Name, UIFont.Body, "reward-name"));
+            chip.style.opacity = 0f;
+            resultRewards.Add(chip);
+            int total = r.count;
+            float delay = 0.25f + 0.18f * i;
+            chip.schedule.Execute(() =>
+            {
+                GachaSound.Play("star", 0.4f);
+                UITween.Run(chip, 0.6f, t =>
+                {
+                    float e = Ease.OutBack(Mathf.Clamp01(t * 1.6f));
+                    chip.style.opacity = Mathf.Clamp01(t * 3f);
+                    chip.style.scale = new Scale(new Vector3(Mathf.LerpUnclamped(0.6f, 1f, e), Mathf.LerpUnclamped(0.6f, 1f, e), 1f));
+                    if (coin) count.text = "+" + Mathf.RoundToInt(total * Ease.OutCubic(t));
+                });
+            }).StartingIn((long)(delay * 1000f));
+        }
     }
 
     /// <summary>拠点に着かれた：画面のふちが赤く光り、ライフの札が揺れる</summary>
