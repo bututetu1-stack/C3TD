@@ -313,7 +313,7 @@
           <span class="got">必殺技・寝落ち・召喚・艦娘（艦娘は 10/14 夜から使っていない）</span>
           <span class="got">ファインマン・キャロ・ヲツのアイコン（10/14 夜）</span>
           <span class="got">艦娘の砲弾・砲弾の爆発・状態の印・DP 獲得・タイトルの絵（10/14）</span>
-          <span class="got">BGM 3曲（battle・menu・boss）と効果音14種（10/14）</span>
+          <span class="got">BGM 8曲（battle・menu・boss、10/14 夜に battle2〜4・final・battle_ex）と効果音14種（10/14）</span>
           <span class="got">第2〜4章の敵 17体（10/14。オーナーの ChatGPT で Claude が作成）</span>
           <span class="got">番外編の敵 6体（10/14。同じく Claude が作成）</span>
           <span class="got">敵の性質のエフェクト 6種（10/14。同じく Claude が作成）</span>
@@ -472,23 +472,23 @@
         <thead><tr><th>ファイル名</th><th>置き場所</th><th>鳴る場面</th><th>どんな音</th><th>長さ</th></tr></thead>
         <tbody>
           <tr><td><code>battle</code> <span class="got">受取済</span></td><td><code>Audio/BGM/</code></td><td>出撃中</td><td>緊張感のある作戦BGM（ループ）。電子音とストリングス</td><td class="len">1〜3分</td></tr>
-          <tr><td><code>menu</code></td><td><code>Audio/BGM/</code></td><td>タイトル・作戦選択・編成</td><td>落ち着いた作戦室のBGM（ループ）</td><td class="len">1〜3分</td></tr>
-          <tr><td><code>boss</code> <span class="chip">新・任意</span></td><td><code>Audio/BGM/</code></td><td>ボス（締切）が出てから。なければ battle のまま</td><td>激しく切迫したボス戦のBGM（ループ）</td><td class="len">1〜3分</td></tr>
-          <tr><td><code>start</code> <span class="chip">新</span></td><td><code>Audio/SE/</code></td><td>出撃して「作戦開始」の帯が出る</td><td>作戦開始の合図。短いファンファーレや、無線の「ザッ」</td><td class="len">1〜2秒</td></tr>
-          <tr><td><code>boss_warning</code> <span class="chip">新</span></td><td><code>Audio/SE/</code></td><td>ボスが出る2秒前（出撃口に金色の輪が出る）</td><td>警報（サイレン）や重い鐘の音</td><td class="len">約2秒</td></tr>
-          <tr><td><code>life_lost</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>敵に拠点を突破された</td><td>低い警告音（ブーッ）とガラスが割れる音</td><td class="len">約1秒</td></tr>
-          <tr><td><code>victory</code></td><td><code>Audio/SE/</code></td><td>防衛成功</td><td>短いファンファーレ</td><td class="len">2〜3秒</td></tr>
-          <tr><td><code>defeat</code></td><td><code>Audio/SE/</code></td><td>防衛失敗</td><td>沈んでいく低い音</td><td class="len">約2秒</td></tr>
-          <tr><td><code>click</code></td><td><code>Audio/SE/</code></td><td>ボタンを押す</td><td>短い電子音（ピッ）</td><td class="len">0.2秒</td></tr>
-          <tr><td><code>deploy</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>部員を配置した</td><td>着地の「ドン」と、きらっと光る音</td><td class="len">約0.6秒</td></tr>
-          <tr><td><code>hit</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>攻撃が当たった（何度も鳴る）</td><td>短く軽い打撃音。うるさくないもの</td><td class="len">0.2秒以内</td></tr>
-          <tr><td><code>enemy_defeat</code></td><td><code>Audio/SE/</code></td><td>敵を倒した</td><td>紙が破れる「ビリッ」</td><td class="len">約0.4秒</td></tr>
-          <tr><td><code>retreat</code></td><td><code>Audio/SE/</code></td><td>部員を撤退させた</td><td>ふわっと消える音</td><td class="len">約0.5秒</td></tr>
-          <tr><td><code>skill</code> <span class="chip gold">優先</span></td><td><code>Audio/SE/</code></td><td>必殺技の発動（カットイン）</td><td>力強い決め音（シャキーン）</td><td class="len">約1.2秒</td></tr>
-          <tr><td><code>skill_ready</code></td><td><code>Audio/SE/</code></td><td>必殺技が使えるようになった</td><td>軽いきらめき（ピロン）</td><td class="len">約0.5秒</td></tr>
+          <tr><td><code>menu</code> <span class="got">受取済</span></td><td><code>Audio/BGM/</code></td><td>タイトル・作戦選択・編成</td><td>落ち着いた作戦室のBGM（ループ）</td><td class="len">1〜3分</td></tr>
+          <tr><td><code>boss</code> <span class="got">受取済</span></td><td><code>Audio/BGM/</code></td><td>ボス（締切）が出てから。なければ battle のまま</td><td>激しく切迫したボス戦のBGM（ループ）</td><td class="len">1〜3分</td></tr>
+          <tr><td><code>start</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>出撃して「作戦開始」の帯が出る</td><td>作戦開始の合図。短いファンファーレや、無線の「ザッ」</td><td class="len">1〜2秒</td></tr>
+          <tr><td><code>boss_warning</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>ボスが出る2秒前（出撃口に金色の輪が出る）</td><td>警報（サイレン）や重い鐘の音</td><td class="len">約2秒</td></tr>
+          <tr><td><code>life_lost</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>敵に拠点を突破された</td><td>低い警告音（ブーッ）とガラスが割れる音</td><td class="len">約1秒</td></tr>
+          <tr><td><code>victory</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>防衛成功</td><td>短いファンファーレ</td><td class="len">2〜3秒</td></tr>
+          <tr><td><code>defeat</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>防衛失敗</td><td>沈んでいく低い音</td><td class="len">約2秒</td></tr>
+          <tr><td><code>click</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>ボタンを押す</td><td>短い電子音（ピッ）</td><td class="len">0.2秒</td></tr>
+          <tr><td><code>deploy</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>部員を配置した</td><td>着地の「ドン」と、きらっと光る音</td><td class="len">約0.6秒</td></tr>
+          <tr><td><code>hit</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>攻撃が当たった（何度も鳴る）</td><td>短く軽い打撃音。うるさくないもの</td><td class="len">0.2秒以内</td></tr>
+          <tr><td><code>enemy_defeat</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>敵を倒した</td><td>紙が破れる「ビリッ」</td><td class="len">約0.4秒</td></tr>
+          <tr><td><code>retreat</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>部員を撤退させた</td><td>ふわっと消える音</td><td class="len">約0.5秒</td></tr>
+          <tr><td><code>skill</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>必殺技の発動（カットイン）</td><td>力強い決め音（シャキーン）</td><td class="len">約1.2秒</td></tr>
+          <tr><td><code>skill_ready</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>必殺技が使えるようになった</td><td>軽いきらめき（ピロン）</td><td class="len">約0.5秒</td></tr>
           <tr><td><code>summon</code> <span class="chip">なくてよい</span></td><td><code>Audio/SE/</code></td><td>艦娘の召喚</td><td>水しぶきと汽笛</td><td class="len">約1秒</td></tr>
-          <tr><td><code>buff</code></td><td><code>Audio/SE/</code></td><td>能力が上がった（夜戦主義が重なった）</td><td>上がっていく短い音</td><td class="len">約0.5秒</td></tr>
-          <tr><td><code>unit_down</code></td><td><code>Audio/SE/</code></td><td>部員が倒された</td><td>低く沈む打撃音</td><td class="len">約0.8秒</td></tr>
+          <tr><td><code>buff</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>能力が上がった（夜戦主義が重なった）</td><td>上がっていく短い音</td><td class="len">約0.5秒</td></tr>
+          <tr><td><code>unit_down</code> <span class="got">受取済</span></td><td><code>Audio/SE/</code></td><td>部員が倒された</td><td>低く沈む打撃音</td><td class="len">約0.8秒</td></tr>
         </tbody>
       </table>
     </div>
@@ -545,7 +545,7 @@
       <article class="card">
         <div class="card-head"><h3>第2章の戦闘 BGM</h3><span class="file">battle2.mp3</span></div>
         <div class="scene">第2章「後期」の戦闘（2-1〜2-5）。なければ battle が流れます。</div>
-        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">BGM・約2分</span></div>
         <pre class="prompt" id="g-battle2">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
 ・大学の後期。秋から冬へ、日が短くなり、課題と試験が増えていく時期。少し寂しげな空気の中で、仲間と踏ん張る熱さがある戦闘曲。
 ・テンポは BPM 145 前後。哀愁のあるピアノのリフ、刻むストリングス、タイトなドラム、うねるシンセベース、要所で鳴るブラス。
@@ -557,7 +557,7 @@
       <article class="card">
         <div class="card-head"><h3>第3章の戦闘 BGM</h3><span class="file">battle3.mp3</span></div>
         <div class="scene">第3章「就活」の戦闘（3-1〜3-5）。なければ battle が流れます。</div>
-        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">BGM・約2分</span></div>
         <pre class="prompt" id="g-battle3">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
 ・就職活動。スーツ、高層ビル、面接室の張りつめた空気。都会的でクールだが、追い立てられるような緊張感がある戦闘曲。
 ・テンポは BPM 150 前後。冷たいシンセのアルペジオ、ファンキーなベース、硬いエレクトロのドラム、鋭いストリングス。
@@ -569,7 +569,7 @@
       <article class="card">
         <div class="card-head"><h3>第4章の戦闘 BGM</h3><span class="file">battle4.mp3</span></div>
         <div class="scene">第4章「卒論」の戦闘（4-1〜4-5）。なければ battle が流れます。</div>
-        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">BGM・約2分</span></div>
         <pre class="prompt" id="g-battle4">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
 ・卒業論文の追い込み。深夜の研究室、モニターの光、締切直前の焦りと、最後の力を振り絞る熱さ。
 ・テンポは BPM 165 前後。疾走するドラムンベースのビート、切迫したピアノ、重厚なストリングス、ここぞで鳴るブラス。
@@ -581,7 +581,7 @@
       <article class="card">
         <div class="card-head"><h3>最後のボス BGM</h3><span class="file">final.mp3</span></div>
         <div class="scene">4-5 で「卒論審査」が出たら切り替わる。なければ boss が流れます。</div>
-        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">BGM・約2分</span></div>
         <pre class="prompt" id="g-final">2Dタワーディフェンスゲームの最後のボス戦のBGMを作ってください。
 ・ボスは「卒論審査」。審査員席にずらりと並ぶ巨大な影の審査員。四年間の集大成に挑む、荘厳で壮大な決戦。
 ・テンポは BPM 170 前後。重厚なオーケストラ（ストリングス・ブラス・ティンパニ）に、パイプオルガンと激しいエレクトロのドラムを重ねる。合唱や歌声は入れない。
@@ -593,7 +593,7 @@
       <article class="card">
         <div class="card-head"><h3>番外編の戦闘 BGM</h3><span class="file">battle_ex.mp3</span></div>
         <div class="scene">番外編「院試」の戦闘（EX-1〜EX-5）。なければ battle が流れます。</div>
-        <div class="chips"><span class="chip gold">依頼中（任意）</span><span class="chip">BGM・約2分</span></div>
+        <div class="chips"><span class="got">受取済</span><span class="chip">BGM・約2分</span></div>
         <pre class="prompt" id="g-battle-ex">2Dタワーディフェンスゲームの戦闘中に流すBGMを作ってください。
 ・番外編。大学院入試に挑む、少し不思議でミステリアスな雰囲気。ワープする敵や、時空がゆがむような演出に合う戦闘曲。
 ・テンポは BPM 150 前後。紫がかったシンセパッド、きらめくアルペジオ、変拍子気味のドラム、うねるベース。
