@@ -24,6 +24,20 @@ isuzu-unity-cli call play_mode_stop
 - ステージを変えるには `UnityEngine.Object.FindAnyObjectByType<GameBootstrap>().StartStage("stage_02");`。
 - コンパイルの確認は `isuzu-unity-cli verify`。
 
+## よく使うもの（tools/。2026-10-15 にまとめた）
+
+| ファイル | 使いどころ |
+|---|---|
+| `tools/backup.cs` / `tools/restore.cs` | **テストで再生する前に backup、止めたあとに restore**。オーナーのセーブ（クリア・編成・育成・ガチャ・毎日のこと）を守る |
+| `tools/snap.sh OUT.png [phone]` | 再生中（`play_mode_play --paused` のままでよい）の画面を PNG に。phone ならスマホの形（2340x1080）。スマホの UI の大きさは先に `UIFactory.SetZoom(1.35f)` |
+| `tools/balance.sh NOVICE RUNS "stages" "squad"` | 自動で戦わせて勝った割合（下の「バランスの確かめ」）。強化・育成は効かない |
+| `tools/webbuild.cs` | ブラウザ版を作る（`--wait-timeout 1800` を付けて背面で） |
+| `tools/gacha_test.cs` / `tools/gacha_tap.cs` | ガチャの演出を確かめる（★3 が必ず出る 10 回）／演出で「押す」 |
+
+- 撮った画像を並べる `chatgpt/sheet.ps1` は正方形のマスに引き伸ばすので、16:9 の画像はつぶれて見える。大きさを確かめるときは 1 枚ずつ見る。
+- コンパイルの直後に再生すると、数秒エディタが止まる（"main thread has not run"）。そのあいだに出たエラーは気にしなくてよいことが多い。続けて出るなら再生しなおす。
+- bash の `node -e "…"` の中に `` ` ``（バッククォート）を書くとシェルに食われる。文が長い書き換えは、作業用フォルダに .js を書いてから `node` で流す。
+
 ## 戦闘の確かめ（M2）
 
 | ファイル | 使いどころ |
