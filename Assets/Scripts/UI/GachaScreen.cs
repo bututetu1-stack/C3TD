@@ -29,6 +29,7 @@ public class GachaScreen
     private readonly Label pickupName;
     private readonly Label pickupEffect;
     private readonly VisualElement pickupRays;
+    private readonly VisualElement pickupCircle;
     private readonly Label pickupTimer;
     private int timerSecond = -1;
     private bool pityNear;
@@ -73,6 +74,12 @@ public class GachaScreen
         bannerGlow.style.backgroundImage = new StyleBackground(SpriteFactory.Glow);
         bannerGlow.style.unityBackgroundImageTintColor = new Color(1f, 0.7f, 0.3f, 0.35f);
         banner.Add(bannerGlow);
+        // 絵の後ろで、魔法陣がゆっくり回る（Art/Gacha/Circle。なければ出さない）
+        pickupCircle = UIFactory.Box("gacha-banner-circle", "gacha-img");
+        Sprite circleArt = Art.GachaGlow("Circle");
+        if (circleArt != null) pickupCircle.style.backgroundImage = new StyleBackground(circleArt);
+        pickupCircle.style.unityBackgroundImageTintColor = new Color(1f, 0.82f, 0.45f, 0.35f);
+        banner.Add(pickupCircle);
         pickupArt = UIFactory.Box("gacha-banner-art", "gacha-img");
         banner.Add(pickupArt);
         var bannerText = UIFactory.Box("gacha-banner-text");
@@ -155,6 +162,7 @@ public class GachaScreen
             if (!UIFactory.IsVisible(Root)) return;
             float t = Time.unscaledTime;
             pickupRays.style.rotate = new Rotate(new Angle(t * 8f, AngleUnit.Degree));
+            pickupCircle.style.rotate = new Rotate(new Angle(-t * 6f, AngleUnit.Degree));
             float s = 1f + 0.04f * Mathf.Sin(t * 2.2f);
             pickupRays.style.scale = new Scale(new Vector3(s, s, 1f));
             pickupArt.style.translate = new Translate(0f, Mathf.Sin(t * 1.6f) * 10f);

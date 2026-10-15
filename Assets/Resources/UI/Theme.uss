@@ -2614,6 +2614,14 @@
     height: 220%;
 }
 
+.gacha-banner-circle {
+    position: absolute;
+    left: 0;
+    top: -2%;
+    width: 60%;
+    height: 104%;
+}
+
 .gacha-banner-art {
     position: absolute;
     left: 4%;
