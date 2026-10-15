@@ -18,6 +18,9 @@ public class GachaScreen
     private readonly VisualElement results;
     private readonly VisualElement collection;
     private readonly Label collectionLabel;
+    private readonly VisualElement collectionInfo;
+    private readonly ScrollView scroll;
+    private string infoId;
     private readonly Label ownedLabel;
     private readonly Label pityLabel;
     private readonly Label needLabel;
@@ -50,6 +53,7 @@ public class GachaScreen
 
         // 画面が小さい（スマホ）ときも収まるよう、見出しより下は縦に流せるようにする
         var page = new ScrollView(ScrollViewMode.Vertical);
+        scroll = page;
         page.AddToClassList("gacha-page");
         page.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
         page.verticalScrollerVisibility = ScrollerVisibility.Auto;
@@ -133,6 +137,12 @@ public class GachaScreen
         page.Add(collectionLabel);
         collection = UIFactory.Box("gacha-collection");
         page.Add(collection);
+        // 図鑑のマスを押すと、その備品の札（スマホでは重ねて出る説明が見られないので）
+        collectionInfo = new ChamferBox();
+        collectionInfo.AddToClassList("gacha-tile-info");
+        ((ChamferBox)collectionInfo).SetFill(Palette.UiPanel).SetStroke(Palette.UiPanelLine, 1f).SetCut(12f, ChamferBox.Corners.TopRight | ChamferBox.Corners.BottomLeft);
+        UIFactory.SetVisible(collectionInfo, false);
+        page.Add(collectionInfo);
 
         page.Add(UIFactory.Text("前回の結果", UIFont.Body, "gacha-results-caption"));
         results = UIFactory.Box("gacha-results");
@@ -215,6 +225,8 @@ public class GachaScreen
     private void BuildCollection()
     {
         collection.Clear();
+        UIFactory.SetVisible(collectionInfo, false);
+        infoId = null;
         var all = new List<EquipmentData>(GameData.Items.equipment);
         all.Sort((a, b) => b.rarity != a.rarity ? b.rarity.CompareTo(a.rarity) : 0);
         int owned = 0, popped = 0;
@@ -242,9 +254,57 @@ public class GachaScreen
             if (have && stacks > 0) tile.Add(UIFactory.Text("+" + stacks, UIFont.Display, "gacha-tile-stack"));
             if (freshIds != null && freshIds.Contains(e.id)) PopNew(tile, popped++, color);
             tile.tooltip = have ? e.name + "：" + Growth.Describe(e, stacks) : "？？？";
+            tile.pickingMode = PickingMode.Position;
+            EquipmentData picked = e;
+            bool owns = have;
+            int stackCount = stacks;
+            tile.RegisterCallback<ClickEvent>(ev => ShowTileInfo(picked, owns, stackCount));
             collection.Add(tile);
         }
         collectionLabel.text = "備品図鑑 " + owned + " / " + all.Count + (owned >= all.Count ? "　コンプリート！" : "");
+    }
+
+    /// <summary>図鑑のマスを押したとき：絵・★・名前・効き目・ひとこと（持っていない物は ★ だけ）。もう一度押すと閉じる</summary>
+    private void ShowTileInfo(EquipmentData e, bool have, int stacks)
+    {
+        if (infoId == e.id && UIFactory.IsVisible(collectionInfo))
+        {
+            UIFactory.SetVisible(collectionInfo, false);
+            infoId = null;
+            return;
+        }
+        infoId = e.id;
+        AudioManager.PlaySE("click");
+        collectionInfo.Clear();
+        Color color = GachaShow.RarityColor(e.rarity);
+        var img = UIFactory.Box("gacha-tile-info-art", "gacha-img");
+        Sprite art = Art.Item(e.id);
+        if (art != null)
+        {
+            img.style.backgroundImage = new StyleBackground(art);
+            if (!have) img.style.unityBackgroundImageTintColor = new Color(0f, 0f, 0f, 0.85f);
+        }
+        collectionInfo.Add(img);
+        var text = UIFactory.Box("gacha-tile-info-text");
+        var stars = UIFactory.Text(GrowthScreen.Stars(e.rarity), UIFont.Body, "gacha-tile-info-stars");
+        stars.style.color = color;
+        text.Add(stars);
+        text.Add(UIFactory.Text(have ? e.name : "？？？", UIFont.Title, "gacha-tile-info-name"));
+        if (have)
+        {
+            text.Add(UIFactory.Text(Growth.Describe(e, stacks) + (stacks > 0 ? "（重ね " + stacks + "）" : ""), UIFont.Body, "gacha-tile-info-effect"));
+            if (!string.IsNullOrEmpty(e.description)) text.Add(UIFactory.Text("「" + e.description + "」", UIFont.Body, "gacha-tile-info-flavor"));
+        }
+        else text.Add(UIFactory.Text("まだ持っていない。ガチャで出ると、ここに絵と効き目が出る", UIFont.Body, "gacha-tile-info-flavor"));
+        collectionInfo.Add(text);
+        UIFactory.SetVisible(collectionInfo, true);
+        // 画面が小さいときは、札が見えるところまで流す
+        collectionInfo.schedule.Execute(() => scroll.ScrollTo(collectionInfo)).StartingIn(30);
+        UITween.Run(collectionInfo, 0.2f, t =>
+        {
+            collectionInfo.style.opacity = t;
+            collectionInfo.style.translate = new Translate(0f, (1f - Ease.OutCubic(t)) * 10f);
+        });
     }
 
     /// <summary>図鑑に新しく入った物：光って、はねて、NEW が付く</summary>

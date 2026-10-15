@@ -2670,6 +2670,48 @@
     flex-wrap: wrap;
 }
 
+.gacha-tile-info {
+    flex-direction: row;
+    align-items: center;
+    width: 760px;
+    max-width: 100%;
+    margin-top: 6px;
+    padding: 10px 18px 10px 12px;
+}
+
+.gacha-tile-info-art {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+}
+
+.gacha-tile-info-text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin-left: 14px;
+}
+
+.gacha-tile-info-stars {
+    font-size: 18px;
+}
+
+.gacha-tile-info-name {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+}
+
+.gacha-tile-info-effect {
+    font-size: 20px;
+    color: rgb(255, 210, 122);
+    white-space: normal;
+}
+
+.gacha-tile-info-flavor {
+    font-size: 18px;
+    color: rgb(178, 186, 204);
+    white-space: normal;
+}
+
 .gacha-tile {
     width: 82px;
     height: 82px;
