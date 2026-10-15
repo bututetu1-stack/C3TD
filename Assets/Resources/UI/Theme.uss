@@ -2249,6 +2249,37 @@
     color: rgb(124, 224, 160);
 }
 
+.growth-equip-current {
+    width: 84px;
+    height: 84px;
+    margin: 6px 0 2px 0;
+}
+
+.growth-equip-glow {
+    position: absolute;
+    left: -30px;
+    top: -30px;
+    right: -30px;
+    bottom: -30px;
+}
+
+.growth-equip-current-art {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.growth-equip-pop {
+    position: absolute;
+    left: 96px;
+    top: 20px;
+    font-size: 26px;
+    color: rgb(255, 210, 122);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
 .growth-section {
     margin-top: 14px;
     padding-top: 10px;

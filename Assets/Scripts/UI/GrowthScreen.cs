@@ -17,6 +17,8 @@ public class GrowthScreen
     private readonly Label notice;
     private string selected;
     private bool choosingEquip;
+    // いま付けたばかりの備品（次の Refresh で「装備！」の演出を出す）
+    private string justEquipped;
     private readonly Celebration celebration;
     private Label levelLabel;
 
@@ -257,6 +259,25 @@ public class GrowthScreen
         var equipBox = Section("備品", equipped != null
             ? Stars(equipped.rarity) + " " + equipped.name + "：" + Growth.Describe(equipped, Progress.EquipmentStacks(equipped.id))
             : "付けていない（部室ガチャで手に入る）");
+        if (equipped != null)
+        {
+            // 付けている備品の絵（付けたばかりなら、はねて光って「装備！」）
+            Sprite equipArt = Art.Item(equipped.id);
+            if (equipArt != null)
+            {
+                var holder = UIFactory.Box("growth-equip-current");
+                var glow = UIFactory.Box("growth-equip-glow", "gacha-img");
+                glow.style.backgroundImage = new StyleBackground(SpriteFactory.Glow);
+                glow.style.unityBackgroundImageTintColor = Palette.WithAlpha(RarityColor(equipped.rarity), 0.7f);
+                holder.Add(glow);
+                var equipIcon = UIFactory.Box("growth-equip-current-art", "gacha-img");
+                equipIcon.style.backgroundImage = new StyleBackground(equipArt);
+                holder.Add(equipIcon);
+                equipBox.Insert(1, holder);
+                if (justEquipped == equipped.id) EquipEffect(holder, equipIcon, glow, equipped.rarity);
+            }
+        }
+        justEquipped = null;
         var equipRow = UIFactory.Box("growth-buttons");
         var change = new C3Button(IconKind.Next, 22f, choosingEquip ? "えらぶのをやめる" : "付け替える", () =>
         {
@@ -316,14 +337,45 @@ public class GrowthScreen
             string id = e.id;
             row.AddManipulator(new Clickable(() =>
             {
-                AudioManager.PlaySE("click");
                 Progress.SetMemberEquip(memberId, id);
                 choosingEquip = false;
+                justEquipped = id;
                 Refresh();
             }));
             list.Add(row);
         }
         return list;
+    }
+
+    /// <summary>備品を付けた：絵がはねて、後ろが光り、「装備！」が浮かぶ</summary>
+    private static void EquipEffect(VisualElement holder, VisualElement icon, VisualElement glow, int rarity)
+    {
+        // 付けた備品が見えるところまで流す
+        holder.schedule.Execute(() =>
+        {
+            ScrollView sv = holder.GetFirstAncestorOfType<ScrollView>();
+            if (sv != null) sv.ScrollTo(holder);
+        }).StartingIn(30);
+        GachaSound.Play("stamp", 0.7f);
+        GachaSound.Play(rarity >= 3 ? "rare3" : rarity == 2 ? "rare2" : "star", 0.5f);
+        UITween.Run(icon, 0.45f, t =>
+        {
+            float s = Mathf.LerpUnclamped(2.2f, 1f, Ease.OutBack(t));
+            icon.style.scale = new Scale(new Vector3(s, s, 1f));
+            icon.style.rotate = new Rotate(new Angle((1f - t) * -20f, AngleUnit.Degree));
+        });
+        UITween.Run(glow, 1f, t =>
+        {
+            float s = 1f + 1.2f * (1f - Ease.OutCubic(t));
+            glow.style.scale = new Scale(new Vector3(s, s, 1f));
+        });
+        var pop = UIFactory.Text("装備！", UIFont.Body, "growth-equip-pop");
+        holder.Add(pop);
+        UITween.Run(pop, 1.1f, t =>
+        {
+            pop.style.translate = new Translate(0f, -30f * Ease.OutCubic(t));
+            pop.style.opacity = t < 0.7f ? 1f : (1f - t) / 0.3f;
+        }, () => pop.RemoveFromHierarchy());
     }
 
     /// <summary>レベルが上がった：レベルの文字がはねて、「Lv UP」が浮かぶ</summary>
