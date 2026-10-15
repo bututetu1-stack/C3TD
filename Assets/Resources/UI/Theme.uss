@@ -2789,6 +2789,16 @@
     bottom: 14px;
 }
 
+.gacha-tile-letter {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 40px;
+    -unity-text-align: middle-center;
+}
+
 .gacha-tile-unknown {
     position: absolute;
     left: 0;

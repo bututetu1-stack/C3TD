@@ -925,7 +925,7 @@ public class GachaShow
         if (art != null) icon.style.backgroundImage = new StyleBackground(art);
         else
         {
-            var letter = UIFactory.Text(e.name.Substring(0, 1), UIFont.Title, "gacha-face-letter");
+            var letter = UIFactory.Text(e.Letter, UIFont.Title, "gacha-face-letter");
             letter.style.fontSize = iconSize * 0.5f;
             letter.style.color = color;
             icon.Add(letter);

@@ -76,10 +76,15 @@ public class EquipmentData
     public string name;
     public int rarity = 1;
 
-    /// <summary>hp / atk / def（%）、interval（攻撃間隔 -%）、sp（最初の SP +）、redeploy（再配置 -%）</summary>
+    /// <summary>hp / atk / def（%）、all（体力・攻撃力・防御 %）、interval（攻撃間隔 -%）、sp（最初の SP +）、redeploy（再配置 -%）、skillTime（必殺技の効果時間 +%）、cost（配置コスト -）</summary>
     public string stat;
     public float value;
     public string description;
+
+    /// <summary>絵がないときに出す一字（省略時は名前の頭文字）</summary>
+    public string label;
+
+    public string Letter { get { return !string.IsNullOrEmpty(label) ? label : name.Substring(0, 1); } }
 }
 
 public class GachaData

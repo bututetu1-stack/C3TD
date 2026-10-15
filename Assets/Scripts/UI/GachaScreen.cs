@@ -259,6 +259,13 @@ public class GachaScreen
                 // 持っていない物は黒い影に
                 if (!have) img.style.unityBackgroundImageTintColor = new Color(0f, 0f, 0f, 0.85f);
             }
+            else if (have)
+            {
+                // 絵がまだない備品は、名前の頭文字
+                var letter = UIFactory.Text(e.Letter, UIFont.Title, "gacha-tile-letter");
+                letter.style.color = color;
+                img.Add(letter);
+            }
             tile.Add(img);
             if (!have) tile.Add(UIFactory.Text("?", UIFont.Display, "gacha-tile-unknown"));
             var stars = UIFactory.Text(GrowthScreen.Stars(e.rarity), UIFont.Body, "gacha-tile-stars");
