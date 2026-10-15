@@ -700,7 +700,12 @@ public class GachaShow
             c.Root.style.opacity = 1f;
             c.Root.style.translate = new Translate(0f, 0f);
             c.Root.style.rotate = new Rotate(new Angle(0f, AngleUnit.Degree));
-            if (!c.Open) ShowFace(c);
+            if (!c.Open)
+            {
+                // 飛ばしてまとめに来たカードにも NEW を付ける（音はまとめの鐘ひとつにする）
+                ShowFace(c);
+                if (c.Result.IsNew) Stamp(c, false);
+            }
         }
         spot.Clear();
         spot.style.opacity = 1f;
@@ -822,10 +827,10 @@ public class GachaShow
         }
     }
 
-    private void Stamp(CardView c)
+    private void Stamp(CardView c, bool sound = true)
     {
         if (c.Face == null) return;
-        GachaSound.Play("stamp", 0.5f);
+        if (sound) GachaSound.Play("stamp", 0.5f);
         var tag = UIFactory.Text("NEW", UIFont.Display, "gacha-card-badge", "gacha-card-badge--new");
         tag.style.fontSize = Mathf.Max(14f, c.Width * 0.075f);
         c.Face.Add(tag);

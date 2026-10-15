@@ -83,7 +83,10 @@ public class GachaScreen
         pickupArt = UIFactory.Box("gacha-banner-art", "gacha-img");
         banner.Add(pickupArt);
         var bannerText = UIFactory.Box("gacha-banner-text");
-        bannerText.Add(UIFactory.Text("PICK UP", UIFont.Display, "gacha-banner-caption"));
+        var captionRow = UIFactory.Box("gacha-banner-caption-row");
+        captionRow.Add(UIFactory.Text("PICK UP", UIFont.Display, "gacha-banner-caption"));
+        captionRow.Add(UIFactory.Text("確率UP", UIFont.Body, "gacha-banner-rateup"));
+        bannerText.Add(captionRow);
         bannerText.Add(UIFactory.Text("★★★", UIFont.Body, "gacha-banner-stars"));
         pickupName = UIFactory.Text("", UIFont.Title, "gacha-banner-name");
         bannerText.Add(pickupName);
