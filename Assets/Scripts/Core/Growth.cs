@@ -6,6 +6,8 @@ public class Reward
 {
     public string id;
     public int count;
+    // 大成功（greatScale 倍になった）
+    public bool great;
     public string Name { get { return id == Growth.CoinId ? "部費" : Growth.ItemName(id); } }
 }
 
@@ -225,6 +227,15 @@ public static class Growth
                 int count = D.materialDrop.baseCount + stageIndex / 2 + (stars >= 3 ? 1 : 0) + Random.Range(0, 2);
                 if (hard) count *= 2;
                 Add(rewards, material, count);
+            }
+            // 大成功：部費と素材がまとめて greatScale 倍
+            if (won && Random.value * 100f < D.coins.greatChance)
+            {
+                foreach (Reward r in rewards)
+                {
+                    r.count = Mathf.RoundToInt(r.count * D.coins.greatScale);
+                    r.great = true;
+                }
             }
         }
         foreach (Reward r in rewards)

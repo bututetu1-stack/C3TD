@@ -802,11 +802,30 @@ public class HudUI : MonoBehaviour
         resultRewards.Clear();
         UIFactory.SetVisible(resultRewards, rewards.Count > 0);
         if (rewards.Count == 0) return;
-        resultRewards.Add(UIFactory.Text("手に入れた", UIFont.Body, "reward-caption"));
+        bool great = rewards.Exists(r => r.great);
+        if (great)
+        {
+            // 大成功：金色の札がはねて、鐘が鳴る
+            var stamp = UIFactory.Text("大成功！ ×" + GameData.Items.coins.greatScale.ToString("0.#"), UIFont.Body, "reward-great");
+            resultRewards.Add(stamp);
+            stamp.style.opacity = 0f;
+            stamp.schedule.Execute(() =>
+            {
+                GachaSound.Play("rare3", 0.6f);
+                UITween.Run(stamp, 0.4f, t =>
+                {
+                    float s = Mathf.Lerp(2.4f, 1f, Ease.OutCubic(t));
+                    stamp.style.scale = new Scale(new Vector3(s, s, 1f));
+                    stamp.style.opacity = t;
+                });
+            }).StartingIn(150);
+        }
+        else resultRewards.Add(UIFactory.Text("手に入れた", UIFont.Body, "reward-caption"));
         for (int i = 0; i < rewards.Count; i++)
         {
             Reward r = rewards[i];
             var chip = UIFactory.Box("reward-chip");
+            chip.EnableInClassList("reward-chip--great", r.great);
             bool coin = r.id == Growth.CoinId;
             if (coin) chip.Add(UIFactory.Text("部費", UIFont.Body, "reward-coin"));
             else chip.Add(GrowthScreen.ItemIcon(Growth.Material(r.id), 34f));
@@ -816,7 +835,7 @@ public class HudUI : MonoBehaviour
             chip.style.opacity = 0f;
             resultRewards.Add(chip);
             int total = r.count;
-            float delay = 0.25f + 0.18f * i;
+            float delay = (great ? 0.6f : 0.25f) + 0.18f * i;
             chip.schedule.Execute(() =>
             {
                 GachaSound.Play("star", 0.4f);

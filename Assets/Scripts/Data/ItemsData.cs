@@ -21,6 +21,9 @@ public class CoinRule
     public float perStage = 10f;
     public float lossRate = 0.2f;
     public float endlessPerWave = 12f;
+    // 勝ったとき greatChance% で「大成功」：部費と素材が greatScale 倍
+    public float greatChance = 15f;
+    public float greatScale = 2f;
 }
 
 public class MaterialDropRule

@@ -651,6 +651,21 @@
     border-color: rgba(255, 210, 122, 0.4);
 }
 
+.reward-chip.reward-chip--great {
+    background-color: rgba(255, 210, 122, 0.22);
+    border-width: 2px;
+    border-color: rgb(255, 210, 122);
+}
+
+.reward-great {
+    font-size: 26px;
+    color: rgb(20, 17, 10);
+    background-color: rgb(255, 210, 122);
+    padding: 0 12px 0 12px;
+    margin-right: 12px;
+    rotate: -4deg;
+}
+
 .reward-coin {
     font-size: 20px;
     color: rgb(255, 210, 122);

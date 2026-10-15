@@ -16,7 +16,8 @@
   "chapterDrops": { "ch1": "paper", "ch2": "energy", "ch3": "suit", "ch4": "labnote", "ex": "pastexam" },
 
   // クリアしたときの部費：base ＋ 章の番号×perChapter ＋ 章の中の番号×perStage。★3 なら ×1.2、強襲なら ×1.5。負けたら lossRate 倍
-  "coins": { "base": 60, "perChapter": 20, "perStage": 10, "lossRate": 0.2, "endlessPerWave": 12 },
+  // 勝ったとき greatChance% で「大成功」：その出撃の部費と素材が greatScale 倍（結果の画面で金色に光る）
+  "coins": { "base": 60, "perChapter": 20, "perStage": 10, "lossRate": 0.2, "endlessPerWave": 12, "greatChance": 15, "greatScale": 2 },
 
   // 素材の数：base ＋ 章の中の番号の半分（切り捨て）＋ ★3 なら 1 ＋ 0〜1 のおまけ。強襲なら 2 倍。負けたら落ちない
   "materialDrop": { "base": 2 },
