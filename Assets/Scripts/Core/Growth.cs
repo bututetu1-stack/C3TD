@@ -272,22 +272,61 @@ public static class Growth
 
     // ================= ガチャ =================
 
-    /// <summary>count 回引く（部費が足りなければ空）。10 回なら最後の 1 回は★2 以上</summary>
-    public static List<GachaResult> Pull(int count)
+    /// <summary>今日のピックアップ（★3 を日ごとに順に。★3 がなければ null）</summary>
+    public static EquipmentData Pickup()
+    {
+        var pool = D.equipment.FindAll(e => e.rarity >= 3);
+        if (pool.Count == 0) return null;
+        int day = (int)(System.DateTime.Now.Date - new System.DateTime(2026, 1, 1)).TotalDays;
+        return pool[((day % pool.Count) + pool.Count) % pool.Count];
+    }
+
+    private static string Today { get { return System.DateTime.Now.ToString("yyyy-MM-dd"); } }
+
+    /// <summary>今日の無料の 1 回がまだあるか</summary>
+    public static bool FreePullAvailable()
+    {
+        return D.gacha.freeDaily && Progress.FreePullDate != Today;
+    }
+
+    /// <summary>天井まであと何回（その回で★3 確定）。天井がなければ -1</summary>
+    public static int PityLeft()
+    {
+        int max = D.gacha.pity;
+        return max > 0 ? Mathf.Max(1, max - Progress.GachaPity) : -1;
+    }
+
+    /// <summary>count 回引く（部費が足りなければ空）。10 回なら最後の 1 回は★2 以上。天井あり</summary>
+    public static List<GachaResult> Pull(int count, bool free = false)
     {
         var results = new List<GachaResult>();
         int cost = count >= 10 ? D.gacha.cost10 : D.gacha.cost * count;
+        if (free)
+        {
+            if (!FreePullAvailable()) return results;
+            count = 1;
+            cost = 0;
+        }
         if (count <= 0 || Progress.Coins < cost || D.equipment.Count == 0) return results;
+        if (free) Progress.FreePullDate = Today;
         Progress.AddCoins(-cost);
+        EquipmentData pickup = Pickup();
         bool high = false;
+        int pity = Progress.GachaPity;
+        int pityMax = D.gacha.pity;
         for (int i = 0; i < count; i++)
         {
             int rarity = RollRarity();
             if (count >= 10 && i == count - 1 && !high) rarity = Mathf.Max(rarity, 2);
+            // 天井：★3 が出ないまま pity 回引いていたら、次は★3
+            if (pityMax > 0 && pity >= pityMax - 1) rarity = 3;
+            pity = rarity >= 3 ? 0 : pity + 1;
             if (rarity >= 2) high = true;
             var pool = D.equipment.FindAll(e => e.rarity == rarity);
             if (pool.Count == 0) pool = D.equipment;
             EquipmentData pick = pool[Random.Range(0, pool.Count)];
+            // ★3 は pickupRate% で今日のピックアップ
+            if (rarity >= 3 && pickup != null && Random.value * 100f < D.gacha.pickupRate) pick = pickup;
             var r = new GachaResult { Equipment = pick };
             int stacks;
             bool owned = Progress.HasEquipment(pick.id, out stacks);
@@ -310,6 +349,8 @@ public static class Growth
             }
             results.Add(r);
         }
+        Progress.GachaPity = pity;
+        Progress.GachaPulls += count;
         return results;
     }
 

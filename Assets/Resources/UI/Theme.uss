@@ -2323,10 +2323,14 @@
 }
 
 .gacha-button {
-    width: 320px;
-    height: 70px;
-    margin-right: 16px;
-    margin-top: 6px;
+    width: 278px;
+    height: 66px;
+    margin-right: 0;
+    margin-top: 10px;
+}
+
+.gacha-buttons .gacha-button {
+    margin-right: 14px;
 }
 
 .gacha-button .c3-button-text {
@@ -2346,10 +2350,10 @@
 
 .gacha-card {
     width: 330px;
-    min-height: 150px;
-    margin-right: 14px;
-    margin-bottom: 14px;
-    padding: 12px 16px 12px 16px;
+    min-height: 120px;
+    margin-right: 12px;
+    margin-bottom: 12px;
+    padding: 10px 84px 10px 14px;
 }
 
 .gacha-card-stars {
@@ -2397,6 +2401,307 @@
 
 .c3-mobile .gacha-card {
     width: 300px;
+}
+
+/* ---------- 部室ガチャの画面 ---------- */
+.gacha-body {
+    flex-direction: row;
+    height: 560px;
+    flex-shrink: 0;
+}
+
+.gacha-banner {
+    flex-grow: 1;
+    margin-right: 20px;
+}
+
+.gacha-banner-rays {
+    position: absolute;
+    left: -20%;
+    top: -60%;
+    width: 100%;
+    height: 220%;
+}
+
+.gacha-banner-art {
+    position: absolute;
+    left: 4%;
+    top: 8%;
+    width: 52%;
+    height: 84%;
+}
+
+.gacha-banner-text {
+    position: absolute;
+    left: 56%;
+    right: 4%;
+    top: 0;
+    bottom: 0;
+    justify-content: center;
+}
+
+.gacha-banner-caption {
+    font-size: 34px;
+    letter-spacing: 10px;
+    color: rgb(255, 210, 122);
+}
+
+.gacha-banner-stars {
+    font-size: 30px;
+    color: rgb(255, 210, 122);
+}
+
+.gacha-banner-name {
+    font-size: 52px;
+    color: rgb(255, 255, 255);
+    white-space: normal;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
+}
+
+.gacha-banner-effect {
+    font-size: 24px;
+    color: rgb(255, 210, 122);
+    margin-top: 8px;
+    white-space: normal;
+}
+
+.gacha-banner-note {
+    font-size: 18px;
+    color: rgb(214, 219, 232);
+    margin-top: 18px;
+    white-space: normal;
+}
+
+.gacha-side {
+    width: 640px;
+    padding: 22px 28px 22px 28px;
+}
+
+.gacha-button--free {
+    width: 100%;
+    height: 66px;
+    margin-top: 14px;
+}
+
+.gacha-pity-track {
+    height: 10px;
+    margin-top: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.gacha-pity-fill {
+    height: 10px;
+    width: 0;
+    background-color: rgb(255, 210, 122);
+}
+
+.gacha-results-caption {
+    font-size: 18px;
+    color: rgb(142, 152, 172);
+    margin-top: 14px;
+    margin-bottom: 6px;
+}
+
+.gacha-card-icon {
+    position: absolute;
+    right: 8px;
+    top: 30px;
+    width: 64px;
+    height: 64px;
+}
+
+/* ---------- ガチャの演出（GachaShow） ---------- */
+.gacha-show-dim {
+    background-color: rgb(5, 7, 14);
+}
+
+.gacha-img {
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.gacha-flash {
+    background-color: rgb(255, 255, 255);
+}
+
+.gacha-hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.gacha-skip {
+    position: absolute;
+    right: 30px;
+    top: 26px;
+    width: 160px;
+    height: 56px;
+}
+
+.gacha-skip .c3-button-text {
+    font-size: 22px;
+    margin-left: 8px;
+}
+
+.gacha-summary {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 34px;
+    align-items: center;
+}
+
+.gacha-summary-text {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+    margin-bottom: 14px;
+}
+
+.gacha-summary-buttons {
+    flex-direction: row;
+}
+
+.gacha-summary-button {
+    width: 380px;
+    height: 70px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.gacha-summary-button .c3-button-text {
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+.gacha-card-slot {
+    overflow: visible;
+}
+
+.gacha-card-back-mark {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    color: rgba(244, 182, 63, 0.75);
+    -unity-text-align: middle-center;
+    letter-spacing: 6px;
+}
+
+.gacha-face-stars {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+}
+
+.gacha-face-letter {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    -unity-text-align: middle-center;
+}
+
+.gacha-face-name {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.gacha-face-effect {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    color: rgb(214, 219, 232);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.gacha-shine {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.22);
+    rotate: 20deg;
+}
+
+.gacha-pop {
+    position: absolute;
+    font-size: 96px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+.gacha-spot-dim {
+    background-color: rgba(2, 3, 8, 0.86);
+}
+
+.gacha-spot-banner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    align-items: center;
+}
+
+.gacha-spot-stars {
+    font-size: 50px;
+    color: rgb(255, 210, 122);
+    letter-spacing: 10px;
+    height: 58px;
+}
+
+.gacha-spot-name {
+    font-size: 48px;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
+}
+
+.gacha-spot-effect {
+    font-size: 26px;
+    color: rgb(255, 210, 122);
+}
+
+.gacha-spot-new {
+    position: absolute;
+    font-size: 64px;
+    padding: 0 18px 0 20px;
+    color: rgb(20, 17, 10);
+    background-color: rgb(255, 210, 122);
+    rotate: -12deg;
+}
+
+.gacha-pity {
+    font-size: 20px;
+    color: rgb(214, 219, 232);
+    margin-top: 16px;
+}
+
+.gacha-box-tape {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 40%;
+    height: 20%;
+    background-color: rgba(244, 182, 63, 0.85);
+}
+
+.growth-equip-icon {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    width: 64px;
+    height: 64px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.item-art {
+    flex-shrink: 0;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 /* ---------- 強化 ---------- */

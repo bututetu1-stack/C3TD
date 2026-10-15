@@ -93,6 +93,13 @@ public class ProgressData
     public List<ItemStack> items = new List<ItemStack>();
     public List<EquipRecord> equipment = new List<EquipRecord>();
     public bool pastRewards;
+
+    /// <summary>ガチャ：★3 が出ないまま引いた回数（天井）と、引いた回数</summary>
+    public int gachaPity;
+    public int gachaPulls;
+
+    /// <summary>無料の 1 回を引いた日（yyyy-MM-dd）</summary>
+    public string freePullDate;
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -422,6 +429,36 @@ public static class Progress
         if (Data.members == null || string.IsNullOrEmpty(equipId)) return null;
         foreach (MemberRecord r in Data.members) if (r.equip == equipId) return r.id;
         return null;
+    }
+
+    public static int GachaPity
+    {
+        get { return Data.gachaPity; }
+        set
+        {
+            Data.gachaPity = Mathf.Max(0, value);
+            Save();
+        }
+    }
+
+    public static string FreePullDate
+    {
+        get { return Data.freePullDate; }
+        set
+        {
+            Data.freePullDate = value;
+            Save();
+        }
+    }
+
+    public static int GachaPulls
+    {
+        get { return Data.gachaPulls; }
+        set
+        {
+            Data.gachaPulls = Mathf.Max(0, value);
+            Save();
+        }
     }
 
     public static bool PastRewardsGiven

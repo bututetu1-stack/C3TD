@@ -89,6 +89,15 @@ public class GachaData
 
     /// <summary>重ねきった物がまた出たときの部費（★1〜★3）</summary>
     public List<int> duplicateCoins = new List<int>();
+
+    /// <summary>天井：★3 が出ないままこの回数引くと、次は必ず★3（0 なら天井なし）</summary>
+    public int pity = 40;
+
+    /// <summary>★3 が出たとき、今日のピックアップになる割合（%）</summary>
+    public float pickupRate = 50f;
+
+    /// <summary>1 日 1 回、無料で 1 回引ける</summary>
+    public bool freeDaily = true;
 }
 
 /// <summary>育成とガチャ（Resources/Data/items.json）</summary>

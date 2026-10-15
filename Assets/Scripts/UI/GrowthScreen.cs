@@ -94,6 +94,16 @@ public class GrowthScreen
     /// <summary>素材のアイコン（色の丸に字。枠はめずらしさの色）</summary>
     public static VisualElement ItemIcon(MaterialData m, float size)
     {
+        // 絵があれば絵（Art/Items/{id}）
+        Sprite art = m != null ? Art.Item(m.id) : null;
+        if (art != null)
+        {
+            var img = UIFactory.Box("item-art");
+            img.style.width = size * 1.15f;
+            img.style.height = size * 1.15f;
+            img.style.backgroundImage = new StyleBackground(art);
+            return img;
+        }
         var icon = UIFactory.Box("item-icon");
         icon.style.width = size;
         icon.style.height = size;
@@ -286,6 +296,13 @@ public class GrowthScreen
             if (e == null) continue;
             var row = UIFactory.Box("growth-equip-row");
             row.pickingMode = PickingMode.Position;
+            Sprite art = Art.Item(e.id);
+            if (art != null)
+            {
+                var img = UIFactory.Box("growth-equip-icon");
+                img.style.backgroundImage = new StyleBackground(art);
+                row.Add(img);
+            }
             var name = UIFactory.Text(Stars(e.rarity) + " " + e.name + (r.stacks > 0 ? "  +" + r.stacks : ""), UIFont.Body, "growth-equip-name");
             name.style.color = GrowthScreen.RarityColor(e.rarity);
             row.Add(name);

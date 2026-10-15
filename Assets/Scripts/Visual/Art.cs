@@ -10,6 +10,8 @@ using UnityEngine;
 ///   Art/Effects/{名前}.png          エフェクト（黒背景なら黒を透明にする）
 ///   Art/Map/{Spawn|Base}.png        出撃口・拠点の印（黒背景なら黒を透明にする）
 ///   Art/Background/{名前}.png       背景
+///   Art/Items/{id}.png              備品・素材の絵（透過PNG）
+///   Art/Gacha/{名前}.png            ガチャの箱（Box）・カードの裏（CardBack）
 /// </summary>
 public static class Art
 {
@@ -70,6 +72,9 @@ public static class Art
     /// <summary>glow なら光る絵（黒を明るさに応じて透明に）、そうでなければ物の絵（縁から続く黒い背景だけ透明に）</summary>
     public static Sprite Map(string name, bool glow) { return Load("Art/Map/" + name, 512, glow ? KeyMode.Glow : KeyMode.Object); }
     public static Sprite Background(string name) { return Load("Art/Background/" + name, 2048, KeyMode.None); }
+    /// <summary>備品・素材の絵（なければ null）</summary>
+    public static Sprite Item(string id) { return string.IsNullOrEmpty(id) ? null : Load("Art/Items/" + id, 512, KeyMode.Object); }
+    public static Sprite Gacha(string name) { return Load("Art/Gacha/" + name, 1024, KeyMode.Object); }
 
     /// <summary>透過のない画像の背景の抜き方</summary>
     private enum KeyMode { None, Glow, Object }

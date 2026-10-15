@@ -160,14 +160,15 @@ public class MenuUI : MonoBehaviour
         if (kb == null) return;
         if (kb.escapeKey.wasPressedThisFrame)
         {
-            // 設定の札が開いていれば、先にそれを閉じる
+            // 設定の札が開いていれば、先にそれを閉じる。ガチャの演出中なら、演出が受け取る
             if (settings.IsOpen) settings.Hide();
+            else if (current == gacha.Root && gacha.ShowOpen) gacha.Escape();
             else if (current == squad.Root) bootstrap.ShowStageSelect(squad.StageId);
             else if (current == classGuide.Root) { if (classGuideBack != null) classGuideBack(); }
             else if (current == select.Root || current == book.Root || current == help.Root || current == records.Root || current == upgrade.Root || current == growth.Root || current == gacha.Root) bootstrap.ShowTitle();
             return;
         }
-        if (settings.IsOpen) return;
+        if (settings.IsOpen || (current == gacha.Root && gacha.ShowOpen)) return;
         if (current == title.Root && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
             bootstrap.ShowStageSelect();
     }
