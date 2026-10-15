@@ -60,7 +60,7 @@
     { "id": "hanko",      "name": "部長の判子",                   "rarity": 3, "stat": "def",      "value": 18, "description": "これがあれば通る" },
     { "id": "kotatsu",    "name": "部室のコタツ",                 "rarity": 3, "stat": "hp",       "value": 20, "description": "一度入ると出られない" },
     { "id": "studentid",  "name": "学生証",                       "rarity": 3, "stat": "cost",     "value": 1,  "description": "学割がきく" },
-    { "id": "clubkey",    "name": "部室の合鍵",                   "rarity": 3, "stat": "redeploy", "value": 25, "label": "鍵", "description": "いつでも部室に戻れる" },
+    { "id": "clubkey",    "name": "金色の合鍵",                   "rarity": 3, "stat": "redeploy", "value": 25, "label": "鍵", "description": "いつでも部室に戻れる" },
     { "id": "fridge",     "name": "部室の冷蔵庫",                 "rarity": 3, "stat": "all",      "value": 8,  "label": "冷", "description": "差し入れが冷えている" }
   ],
 

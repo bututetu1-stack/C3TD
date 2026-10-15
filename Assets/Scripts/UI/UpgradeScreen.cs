@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// 強化（タイトルから）。★で部の備品をそろえて部員を少し強くする（Kingdom Rush の強化のように）。
+/// 強化（タイトルから）。★で部室の設備をととのえて部員を少し強くする（Kingdom Rush の強化のように）。
 /// 1 行に 1 つ：名前・いまの効果・段（■□□）・次の★・「そろえる」。下の「元に戻す」で★はすべて戻る。
 /// </summary>
 public class UpgradeScreen
@@ -17,7 +17,7 @@ public class UpgradeScreen
         Root = UIFactory.Box("full", "menu-screen");
         MenuUI.Header(Root, "UPGRADES", "強化", () => bootstrap.ShowTitle(), out starsLabel);
 
-        Root.Add(UIFactory.Text("作戦でもらった★（★3 なら 3 つ。強襲でクリアするともう 1 つ）で、部の備品をそろえて部員を少し強くする。「元に戻す」で★はすべて戻るので、何度でも選び直せる",
+        Root.Add(UIFactory.Text("作戦でもらった★（★3 なら 3 つ。強襲でクリアするともう 1 つ）で、部室の設備をととのえて部員を少し強くする。「元に戻す」で★はすべて戻るので、何度でも選び直せる",
             UIFont.Medium, "upgrade-help"));
 
         var panel = new ChamferBox();

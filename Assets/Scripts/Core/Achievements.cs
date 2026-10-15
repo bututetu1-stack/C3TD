@@ -81,7 +81,7 @@ public static class Achievements
         add("all_members", "部員総出", "部員を全員 1 回は出撃させる", () => AllMembers(r => r.sorties >= 1, false));
         add("real_mvp", "みんなが主役", "ダミー以外の部員が全員 MVP を取る", () => AllMembers(r => r.mvp >= 1, true));
         add("mvp10", "エース", "同じ部員で MVP を 10 回取る", () => AnyMember(r => r.mvp >= 10));
-        add("upgrades_max", "備品そろい", "強化をすべて最後の段までそろえる", UpgradesMax);
+        add("upgrades_max", "設備かんぺき", "強化をすべて最後の段までそろえる", UpgradesMax);
         add("battles50", "常連", "50 回出撃する", () => Progress.Battles >= 50);
         add("promotion1", "はじめての昇進", "部員を 1 人昇進させる", () => AnyMember(r => r.promotion >= 1));
         add("promotion2", "幹部", "部員を 1 人 2 回昇進させる", () => AnyMember(r => r.promotion >= 2));

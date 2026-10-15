@@ -1,5 +1,5 @@
 {
-  // 強化（Kingdom Rush の★で買う強化のように）。作戦の★（と強襲のクリア 1 つにつき★1）で、部の備品をそろえて部員を少し強くする。
+  // 強化（Kingdom Rush の★で買う強化のように）。作戦の★（と強襲のクリア 1 つにつき★1）で、部室の設備をととのえて部員を少し強くする。
   // stat：hp（体力）・atk（攻撃力。医療なら回復量）・dp（はじめの DP）・redeploy（再配置までの時間を減らす）
   // classes：効く職業（Guard・Defender・Sniper・Caster・Medic。書かなければ全員）。perLevel：1 段ごとの量（% か DP）。costs：段ごとの★
   "upgrades": [

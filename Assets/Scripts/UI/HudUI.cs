@@ -257,7 +257,7 @@ public class HudUI : MonoBehaviour
         {
             Caption = "NEW ENEMY",
             Title = d.name + (d.boss ? "（ボス）" : ""),
-            Body = (traits.Length > 0 ? traits : "特別な性質はない") + "\n倒し方：" + StageTips.Advice(d),
+            Body = (traits.Length > 0 ? traits : "特別な性質はない") + "\n倒し方：" + StageTips.Advice(d, false),
             Icon = Art.Enemy(d.id),
             IconLabel = d.Label,
             IconColor = Palette.Hex(d.color, Palette.Crimson),
