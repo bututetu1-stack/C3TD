@@ -3097,6 +3097,17 @@
     rotate: 10deg;
 }
 
+.gacha-ten-badge {
+    position: absolute;
+    right: -6px;
+    top: -14px;
+    font-size: 15px;
+    padding: 1px 8px 1px 8px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(239, 74, 85);
+    rotate: 4deg;
+}
+
 .gacha-need {
     font-size: 18px;
     color: rgb(178, 186, 204);

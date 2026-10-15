@@ -104,6 +104,7 @@ public class GachaScreen
         buttons.Add(oneButton);
         tenButton = new C3Button(IconKind.Star, 24f, "10 回　部費 " + g.cost10, () => Pull(10, false));
         tenButton.AddToClassList("gacha-button");
+        tenButton.Add(UIFactory.Text("★2以上 1 枚確定", UIFont.Body, "gacha-ten-badge"));
         buttons.Add(tenButton);
         side.Add(buttons);
         needLabel = UIFactory.Text("", UIFont.Medium, "gacha-need");
