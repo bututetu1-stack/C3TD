@@ -192,9 +192,12 @@ public class GachaShow
 
     private IEnumerator Run(List<GachaResult> results)
     {
-        yield return null; // 大きさが決まるのを待つ
-        W = Layer.layout.width;
-        H = Layer.layout.height;
+        // 大きさは、いつも出ている親（ガチャの画面）から読む（出したばかりの Layer はまだ大きさが決まっていない）
+        yield return null;
+        Rect area = Layer.parent != null ? Layer.parent.layout : Layer.layout;
+        if ((float.IsNaN(area.width) || area.width < 10f) && Layer.panel != null) area = Layer.panel.visualTree.layout;
+        W = area.width;
+        H = area.height;
         if (float.IsNaN(W) || W < 10f) { W = 1920f; H = 1080f; }
         S = H / 1080f;
 
@@ -447,7 +450,7 @@ public class GachaShow
         VisualElement halo = Image(SpriteFactory.Glow, cx, cy, H * 0.9f, H * 0.9f, spot);
         halo.style.unityBackgroundImageTintColor = Palette.WithAlpha(gold, 0.8f);
 
-        float cw = 340f * S, ch = cw * 1.4f;
+        float cw = Mathf.Min(340f * S, H * 0.5f / 1.4f), ch = cw * 1.4f;
         VisualElement card = CardFace(r, cw, ch, true);
         card.style.position = Position.Absolute;
         card.style.left = cx - cw * 0.5f;
@@ -474,9 +477,15 @@ public class GachaShow
         // 「★3」と名前の帯
         var banner = UIFactory.Box("gacha-spot-banner");
         var stars = UIFactory.Text("", UIFont.Display, "gacha-spot-stars");
+        stars.style.fontSize = 50f * S;
+        stars.style.height = 58f * S;
         banner.Add(stars);
-        banner.Add(UIFactory.Text(e.name, UIFont.Title, "gacha-spot-name"));
-        banner.Add(UIFactory.Text(Growth.Describe(e, r.Stacks), UIFont.Body, "gacha-spot-effect"));
+        var spotName = UIFactory.Text(e.name, UIFont.Title, "gacha-spot-name");
+        spotName.style.fontSize = 48f * S;
+        banner.Add(spotName);
+        var spotEffect = UIFactory.Text(Growth.Describe(e, r.Stacks), UIFont.Body, "gacha-spot-effect");
+        spotEffect.style.fontSize = 26f * S;
+        banner.Add(spotEffect);
         banner.style.top = cy + ch * 0.5f + 10f * S;
         spot.Add(banner);
         for (int i = 0; i < 3; i++)
@@ -488,6 +497,7 @@ public class GachaShow
         if (r.IsNew)
         {
             var stamp = UIFactory.Text("NEW!", UIFont.Display, "gacha-spot-new");
+            stamp.style.fontSize = 64f * S;
             stamp.style.left = cx + cw * 0.25f;
             stamp.style.top = cy - ch * 0.62f;
             spot.Add(stamp);
@@ -499,9 +509,11 @@ public class GachaShow
             }, () => Shake(10f * S, 0.2f));
             GachaSound.Play("stamp", 0.9f);
         }
+        hint.AddToClassList("gacha-hint--top");
         SetHint("押して続ける");
         yield return WaitTap(10f);
         SetHint("");
+        hint.RemoveFromClassList("gacha-hint--top");
         sparkle.Pause();
         yield return Tween(0.25f, t => spot.style.opacity = 1f - t);
         spot.Clear();
@@ -560,13 +572,14 @@ public class GachaShow
         int n = results.Count;
         int cols = n >= 10 ? 5 : n;
         int rows = Mathf.CeilToInt(n / (float)cols);
-        float cw = n == 1 ? 330f * S : Mathf.Min(260f * S, W * 0.86f / cols - 18f * S);
-        float chh = cw * 1.4f;
         float gap = 18f * S;
+        float cw = n == 1 ? 330f * S : Mathf.Min(260f * S, W * 0.86f / cols - gap);
+        cw = Mathf.Min(cw, (H * 0.6f - gap * (rows - 1)) / rows / 1.4f);
+        float chh = cw * 1.4f;
         float totalW = cols * cw + (cols - 1) * gap;
         float totalH = rows * chh + (rows - 1) * gap;
         float x0 = W * 0.5f - totalW * 0.5f + cw * 0.5f;
-        float y0 = H * 0.47f - totalH * 0.5f + chh * 0.5f;
+        float y0 = H * 0.44f - totalH * 0.5f + chh * 0.5f;
         for (int i = 0; i < n; i++)
         {
             var c = new CardView { Result = results[i], Width = cw, Height = chh };

@@ -42,6 +42,11 @@ public class GachaScreen
         MenuUI.Header(Root, "GACHA", "部室ガチャ", () => bootstrap.ShowTitle(), out walletLabel);
         GachaData g = GameData.Items.gacha;
 
+        // 画面が小さい（スマホ）ときも収まるよう、見出しより下は縦に流せるようにする
+        var page = new ScrollView(ScrollViewMode.Vertical);
+        page.AddToClassList("gacha-page");
+        page.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+        page.verticalScrollerVisibility = ScrollerVisibility.Auto;
         var body = UIFactory.Box("gacha-body");
 
         // ---- 左：今日のピックアップ ----
@@ -109,17 +114,18 @@ public class GachaScreen
         ownedLabel = UIFactory.Text("", UIFont.Medium, "gacha-owned");
         side.Add(ownedLabel);
         body.Add(side);
-        Root.Add(body);
+        page.Add(body);
+        Root.Add(page);
 
         // 備品図鑑：持っていない物は影だけ（そろえたくなるように）
         collectionLabel = UIFactory.Text("", UIFont.Body, "gacha-results-caption");
-        Root.Add(collectionLabel);
+        page.Add(collectionLabel);
         collection = UIFactory.Box("gacha-collection");
-        Root.Add(collection);
+        page.Add(collection);
 
-        Root.Add(UIFactory.Text("前回の結果", UIFont.Body, "gacha-results-caption"));
+        page.Add(UIFactory.Text("前回の結果", UIFont.Body, "gacha-results-caption"));
         results = UIFactory.Box("gacha-results");
-        Root.Add(results);
+        page.Add(results);
         parent.Add(Root);
 
         // 光をゆっくり回し、ピックアップの絵をふわふわ、引けるボタンを光らせる

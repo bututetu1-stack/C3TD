@@ -2318,8 +2318,8 @@
 
 .gacha-buttons {
     flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 16px;
+    flex-wrap: nowrap;
+    margin-top: 6px;
 }
 
 .gacha-button {
@@ -2404,10 +2404,39 @@
 }
 
 /* ---------- 部室ガチャの画面 ---------- */
+.gacha-page {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
 .gacha-body {
     flex-direction: row;
-    height: 500px;
+    min-height: 480px;
     flex-shrink: 0;
+}
+
+.gacha-side > * {
+    flex-shrink: 0;
+}
+
+.gacha-buttons .gacha-button {
+    flex-grow: 1;
+    flex-basis: 0;
+    width: auto;
+    margin-right: 6px;
+}
+
+.gacha-hint--top {
+    top: 26px;
+    bottom: auto;
+}
+
+.c3-mobile .gacha-side {
+    width: 760px;
+}
+
+.c3-mobile .gacha-banner-name {
+    font-size: 40px;
 }
 
 .gacha-banner {
