@@ -142,8 +142,9 @@ public class UnitPanel
             shownSkill = skill;
             UIFactory.SetVisible(skillButton, skill.Length > 0);
             skillButton.Text.text = skill;
-            skillButton.Interactable = c.Skills.Ready || c.IsSummon; // 召喚ユニットは残り時間の表示なので暗くしない（押しても何もしない）
-            skillButton.Active = c.Skills.Ready || c.Skills.Active;
+            // 召喚ユニットの残り時間と、発動中の残り時間は、読めるよう暗くしない（押しても何もしない）。琥珀色は「使える」ときだけ
+            skillButton.Interactable = c.Skills.Ready || c.IsSummon || c.Skills.Active;
+            skillButton.Active = c.Skills.Ready;
             if (c.Skills.HasUltimate)
                 card.UltMeta.text = (c.Skills.Active ? "発動中" : c.Skills.Ready ? "使える" : "SP " + Mathf.FloorToInt(c.Skills.Sp) + "/" + Mathf.RoundToInt(c.Skills.SpCost))
                     + "（" + MenuUI.SpChargeName(c.Skills.Ultimate.spCharge) + "）"
