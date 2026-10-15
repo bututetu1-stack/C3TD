@@ -564,6 +564,14 @@ public class GachaShow
             r2.style.unityBackgroundImageTintColor = new Color(1f, 1f, 1f, 0.6f);
             Spin(r2, -10f);
         }
+        // カードの後ろに、立てた魔法陣がゆっくり回る
+        Sprite circleArt = Art.GachaGlow("Circle");
+        if (circleArt != null)
+        {
+            VisualElement standing = Image(circleArt, cx, cy, H * 0.85f, H * 0.85f, spot);
+            standing.style.unityBackgroundImageTintColor = Palette.WithAlpha(gold, 0.55f);
+            Spin(standing, 8f);
+        }
         VisualElement halo = Image(SpriteFactory.Glow, cx, cy, H * 0.9f, H * 0.9f, spot);
         halo.style.unityBackgroundImageTintColor = Palette.WithAlpha(gold, 0.8f);
 
@@ -908,7 +916,11 @@ public class GachaShow
         // ★3 は光の筋がくり返し走る
         if (e.rarity >= 3)
         {
+            // 光の筋：まん中が明るく、ふちはぼける（縦の光の柱の絵を使う）
             var shine = UIFactory.Box("gacha-shine");
+            shine.style.backgroundImage = new StyleBackground(BeamTexture());
+            shine.style.unityBackgroundImageTintColor = new Color(1f, 1f, 1f, 0.45f);
+            shine.pickingMode = PickingMode.Ignore;
             shine.style.width = w * 0.35f;
             shine.style.height = h * 1.6f;
             shine.style.top = -h * 0.3f;
