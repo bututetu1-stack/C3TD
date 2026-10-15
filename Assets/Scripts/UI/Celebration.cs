@@ -67,9 +67,9 @@ public class Celebration
         openedAt = Time.unscaledTime;
         UIFactory.SetVisible(layer, true);
 
-        AudioManager.Duck(0.35f);
+        AudioManager.Duck(0.25f);
         GachaSound.Play("burst", 0.9f);
-        GachaSound.Play("rare3", 0.7f);
+        GachaSound.Play("fanfare", 0.8f);
         UITween.Run(layer, 0.5f, t =>
         {
             float e = Ease.OutBack(t);

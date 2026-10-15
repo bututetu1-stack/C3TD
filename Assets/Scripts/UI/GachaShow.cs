@@ -146,7 +146,9 @@ public class GachaShow
         if (running != null) host.StopCoroutine(running);
         lastCount = results.Count;
         Reset();
-        AudioManager.Duck(0.3f);
+        AudioManager.Duck(0f);
+        // 演出のあいだはメニューの BGM を消して、ガチャだけの BGM（GachaMusic）を流す
+        AudioManager.PlayLoop(GachaMusic.Loop(), LoopVolume);
         UIFactory.SetVisible(Layer, true);
         running = host.StartCoroutine(Run(results));
     }
@@ -166,6 +168,7 @@ public class GachaShow
     {
         if (running != null) host.StopCoroutine(running);
         running = null;
+        AudioManager.StopLoop();
         AudioManager.Duck(1f);
         Reset();
         UIFactory.SetVisible(Layer, false);
@@ -212,6 +215,9 @@ public class GachaShow
 
     /// <summary>★3 があるときに確定演出（金の光の柱）が出る割合</summary>
     public static float OmenChance = 0.15f;
+
+    /// <summary>ガチャの BGM（GachaMusic）の音量（BGM の設定に掛ける）</summary>
+    private const float LoopVolume = 0.55f;
 
     /// <summary>★3 のカードが、★2 の青い光で並び、めくる前に金色に変わる割合（カードの昇格演出）</summary>
     public static float CardDisguiseChance = 0.3f;
@@ -291,7 +297,7 @@ public class GachaShow
             VisualElement core = Image(BeamTexture(), cx, H * 0.5f, 8f * S, H * 1.6f, back);
             beam.AddToClassList("gacha-img--stretch");
             core.AddToClassList("gacha-img--stretch");
-            GachaSound.Play("upgrade", 1f);
+            GachaSound.Play("omen", 1f);
             FlashScreen(gold, 0.35f, 0.4f);
             Shake(24f * S, 0.5f);
             yield return Tween(0.6f, t =>
@@ -365,8 +371,8 @@ public class GachaShow
         {
             yield return Wait(0.2f);
             FlashScreen(Color.white, 0.8f, 0.6f);
-            GachaSound.Play("upgrade", 1f);
-            GachaSound.Play("rare3", 0.6f);
+            GachaSound.Play("rainbow", 0.9f);
+            GachaSound.Play("upgrade", 0.7f);
             Shake(28f * S, 0.6f);
             Pop("!!!", cx + boxSize * 0.4f, cy - boxSize * 0.6f, Color.white);
             Loop(glow, () =>
@@ -475,7 +481,7 @@ public class GachaShow
                 c.Root.style.scale = new Scale(new Vector3(s, s, 1f));
                 c.Root.style.opacity = Mathf.Clamp01(t * 3f);
             });
-            GachaSound.Play("flip", 0.4f);
+            GachaSound.Play("deal", 0.45f);
             yield return Wait(cards.Count > 1 ? 0.05f : 0f);
         }
         yield return Wait(0.45f);
@@ -601,6 +607,9 @@ public class GachaShow
         });
 
         GachaSound.Play("burst", 0.8f);
+        // ファンファーレのあいだは、ガチャの BGM を小さく
+        GachaSound.Play("fanfare", 0.85f);
+        AudioManager.PlayLoop(GachaMusic.Loop(), LoopVolume * 0.35f);
         yield return Tween(0.45f, t =>
         {
             float s = Mathf.LerpUnclamped(2.2f, 1f, Ease.OutBack(t));
@@ -676,6 +685,7 @@ public class GachaShow
         SetHint("");
         hint.RemoveFromClassList("gacha-hint--top");
         sparkle.Pause();
+        AudioManager.PlayLoop(GachaMusic.Loop(), LoopVolume);
         yield return Tween(0.25f, t => spot.style.opacity = 1f - t);
         spot.Clear();
         spot.style.opacity = 1f;

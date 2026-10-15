@@ -39,21 +39,29 @@
     ]
   },
 
-  // 備品（ガチャで出る。部員 1 人に 1 つ付けられる）。stat：hp / atk / def（%）、interval（攻撃間隔 -%）、sp（最初の SP +）、redeploy（再配置 -%）
+  // 備品（ガチャで出る。部員 1 人に 1 つ付けられる）。stat：hp / atk / def（%）、all（体力・攻撃力・防御 %）、interval（攻撃間隔 -%）、sp（最初の SP +）、redeploy（再配置 -%）、skillTime（必殺技の効果時間 +%）、cost（配置コスト -。1 より下げない）
   // 同じ物がまた出ると「重ね」が 1 上がり、効き目が 25% ずつ上がる（4 まで。それより上は部費に換わる）
   "equipment": [
     { "id": "fusen",      "name": "付箋",                         "rarity": 1, "stat": "atk",      "value": 4,  "description": "大事なところに貼っておく" },
     { "id": "sharpen",    "name": "シャーペン",                   "rarity": 1, "stat": "def",      "value": 6,  "description": "芯は 0.5" },
     { "id": "bottle",     "name": "水筒",                         "rarity": 1, "stat": "hp",       "value": 6,  "description": "麦茶入り" },
     { "id": "usb",        "name": "USB メモリ",                   "rarity": 1, "stat": "redeploy", "value": 6,  "description": "レポートのバックアップ" },
+    { "id": "cupnoodle",  "name": "カップ麺",                     "rarity": 1, "stat": "sp",       "value": 2,  "description": "3 分待てば元気が出る" },
+    { "id": "extension",  "name": "延長コード",                   "rarity": 1, "stat": "interval", "value": 3,  "description": "どこでも電源が取れる" },
     { "id": "keyboard",   "name": "メカニカルキーボード",         "rarity": 2, "stat": "atk",      "value": 8,  "description": "打鍵感が良い" },
     { "id": "chair",      "name": "ゲーミングチェア",             "rarity": 2, "stat": "hp",       "value": 12, "description": "長時間の作業でも疲れない" },
     { "id": "headphone",  "name": "ノイズキャンセリングヘッドホン", "rarity": 2, "stat": "sp",       "value": 4,  "description": "集中できる" },
     { "id": "battery",    "name": "モバイルバッテリー",           "rarity": 2, "stat": "interval", "value": 6,  "description": "充電切れの心配がない" },
+    { "id": "kettle",     "name": "電気ケトル",                   "rarity": 2, "stat": "redeploy", "value": 12, "description": "すぐにお湯が沸く" },
+    { "id": "whiteboard", "name": "ホワイトボード",               "rarity": 2, "stat": "def",      "value": 12, "description": "作戦会議に欠かせない" },
+    { "id": "monitor",    "name": "サブモニター",                 "rarity": 2, "stat": "skillTime", "value": 10, "description": "作業がはかどる" },
     { "id": "senpainote", "name": "先輩のノート",                 "rarity": 3, "stat": "sp",       "value": 8,  "description": "要点がまとまっている" },
     { "id": "legendexam", "name": "伝説の過去問",                 "rarity": 3, "stat": "atk",      "value": 14, "description": "なぜか毎年当たる" },
     { "id": "hanko",      "name": "部長の判子",                   "rarity": 3, "stat": "def",      "value": 18, "description": "これがあれば通る" },
-    { "id": "kotatsu",    "name": "部室のコタツ",                 "rarity": 3, "stat": "hp",       "value": 20, "description": "一度入ると出られない" }
+    { "id": "kotatsu",    "name": "部室のコタツ",                 "rarity": 3, "stat": "hp",       "value": 20, "description": "一度入ると出られない" },
+    { "id": "studentid",  "name": "学生証",                       "rarity": 3, "stat": "cost",     "value": 1,  "description": "学割がきく" },
+    { "id": "clubkey",    "name": "部室の合鍵",                   "rarity": 3, "stat": "redeploy", "value": 25, "description": "いつでも部室に戻れる" },
+    { "id": "fridge",     "name": "部室の冷蔵庫",                 "rarity": 3, "stat": "all",      "value": 8,  "description": "差し入れが冷えている" }
   ],
 
   // 部室ガチャ。rates：★1〜★3 の出る割合（%）。10 回なら最後の 1 回は★2 以上。duplicateCoins：重ねきった物がまた出たときの部費

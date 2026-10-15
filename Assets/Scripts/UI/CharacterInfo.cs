@@ -182,7 +182,9 @@ public class CharacterInfo
         int block = d.stats.block >= 0 ? d.stats.block : cls.block;
         BlockValue.text = cls.placement == Placement.Ground ? block.ToString() : "-";
         RangeValue.text = d.stats.range.ToString("0.#");
-        CostValue.text = summon ? "-" : d.cost.ToString();
+        // 備品で配置コストが下がっていれば、下がったあとの数
+        int cost = summon ? 0 : Mathf.Max(1, d.cost - Growth.CostCut(d.id));
+        CostValue.text = summon ? "-" : cost.ToString();
 
         bool hasTrait = d.trait != null && !string.IsNullOrEmpty(d.trait.name);
         UIFactory.SetVisible(traitBox, hasTrait);

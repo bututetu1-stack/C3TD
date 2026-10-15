@@ -5,6 +5,8 @@ using UnityEngine;
 /// ガチャの演出の音を、コードで作って鳴らす（音の素材は要らない。2026-10-15）。
 ///   land 箱が落ちた・charge0〜2 ふくらむ（だんだん高く）・upgrade 昇格・burst はじける・flip めくる
 ///   rare2 ★2・rare3 ★3（鐘のアルペジオ）・star ★がひとつ出る・stamp NEW の判子・tap 待っているあいだの心音
+///   fanfare ★3 のスポットライト（金管のような和音）・omen 確定演出（地鳴りと光）・rainbow 虹（駆け上がる鐘）・deal カードを配る
+/// 演出のあいだの BGM は GachaMusic。
 /// 音量は効果音の設定（AudioManager.SeLevel）に従う。
 /// </summary>
 public static class GachaSound
@@ -60,6 +62,10 @@ public static class GachaSound
             case "star": return Chime(new[] { 1568f }, 0f, 0.5f);
             case "stamp": return Stamp();
             case "tap": return Heartbeat();
+            case "fanfare": return Fanfare();
+            case "omen": return Omen();
+            case "rainbow": return Rainbow();
+            case "deal": return Deal();
             default: return null;
         }
     }
@@ -182,6 +188,106 @@ public static class GachaSound
             d[i] = Mathf.Sin(2f * Mathf.PI * f * t) * Mathf.Exp(-t * 18f) * 0.8f;
         }
         Add(d, Bell(1760f, 0.25f, 12f), 0f, 0.2f);
+        return d;
+    }
+
+    /// <summary>★3：ド・ミ・ソと駆け上がって、ドミソドの和音を伸ばす（金管のように、はじめは倍音が少なく明るくなっていく）</summary>
+    private static float[] Fanfare()
+    {
+        float[] d = Buffer(2.6f);
+        float[] run = { 523.25f, 659.25f, 783.99f };
+        for (int k = 0; k < run.Length; k++) Brass(d, run[k], 0.09f * k, 0.16f, 0.35f);
+        foreach (float f in new[] { 523.25f, 659.25f, 783.99f, 1046.5f }) Brass(d, f, 0.3f, 2.2f, 0.22f);
+        Brass(d, 261.63f, 0.3f, 2.2f, 0.2f);
+        // シャラーンと光る音
+        var rnd = new System.Random(11);
+        float prev = 0f;
+        int from = Mathf.RoundToInt(0.3f * Rate);
+        for (int i = 0; from + i < d.Length; i++)
+        {
+            float t = i / (float)Rate;
+            float n = (float)rnd.NextDouble() * 2f - 1f;
+            float hp = n - prev;
+            prev = n;
+            d[from + i] += hp * Mathf.Exp(-t * 2.5f) * 0.05f;
+        }
+        // 伸ばしている和音は、少しずつ小さく（ずっと同じ大きさだと耳に残りすぎる）
+        for (int i = from; i < d.Length; i++)
+        {
+            float t = (i - from) / (float)Rate;
+            d[i] *= Mathf.Lerp(1f, 0.55f, Mathf.Clamp01(t / 2f));
+        }
+        return d;
+    }
+
+    /// <summary>金管らしい音：倍音 6 つ。鳴りはじめは高い倍音が小さく、すぐに明るくなる。少しだけゆれる</summary>
+    private static void Brass(float[] d, float f, float at, float length, float volume)
+    {
+        int start = Mathf.RoundToInt(at * Rate), count = Mathf.RoundToInt(length * Rate);
+        float phase = 0f;
+        for (int i = 0; i < count && start + i < d.Length; i++)
+        {
+            float t = i / (float)Rate;
+            float attack = Mathf.Clamp01(t / 0.04f);
+            float release = Mathf.Clamp01((length - t) / Mathf.Min(0.35f, length * 0.5f));
+            float bright = Mathf.Clamp01(t / 0.12f);
+            float vib = 1f + 0.004f * Mathf.Sin(2f * Mathf.PI * 5.5f * t) * Mathf.Clamp01((t - 0.3f) / 0.3f);
+            phase += 2f * Mathf.PI * f * vib / Rate;
+            float v = 0f;
+            for (int h = 1; h <= 6; h++) v += Mathf.Sin(phase * h) / h * (h == 1 ? 1f : 0.3f + 0.7f * bright);
+            d[start + i] += v * attack * release * volume;
+        }
+    }
+
+    /// <summary>確定演出：ゴゴゴと地鳴りが高まり、光の柱で明るい和音が開く</summary>
+    private static float[] Omen()
+    {
+        float[] d = Buffer(1.9f);
+        var rnd = new System.Random(13);
+        float lp = 0f, phase = 0f, band = 0f, bandLp = 0f;
+        for (int i = 0; i < d.Length; i++)
+        {
+            float t = i / (float)Rate;
+            float n = (float)rnd.NextDouble() * 2f - 1f;
+            lp += (n - lp) * 0.02f;
+            float rumble = Mathf.Clamp01(t / 0.5f) * Mathf.Exp(-Mathf.Max(0f, t - 0.5f) * 3f);
+            phase += 2f * Mathf.PI * 42f / Rate;
+            // だんだん高くなるシューッという音
+            float cut = Mathf.Lerp(0.02f, 0.35f, Mathf.Clamp01(t / 0.6f));
+            band += (n - band) * cut;
+            bandLp += (band - bandLp) * cut * 0.5f;
+            float whoosh = (band - bandLp) * Mathf.Sin(Mathf.PI * Mathf.Clamp01(t / 0.7f));
+            d[i] = lp * rumble * 3f + Mathf.Sin(phase) * rumble * 0.5f + whoosh * 0.5f;
+        }
+        foreach (float f in new[] { 1046.5f, 1318.5f, 1568f, 2093f })
+            Add(d, Bell(f, 1.2f, 2.6f), 0.55f, 0.16f);
+        return d;
+    }
+
+    /// <summary>虹：鐘がラ・ド・レ・ミ・ソの音階で 2 オクターブ半を一気に駆け上がる</summary>
+    private static float[] Rainbow()
+    {
+        float[] notes = { 523.25f, 587.33f, 659.25f, 783.99f, 880f, 1046.5f, 1174.7f, 1318.5f, 1568f, 1760f, 2093f, 2349.3f, 2637f };
+        float[] d = Buffer(0.045f * notes.Length + 1.2f);
+        for (int k = 0; k < notes.Length; k++) Add(d, Bell(notes[k], 1.1f, 3.5f), 0.045f * k, 0.22f);
+        return d;
+    }
+
+    /// <summary>カードを配る：短いシュッ（めくる音より軽く、高いほうへ流れる）</summary>
+    private static float[] Deal()
+    {
+        float[] d = Buffer(0.16f);
+        var rnd = new System.Random(17);
+        float band = 0f, bandLp = 0f;
+        for (int i = 0; i < d.Length; i++)
+        {
+            float t = i / (float)Rate;
+            float n = (float)rnd.NextDouble() * 2f - 1f;
+            float cut = Mathf.Lerp(0.08f, 0.45f, t / 0.16f);
+            band += (n - band) * cut;
+            bandLp += (band - bandLp) * cut * 0.4f;
+            d[i] = (band - bandLp) * Mathf.Sin(Mathf.PI * Mathf.Clamp01(t / 0.16f)) * 0.6f;
+        }
         return d;
     }
 

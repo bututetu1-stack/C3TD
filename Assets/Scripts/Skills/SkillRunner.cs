@@ -228,13 +228,16 @@ public class SkillRunner
         UseCount++;
         if (owner.Member != null) Daily.Count("skill");
         ultimateModifiers.Clear();
-        var ctx = Context(Ultimate.duration, null, ultimateModifiers);
+        // 備品の「必殺技の効果時間 +%」
+        float duration = Ultimate.duration;
+        if (owner.Member != null) duration *= 1f + Growth.Percent(owner.Member.Data.id, "skillTime") / 100f;
+        var ctx = Context(duration, null, ultimateModifiers);
         foreach (EffectData e in Ultimate.effects) SkillEffects.Apply(e, ctx);
         battle.OnSkillActivated(owner);
-        if (Ultimate.duration > 0f)
+        if (duration > 0f)
         {
             Active = true;
-            ActiveRemaining = Ultimate.duration;
+            ActiveRemaining = duration;
         }
         else
         {

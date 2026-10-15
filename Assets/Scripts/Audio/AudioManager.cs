@@ -77,6 +77,10 @@ public class AudioManager : MonoBehaviour
     // 演出のあいだ BGM を小さくする（ガチャ・昇進。効果音を立たせる）
     private float duck = 1f;
     private float duckTarget = 1f;
+    // 演出だけの BGM（ガチャの GachaMusic）。少しずつ大きく・小さくする
+    private AudioSource loopSource;
+    private float loopLevel;
+    private float loopTarget;
     private float fadeLength;
     private AudioEntry bgmEntry;
     private bool boundsPending;
@@ -226,6 +230,41 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>BGM を切り替える（頭から鳴らす）。key が空かファイルがなければ止める</summary>
+    /// <summary>演出だけの BGM を流す（同じ曲ならそのまま音量だけ変える）。音量は BGM の設定に従う</summary>
+    public static void PlayLoop(AudioClip clip, float volume)
+    {
+        var self = Instance;
+        if (clip == null) return;
+        if (self.loopSource == null)
+        {
+            self.loopSource = self.gameObject.AddComponent<AudioSource>();
+            self.loopSource.playOnAwake = false;
+            self.loopSource.loop = true;
+        }
+        if (self.loopSource.clip != clip || !self.loopSource.isPlaying)
+        {
+            self.loopSource.clip = clip;
+            self.loopSource.volume = 0f;
+            self.loopLevel = 0f;
+            self.loopSource.Play();
+        }
+        self.loopTarget = Mathf.Clamp01(volume);
+    }
+
+    /// <summary>演出だけの BGM を少しずつ消す</summary>
+    public static void StopLoop()
+    {
+        if (instance != null) instance.loopTarget = 0f;
+    }
+
+    private void UpdateLoop()
+    {
+        if (loopSource == null || loopSource.clip == null) return;
+        loopLevel = Mathf.MoveTowards(loopLevel, loopTarget, Time.unscaledDeltaTime * 1.2f);
+        loopSource.volume = loopLevel * BgmLevel;
+        if (loopLevel <= 0f && loopTarget <= 0f && loopSource.isPlaying) loopSource.Stop();
+    }
+
     /// <summary>BGM を一時的に小さくする（1 で元に戻す。少しずつ変わる）</summary>
     public static void Duck(float level)
     {
@@ -278,6 +317,7 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         UpdateParts();
+        UpdateLoop();
         AudioSource current = bgm[bgmIndex];
         if (current == null || current.clip == null) return;
         if (boundsPending)

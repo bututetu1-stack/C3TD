@@ -98,6 +98,12 @@ public class DeployBar
         var box = new CharacterCard(member.Data, member.Class);
         box.AddToClassList("deploy-card");
         card.Cost = box.Cost;
+        // 備品でコストが下がっていれば、下がったあとの数を緑で
+        if (member.Cost < member.Data.cost)
+        {
+            box.Cost.text = member.Cost.ToString();
+            box.Cost.style.color = new Color(0.49f, 0.88f, 0.63f);
+        }
         // 1〜9 のキーで選べることを、カードの右上に小さく出す（キーボードのない スマホでは出さない）
         int index = cards.Count;
         if (index < 9 && !Application.isMobilePlatform) box.Add(UIFactory.Text((index + 1).ToString(), UIFont.Display, "card-key"));

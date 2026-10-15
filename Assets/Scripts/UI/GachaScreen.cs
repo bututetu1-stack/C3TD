@@ -190,6 +190,8 @@ public class GachaScreen
 
     public void Open()
     {
+        // ガチャの BGM を先に作っておく（引いた瞬間に作ると一瞬止まるので）
+        GachaMusic.Loop();
         last = null;
         results.Clear();
         Refresh();

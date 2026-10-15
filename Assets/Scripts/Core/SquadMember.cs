@@ -22,7 +22,8 @@ public class SquadMember
         Class = classData;
     }
 
-    public int Cost { get { return Data.cost; } }
+    /// <summary>配置コスト（備品の「配置コスト -N」を引く。1 より下げない）</summary>
+    public int Cost { get { return UnityEngine.Mathf.Max(1, Data.cost - Growth.CostCut(Data.id)); } }
 
     /// <summary>配置中でも待ち時間中でもない</summary>
     public bool Ready { get { return Deployed == null && Cooldown <= 0f; } }

@@ -74,6 +74,9 @@ public static class Growth
             case "interval": return "攻撃間隔 -" + n + "%";
             case "sp": return "必殺技の最初の SP +" + n;
             case "redeploy": return "再配置までの時間 -" + n + "%";
+            case "skillTime": return "必殺技の効果時間 +" + n + "%";
+            case "all": return "体力・攻撃力・防御 +" + n + "%";
+            case "cost": return "配置コスト -" + Mathf.FloorToInt(v);
             default: return e.stat + " " + n;
         }
     }
@@ -150,7 +153,7 @@ public static class Growth
 
     // ================= 出撃中の効き目 =================
 
-    /// <summary>レベル・昇進・備品で上がる %（stat は hp / atk / def / interval / redeploy）</summary>
+    /// <summary>レベル・昇進・備品で上がる %（stat は hp / atk / def / interval / redeploy / skillTime。備品の all は hp・atk・def のすべて）</summary>
     public static float Percent(string id, string stat)
     {
         if (!On || string.IsNullOrEmpty(id)) return 0f;
@@ -160,8 +163,18 @@ public static class Growth
         for (int i = 0; i < promotion && i < D.growth.promotions.Count; i++)
             if (stat == "atk") p += D.growth.promotions[i].atkPercent;
         EquipmentData e = Equipment(Progress.MemberEquip(id));
-        if (e != null && e.stat == stat) p += e.value * (1f + 0.25f * Progress.EquipmentStacks(e.id));
+        bool all = e != null && e.stat == "all" && (stat == "hp" || stat == "atk" || stat == "def");
+        if (e != null && (e.stat == stat || all)) p += e.value * (1f + 0.25f * Progress.EquipmentStacks(e.id));
         return p;
+    }
+
+    /// <summary>配置コストを下げる量（備品の cost。重ねると 4 回目で -2）</summary>
+    public static int CostCut(string id)
+    {
+        if (!On || string.IsNullOrEmpty(id)) return 0;
+        EquipmentData e = Equipment(Progress.MemberEquip(id));
+        if (e == null || e.stat != "cost") return 0;
+        return Mathf.FloorToInt(e.value * (1f + 0.25f * Progress.EquipmentStacks(e.id)));
     }
 
     /// <summary>必殺技の最初の SP に足す量</summary>
