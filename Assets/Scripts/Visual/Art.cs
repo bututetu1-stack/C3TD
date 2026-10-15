@@ -75,6 +75,8 @@ public static class Art
     /// <summary>備品・素材の絵（なければ null）</summary>
     public static Sprite Item(string id) { return string.IsNullOrEmpty(id) ? null : Load("Art/Items/" + id, 512, KeyMode.Object); }
     public static Sprite Gacha(string name) { return Load("Art/Gacha/" + name, 1024, KeyMode.Object); }
+    /// <summary>ガチャの光る絵で大きく出すもの（魔法陣など。黒を明るさに応じて透明に）</summary>
+    public static Sprite GachaGlow(string name) { return Load("Art/Gacha/" + name, 1024, KeyMode.Glow); }
 
     /// <summary>透過のない画像の背景の抜き方</summary>
     private enum KeyMode { None, Glow, Object }

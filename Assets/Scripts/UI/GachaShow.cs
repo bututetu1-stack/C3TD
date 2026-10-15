@@ -79,6 +79,13 @@ public class GachaShow
         Layer.RegisterCallback<PointerDownEvent>(e => advance = true);
 
         dim = UIFactory.Box("full", "gacha-show-dim");
+        Sprite room = Art.Background("Gacha");
+        if (room != null)
+        {
+            var roomImage = UIFactory.Box("full", "gacha-room");
+            roomImage.style.backgroundImage = new StyleBackground(room);
+            dim.Add(roomImage);
+        }
         var center = UIFactory.Box("full", "gacha-img");
         center.style.backgroundImage = new StyleBackground(SpriteFactory.Glow);
         center.style.unityBackgroundImageTintColor = new Color(0.16f, 0.2f, 0.36f, 0.55f);
@@ -241,6 +248,25 @@ public class GachaShow
         Spin(rays, 14f);
         VisualElement glow = Image(SpriteFactory.Glow, cx, cy, boxSize * 1.2f, boxSize * 1.2f, back);
         glow.style.opacity = 0f;
+        // 箱の下の床で回る魔法陣（Art/Gacha/Circle。★の色に染まり、ふくらむたびに明るく）
+        VisualElement circle = null;
+        Sprite circleArt = Art.GachaGlow("Circle");
+        if (circleArt != null)
+        {
+            float size = boxSize * 2.6f;
+            var floor = UIFactory.Box();
+            floor.style.position = Position.Absolute;
+            floor.style.left = cx - size * 0.5f;
+            floor.style.top = cy + boxSize * 0.3f - size * 0.5f;
+            floor.style.width = size;
+            floor.style.height = size;
+            // 回してから縦につぶす（床に寝かせて見える）ために、つぶす要素と回す要素を分ける
+            floor.style.scale = new Scale(new Vector3(1f, 0.36f, 1f));
+            back.Add(floor);
+            circle = Image(circleArt, size * 0.5f, size * 0.5f, size, size, floor);
+            circle.style.unityBackgroundImageTintColor = new Color(0.7f, 0.8f, 1f, 0.25f);
+            Spin(circle, 16f);
+        }
         // 確定演出：★3 があるとき、まれに（15%）金の光の柱が落ちてきて、箱がはじめから金色に光る
         bool omen = best >= 3 && Random.value < OmenChance;
         if (omen)
@@ -268,6 +294,7 @@ public class GachaShow
             UITween.Run(beam, 0.6f, t => beam.style.opacity = 0.5f * (1f - t), () => beam.RemoveFromHierarchy());
             glow.style.unityBackgroundImageTintColor = gold;
             glow.style.opacity = 0.6f;
+            if (circle != null) circle.style.unityBackgroundImageTintColor = Palette.WithAlpha(gold, 0.7f);
         }
         VisualElement box = Box(cx, cy, boxSize);
         if (omen) box.style.unityBackgroundImageTintColor = new Color(1f, 0.9f, 0.55f);
@@ -305,6 +332,7 @@ public class GachaShow
                 float g = boxSize * (1.1f + 0.8f * k + 0.2f * pulse);
                 Resize(glow, cx, cy, g, g);
                 rays.style.opacity = shown >= 2 ? (0.05f + 0.45f * k * k) * (0.7f + 0.3f * pulse) : 0f;
+                if (circle != null) circle.style.unityBackgroundImageTintColor = Palette.WithAlpha(color, (0.3f + 0.55f * k) * (0.7f + 0.3f * pulse));
             });
             // 昇格演出：2 回目のあとで色が変わる
             if (upgrade && i == 1 && !skip)
@@ -335,6 +363,7 @@ public class GachaShow
                 Color hue = Color.HSVToRGB((Time.unscaledTime * 0.6f) % 1f, 0.6f, 1f);
                 glow.style.unityBackgroundImageTintColor = hue;
                 rays.style.unityBackgroundImageTintColor = hue;
+                if (circle != null) circle.style.unityBackgroundImageTintColor = hue;
             });
             rays.style.opacity = 0.7f;
         }
@@ -353,6 +382,7 @@ public class GachaShow
             }
             box.style.rotate = new Rotate(new Angle(Mathf.Sin(t * 30f) * (shown >= 3 ? 3f : 1.5f), AngleUnit.Degree));
             glow.style.opacity = 0.65f + 0.2f * Mathf.Sin(t * 6f);
+            if (circle != null && !rainbow) circle.style.unityBackgroundImageTintColor = Palette.WithAlpha(color, 0.7f + 0.25f * Mathf.Sin(t * 6f));
         });
         yield return WaitTap(8f);
         shiver.Pause();
@@ -365,7 +395,18 @@ public class GachaShow
         else if (best == 2) GachaSound.Play("rare2", 0.6f);
         FlashScreen(best >= 3 ? new Color(1f, 0.93f, 0.75f) : Color.white, 1f, best >= 3 ? 0.8f : 0.5f);
         Shake((best >= 3 ? 34f : best == 2 ? 20f : 12f) * S, best >= 3 ? 0.8f : 0.45f);
-        Sprite burstArt = Art.Effect(best >= 3 ? "GachaBurstGold" : best == 2 ? "GachaBurstBlue" : "GachaBurstWhite");
+        Sprite burstArt = rainbow ? Art.Effect("GachaBurstRainbow") : null;
+        if (burstArt == null) burstArt = Art.Effect(best >= 3 ? "GachaBurstGold" : best == 2 ? "GachaBurstBlue" : "GachaBurstWhite");
+        if (circle != null)
+        {
+            VisualElement c0 = circle;
+            UITween.Run(c0, 0.6f, t =>
+            {
+                float s = 1f + 0.8f * Ease.OutCubic(t);
+                c0.style.scale = new Scale(new Vector3(s, s, 1f));
+                c0.style.opacity = 1f - t;
+            });
+        }
         VisualElement burst = Image(burstArt != null ? burstArt : SpriteFactory.Glow, cx, cy, boxSize, boxSize, front);
         if (burstArt == null) burst.style.unityBackgroundImageTintColor = color;
         UITween.Run(burst, 0.9f, t =>

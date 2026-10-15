@@ -2993,6 +2993,12 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
+/* ガチャの演出の背景（夜の部室）。暗く敷く */
+.gacha-room {
+    -unity-background-scale-mode: scale-and-crop;
+    opacity: 0.4;
+}
+
 .gacha-img.gacha-img--stretch {
     -unity-background-scale-mode: stretch-to-fill;
 }

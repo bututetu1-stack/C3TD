@@ -57,7 +57,7 @@ public static class WebBuild
 
     /// <summary>
     /// ブラウザ版だけ、Resources/Art の画像を、読み込むときに縮める大きさ（Art.cs）にそろえて圧縮する（Windows 版の設定は変えない）。
-    /// 背景とカットインの立ち絵は大きく出すので 2048、ほかは 512。新しく置いた画像も、ビルドのたびにここでそろえる
+    /// 背景とカットインの立ち絵は大きく出すので 2048、ガチャの箱・カードの裏・魔法陣は 1024、ほかは 512。新しく置いた画像も、ビルドのたびにここでそろえる
     /// </summary>
     private static void ShrinkTexturesForWeb()
     {
@@ -66,7 +66,7 @@ public static class WebBuild
             string path = AssetDatabase.GUIDToAssetPath(guid);
             var importer = AssetImporter.GetAtPath(path) as TextureImporter;
             if (importer == null) continue;
-            int size = path.Contains("/Art/Background/") || path.Contains("/Art/CutIn/") ? 2048 : 512;
+            int size = path.Contains("/Art/Background/") || path.Contains("/Art/CutIn/") ? 2048 : path.Contains("/Art/Gacha/") ? 1024 : 512;
             TextureImporterPlatformSettings s = importer.GetPlatformTextureSettings("WebGL");
             if (s.overridden && s.maxTextureSize == size && s.textureCompression == TextureImporterCompression.Compressed) continue;
             s.overridden = true;
