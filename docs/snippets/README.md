@@ -28,6 +28,7 @@ isuzu-unity-cli call play_mode_stop
 
 | ファイル | 使いどころ |
 |---|---|
+| `tools/play.sh` / `tools/stop.sh` | **テストの再生はいつもこれで**。play.sh は backup.cs のあと止めたまま再生、stop.sh は再生を止めて restore.cs。backup を忘れて再生すると、タイトルを出しただけでその日のログインボーナスがオーナーのセーブに入る |
 | `tools/backup.cs` / `tools/restore.cs` | **テストで再生する前に backup、止めたあとに restore**。オーナーのセーブ（クリア・編成・育成・ガチャ・毎日のこと）を守る |
 | `tools/snap.sh OUT.png [phone]` | 再生中（`play_mode_play --paused` のままでよい）の画面を PNG に。phone ならスマホの形（2340x1080）。スマホの UI の大きさは先に `UIFactory.SetZoom(1.35f)` |
 | `tools/balance.sh NOVICE RUNS "stages" "squad"` | 自動で戦わせて勝った割合（下の「バランスの確かめ」）。強化・育成は効かない |
