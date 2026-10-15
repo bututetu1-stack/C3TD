@@ -2346,7 +2346,7 @@
 
 .gacha-card {
     width: 330px;
-    height: 150px;
+    min-height: 150px;
     margin-right: 14px;
     margin-bottom: 14px;
     padding: 12px 16px 12px 16px;
@@ -2359,6 +2359,8 @@
 .gacha-card-name {
     font-size: 24px;
     color: rgb(255, 255, 255);
+    white-space: normal;
+    margin-right: 60px;
 }
 
 .gacha-card-effect {

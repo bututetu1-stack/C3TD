@@ -83,6 +83,9 @@ public class BalanceRun : MonoBehaviour
             sb.Append(losses);
         }
         Time.timeScale = 1f;
+        // 最後の出撃の勝ち負けは次のフレームで記録されることがあるので、待ってから強化・育成を戻す（落ちる物を渡さない）
+        if (Battle.Current != null) Destroy(Battle.Current.gameObject);
+        yield return null;
         Upgrades.Enabled = true;
         Report = sb.ToString();
         Debug.Log("BalanceRun\n" + Report);
