@@ -145,7 +145,7 @@ public class UnitPanel
             skillButton.Interactable = c.Skills.Ready || c.IsSummon; // 召喚ユニットは残り時間の表示なので暗くしない（押しても何もしない）
             skillButton.Active = c.Skills.Ready || c.Skills.Active;
             if (c.Skills.HasUltimate)
-                card.UltMeta.text = (c.Skills.Active ? "発動中" : c.Skills.Ready ? "使えます" : "SP " + Mathf.FloorToInt(c.Skills.Sp) + "/" + Mathf.RoundToInt(c.Skills.SpCost))
+                card.UltMeta.text = (c.Skills.Active ? "発動中" : c.Skills.Ready ? "使える" : "SP " + Mathf.FloorToInt(c.Skills.Sp) + "/" + Mathf.RoundToInt(c.Skills.SpCost))
                     + "（" + MenuUI.SpChargeName(c.Skills.Ultimate.spCharge) + "）"
                     + (c.Skills.Ultimate.duration > 0f ? "　効果 " + c.Skills.Ultimate.duration.ToString("0.#") + "秒" : "　すぐに効く");
         }

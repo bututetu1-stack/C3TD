@@ -34,6 +34,9 @@ public class StageSelectScreen
 
     private readonly List<KeyValuePair<string, ChamferBox>> nodes = new List<KeyValuePair<string, ChamferBox>>();
     private string selected;
+    // 「出てくる敵」に重ねる（押す）と出る敵の札
+    private ChamferBox enemyTip;
+    private string tipEnemy;
 
     public StageSelectScreen(VisualElement parent, GameBootstrap bootstrap)
     {
@@ -99,7 +102,7 @@ public class StageSelectScreen
         enemiesScroll.Add(detailEnemies);
         detail.Add(enemiesScroll);
 
-        detailLock = UIFactory.Text("前の作戦をクリアすると開きます", UIFont.Body, "detail-lock");
+        detailLock = UIFactory.Text("前の作戦をクリアすると開く", UIFont.Body, "detail-lock");
         detail.Add(detailLock);
         // 強襲（アークナイツの強襲作戦）：クリアした作戦だけ。ライフ 1・敵が強い
         hardToggle = UIFactory.Text("", UIFont.Body, "detail-hard");
@@ -121,6 +124,13 @@ public class StageSelectScreen
         body.Add(detail);
         Root.Add(body);
 
+        enemyTip = new ChamferBox();
+        enemyTip.AddToClassList("enemy-tip");
+        enemyTip.SetFill(new Color(0.05f, 0.06f, 0.1f, 0.97f)).SetStroke(Palette.WithAlpha(Palette.Crimson, 0.8f), 1.5f)
+            .SetCut(14f, ChamferBox.Corners.TopLeft | ChamferBox.Corners.BottomRight).SetAccent(Palette.Crimson, 5f);
+        enemyTip.pickingMode = PickingMode.Ignore;
+        UIFactory.SetVisible(enemyTip, false);
+        Root.Add(enemyTip);
         parent.Add(Root);
     }
 
@@ -291,6 +301,7 @@ public class StageSelectScreen
         }
 
         detailEnemies.Clear();
+        HideEnemyTip();
         HashSet<string> seenBefore = GameData.EnemiesBefore(id);
         // 敵の種類が多いときは3列にして、小さく並べる（下の「編成へ」に隠れないように）
         detailEnemies.EnableInClassList("detail-enemies--many", counts.Count > 6);
@@ -303,7 +314,7 @@ public class StageSelectScreen
         // 別の条件で開く章（エンドレス）は、どのステージをクリアすれば開くかを書く
         ChapterData chapterOf = GameData.Campaign.ChapterOf(id);
         StageData after = chapterOf != null && !string.IsNullOrEmpty(chapterOf.unlockAfter) ? GameData.Stage(chapterOf.unlockAfter) : null;
-        detailLock.text = after != null ? "「" + after.name + "」をクリアすると開きます" : "前の作戦をクリアすると開きます";
+        detailLock.text = after != null ? "「" + after.name + "」をクリアすると開く" : "前の作戦をクリアすると開く";
         UIFactory.SetVisible(detailLock, !open);
         bool hardOk = stage.endless == null && Progress.IsCleared(id);
         UIFactory.SetVisible(hardToggle, hardOk);
@@ -320,9 +331,18 @@ public class StageSelectScreen
     // ================= 部品 =================
 
     /// <summary>敵の札。この作戦で初めて出る敵には、アイコンの左上に「NEW」</summary>
-    private static VisualElement EnemyChip(EnemyData enemy, int count, bool isNew)
+    private VisualElement EnemyChip(EnemyData enemy, int count, bool isNew)
     {
         var chip = UIFactory.Box("enemy-chip");
+        // 重ねる（スマホでは押す）と、性質と倒し方の札
+        chip.pickingMode = PickingMode.Position;
+        chip.RegisterCallback<PointerEnterEvent>(e => { if (e.pointerType == "mouse") ShowEnemyTip(enemy, chip); });
+        chip.RegisterCallback<PointerLeaveEvent>(e => { if (e.pointerType == "mouse") HideEnemyTip(); });
+        chip.RegisterCallback<ClickEvent>(e =>
+        {
+            if (tipEnemy == enemy.id && UIFactory.IsVisible(enemyTip)) HideEnemyTip();
+            else ShowEnemyTip(enemy, chip);
+        });
         var icon = UIFactory.Box("enemy-icon");
         Sprite art = Art.Enemy(enemy.id);
         if (art != null)
@@ -360,6 +380,31 @@ public class StageSelectScreen
         row.style.flexDirection = FlexDirection.Row;
         for (int i = 0; i < 3; i++) row.Add(new IconView(IconKind.Star, size, Palette.Amber));
         return row;
+    }
+
+    /// <summary>敵の札：名前・能力・性質・倒し方。右の作戦の札の左に、重ねた敵の高さで出す</summary>
+    private void ShowEnemyTip(EnemyData d, VisualElement chip)
+    {
+        tipEnemy = d.id;
+        enemyTip.Clear();
+        enemyTip.Add(UIFactory.Text(d.name + (d.boss ? "（ボス）" : ""), UIFont.Title, "enemy-tip-name"));
+        enemyTip.Add(UIFactory.Text("体力 " + d.hp + "　攻撃 " + d.atk + "　防御 " + d.def + (d.res > 0f ? "　術耐性 " + d.res.ToString("0") + "%" : "") + "　速さ " + d.speed.ToString("0.0#"), UIFont.Body, "enemy-tip-stats"));
+        string traits = EnemyPanel.Traits(d);
+        enemyTip.Add(UIFactory.Text(SkillText.Format(traits.Length > 0 ? traits : "特別な性質はない"), UIFont.Body, "enemy-tip-traits"));
+        enemyTip.Add(UIFactory.Text("<color=#FFD27A>倒し方</color>　" + StageTips.Advice(d, false), UIFont.Body, "enemy-tip-advice"));
+        Rect root = Root.worldBound, at = chip.worldBound;
+        float panelLeft = detailEnemies.worldBound.xMin;
+        enemyTip.style.right = root.xMax - panelLeft + 24f;
+        enemyTip.style.top = Mathf.Clamp(at.yMin - root.yMin - 20f, 20f, Mathf.Max(20f, root.height - 330f));
+        UIFactory.SetVisible(enemyTip, true);
+        enemyTip.style.opacity = 0f;
+        UITween.Run(enemyTip, 0.12f, t => enemyTip.style.opacity = t);
+    }
+
+    private void HideEnemyTip()
+    {
+        tipEnemy = null;
+        UIFactory.SetVisible(enemyTip, false);
     }
 
     private static void SetStars(VisualElement row, int stars)

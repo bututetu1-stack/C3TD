@@ -1367,6 +1367,38 @@
     flex-wrap: wrap;
 }
 
+/* 作戦選択：出てくる敵に重ねると出る札 */
+.enemy-tip {
+    position: absolute;
+    width: 560px;
+    padding: 14px 20px 16px 22px;
+}
+
+.enemy-tip-name {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+}
+
+.enemy-tip-stats {
+    font-size: 17px;
+    color: rgb(178, 186, 204);
+    margin-top: 2px;
+}
+
+.enemy-tip-traits {
+    font-size: 19px;
+    color: rgb(238, 241, 246);
+    margin-top: 8px;
+    white-space: normal;
+}
+
+.enemy-tip-advice {
+    font-size: 19px;
+    color: rgb(214, 219, 232);
+    margin-top: 8px;
+    white-space: normal;
+}
+
 .enemy-chip {
     flex-direction: row;
     align-items: center;
@@ -3023,6 +3055,29 @@
 
 .gacha-img {
     -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 部員の札：付けている備品 */
+.unit-equip {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 6px;
+    padding: 4px 8px 4px 4px;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.unit-equip-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+
+.unit-equip-label {
+    font-size: 17px;
+    color: rgb(214, 219, 232);
+    white-space: normal;
+    flex-shrink: 1;
 }
 
 /* ガチャの演出の背景（夜の部室）。暗く敷く */

@@ -31,6 +31,9 @@ public class CharacterInfo
     private readonly VisualElement portrait;
     private readonly Label portraitInitial;
     private readonly Label profileLabel;
+    private readonly VisualElement equipRow;
+    private readonly VisualElement equipIcon;
+    private readonly Label equipLabel;
     private readonly VisualElement stats;
     private readonly VisualElement traitBox;
     private readonly Label traitFlavor;
@@ -100,6 +103,15 @@ public class CharacterInfo
         CostValue = Stat(stats, "COST");
         body.Add(stats);
 
+        // 付けている備品（ガチャの備品。なければ出さない）
+        equipRow = UIFactory.Box("unit-equip");
+        equipIcon = UIFactory.Box("unit-equip-icon", "gacha-img");
+        equipRow.Add(equipIcon);
+        equipLabel = UIFactory.Text("", UIFont.Body, "unit-equip-label");
+        equipRow.Add(equipLabel);
+        body.Add(equipRow);
+        UIFactory.SetVisible(equipRow, false);
+
         Label traitMeta;
         traitBox = Skill(body, "特性", out TraitName, out traitMeta, out traitFlavor, out traitDesc);
         UIFactory.SetVisible(traitMeta, false);
@@ -140,6 +152,7 @@ public class CharacterInfo
         compact = value;
         Root.EnableInClassList("unit-info--compact", value);
         UIFactory.SetVisible(stats, !value);
+        UIFactory.SetVisible(equipRow, !value && equipLabel.text.Length > 0);
         UIFactory.SetVisible(profileLabel, !value && ShowProfile && profileLabel.text.Length > 0);
         UIFactory.SetVisible(traitDesc, !value);
         UIFactory.SetVisible(ultDesc, !value);
@@ -178,6 +191,16 @@ public class CharacterInfo
         DefValue.text = Mathf.RoundToInt(def).ToString();
         int promotion = Progress.MemberPromotion(d.id);
         LevelLabel.text = summon ? "" : "Lv" + Growth.Level(d.id) + (promotion > 0 ? "  昇進" + promotion : "");
+        EquipmentData equip = summon ? null : Growth.Equipment(Progress.MemberEquip(d.id));
+        if (equip != null)
+        {
+            Sprite art = Art.Item(equip.id);
+            equipIcon.style.backgroundImage = art != null ? new StyleBackground(art) : new StyleBackground(StyleKeyword.None);
+            UIFactory.SetVisible(equipIcon, art != null);
+            equipLabel.text = "<color=#" + ColorUtility.ToHtmlStringRGB(GachaShow.RarityColor(equip.rarity)) + ">" + GrowthScreen.Stars(equip.rarity) + " " + equip.name + "</color>　" + Growth.Describe(equip, Progress.EquipmentStacks(equip.id));
+        }
+        else equipLabel.text = "";
+        UIFactory.SetVisible(equipRow, !compact && equip != null);
         UIFactory.SetVisible(LevelLabel, !summon);
         int block = d.stats.block >= 0 ? d.stats.block : cls.block;
         BlockValue.text = cls.placement == Placement.Ground ? block.ToString() : "-";

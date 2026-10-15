@@ -61,7 +61,7 @@ public class BriefingDialog
         card.Add(body);
 
         var footer = UIFactory.Box("briefing-footer");
-        footer.Add(UIFactory.Text(Application.isMobilePlatform ? "時間は止まっています" : "時間は止まっています　Space・Enter でも閉じる", UIFont.Medium, "briefing-note"));
+        footer.Add(UIFactory.Text(Application.isMobilePlatform ? "時間は止まっている" : "時間は止まっている　Space・Enter でも閉じる", UIFont.Medium, "briefing-note"));
         footer.Add(UIFactory.Box("top-spacer"));
         var ok = new C3Button(IconKind.Play, 22f, "OK（続ける）", Next);
         ok.AddToClassList("briefing-ok");

@@ -37,6 +37,8 @@ public static class StageTips
         }
 
         Add(tips, enemies, e => e.flying, "空を飛ぶ敵", "狙撃・術師で落とす", airAttack);
+        Add(tips, enemies, e => e.aura != null || e.heal != null, "まわりを強くする・回復する敵", "狙撃・術師で先に倒す", airAttack);
+        Add(tips, enemies, e => e.shield > 0f, "盾を持つ敵", "必殺技を重ねて一気に割る", null);
         Add(tips, enemies, e => !e.boss && e.def >= 300f, "硬い敵", "術師の術は防御が効かない", arts);
         Add(tips, enemies, e => !e.boss && e.res >= 40f, "術が効きにくい敵", "狙撃・前衛の物理で", physical);
         Add(tips, enemies, e => e.dodge > 0f, "物理をかわす敵", "術師の術は当たる", arts);
