@@ -17,6 +17,8 @@ public class GrowthScreen
     private readonly Label notice;
     private string selected;
     private bool choosingEquip;
+    private readonly Celebration celebration;
+    private Label levelLabel;
 
     public GrowthScreen(VisualElement parent, GameBootstrap bootstrap)
     {
@@ -54,6 +56,7 @@ public class GrowthScreen
         Root.Add(body);
 
         parent.Add(Root);
+        celebration = new Celebration(Root);
     }
 
     public void Open(int pastCoins)
@@ -177,7 +180,8 @@ public class GrowthScreen
         names.Add(UIFactory.Text(d.name, UIFont.Title, "unit-name"));
         int level = Growth.Level(d.id);
         int promotion = Progress.MemberPromotion(d.id);
-        names.Add(UIFactory.Text("Lv " + level + " / " + Growth.LevelCap(d.id) + "　昇進 " + promotion + " / " + GameData.Items.growth.promotions.Count, UIFont.Display, "growth-level"));
+        levelLabel = UIFactory.Text("Lv " + level + " / " + Growth.LevelCap(d.id) + "　昇進 " + promotion + " / " + GameData.Items.growth.promotions.Count, UIFont.Display, "growth-level");
+        names.Add(levelLabel);
         head.Add(names);
         detail.Add(head);
 
@@ -201,8 +205,7 @@ public class GrowthScreen
             var up = new C3Button(IconKind.Next, 22f, "レベルを上げる", () =>
             {
                 if (!Growth.LevelUp(d.id)) return;
-                AudioManager.PlaySE("buff");
-                Refresh();
+                LevelUpEffect(1);
             });
             up.AddToClassList("growth-button");
             up.Interactable = Growth.CanLevelUp(d.id);
@@ -210,11 +213,10 @@ public class GrowthScreen
             row.Add(up);
             var max = new C3Button(IconKind.FastForward, 22f, "上げられるだけ", () =>
             {
-                bool any = false;
-                while (Growth.LevelUp(d.id)) any = true;
-                if (!any) return;
-                AudioManager.PlaySE("buff");
-                Refresh();
+                int gained = 0;
+                while (Growth.LevelUp(d.id)) gained++;
+                if (gained == 0) return;
+                LevelUpEffect(gained);
             });
             max.AddToClassList("growth-button");
             max.Interactable = Growth.CanLevelUp(d.id);
@@ -238,9 +240,10 @@ public class GrowthScreen
             promoBox.Add(line);
             var promote = new C3Button(IconKind.Star, 22f, "昇進する", () =>
             {
+                PromotionData done = Growth.NextPromotion(d.id);
                 if (!Growth.Promote(d.id)) return;
-                AudioManager.PlaySE("skill");
                 Refresh();
+                celebration.Show(d, Progress.MemberPromotion(d.id), done != null ? done.description : "");
             });
             promote.AddToClassList("growth-button");
             promote.Interactable = Growth.CanPromote(d.id);
@@ -321,6 +324,28 @@ public class GrowthScreen
             list.Add(row);
         }
         return list;
+    }
+
+    /// <summary>レベルが上がった：レベルの文字がはねて、「Lv UP」が浮かぶ</summary>
+    private void LevelUpEffect(int gained)
+    {
+        Refresh();
+        GachaSound.Play(gained >= 5 ? "rare2" : "star", 0.8f);
+        if (levelLabel == null) return;
+        Label label = levelLabel;
+        UITween.Run(label, 0.4f, t =>
+        {
+            float s = 1f + 0.5f * (1f - Ease.OutCubic(t));
+            label.style.scale = new Scale(new Vector3(s, s, 1f));
+            label.style.color = Color.Lerp(new Color(0.5f, 1f, 0.6f), new Color(1f, 0.82f, 0.48f), t);
+        });
+        var pop = UIFactory.Text("Lv UP" + (gained > 1 ? " ×" + gained : "") + "！", UIFont.Display, "growth-lvup");
+        label.parent.Add(pop);
+        UITween.Run(pop, 1.1f, t =>
+        {
+            pop.style.translate = new Translate(0f, -40f * Ease.OutCubic(t));
+            pop.style.opacity = t < 0.7f ? 1f : (1f - t) / 0.3f;
+        }, () => pop.RemoveFromHierarchy());
     }
 
     public static string Stars(int rarity)
