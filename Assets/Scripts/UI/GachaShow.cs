@@ -173,6 +173,14 @@ public class GachaShow
     }
 
     /// <summary>もう一度引けるか（まとめの「もう一度」の文と押せるか）</summary>
+    private string note = "";
+
+    /// <summary>まとめの下に添える一行（引いて取った実績など。なければ空）</summary>
+    public void SetNote(string text)
+    {
+        note = text ?? "";
+    }
+
     public void SetAgain(string text, bool enabled)
     {
         againButton.Text.text = text;
@@ -724,7 +732,7 @@ public class GachaShow
         if (fresh > 0) parts.Add("<color=#FFD27A>NEW ×" + fresh + "</color>");
         if (results.Count == 1 && fresh == 0 && coins == 0) parts.Add("重ねて強くなった");
         if (coins > 0) parts.Add("部費に換わった " + coins);
-        summaryText.text = string.Join("　", parts);
+        summaryText.text = string.Join("　", parts) + (note.Length > 0 ? "\n<size=70%>" + note + "</size>" : "");
         UIFactory.SetVisible(summary, true);
         GachaSound.Play(r3 > 0 ? "rare3" : "rare2", 0.5f);
         yield break;

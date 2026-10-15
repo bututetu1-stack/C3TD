@@ -375,6 +375,12 @@ public class GachaScreen
     {
         List<GachaResult> pulled = Growth.Pull(count, free);
         if (pulled.Count == 0) return;
+        // 引いて取った実績（備品集め・★3・ガチャの回数など）。部費はここで入る
+        var got = Achievements.CheckNew();
+        var names = new List<string>();
+        int reward = 0;
+        foreach (Achievements.Entry a in got) { names.Add("「" + a.Name + "」"); reward += a.Reward; }
+        show.SetNote(got.Count > 0 ? "<color=#FFD27A>実績を取った：</color>" + string.Join("", names) + (reward > 0 ? "　部費 +" + reward : "") : "");
         last = pulled;
         results.Clear();
         Refresh();

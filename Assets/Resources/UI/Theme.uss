@@ -3051,6 +3051,9 @@
     font-size: 30px;
     color: rgb(255, 255, 255);
     margin-bottom: 14px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    max-width: 1600px;
 }
 
 .gacha-summary-buttons {

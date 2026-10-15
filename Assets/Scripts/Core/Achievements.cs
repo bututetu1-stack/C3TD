@@ -86,6 +86,11 @@ public static class Achievements
         add("promotion1", "はじめての昇進", "部員を 1 人昇進させる", () => AnyMember(r => r.promotion >= 1));
         add("promotion2", "幹部", "部員を 1 人 2 回昇進させる", () => AnyMember(r => r.promotion >= 2));
         add("rare_equip", "掘り出し物", "★3 の備品を手に入れる", () => Progress.OwnedEquipment.Exists(e => { EquipmentData d = Growth.Equipment(e.id); return d != null && d.rarity >= 3; }));
+        add("collect6", "備品集め", "備品を 6 種類そろえる", () => Progress.OwnedEquipment.Count >= 6);
+        add("collect_all", "備品図鑑コンプリート", "備品をすべての種類そろえる", () => Progress.OwnedEquipment.Count >= GameData.Items.equipment.Count);
+        add("stack_max", "使い込み", "同じ備品を 4 回重ねる", () => Progress.OwnedEquipment.Exists(e => e.stacks >= 4));
+        add("gacha10", "ガチャ好き", "ガチャを 10 回引く", () => Progress.GachaPulls >= 10);
+        add("gacha100", "ガチャ沼", "ガチャを 100 回引く", () => Progress.GachaPulls >= 100);
         return list;
     }
 
@@ -94,9 +99,9 @@ public static class Achievements
     {
         switch (id)
         {
-            case "all_perfect": case "endless30": case "real_mvp": case "upgrades_max": return 1000;
-            case "ch3": case "ch4": case "ex": case "hard10": case "endless20": case "mvp10": case "promotion2": return 500;
-            case "ch1": case "ch2": case "ch1_perfect": case "endless10": case "battles50": case "all_members": case "rare_equip": return 300;
+            case "all_perfect": case "endless30": case "real_mvp": case "upgrades_max": case "collect_all": return 1000;
+            case "ch3": case "ch4": case "ex": case "hard10": case "endless20": case "mvp10": case "promotion2": case "stack_max": case "gacha100": return 500;
+            case "ch1": case "ch2": case "ch1_perfect": case "endless10": case "battles50": case "all_members": case "rare_equip": case "collect6": return 300;
             default: return 150;
         }
     }
