@@ -31,6 +31,8 @@ public static class GachaSound
         float[] data = Make(name);
         if (data != null)
         {
+            // どの音も、頭と終わりをなめらかに（途中で切れた余韻がプツッと鳴らないよう）
+            Smooth(data);
             // 割れないよう、いちばん大きいところを 0.9 にそろえる（小さい音は大きくしない）
             float peak = 0f;
             foreach (float x in data) peak = Mathf.Max(peak, Mathf.Abs(x));
@@ -101,8 +103,13 @@ public static class GachaSound
             phase += 2f * Mathf.PI * f / Rate;
             phase2 += 2f * Mathf.PI * f * 2.01f / Rate;
             float env = Mathf.Sin(Mathf.PI * Mathf.Clamp01(k)) * (0.6f + 0.4f * k);
-            float sparkle = rnd.NextDouble() < 0.002 ? 1f : 0f;
-            d[i] = (Mathf.Sin(phase) * 0.5f + Mathf.Sin(phase2) * 0.2f) * env * 0.7f + sparkle * 0.3f;
+            d[i] = (Mathf.Sin(phase) * 0.5f + Mathf.Sin(phase2) * 0.2f) * env * 0.7f;
+        }
+        // きらきら：高い短い音をところどころに（1 サンプルだけの点はプチッと鳴るので使わない）
+        for (int n = 0; n < 8 + level * 3; n++)
+        {
+            float at = (float)rnd.NextDouble() * 0.42f;
+            Add(d, Ping(2600f + (float)rnd.NextDouble() * 2400f), at, 0.12f + 0.06f * level);
         }
         return Smooth(d);
     }
@@ -110,7 +117,7 @@ public static class GachaSound
     /// <summary>昇格：一気に駆け上がる音と鐘</summary>
     private static float[] Upgrade()
     {
-        float[] d = Buffer(1.0f);
+        float[] d = Buffer(1.25f);
         float phase = 0f;
         for (int i = 0; i < d.Length; i++)
         {
@@ -212,6 +219,18 @@ public static class GachaSound
             float env = Mathf.Exp(-t * decay) * Mathf.Clamp01(t * 400f);
             d[i] = (Mathf.Sin(2f * Mathf.PI * f * t) + 0.5f * Mathf.Sin(2f * Mathf.PI * f * 2.76f * t) * Mathf.Exp(-t * 6f)
                 + 0.25f * Mathf.Sin(2f * Mathf.PI * f * 5.4f * t) * Mathf.Exp(-t * 12f)) * env;
+        }
+        return d;
+    }
+
+    /// <summary>きらっ：高い音が 0.06 秒ほどで消える</summary>
+    private static float[] Ping(float f)
+    {
+        float[] d = Buffer(0.06f);
+        for (int i = 0; i < d.Length; i++)
+        {
+            float t = i / (float)Rate;
+            d[i] = Mathf.Sin(2f * Mathf.PI * f * t) * Mathf.Exp(-t * 70f) * Mathf.Clamp01(t * 2000f);
         }
         return d;
     }
