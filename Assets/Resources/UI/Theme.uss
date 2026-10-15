@@ -3061,6 +3061,12 @@
     color: rgb(255, 210, 122);
 }
 
+.gacha-spot-flavor {
+    font-size: 21px;
+    color: rgb(214, 219, 232);
+    margin-top: 2px;
+}
+
 .gacha-spot-new {
     position: absolute;
     font-size: 64px;

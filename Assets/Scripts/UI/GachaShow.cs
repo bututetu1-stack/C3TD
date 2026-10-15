@@ -62,6 +62,9 @@ public class GachaShow
         public VisualElement Face;
         public VisualElement Aura;
         public bool Open;
+        // めくる前に見せている★（昇格演出のカードは 1 つ下）
+        public int Look;
+        public bool Disguised;
         public float X, Y, Width, Height;
     }
 
@@ -194,6 +197,9 @@ public class GachaShow
 
     /// <summary>★3 があるときに確定演出（金の光の柱）が出る割合</summary>
     public static float OmenChance = 0.15f;
+
+    /// <summary>★3 のカードが、★2 の青い光で並び、めくる前に金色に変わる割合（カードの昇格演出）</summary>
+    public static float CardDisguiseChance = 0.3f;
 
     private IEnumerator Run(List<GachaResult> results)
     {
@@ -404,9 +410,11 @@ public class GachaShow
         {
             CardView c = cards[i];
             float fromX = cx, fromY = cy;
+            float spin = Random.Range(-40f, 40f);
             UITween.Run(c.Root, 0.38f, t =>
             {
                 float e = Ease.OutBack(t);
+                c.Root.style.rotate = new Rotate(new Angle(spin * (1f - Ease.OutCubic(t)), AngleUnit.Degree));
                 float x = Mathf.LerpUnclamped(fromX, c.X, e), y = Mathf.LerpUnclamped(fromY, c.Y, e);
                 c.Root.style.left = x - c.Width * 0.5f;
                 c.Root.style.top = y - c.Height * 0.5f;
@@ -427,6 +435,28 @@ public class GachaShow
             if (skip) break;
             if (advance) { fast = true; advance = false; }
             int rarity = c.Result.Equipment.rarity;
+            if (c.Disguised && !skip)
+            {
+                // カードの昇格演出：青い光がふるえて、金色に変わる
+                GachaSound.Play("charge1", 0.8f);
+                yield return Tween(0.45f, t =>
+                {
+                    float a = 4f * S * t;
+                    c.Root.style.translate = new Translate(Random.Range(-a, a), Random.Range(-a, a));
+                });
+                c.Root.style.translate = new Translate(0f, 0f);
+                c.Look = 3;
+                Color gold = RarityColor(3);
+                ((ChamferBox)c.Back).SetStroke(gold, 4f);
+                if (c.Aura != null) c.Aura.style.unityBackgroundImageTintColor = gold;
+                FlashScreen(Color.white, 0.5f, 0.35f);
+                GachaSound.Play("upgrade", 0.9f);
+                Shake(14f * S, 0.35f);
+                Pop("!?", c.X + c.Width * 0.4f, c.Y - c.Height * 0.5f, gold);
+                Ring(c.X, c.Y, gold, c.Width * 0.3f, c.Width * 2.2f, 0.5f);
+                Burst(c.X, c.Y, gold, 14, c.Width * 1.4f);
+                yield return Wait(0.3f);
+            }
             if (rarity >= 3)
             {
                 // めくる前に、ふるえて光が強くなる
@@ -438,8 +468,8 @@ public class GachaShow
                     c.Root.style.translate = new Translate(Random.Range(-a, a), Random.Range(-a, a));
                     if (c.Aura != null)
                     {
-                        float g = c.Width * (1.6f + 0.8f * t);
-                        Resize(c.Aura, c.Width * 0.5f, c.Height * 0.5f, g, g);
+                        float g = c.Width * (2.5f + 0.8f * t);
+                        Resize(c.Aura, c.Width * 0.5f, c.Height * 0.5f, g, g * 1.2f);
                         c.Aura.style.opacity = 0.6f + 0.4f * t;
                     }
                 });
@@ -532,6 +562,12 @@ public class GachaShow
         var spotEffect = UIFactory.Text(Growth.Describe(e, r.Stacks), UIFont.Body, "gacha-spot-effect");
         spotEffect.style.fontSize = 26f * S;
         banner.Add(spotEffect);
+        if (!string.IsNullOrEmpty(e.description))
+        {
+            var flavor = UIFactory.Text("「" + e.description + "」", UIFont.Body, "gacha-spot-flavor");
+            flavor.style.fontSize = 21f * S;
+            banner.Add(flavor);
+        }
         banner.style.top = cy + ch * 0.5f + 10f * S;
         spot.Add(banner);
         for (int i = 0; i < 3; i++)
@@ -602,6 +638,7 @@ public class GachaShow
             c.Root.style.scale = new Scale(Vector3.one);
             c.Root.style.opacity = 1f;
             c.Root.style.translate = new Translate(0f, 0f);
+            c.Root.style.rotate = new Rotate(new Angle(0f, AngleUnit.Degree));
             if (!c.Open) ShowFace(c);
         }
         spot.Clear();
@@ -669,24 +706,27 @@ public class GachaShow
             c.Root.style.opacity = 0f;
 
             int rarity = results[i].Equipment.rarity;
-            // めくる前から、★2 は青く、★3 は金色に光る（後ろの光・ふちの色・カードの上のきらめき）
+            // めくる前から、★2 は青く、★3 は金色に光る（後ろの光・ふちの色・カードの上のきらめき）。
+            // ★3 でも CardDisguiseChance で★2 の青で並び、めくる前に金色に変わる（カードの昇格演出）
             ChamferBox back = CardBack(cw, chh);
+            c.Look = rarity >= 3 && Random.value < CardDisguiseChance ? 2 : rarity;
+            c.Disguised = c.Look != rarity;
             if (rarity >= 2)
             {
-                bool gold = rarity >= 3;
-                Color color = RarityColor(rarity);
-                float g = cw * (gold ? 2.5f : 2.1f);
+                bool look3 = c.Look >= 3;
+                float g = cw * (look3 ? 2.5f : 2.1f);
                 c.Aura = Image(SpriteFactory.Glow, cw * 0.5f, chh * 0.5f, g, g * 1.2f, c.Root);
-                c.Aura.style.unityBackgroundImageTintColor = color;
-                back.SetStroke(color, gold ? 4f : 3f);
+                c.Aura.style.unityBackgroundImageTintColor = RarityColor(c.Look);
+                back.SetStroke(RarityColor(c.Look), look3 ? 4f : 3f);
                 VisualElement aura = c.Aura;
                 float phase = Random.value * 6f;
                 Loop(c.Root, () =>
                 {
                     if (c.Open) return;
+                    bool gold = c.Look >= 3;
                     aura.style.opacity = (gold ? 0.8f : 0.55f) + 0.2f * Mathf.Sin(Time.unscaledTime * (gold ? 7f : 4f) + phase);
                     if (c.Root.resolvedStyle.opacity > 0.9f && Random.value < (gold ? 0.12f : 0.05f))
-                        Spark(Random.Range(0f, cw), Random.Range(0f, chh), color, c.Root);
+                        Spark(Random.Range(0f, cw), Random.Range(0f, chh), RarityColor(c.Look), c.Root);
                 });
             }
             c.Back = back;
