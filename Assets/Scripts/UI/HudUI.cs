@@ -79,6 +79,8 @@ public class HudUI : MonoBehaviour
     private VisualElement resultTeam;
     private Label resultAchievements;
     private int shownAchievements = -1;
+    private Label resultRewards;
+    private int shownRewards = -1;
     private C3Button nextButton;
 
     // 編成バーと選択中の部員
@@ -449,6 +451,9 @@ public class HudUI : MonoBehaviour
         resultAchievements = UIFactory.Text("", UIFont.Body, "result-achievements");
         resultContent.Add(resultAchievements);
         UIFactory.SetVisible(resultAchievements, false);
+        resultRewards = UIFactory.Text("", UIFont.Body, "result-rewards");
+        resultContent.Add(resultRewards);
+        UIFactory.SetVisible(resultRewards, false);
 
         var stats = UIFactory.Box("result-stats");
         resultLife = AddResultStat(stats, "LIFE");
@@ -570,6 +575,15 @@ public class HudUI : MonoBehaviour
             shownPhase = state.Phase;
             if (state.Phase != GamePhase.Playing) ShowResult(state);
         }
+        // 手に入れた部費と素材（実績と同じく、結果を出してから届く）
+        if (state.Phase != GamePhase.Playing && battle.Rewards.Count != shownRewards)
+        {
+            shownRewards = battle.Rewards.Count;
+            var parts = new System.Collections.Generic.List<string>();
+            foreach (Reward r in battle.Rewards) parts.Add(r.id == Growth.CoinId ? "部費 +" + r.count : r.Name + " ×" + r.count);
+            resultRewards.text = "手に入れた：" + string.Join("　", parts);
+            UIFactory.SetVisible(resultRewards, parts.Count > 0);
+        }
         // 実績は Battle が記録を書いたあとに決まるので、結果を出してから届いた分を足す
         if (state.Phase != GamePhase.Playing && battle.NewAchievements.Count != shownAchievements)
         {
@@ -601,7 +615,8 @@ public class HudUI : MonoBehaviour
         UIFactory.SetVisible(opHard, battle.Hard);
         lifeMax.text = "/" + battle.State.MaxLife;
 
-        shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = shownWave = shownAchievements = -1;
+        shownSeconds = shownFinished = shownLife = shownSpeed = shownPaused = shownWave = shownAchievements = shownRewards = -1;
+        UIFactory.SetVisible(resultRewards, false);
         UIFactory.SetVisible(resultAchievements, false);
         if (enemyCaption != null) enemyCaption.text = battle.IsEndless ? "WAVE" : "ENEMY";
         shownPhase = GamePhase.Playing;

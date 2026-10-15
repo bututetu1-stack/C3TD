@@ -42,5 +42,15 @@ public class CharacterCard : ChamferBox
 
         Cost = UIFactory.Text(data.cost.ToString(), UIFont.Display, "card-cost");
         Add(Cost);
+
+        // 育成したレベル（Lv2 以上か昇進したら）
+        int level = Growth.Level(data.id);
+        int promotion = Progress.MemberPromotion(data.id);
+        if (level > 1 || promotion > 0)
+        {
+            var lv = UIFactory.Text("Lv" + level, UIFont.Display, "card-level");
+            lv.EnableInClassList("card-level--promoted", promotion > 0);
+            Add(lv);
+        }
     }
 }

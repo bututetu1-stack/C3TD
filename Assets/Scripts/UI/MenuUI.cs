@@ -20,6 +20,8 @@ public class MenuUI : MonoBehaviour
     private RecordsScreen records;
     private UpgradeScreen upgrade;
     private ClassGuideScreen classGuide;
+    private GrowthScreen growth;
+    private GachaScreen gacha;
     private Action classGuideBack;
     private SettingsPanel settings;
     private VisualElement current;
@@ -39,6 +41,8 @@ public class MenuUI : MonoBehaviour
         records = new RecordsScreen(root, bootstrap);
         upgrade = new UpgradeScreen(root, bootstrap);
         classGuide = new ClassGuideScreen(root, () => { if (classGuideBack != null) classGuideBack(); });
+        growth = new GrowthScreen(root, bootstrap);
+        gacha = new GachaScreen(root, bootstrap);
         settings = new SettingsPanel(root);
         HideAll();
     }
@@ -100,6 +104,19 @@ public class MenuUI : MonoBehaviour
         Show(upgrade.Root);
     }
 
+    /// <summary>育成。pastCoins は、この仕組みの前にクリアした作戦のぶんとして渡した部費（お知らせを出す）</summary>
+    public void ShowGrowth(int pastCoins)
+    {
+        growth.Open(pastCoins);
+        Show(growth.Root);
+    }
+
+    public void ShowGacha()
+    {
+        gacha.Open();
+        Show(gacha.Root);
+    }
+
     /// <summary>職業の説明（遊び方・編成画面から）。back は「戻る」と Esc で戻る先</summary>
     public void ShowClassGuide(Action back)
     {
@@ -124,7 +141,7 @@ public class MenuUI : MonoBehaviour
     private void Show(VisualElement screen)
     {
         root.style.display = DisplayStyle.Flex;
-        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root, help.Root, records.Root, upgrade.Root, classGuide.Root }) UIFactory.SetVisible(s, s == screen);
+        foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root, help.Root, records.Root, upgrade.Root, classGuide.Root, growth.Root, gacha.Root }) UIFactory.SetVisible(s, s == screen);
         current = screen;
         AudioManager.PlayBGM("menu");
         UITween.Stop(ref showTween);
@@ -147,7 +164,7 @@ public class MenuUI : MonoBehaviour
             if (settings.IsOpen) settings.Hide();
             else if (current == squad.Root) bootstrap.ShowStageSelect(squad.StageId);
             else if (current == classGuide.Root) { if (classGuideBack != null) classGuideBack(); }
-            else if (current == select.Root || current == book.Root || current == help.Root || current == records.Root || current == upgrade.Root) bootstrap.ShowTitle();
+            else if (current == select.Root || current == book.Root || current == help.Root || current == records.Root || current == upgrade.Root || current == growth.Root || current == gacha.Root) bootstrap.ShowTitle();
             return;
         }
         if (settings.IsOpen) return;

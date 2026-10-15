@@ -59,12 +59,23 @@ public class SkillRunner
     }
 
     public bool HasUltimate { get { return Ultimate != null; } }
-    public float SpCost { get { return Ultimate != null ? Ultimate.spCost : 0f; } }
+
+    /// <summary>必殺技の SP の量（育成の昇進で減る）</summary>
+    public float SpCost { get { return Ultimate != null ? Ultimate.spCost * spCostScale : 0f; } }
+    private float spCostScale = 1f;
+
+    /// <summary>育成のぶん：最初の SP を足し、SP の量に倍率を掛ける（置いたときに一度）</summary>
+    public void ApplyGrowth(float initialSpBonus, float costScale)
+    {
+        if (Ultimate == null) return;
+        spCostScale = Mathf.Max(0.3f, costScale);
+        Sp = Mathf.Clamp(Sp + initialSpBonus, 0f, SpCost);
+    }
 
     /// <summary>必殺技を使える（SP が溜まっていて、発動中でもスタン中でもない）</summary>
     public bool Ready
     {
-        get { return Ultimate != null && !Active && Sp >= Ultimate.spCost && !owner.Stunned && battle.State.Phase == GamePhase.Playing; }
+        get { return Ultimate != null && !Active && Sp >= SpCost && !owner.Stunned && battle.State.Phase == GamePhase.Playing; }
     }
 
     // ================= 特性 =================
@@ -255,7 +266,7 @@ public class SkillRunner
 
     private void AddSp(float amount)
     {
-        Sp = Mathf.Min(Ultimate.spCost, Sp + amount);
+        Sp = Mathf.Min(SpCost, Sp + amount);
     }
 
     private SkillContext Context(float defaultDuration, Unit target, List<KeyValuePair<Unit, StatModifier>> collected)

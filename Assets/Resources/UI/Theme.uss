@@ -285,13 +285,16 @@
 
 /* ---------- 勝敗 ---------- */
 .result-band {
-    height: 400px;
+    min-height: 400px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     align-items: center;
     justify-content: center;
 }
 
 .result-content {
     align-items: center;
+    flex-shrink: 0;
 }
 
 .result-en {
@@ -595,6 +598,41 @@
     font-size: 46px;
     color: rgb(255, 255, 255);
     -unity-text-align: middle-center;
+}
+
+/* 育成したレベル */
+.card-level {
+    position: absolute;
+    left: 3px;
+    bottom: 29px;
+    padding: 0 6px 0 6px;
+    font-size: 17px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(6, 9, 16, 0.85);
+}
+
+.card-level--promoted {
+    color: rgb(255, 210, 122);
+}
+
+.unit-class-row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.unit-level {
+    font-size: 19px;
+    color: rgb(255, 210, 122);
+    margin-left: 10px;
+}
+
+.result-rewards {
+    font-size: 22px;
+    color: rgb(214, 219, 232);
+    margin-bottom: 6px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    max-width: 1500px;
 }
 
 /* キーボードの数字（1〜9 でカードを選べる。スマホでは出さない） */
@@ -2075,6 +2113,290 @@
     width: 170px;
 }
 
+/* ---------- 育成 ---------- */
+.growth-notice {
+    font-size: 20px;
+    color: rgb(255, 210, 122);
+    margin-bottom: 8px;
+}
+
+.growth-inventory {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.growth-item {
+    flex-direction: row;
+    align-items: center;
+    margin-right: 18px;
+    padding: 4px 12px 4px 6px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.item-icon {
+    border-width: 2px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.item-icon-label {
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+}
+
+.growth-item-name {
+    font-size: 18px;
+    color: rgb(214, 219, 232);
+    margin-left: 8px;
+}
+
+.growth-item-count {
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    margin-left: 8px;
+}
+
+.growth-body {
+    flex-direction: row;
+    flex-grow: 1;
+    min-height: 0;
+    padding-bottom: 24px;
+}
+
+.growth-roster-scroll {
+    flex-grow: 1;
+    padding-right: 24px;
+}
+
+.growth-detail {
+    width: 640px;
+    padding: 22px 28px 22px 28px;
+}
+
+.growth-level {
+    font-size: 24px;
+    color: rgb(255, 210, 122);
+    margin-top: 2px;
+}
+
+.growth-stats {
+    flex-direction: row;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.growth-stat {
+    width: 33%;
+}
+
+.growth-stat-next {
+    font-size: 22px;
+    color: rgb(124, 224, 160);
+}
+
+.growth-section {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.12);
+    align-items: flex-start;
+}
+
+.growth-desc {
+    font-size: 18px;
+    color: rgb(214, 219, 232);
+    margin-top: 6px;
+    white-space: normal;
+}
+
+.growth-note {
+    font-size: 18px;
+    color: rgb(142, 152, 172);
+    margin-top: 6px;
+}
+
+.growth-cost {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.growth-cost-item {
+    flex-direction: row;
+    align-items: center;
+    margin-left: 14px;
+}
+
+.growth-cost-item .growth-cost-ok, .growth-cost-item .growth-cost-short {
+    margin-left: 6px;
+}
+
+.growth-cost-ok {
+    font-size: 18px;
+    color: rgb(238, 241, 246);
+}
+
+.growth-cost-short {
+    font-size: 18px;
+    color: rgb(255, 110, 120);
+}
+
+.growth-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.growth-button {
+    height: 52px;
+    padding-left: 14px;
+    padding-right: 18px;
+    margin-right: 10px;
+    margin-top: 6px;
+}
+
+.growth-button .c3-button-text {
+    font-size: 19px;
+    margin-left: 8px;
+}
+
+.growth-equip-list {
+    margin-top: 10px;
+    align-self: stretch;
+}
+
+.growth-equip-row {
+    padding: 8px 12px 8px 12px;
+    margin-bottom: 6px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.growth-equip-row:hover {
+    background-color: rgba(244, 182, 63, 0.15);
+}
+
+.growth-equip-name {
+    font-size: 20px;
+}
+
+.growth-equip-effect {
+    font-size: 17px;
+    color: rgb(214, 219, 232);
+}
+
+.growth-equip-user {
+    font-size: 15px;
+    color: rgb(142, 152, 172);
+}
+
+/* ---------- 部室ガチャ ---------- */
+.gacha-panel {
+    padding: 22px 30px 24px 30px;
+}
+
+.gacha-title {
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+}
+
+.gacha-desc {
+    font-size: 19px;
+    color: rgb(214, 219, 232);
+    margin-top: 8px;
+    white-space: normal;
+    -unity-paragraph-spacing: 4px;
+}
+
+.gacha-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.gacha-button {
+    width: 320px;
+    height: 70px;
+    margin-right: 16px;
+    margin-top: 6px;
+}
+
+.gacha-button .c3-button-text {
+    font-size: 24px;
+    margin-left: 10px;
+}
+
+.gacha-button--sub {
+    width: 300px;
+}
+
+.gacha-results {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+.gacha-card {
+    width: 330px;
+    height: 150px;
+    margin-right: 14px;
+    margin-bottom: 14px;
+    padding: 12px 16px 12px 16px;
+}
+
+.gacha-card-stars {
+    font-size: 18px;
+}
+
+.gacha-card-name {
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+}
+
+.gacha-card-effect {
+    font-size: 17px;
+    color: rgb(214, 219, 232);
+    margin-top: 2px;
+}
+
+.gacha-card-flavor {
+    font-size: 15px;
+    color: rgb(142, 152, 172);
+    white-space: normal;
+}
+
+.gacha-card-badge {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 17px;
+    padding: 0 8px 0 8px;
+    color: rgb(214, 219, 232);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.gacha-card-badge--new {
+    color: rgb(20, 17, 10);
+    background-color: rgb(255, 210, 122);
+}
+
+.gacha-owned {
+    font-size: 18px;
+    color: rgb(142, 152, 172);
+}
+
+.c3-mobile .gacha-card {
+    width: 300px;
+}
+
 /* ---------- 強化 ---------- */
 .upgrade-help {
     font-size: 19px;
@@ -2442,7 +2764,7 @@
 
 /* スマホの結果：帯を低くして、部員の活躍とボタンが重ならないように */
 .c3-mobile .result-band {
-    height: 300px;
+    min-height: 300px;
 }
 
 .c3-mobile .result-title {

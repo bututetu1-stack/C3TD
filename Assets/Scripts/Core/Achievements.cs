@@ -79,6 +79,9 @@ public static class Achievements
         add("mvp10", "エース", "同じ部員で MVP を 10 回取る", () => AnyMember(r => r.mvp >= 10));
         add("upgrades_max", "備品そろい", "強化をすべて最後の段までそろえる", UpgradesMax);
         add("battles50", "常連", "50 回出撃する", () => Progress.Battles >= 50);
+        add("promotion1", "はじめての昇進", "部員を 1 人昇進させる", () => AnyMember(r => r.promotion >= 1));
+        add("promotion2", "幹部", "部員を 1 人 2 回昇進させる", () => AnyMember(r => r.promotion >= 2));
+        add("rare_equip", "掘り出し物", "★3 の備品を手に入れる", () => Progress.OwnedEquipment.Exists(e => { EquipmentData d = Growth.Equipment(e.id); return d != null && d.rarity >= 3; }));
         return list;
     }
 

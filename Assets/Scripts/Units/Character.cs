@@ -115,9 +115,13 @@ public class Character : Unit
     {
         Character c = Spawn(member.Data, member.Class, cell, position, battle, parent);
         c.Member = member;
-        // 強化（★で買う）の分を掛ける
-        c.SetBaseStats(member.Data.stats.hp * Upgrades.HpScale(member.Data.unitClass), member.Data.stats.atk * Upgrades.AtkScale(member.Data.unitClass), member.Data.stats.def);
+        // 強化（★で買う）・育成（レベル・昇進・備品）の分を掛ける
+        float hp, atk, def;
+        Growth.Stats(member.Data, out hp, out atk, out def);
+        c.SetBaseStats(hp, atk, def);
+        c.baseInterval *= Mathf.Max(0.3f, 1f - Growth.Percent(member.Data.id, "interval") / 100f);
         c.Finish();
+        c.Skills.ApplyGrowth(Growth.InitialSp(member.Data.id), Growth.SpCostScale(member.Data.id));
         return c;
     }
 

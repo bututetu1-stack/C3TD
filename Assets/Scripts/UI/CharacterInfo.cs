@@ -22,6 +22,9 @@ public class CharacterInfo
     public readonly Label UltName;
     public readonly Label UltMeta;
 
+    /// <summary>レベルと昇進（育成。召喚ユニットは出さない）</summary>
+    public readonly Label LevelLabel;
+
     /// <summary>名前の下の状態（「配置中」「再配置まで 12秒」など）。空なら隠す</summary>
     public readonly Label StatusLabel;
 
@@ -66,7 +69,11 @@ public class CharacterInfo
         head.Add(portrait);
         var names = UIFactory.Box("unit-names");
         ClassLabel = UIFactory.Text("", UIFont.Body, "unit-class");
-        names.Add(ClassLabel);
+        var classRow = UIFactory.Box("unit-class-row");
+        classRow.Add(ClassLabel);
+        LevelLabel = UIFactory.Text("", UIFont.Display, "unit-level");
+        classRow.Add(LevelLabel);
+        names.Add(classRow);
         NameLabel = UIFactory.Text("", UIFont.Title, "unit-name");
         names.Add(NameLabel);
         StatusLabel = UIFactory.Text("", UIFont.Body, "unit-status");
@@ -163,9 +170,15 @@ public class CharacterInfo
         ClassLabel.style.backgroundColor = classColor;
         profileLabel.text = d.profile ?? "";
 
-        HpValue.text = d.stats.hp.ToString();
-        AtkValue.text = d.stats.atk.ToString();
-        DefValue.text = d.stats.def.ToString();
+        // 部員は、強化・育成ぶん込みの数値（出撃で使う数と同じ）
+        float hp = d.stats.hp, atk = d.stats.atk, def = d.stats.def;
+        if (!summon) Growth.Stats(d, out hp, out atk, out def);
+        HpValue.text = Mathf.RoundToInt(hp).ToString();
+        AtkValue.text = Mathf.RoundToInt(atk).ToString();
+        DefValue.text = Mathf.RoundToInt(def).ToString();
+        int promotion = Progress.MemberPromotion(d.id);
+        LevelLabel.text = summon ? "" : "Lv" + Growth.Level(d.id) + (promotion > 0 ? "  昇進" + promotion : "");
+        UIFactory.SetVisible(LevelLabel, !summon);
         int block = d.stats.block >= 0 ? d.stats.block : cls.block;
         BlockValue.text = cls.placement == Placement.Ground ? block.ToString() : "-";
         RangeValue.text = d.stats.range.ToString("0.#");

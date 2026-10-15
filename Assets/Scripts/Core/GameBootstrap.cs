@@ -47,9 +47,13 @@ public class GameBootstrap : MonoBehaviour
         gameObject.AddComponent<BattleInput>().Init(hud);
     }
 
+    /// <summary>この仕組み（育成とガチャ）の前にクリアした作戦のぶんとして渡した部費（育成の画面で一度だけ知らせる）</summary>
+    private int pastCoins;
+
     void Start()
     {
         squad = Progress.Squad;
+        pastCoins = Growth.GrantPastClears();
         if (!string.IsNullOrEmpty(startStage)) StartBattle(startStage);
         else ShowTitle();
     }
@@ -91,6 +95,19 @@ public class GameBootstrap : MonoBehaviour
     {
         EndBattle();
         menu.ShowUpgrades();
+    }
+
+    public void ShowGrowth()
+    {
+        EndBattle();
+        menu.ShowGrowth(pastCoins);
+        pastCoins = 0;
+    }
+
+    public void ShowGacha()
+    {
+        EndBattle();
+        menu.ShowGacha();
     }
 
     /// <summary>職業の説明。fromSquad なら戻ると編成画面、でなければ遊び方</summary>

@@ -37,6 +37,27 @@ public class MemberRecord
     public string id;
     public int sorties;
     public int mvp;
+
+    /// <summary>育成：レベル（0 は 1 とみなす）・昇進の回数・付けている備品</summary>
+    public int level = 1;
+    public int promotion;
+    public string equip;
+}
+
+/// <summary>持っている素材</summary>
+[Serializable]
+public class ItemStack
+{
+    public string id;
+    public int count;
+}
+
+/// <summary>持っている備品（stacks：同じ物を重ねた数 0〜4）</summary>
+[Serializable]
+public class EquipRecord
+{
+    public string id;
+    public int stacks;
 }
 
 /// <summary>エンドレスの最高記録（守りきった波の数）</summary>
@@ -66,6 +87,12 @@ public class ProgressData
     /// <summary>会ったことのある敵（初めて会ったときだけ説明の札を出す）。seenSeeded：前のセーブからの引き継ぎを済ませた</summary>
     public List<string> seenEnemies = new List<string>();
     public bool seenSeeded;
+
+    /// <summary>育成とガチャ：部費・素材・備品。pastRewards：この仕組みの前にクリアした作戦のぶんを渡した</summary>
+    public int coins;
+    public List<ItemStack> items = new List<ItemStack>();
+    public List<EquipRecord> equipment = new List<EquipRecord>();
+    public bool pastRewards;
     public List<string> squad = new List<string>();
     public bool unlockAll;
 }
@@ -189,7 +216,7 @@ public static class Progress
             MemberRecord r = Member(id);
             if (r == null)
             {
-                r = new MemberRecord { id = id };
+                r = new MemberRecord { id = id, level = 1 };
                 Data.members.Add(r);
             }
             r.sorties++;
@@ -272,6 +299,139 @@ public static class Progress
         if (HasSeenEnemy(id)) return;
         Data.seenEnemies.Add(id);
         Save();
+    }
+
+    // ================= 育成とガチャ =================
+
+    public static int Coins { get { return Data.coins; } }
+
+    public static void AddCoins(int amount)
+    {
+        Data.coins = Mathf.Max(0, Data.coins + amount);
+        Save();
+    }
+
+    public static int ItemCount(string id)
+    {
+        if (Data.items == null) return 0;
+        foreach (ItemStack s in Data.items) if (s.id == id) return s.count;
+        return 0;
+    }
+
+    public static void AddItem(string id, int amount)
+    {
+        if (Data.items == null) Data.items = new List<ItemStack>();
+        ItemStack stack = null;
+        foreach (ItemStack s in Data.items) if (s.id == id) stack = s;
+        if (stack == null)
+        {
+            stack = new ItemStack { id = id };
+            Data.items.Add(stack);
+        }
+        stack.count = Mathf.Max(0, stack.count + amount);
+        Save();
+    }
+
+    public static bool HasEquipment(string id, out int stacks)
+    {
+        stacks = 0;
+        if (Data.equipment == null) return false;
+        foreach (EquipRecord e in Data.equipment)
+            if (e.id == id) { stacks = e.stacks; return true; }
+        return false;
+    }
+
+    public static int EquipmentStacks(string id)
+    {
+        int stacks;
+        HasEquipment(id, out stacks);
+        return stacks;
+    }
+
+    public static List<EquipRecord> OwnedEquipment
+    {
+        get { return Data.equipment ?? (Data.equipment = new List<EquipRecord>()); }
+    }
+
+    public static void AddEquipment(string id)
+    {
+        int stacks;
+        if (HasEquipment(id, out stacks)) return;
+        OwnedEquipment.Add(new EquipRecord { id = id });
+        Save();
+    }
+
+    public static void StackEquipment(string id)
+    {
+        foreach (EquipRecord e in OwnedEquipment)
+            if (e.id == id) e.stacks = Mathf.Min(Growth.MaxStacks, e.stacks + 1);
+        Save();
+    }
+
+    private static MemberRecord MemberOrNew(string id)
+    {
+        if (Data.members == null) Data.members = new List<MemberRecord>();
+        MemberRecord r = Member(id);
+        if (r == null)
+        {
+            r = new MemberRecord { id = id, level = 1 };
+            Data.members.Add(r);
+        }
+        return r;
+    }
+
+    public static int MemberLevel(string id)
+    {
+        MemberRecord r = Member(id);
+        return r != null ? Mathf.Max(1, r.level) : 1;
+    }
+
+    public static int MemberPromotion(string id)
+    {
+        MemberRecord r = Member(id);
+        return r != null ? r.promotion : 0;
+    }
+
+    public static string MemberEquip(string id)
+    {
+        MemberRecord r = Member(id);
+        return r != null ? r.equip : null;
+    }
+
+    public static void SetMemberGrowth(string id, int level, int promotion)
+    {
+        MemberRecord r = MemberOrNew(id);
+        r.level = Mathf.Max(1, level);
+        r.promotion = Mathf.Max(0, promotion);
+        Save();
+    }
+
+    /// <summary>備品を付ける（ほかの部員が付けていれば外す）。equipId が空なら外す</summary>
+    public static void SetMemberEquip(string id, string equipId)
+    {
+        if (!string.IsNullOrEmpty(equipId) && Data.members != null)
+            foreach (MemberRecord other in Data.members)
+                if (other.id != id && other.equip == equipId) other.equip = null;
+        MemberOrNew(id).equip = string.IsNullOrEmpty(equipId) ? null : equipId;
+        Save();
+    }
+
+    /// <summary>その備品を付けている部員（いなければ null）</summary>
+    public static string EquippedBy(string equipId)
+    {
+        if (Data.members == null || string.IsNullOrEmpty(equipId)) return null;
+        foreach (MemberRecord r in Data.members) if (r.equip == equipId) return r.id;
+        return null;
+    }
+
+    public static bool PastRewardsGiven
+    {
+        get { return Data.pastRewards; }
+        set
+        {
+            Data.pastRewards = value;
+            Save();
+        }
     }
 
     /// <summary>勝ち負けが決まった出撃の回数</summary>

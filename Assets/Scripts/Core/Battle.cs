@@ -75,6 +75,9 @@ public class Battle : MonoBehaviour
     /// <summary>エンドレスで負けたとき、最高記録を更新したか</summary>
     public bool EndlessNewBest { get; private set; }
 
+    /// <summary>この出撃が終わって手に入れた部費と素材（結果の画面に出す）</summary>
+    public readonly List<Reward> Rewards = new List<Reward>();
+
     /// <summary>この出撃が終わって新しく取った実績（結果の画面に出す）</summary>
     public readonly List<Achievements.Entry> NewAchievements = new List<Achievements.Entry>();
 
@@ -326,6 +329,13 @@ public class Battle : MonoBehaviour
             if (State.Phase != GamePhase.Playing)
             {
                 Progress.RecordBattle();
+                // 周回で落ちる物（BalanceRun の間は渡さない）
+                if (Upgrades.Enabled)
+                {
+                    bool won = State.Phase == GamePhase.Won;
+                    int stars = !won ? 0 : State.Life >= State.MaxLife ? 3 : 2;
+                    Rewards.AddRange(Growth.GrantBattle(Stage, won, stars, Hard, EndlessSurvived));
+                }
                 NewAchievements.AddRange(Achievements.CheckNew());
             }
         }
@@ -510,7 +520,7 @@ public class Battle : MonoBehaviour
         if (c.Member != null)
         {
             c.Member.Deployed = null;
-            c.Member.Cooldown = c.Data.redeployTime * Upgrades.RedeployScale();
+            c.Member.Cooldown = c.Data.redeployTime * Upgrades.RedeployScale() * Mathf.Max(0.3f, 1f - Growth.Percent(c.Data.id, "redeploy") / 100f);
         }
         c.Despawn();
     }
