@@ -190,6 +190,9 @@ public class GachaShow
 
     // ================= 流れ =================
 
+    /// <summary>★3 があるときに確定演出（金の光の柱）が出る割合</summary>
+    public static float OmenChance = 0.15f;
+
     private IEnumerator Run(List<GachaResult> results)
     {
         // 大きさは、いつも出ている親（ガチャの画面）から読む（出したばかりの Layer はまだ大きさが決まっていない）
@@ -230,7 +233,36 @@ public class GachaShow
         Spin(rays, 14f);
         VisualElement glow = Image(SpriteFactory.Glow, cx, cy, boxSize * 1.2f, boxSize * 1.2f, back);
         glow.style.opacity = 0f;
+        // 確定演出：★3 があるとき、まれに（15%）金の光の柱が落ちてきて、箱がはじめから金色に光る
+        bool omen = best >= 3 && Random.value < OmenChance;
+        if (omen)
+        {
+            shown = 3;
+            upgrade = false;
+            yield return Wait(0.3f);
+            Color gold = RarityColor(3);
+            VisualElement beam = Image(BeamTexture(), cx, H * 0.5f, 20f * S, H * 1.6f, back);
+            beam.style.unityBackgroundImageTintColor = new Color(1f, 0.9f, 0.6f);
+            VisualElement core = Image(BeamTexture(), cx, H * 0.5f, 8f * S, H * 1.6f, back);
+            beam.AddToClassList("gacha-img--stretch");
+            core.AddToClassList("gacha-img--stretch");
+            GachaSound.Play("upgrade", 1f);
+            FlashScreen(gold, 0.35f, 0.4f);
+            Shake(24f * S, 0.5f);
+            yield return Tween(0.6f, t =>
+            {
+                Resize(beam, cx, H * 0.5f, Mathf.Lerp(20f, 320f, Ease.OutCubic(t)) * S, H * 1.6f);
+                Resize(core, cx, H * 0.5f, Mathf.Lerp(8f, 90f, Ease.OutCubic(t)) * S, H * 1.6f);
+                beam.style.opacity = 1f - 0.4f * t;
+            });
+            UITween.Run(core, 0.4f, t => core.style.opacity = 1f - t, () => core.RemoveFromHierarchy());
+            Burst(cx, cy, gold, 24, boxSize * 1.8f);
+            UITween.Run(beam, 0.6f, t => beam.style.opacity = 0.5f * (1f - t), () => beam.RemoveFromHierarchy());
+            glow.style.unityBackgroundImageTintColor = gold;
+            glow.style.opacity = 0.6f;
+        }
         VisualElement box = Box(cx, cy, boxSize);
+        if (omen) box.style.unityBackgroundImageTintColor = new Color(1f, 0.9f, 0.55f);
 
         yield return Tween(0.45f, t =>
         {
@@ -574,6 +606,17 @@ public class GachaShow
         spot.style.opacity = 1f;
         SetHint("");
         UIFactory.SetVisible(skipButton, false);
+
+        // ★3 のカードは、後ろで光線が回りつづける（どのカードよりも後ろに置く）
+        foreach (CardView c in cards)
+        {
+            if (c.Result.Equipment.rarity < 3) continue;
+            VisualElement r = Image(RaysTexture(), c.X, c.Y, c.Width * 2.8f, c.Width * 2.8f, stage);
+            r.style.unityBackgroundImageTintColor = new Color(1f, 0.8f, 0.35f, 0.75f);
+            stage.Remove(r);
+            stage.Insert(0, r);
+            Spin(r, 20f);
+        }
 
         int r3 = 0, r2 = 0, fresh = 0, coins = 0;
         foreach (GachaResult r in results)
@@ -1099,6 +1142,35 @@ public class GachaShow
             case 2: return new Color(0.4f, 0.82f, 1f);
             default: return new Color(0.88f, 0.9f, 0.96f);
         }
+    }
+
+    private static Texture2D beamTexture;
+
+    /// <summary>縦の光の柱（横はまん中が明るく、上下の端は薄い）</summary>
+    private static Texture2D BeamTexture()
+    {
+        if (beamTexture != null) return beamTexture;
+        const int w = 64, h = 64;
+        var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        var px = new Color32[w * h];
+        for (int y = 0; y < h; y++)
+        {
+            float v = (y + 0.5f) / h;
+            float ends = Mathf.Clamp01(Mathf.Min(v, 1f - v) * 6f);
+            for (int x = 0; x < w; x++)
+            {
+                float u = ((x + 0.5f) / w - 0.5f) * 2f;
+                float a = Mathf.Exp(-u * u * 7f) * ends;
+                px[y * w + x] = new Color(1f, 1f, 1f, a);
+            }
+        }
+        tex.SetPixels32(px);
+        tex.wrapMode = TextureWrapMode.Clamp;
+        tex.filterMode = FilterMode.Bilinear;
+        tex.hideFlags = HideFlags.DontSave;
+        tex.Apply(false, true);
+        beamTexture = tex;
+        return tex;
     }
 
     /// <summary>放射状の光線（絵がなくても出せるよう、コードで作る）</summary>

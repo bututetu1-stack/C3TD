@@ -26,6 +26,10 @@ public class GachaScreen
     private readonly Label pickupName;
     private readonly Label pickupEffect;
     private readonly VisualElement pickupRays;
+    private readonly Label pickupTimer;
+    private int timerSecond = -1;
+    private string pickupId;
+    private HashSet<string> freshIds;
     private readonly GachaShow show;
     private List<GachaResult> last;
 
@@ -73,6 +77,8 @@ public class GachaScreen
         bannerText.Add(pickupName);
         pickupEffect = UIFactory.Text("", UIFont.Body, "gacha-banner-effect");
         bannerText.Add(pickupEffect);
+        pickupTimer = UIFactory.Text("", UIFont.Body, "gacha-banner-timer");
+        bannerText.Add(pickupTimer);
         bannerText.Add(UIFactory.Text("★3 が出たら " + g.pickupRate.ToString("0") + "% でこの備品。ピックアップは毎日かわる", UIFont.Medium, "gacha-banner-note"));
         banner.Add(bannerText);
         body.Add(banner);
@@ -143,12 +149,17 @@ public class GachaScreen
             float pulse = 0.85f + 0.15f * Mathf.Sin(t * 5f);
             if (freeButton.Interactable) freeButton.style.opacity = pulse;
             if (tenButton.Interactable) tenButton.style.scale = new Scale(new Vector3(1f + 0.015f * Mathf.Sin(t * 4f), 1f + 0.015f * Mathf.Sin(t * 4f), 1f));
+            if (Random.value < 0.06f) BannerSpark();
+            UpdateTimer();
         }).Every(0);
 
-        // 引いたときの演出（画面いっぱいに重ねる）。閉じたら、結果を下に並べる
+        // 引いたときの演出（画面いっぱいに重ねる）。閉じたら、結果を下に並べ、図鑑に新しく入った物を光らせる
         show = new GachaShow(Root, bootstrap, n => Pull(n, false), () =>
         {
+            freshIds = new HashSet<string>();
+            if (last != null) foreach (GachaResult r in last) if (r.IsNew) freshIds.Add(r.Equipment.id);
             Refresh();
+            freshIds = null;
             ShowLast();
         });
     }
@@ -186,6 +197,7 @@ public class GachaScreen
         BuildCollection();
 
         EquipmentData pickup = Growth.Pickup();
+        pickupId = pickup != null ? pickup.id : null;
         if (pickup != null)
         {
             Sprite art = Art.Item(pickup.id);
@@ -200,7 +212,7 @@ public class GachaScreen
         collection.Clear();
         var all = new List<EquipmentData>(GameData.Items.equipment);
         all.Sort((a, b) => b.rarity != a.rarity ? b.rarity.CompareTo(a.rarity) : 0);
-        int owned = 0;
+        int owned = 0, popped = 0;
         foreach (EquipmentData e in all)
         {
             int stacks;
@@ -223,10 +235,67 @@ public class GachaScreen
             stars.style.color = have ? color : new Color(1f, 1f, 1f, 0.3f);
             tile.Add(stars);
             if (have && stacks > 0) tile.Add(UIFactory.Text("+" + stacks, UIFont.Display, "gacha-tile-stack"));
+            if (freshIds != null && freshIds.Contains(e.id)) PopNew(tile, popped++, color);
             tile.tooltip = have ? e.name + "：" + Growth.Describe(e, stacks) : "？？？";
             collection.Add(tile);
         }
         collectionLabel.text = "備品図鑑 " + owned + " / " + all.Count + (owned >= all.Count ? "　コンプリート！" : "");
+    }
+
+    /// <summary>図鑑に新しく入った物：光って、はねて、NEW が付く</summary>
+    private static void PopNew(VisualElement tile, int index, Color color)
+    {
+        var tag = UIFactory.Text("NEW", UIFont.Display, "gacha-card-badge", "gacha-card-badge--new", "gacha-tile-new");
+        tile.Add(tag);
+        tile.style.scale = new Scale(Vector3.zero);
+        tile.schedule.Execute(() =>
+        {
+            GachaSound.Play("star", 0.5f);
+            UITween.Run(tile, 0.5f, t =>
+            {
+                float s = Ease.OutBack(t);
+                tile.style.scale = new Scale(new Vector3(s, s, 1f));
+                tile.style.backgroundColor = Color.Lerp(Palette.WithAlpha(color, 0.7f), new Color(1f, 1f, 1f, 0.05f), t);
+            });
+        }).StartingIn(300 + 120 * index);
+    }
+
+    /// <summary>ピックアップの入れかわり（夜の 0 時）までの残り。日が変わったら絵も変える</summary>
+    private void UpdateTimer()
+    {
+        System.DateTime now = System.DateTime.Now;
+        if (now.Second == timerSecond) return;
+        timerSecond = now.Second;
+        System.TimeSpan left = now.Date.AddDays(1) - now;
+        pickupTimer.text = "入れかわりまで あと " + left.Hours + ":" + left.Minutes.ToString("00") + ":" + left.Seconds.ToString("00");
+        EquipmentData pickup = Growth.Pickup();
+        if (pickup != null && pickup.id != pickupId) Refresh();
+    }
+
+    /// <summary>ピックアップの絵のまわりに、きらっと光る粒</summary>
+    private void BannerSpark()
+    {
+        Rect r = pickupArt.layout;
+        if (float.IsNaN(r.width) || r.width < 10f || pickupArt.parent == null) return;
+        Sprite star = Art.Effect("GachaSparkle");
+        float size = Random.Range(30f, 80f);
+        var p = UIFactory.Box("gacha-img");
+        p.style.position = Position.Absolute;
+        p.style.width = size;
+        p.style.height = size;
+        p.style.left = r.x + Random.Range(0.05f, 0.95f) * r.width - size * 0.5f;
+        p.style.top = r.y + Random.Range(0.05f, 0.95f) * r.height - size * 0.5f;
+        p.style.backgroundImage = new StyleBackground(star != null ? star : SpriteFactory.Glow);
+        if (star == null) p.style.unityBackgroundImageTintColor = new Color(1f, 0.85f, 0.4f);
+        VisualElement parent = pickupArt.parent;
+        parent.Insert(parent.IndexOf(pickupArt) + 1, p);
+        UITween.Run(p, 1.2f, t =>
+        {
+            float s = Mathf.Sin(t * Mathf.PI);
+            p.style.opacity = s;
+            p.style.scale = new Scale(new Vector3(s, s, 1f));
+            p.style.rotate = new Rotate(new Angle(t * 60f, AngleUnit.Degree));
+        }, () => p.RemoveFromHierarchy());
     }
 
     private void Pull(int count, bool free)
