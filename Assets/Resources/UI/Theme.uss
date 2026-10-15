@@ -2984,6 +2984,19 @@
     rotate: -12deg;
 }
 
+.gacha-spot-new.gacha-spot-pickup {
+    color: rgb(255, 255, 255);
+    background-color: rgb(239, 74, 85);
+    rotate: 10deg;
+}
+
+.gacha-need {
+    font-size: 18px;
+    color: rgb(178, 186, 204);
+    margin-top: 8px;
+    white-space: normal;
+}
+
 .gacha-pity {
     font-size: 20px;
     color: rgb(214, 219, 232);

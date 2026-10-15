@@ -521,6 +521,24 @@ public class GachaShow
             }, () => Shake(10f * S, 0.2f));
             GachaSound.Play("stamp", 0.9f);
         }
+        EquipmentData pickup = Growth.Pickup();
+        if (pickup != null && pickup.id == e.id)
+        {
+            if (r.IsNew) yield return Wait(0.3f);
+            var pick = UIFactory.Text("PICK UP!", UIFont.Display, "gacha-spot-new", "gacha-spot-pickup");
+            pick.style.fontSize = 52f * S;
+            pick.style.left = cx - cw * 0.5f - 230f * S;
+            pick.style.top = cy - ch * 0.5f + 20f * S;
+            spot.Add(pick);
+            UITween.Run(pick, 0.3f, t =>
+            {
+                float s = Mathf.Lerp(3f, 1f, Ease.OutCubic(t));
+                pick.style.scale = new Scale(new Vector3(s, s, 1f));
+                pick.style.opacity = t;
+            }, () => Shake(10f * S, 0.2f));
+            GachaSound.Play("stamp", 0.9f);
+            Burst(cx - cw * 0.5f - 100f * S, cy - ch * 0.5f + 50f * S, new Color(1f, 0.4f, 0.45f), 16, 220f * S);
+        }
         hint.AddToClassList("gacha-hint--top");
         SetHint("押して続ける");
         yield return WaitTap(10f);

@@ -20,6 +20,7 @@ public class GachaScreen
     private readonly Label collectionLabel;
     private readonly Label ownedLabel;
     private readonly Label pityLabel;
+    private readonly Label needLabel;
     private readonly VisualElement pityFill;
     private readonly VisualElement pickupArt;
     private readonly Label pickupName;
@@ -98,6 +99,8 @@ public class GachaScreen
         tenButton.AddToClassList("gacha-button");
         buttons.Add(tenButton);
         side.Add(buttons);
+        needLabel = UIFactory.Text("", UIFont.Medium, "gacha-need");
+        side.Add(needLabel);
 
         // 天井のゲージ
         pityLabel = UIFactory.Text("", UIFont.Body, "gacha-pity");
@@ -169,6 +172,9 @@ public class GachaScreen
         oneButton.Active = oneButton.Interactable;
         tenButton.Interactable = Progress.Coins >= g.cost10;
         tenButton.Active = tenButton.Interactable;
+        int need = Progress.Coins < g.cost ? g.cost - Progress.Coins : Progress.Coins < g.cost10 ? g.cost10 - Progress.Coins : 0;
+        needLabel.text = need <= 0 ? "" : "あと部費 <color=#FFD27A>" + need + "</color> で" + (Progress.Coins < g.cost ? " 1 回" : " 10 回") + "引ける（作戦・今日の任務・実績でもらえる）";
+        UIFactory.SetVisible(needLabel, need > 0);
         ownedLabel.text = "持っている備品 " + Progress.OwnedEquipment.Count + " / " + GameData.Items.equipment.Count + " 種類　引いた回数 " + Progress.GachaPulls;
 
         int left = Growth.PityLeft();

@@ -16,13 +16,22 @@ public class TitleScreen
     {
         int login = Daily.Login();
         if (login > 0) Toast("ログインボーナス　部費 +" + login);
-        UIFactory.SetVisible(freeBadge, Growth.FreePullAvailable());
         RefreshMissions();
+    }
+
+    /// <summary>ガチャのボタンの札：今日の無料があれば「無料」、部費で 10 回引ければ「10回OK」、1 回なら「引ける」</summary>
+    private void RefreshBadge()
+    {
+        GachaData g = GameData.Items.gacha;
+        string text = Growth.FreePullAvailable() ? "無料" : Progress.Coins >= g.cost10 ? "10回OK" : Progress.Coins >= g.cost ? "引ける" : "";
+        freeBadge.text = text;
+        UIFactory.SetVisible(freeBadge, text.Length > 0);
     }
 
     private void RefreshMissions()
     {
         coinLabel.text = "部費 " + Progress.Coins.ToString("N0");
+        RefreshBadge();
         missionList.Clear();
         foreach (Daily.Mission m in Daily.Missions)
         {
