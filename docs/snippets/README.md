@@ -34,6 +34,7 @@ isuzu-unity-cli call play_mode_stop
 | `tools/balance.sh NOVICE RUNS "stages" "squad"` | 自動で戦わせて勝った割合（下の「バランスの確かめ」）。強化・育成は効かない |
 | `tools/webbuild.cs` | ブラウザ版を作る（`--wait-timeout 1800` を付けて背面で） |
 | `tools/gacha_test.cs` / `tools/gacha_tap.cs` | ガチャの演出を確かめる（★3 が必ず出る 10 回）／演出で「押す」 |
+| `tools/gacha_export_wav.cs` | ガチャの音と BGM を `Temp/gacha_sounds/*.wav` に書き出す（オーナーがゲームを動かさずに聞けるように） |
 | `tools/gacha_waves.cs` | ガチャの音の波の形を `Temp/gacha_waves.png` に描く（Claude には音が聞こえないので、切れ目やプチッという音がないかを目で見る） |
 
 - 撮った画像を並べる `chatgpt/sheet.ps1` は正方形のマスに引き伸ばすので、16:9 の画像はつぶれて見える。大きさを確かめるときは 1 枚ずつ見る。
