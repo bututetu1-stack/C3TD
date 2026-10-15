@@ -456,6 +456,7 @@ public class GachaShow
         if (raysArt != null)
         {
             VisualElement r2 = Image(raysArt, cx, cy, H * 1.2f, H * 1.2f, spot);
+            r2.style.unityBackgroundImageTintColor = new Color(1f, 1f, 1f, 0.6f);
             Spin(r2, -10f);
         }
         VisualElement halo = Image(SpriteFactory.Glow, cx, cy, H * 0.9f, H * 0.9f, spot);
@@ -605,20 +606,27 @@ public class GachaShow
             c.Root.style.opacity = 0f;
 
             int rarity = results[i].Equipment.rarity;
-            // めくる前から、★2 は青く、★3 は金色に光る
+            // めくる前から、★2 は青く、★3 は金色に光る（後ろの光・ふちの色・カードの上のきらめき）
+            ChamferBox back = CardBack(cw, chh);
             if (rarity >= 2)
             {
-                c.Aura = Image(SpriteFactory.Glow, cw * 0.5f, chh * 0.5f, cw * 1.6f, cw * 1.6f, c.Root);
-                c.Aura.style.unityBackgroundImageTintColor = RarityColor(rarity);
+                bool gold = rarity >= 3;
+                Color color = RarityColor(rarity);
+                float g = cw * (gold ? 2.5f : 2.1f);
+                c.Aura = Image(SpriteFactory.Glow, cw * 0.5f, chh * 0.5f, g, g * 1.2f, c.Root);
+                c.Aura.style.unityBackgroundImageTintColor = color;
+                back.SetStroke(color, gold ? 4f : 3f);
                 VisualElement aura = c.Aura;
                 float phase = Random.value * 6f;
-                bool gold = rarity >= 3;
                 Loop(c.Root, () =>
                 {
-                    if (!c.Open) aura.style.opacity = (gold ? 0.75f : 0.5f) + 0.25f * Mathf.Sin(Time.unscaledTime * (gold ? 7f : 4f) + phase);
+                    if (c.Open) return;
+                    aura.style.opacity = (gold ? 0.8f : 0.55f) + 0.2f * Mathf.Sin(Time.unscaledTime * (gold ? 7f : 4f) + phase);
+                    if (c.Root.resolvedStyle.opacity > 0.9f && Random.value < (gold ? 0.12f : 0.05f))
+                        Spark(Random.Range(0f, cw), Random.Range(0f, chh), color, c.Root);
                 });
             }
-            c.Back = CardBack(cw, chh);
+            c.Back = back;
             c.Root.Add(c.Back);
             stage.Add(c.Root);
             cards.Add(c);
@@ -666,7 +674,7 @@ public class GachaShow
     }
 
     /// <summary>カードの裏（Art/Gacha/CardBack。なければ紺地に琥珀色の模様と「C3」）</summary>
-    private static VisualElement CardBack(float w, float h)
+    private static ChamferBox CardBack(float w, float h)
     {
         var card = new ChamferBox();
         card.AddToClassList("gacha-card-back");
@@ -956,7 +964,7 @@ public class GachaShow
         Sprite star = Art.Effect("GachaSparkle");
         float size = Random.Range(14f, 40f) * S;
         var p = Image(star != null ? star : SpriteFactory.Glow, x, y, size, size, parent);
-        if (star == null) p.style.unityBackgroundImageTintColor = color;
+        p.style.unityBackgroundImageTintColor = star != null ? Color.Lerp(Color.white, color, 0.5f) : color;
         UITween.Run(p, 0.9f, t =>
         {
             float s = Mathf.Sin(t * Mathf.PI);

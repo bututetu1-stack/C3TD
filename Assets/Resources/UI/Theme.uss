@@ -2950,6 +2950,11 @@
     left: 0;
     right: 0;
     align-items: center;
+    padding: 4px 0 12px 0;
+    background-color: rgba(4, 6, 12, 0.8);
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-color: rgba(255, 210, 122, 0.55);
 }
 
 .gacha-spot-stars {
