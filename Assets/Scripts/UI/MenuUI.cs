@@ -66,6 +66,7 @@ public class MenuUI : MonoBehaviour
 
     public void ShowTitle()
     {
+        title.Refresh();
         Show(title.Root);
     }
 

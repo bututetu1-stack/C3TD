@@ -2406,7 +2406,7 @@
 /* ---------- 部室ガチャの画面 ---------- */
 .gacha-body {
     flex-direction: row;
-    height: 560px;
+    height: 500px;
     flex-shrink: 0;
 }
 
@@ -2493,6 +2493,66 @@
     height: 10px;
     width: 0;
     background-color: rgb(255, 210, 122);
+}
+
+.gacha-collection {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.gacha-tile {
+    width: 82px;
+    height: 82px;
+    margin-right: 8px;
+    margin-bottom: 6px;
+    border-width: 2px;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.gacha-tile-art {
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    right: 6px;
+    bottom: 14px;
+}
+
+.gacha-tile-unknown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 10px;
+    font-size: 34px;
+    color: rgba(255, 255, 255, 0.35);
+    -unity-text-align: middle-center;
+}
+
+.gacha-tile-stars {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 12px;
+    -unity-text-align: middle-center;
+}
+
+.gacha-tile-stack {
+    position: absolute;
+    right: 3px;
+    top: 1px;
+    font-size: 15px;
+    color: rgb(255, 210, 122);
+}
+
+.title-free-badge {
+    position: absolute;
+    right: -8px;
+    top: -12px;
+    font-size: 16px;
+    padding: 1px 8px 1px 8px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(239, 74, 85);
+    rotate: 8deg;
 }
 
 .gacha-results-caption {

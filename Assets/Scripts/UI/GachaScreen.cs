@@ -16,6 +16,8 @@ public class GachaScreen
     private readonly C3Button oneButton;
     private readonly C3Button tenButton;
     private readonly VisualElement results;
+    private readonly VisualElement collection;
+    private readonly Label collectionLabel;
     private readonly Label ownedLabel;
     private readonly Label pityLabel;
     private readonly VisualElement pityFill;
@@ -109,6 +111,12 @@ public class GachaScreen
         body.Add(side);
         Root.Add(body);
 
+        // 備品図鑑：持っていない物は影だけ（そろえたくなるように）
+        collectionLabel = UIFactory.Text("", UIFont.Body, "gacha-results-caption");
+        Root.Add(collectionLabel);
+        collection = UIFactory.Box("gacha-collection");
+        Root.Add(collection);
+
         Root.Add(UIFactory.Text("前回の結果", UIFont.Body, "gacha-results-caption"));
         results = UIFactory.Box("gacha-results");
         Root.Add(results);
@@ -163,6 +171,8 @@ public class GachaScreen
         float rate = g.pity > 0 ? Mathf.Clamp01(Progress.GachaPity / (float)g.pity) : 0f;
         pityFill.style.width = Length.Percent(rate * 100f);
 
+        BuildCollection();
+
         EquipmentData pickup = Growth.Pickup();
         if (pickup != null)
         {
@@ -171,6 +181,40 @@ public class GachaScreen
             pickupName.text = pickup.name;
             pickupEffect.text = Growth.Describe(pickup, 0) + "　" + (pickup.description ?? "");
         }
+    }
+
+    private void BuildCollection()
+    {
+        collection.Clear();
+        var all = new List<EquipmentData>(GameData.Items.equipment);
+        all.Sort((a, b) => b.rarity != a.rarity ? b.rarity.CompareTo(a.rarity) : 0);
+        int owned = 0;
+        foreach (EquipmentData e in all)
+        {
+            int stacks;
+            bool have = Progress.HasEquipment(e.id, out stacks);
+            if (have) owned++;
+            Color color = GachaShow.RarityColor(e.rarity);
+            var tile = UIFactory.Box("gacha-tile");
+            tile.style.borderLeftColor = tile.style.borderRightColor = tile.style.borderTopColor = tile.style.borderBottomColor = have ? color : new Color(1f, 1f, 1f, 0.12f);
+            Sprite art = Art.Item(e.id);
+            var img = UIFactory.Box("gacha-tile-art", "gacha-img");
+            if (art != null)
+            {
+                img.style.backgroundImage = new StyleBackground(art);
+                // 持っていない物は黒い影に
+                if (!have) img.style.unityBackgroundImageTintColor = new Color(0f, 0f, 0f, 0.85f);
+            }
+            tile.Add(img);
+            if (!have) tile.Add(UIFactory.Text("?", UIFont.Display, "gacha-tile-unknown"));
+            var stars = UIFactory.Text(GrowthScreen.Stars(e.rarity), UIFont.Body, "gacha-tile-stars");
+            stars.style.color = have ? color : new Color(1f, 1f, 1f, 0.3f);
+            tile.Add(stars);
+            if (have && stacks > 0) tile.Add(UIFactory.Text("+" + stacks, UIFont.Display, "gacha-tile-stack"));
+            tile.tooltip = have ? e.name + "：" + Growth.Describe(e, stacks) : "？？？";
+            collection.Add(tile);
+        }
+        collectionLabel.text = "備品図鑑 " + owned + " / " + all.Count + (owned >= all.Count ? "　コンプリート！" : "");
     }
 
     private void Pull(int count, bool free)

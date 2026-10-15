@@ -128,6 +128,15 @@ public class AudioManager : MonoBehaviour
             self.seSource.PlayOneShot(clip, volume);
     }
 
+    /// <summary>コードで作った音を鳴らす（ガチャの演出など。効果音の音量に従う）</summary>
+    public static void PlayClip(AudioClip clip, float volume)
+    {
+        if (clip == null) return;
+        float v = volume * SeLevel;
+        if (v <= 0.001f) return;
+        Instance.seSource.PlayOneShot(clip, v);
+    }
+
     /// <summary>ファイルの start〜end 秒だけ鳴らす（音の中身を読めず、切り出せないブラウザ版で使う）</summary>
     private void PlayPart(AudioClip clip, float start, float end, float volume)
     {

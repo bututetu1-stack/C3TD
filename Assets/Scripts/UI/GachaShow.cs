@@ -198,8 +198,14 @@ public class GachaShow
         if (float.IsNaN(W) || W < 10f) { W = 1920f; H = 1080f; }
         S = H / 1080f;
 
-        int best = 1;
-        foreach (GachaResult r in results) best = Mathf.Max(best, r.Equipment.rarity);
+        int best = 1, golds = 0;
+        foreach (GachaResult r in results)
+        {
+            best = Mathf.Max(best, r.Equipment.rarity);
+            if (r.Equipment.rarity >= 3) golds++;
+        }
+        // ★3 が 2 枚以上：最後の溜めで光が虹色になる（いちばんの当たり）
+        bool rainbow = golds >= 2;
         // 昇格演出：いちばん良い★より 1 つ下の色で光りはじめ、途中で変わる
         int shown = best;
         bool upgrade = false;
@@ -212,6 +218,10 @@ public class GachaShow
         float cx = W * 0.5f, cy = H * 0.52f;
         float boxSize = 380f * S;
 
+        Loop(back, () =>
+        {
+            if (Random.value < 0.15f) Drift();
+        });
         VisualElement rays = Image(RaysTexture(), cx, cy, H * 1.6f, H * 1.6f, back);
         rays.style.opacity = 0f;
         Spin(rays, 14f);
@@ -219,14 +229,13 @@ public class GachaShow
         glow.style.opacity = 0f;
         VisualElement box = Box(cx, cy, boxSize);
 
-        AudioManager.PlaySE("click");
         yield return Tween(0.45f, t =>
         {
             float e = Ease.OutCubic(t);
             box.style.translate = new Translate(0f, (1f - e) * -H * 0.7f);
             box.style.rotate = new Rotate(new Angle((1f - e) * -12f, AngleUnit.Degree));
         });
-        AudioManager.PlaySE("deploy");
+        GachaSound.Play("land", 0.9f);
         Shake(14f * S, 0.3f);
         Dust(cx, cy + boxSize * 0.42f);
         yield return Squash(box, 0.18f);
@@ -241,7 +250,7 @@ public class GachaShow
             float k = (i + 1) / 3f;
             glow.style.unityBackgroundImageTintColor = color;
             if (shown >= 2) rays.style.unityBackgroundImageTintColor = Palette.WithAlpha(color, 1f);
-            AudioManager.PlaySE("skill_ready");
+            GachaSound.Play("charge" + i);
             Rise(cx, cy, color, 6 + i * 4);
             yield return Tween(0.42f, t =>
             {
@@ -261,7 +270,7 @@ public class GachaShow
                 shown = best;
                 color = RarityColor(shown);
                 FlashScreen(Color.white, 0.6f, 0.45f);
-                AudioManager.PlaySE("boss_warning");
+                GachaSound.Play("upgrade", 0.9f);
                 Shake(22f * S, 0.45f);
                 Pop("!?", cx + boxSize * 0.45f, cy - boxSize * 0.55f, color);
                 Ring(cx, cy, color, boxSize * 0.6f, boxSize * 3f, 0.6f);
@@ -270,11 +279,35 @@ public class GachaShow
         }
         if (skip) { yield return Summary(results); yield break; }
 
+        if (rainbow && !skip)
+        {
+            yield return Wait(0.2f);
+            FlashScreen(Color.white, 0.8f, 0.6f);
+            GachaSound.Play("upgrade", 1f);
+            GachaSound.Play("rare3", 0.6f);
+            Shake(28f * S, 0.6f);
+            Pop("!!!", cx + boxSize * 0.4f, cy - boxSize * 0.6f, Color.white);
+            Loop(glow, () =>
+            {
+                Color hue = Color.HSVToRGB((Time.unscaledTime * 0.6f) % 1f, 0.6f, 1f);
+                glow.style.unityBackgroundImageTintColor = hue;
+                rays.style.unityBackgroundImageTintColor = hue;
+            });
+            rays.style.opacity = 0.7f;
+        }
+
         // 押すまで待つ（箱はふるえつづける）
-        SetHint(best >= 3 ? "押して開ける……！" : "押して開ける");
+        SetHint(rainbow ? "押して開ける……！！" : best >= 3 ? "押して開ける……！" : "押して開ける");
+        float nextBeat = Time.unscaledTime;
         var shiver = Loop(box, () =>
         {
             float t = Time.unscaledTime;
+            // どくん・どくん（★3 のときは速く）
+            if (t >= nextBeat)
+            {
+                GachaSound.Play("tap", shown >= 3 ? 0.9f : 0.6f);
+                nextBeat = t + (shown >= 3 ? 0.75f : 1.1f);
+            }
             box.style.rotate = new Rotate(new Angle(Mathf.Sin(t * 30f) * (shown >= 3 ? 3f : 1.5f), AngleUnit.Degree));
             glow.style.opacity = 0.65f + 0.2f * Mathf.Sin(t * 6f);
         });
@@ -284,8 +317,9 @@ public class GachaShow
         if (skip) { yield return Summary(results); yield break; }
 
         // 3. はじける
-        AudioManager.PlaySE("skill");
-        if (best >= 3) AudioManager.PlaySE("victory");
+        GachaSound.Play("burst", 1f);
+        if (best >= 3) GachaSound.Play("rare3", 0.7f);
+        else if (best == 2) GachaSound.Play("rare2", 0.6f);
         FlashScreen(best >= 3 ? new Color(1f, 0.93f, 0.75f) : Color.white, 1f, best >= 3 ? 0.8f : 0.5f);
         Shake((best >= 3 ? 34f : best == 2 ? 20f : 12f) * S, best >= 3 ? 0.8f : 0.45f);
         Sprite burstArt = Art.Effect(best >= 3 ? "GachaBurstGold" : best == 2 ? "GachaBurstBlue" : "GachaBurstWhite");
@@ -332,7 +366,7 @@ public class GachaShow
                 c.Root.style.scale = new Scale(new Vector3(s, s, 1f));
                 c.Root.style.opacity = Mathf.Clamp01(t * 3f);
             });
-            if (i % 3 == 0) AudioManager.PlaySE("click");
+            GachaSound.Play("flip", 0.4f);
             yield return Wait(cards.Count > 1 ? 0.05f : 0f);
         }
         yield return Wait(0.45f);
@@ -348,7 +382,7 @@ public class GachaShow
             if (rarity >= 3)
             {
                 // めくる前に、ふるえて光が強くなる
-                AudioManager.PlaySE("skill_ready");
+                GachaSound.Play("charge2", 0.8f);
                 Vector2 basePos = new Vector2(c.X, c.Y);
                 yield return Tween(0.55f, t =>
                 {
@@ -369,18 +403,18 @@ public class GachaShow
                 Ring(c.X, c.Y, RarityColor(3), c.Width * 0.3f, c.Width * 3f, 0.6f);
                 Burst(c.X, c.Y, RarityColor(3), 30, c.Width * 2.2f);
                 Shake(16f * S, 0.35f);
-                AudioManager.PlaySE("victory");
+                GachaSound.Play("rare3", 0.8f);
                 if (!skip) yield return Spotlight(c.Result);
             }
             else if (rarity == 2)
             {
                 Ring(c.X, c.Y, RarityColor(2), c.Width * 0.3f, c.Width * 1.8f, 0.45f);
                 Burst(c.X, c.Y, RarityColor(2), 12, c.Width * 1.2f);
-                AudioManager.PlaySE("buff");
+                GachaSound.Play("rare2", 0.7f);
             }
             else
             {
-                AudioManager.PlaySE("click");
+                GachaSound.Play("flip", 0.6f);
             }
             if (c.Result.IsNew) Stamp(c);
             yield return Wait(fast ? 0.03f : rarity >= 2 ? 0.28f : 0.14f);
@@ -426,7 +460,7 @@ public class GachaShow
             if (Random.value < 0.5f) Spark(cx + Random.Range(-W * 0.4f, W * 0.4f), cy + Random.Range(-H * 0.4f, H * 0.4f), gold, spot);
         });
 
-        AudioManager.PlaySE("start");
+        GachaSound.Play("burst", 0.8f);
         yield return Tween(0.45f, t =>
         {
             float s = Mathf.LerpUnclamped(2.2f, 1f, Ease.OutBack(t));
@@ -449,7 +483,7 @@ public class GachaShow
         {
             yield return Wait(0.16f);
             stars.text = new string('★', i + 1);
-            AudioManager.PlaySE("skill_ready");
+            GachaSound.Play("star", 0.7f);
         }
         if (r.IsNew)
         {
@@ -463,7 +497,7 @@ public class GachaShow
                 stamp.style.scale = new Scale(new Vector3(s, s, 1f));
                 stamp.style.opacity = t;
             }, () => Shake(10f * S, 0.2f));
-            AudioManager.PlaySE("deploy");
+            GachaSound.Play("stamp", 0.9f);
         }
         SetHint("押して続ける");
         yield return WaitTap(10f);
@@ -515,7 +549,7 @@ public class GachaShow
         if (coins > 0) parts.Add("部費に換わった " + coins);
         summaryText.text = string.Join("　", parts);
         UIFactory.SetVisible(summary, true);
-        AudioManager.PlaySE(r3 > 0 ? "victory" : "buff");
+        GachaSound.Play(r3 > 0 ? "rare3" : "rare2", 0.5f);
         yield break;
     }
 
@@ -595,6 +629,7 @@ public class GachaShow
     private void Stamp(CardView c)
     {
         if (c.Face == null) return;
+        GachaSound.Play("stamp", 0.5f);
         var tag = UIFactory.Text("NEW", UIFont.Display, "gacha-card-badge", "gacha-card-badge--new");
         tag.style.fontSize = Mathf.Max(14f, c.Width * 0.075f);
         c.Face.Add(tag);
@@ -823,6 +858,23 @@ public class GachaShow
                 p.style.rotate = new Rotate(new Angle(spin * t, AngleUnit.Degree));
             }, () => p.RemoveFromHierarchy());
         }
+    }
+
+    /// <summary>背景をゆっくり舞う光の粒</summary>
+    private void Drift()
+    {
+        float x = Random.Range(0f, W), y = H + 20f;
+        float size = Random.Range(6f, 16f) * S;
+        var p = Image(SpriteFactory.Glow, x, y, size, size, back);
+        p.style.unityBackgroundImageTintColor = new Color(0.6f, 0.7f, 1f, 0.6f);
+        float rise = Random.Range(H * 0.5f, H * 1.1f), sway = Random.Range(-60f, 60f) * S;
+        float life = Random.Range(3f, 6f);
+        UITween.Run(p, life, t =>
+        {
+            p.style.top = y - rise * t - size * 0.5f;
+            p.style.left = x + sway * Mathf.Sin(t * 6f) - size * 0.5f;
+            p.style.opacity = Mathf.Sin(t * Mathf.PI) * 0.8f;
+        }, () => p.RemoveFromHierarchy());
     }
 
     /// <summary>箱から光の粒が立ちのぼる</summary>

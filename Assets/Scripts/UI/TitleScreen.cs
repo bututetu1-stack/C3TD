@@ -4,6 +4,13 @@ using UnityEngine.UIElements;
 public class TitleScreen
 {
     public readonly VisualElement Root;
+    private readonly Label freeBadge;
+
+    /// <summary>タイトルを出すたびに：今日の無料ガチャがまだなら「無料」の札</summary>
+    public void Refresh()
+    {
+        UIFactory.SetVisible(freeBadge, Growth.FreePullAvailable());
+    }
 
     public TitleScreen(VisualElement parent, GameBootstrap bootstrap)
     {
@@ -27,6 +34,8 @@ public class TitleScreen
         var gacha = new C3Button(IconKind.Star, 24f, "ガチャ", () => bootstrap.ShowGacha());
         gacha.AddToClassList("title-button");
         gacha.AddToClassList("title-button--sub");
+        freeBadge = UIFactory.Text("無料", UIFont.Body, "title-free-badge");
+        gacha.Add(freeBadge);
         growRow.Add(gacha);
         var subRow = UIFactory.Box("title-subrow");
         var book = new C3Button(IconKind.Next, 26f, "敵図鑑", () => bootstrap.ShowEnemyBook());
