@@ -134,6 +134,8 @@ public class MenuUI : MonoBehaviour
     public void HideAll()
     {
         settings.Hide();
+        AudioManager.StopLoop();
+        AudioManager.Duck(1f);
         root.style.display = DisplayStyle.None;
         current = null;
     }
@@ -145,6 +147,17 @@ public class MenuUI : MonoBehaviour
         foreach (VisualElement s in new[] { title.Root, select.Root, squad.Root, book.Root, help.Root, records.Root, upgrade.Root, classGuide.Root, growth.Root, gacha.Root }) UIFactory.SetVisible(s, s == screen);
         current = screen;
         AudioManager.PlayBGM("menu");
+        // ガチャの画面ではメニューの BGM の代わりにガチャの BGM を小さく流す。ほかの画面では戻す
+        if (screen == gacha.Root)
+        {
+            AudioManager.Duck(0f);
+            AudioManager.PlayLoop(GachaMusic.Loop(), GachaShow.AmbientVolume);
+        }
+        else
+        {
+            AudioManager.StopLoop();
+            AudioManager.Duck(1f);
+        }
         UITween.Stop(ref showTween);
         showTween = UITween.Run(screen, 0.35f, t =>
         {

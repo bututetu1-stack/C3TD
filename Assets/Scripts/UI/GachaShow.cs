@@ -168,8 +168,8 @@ public class GachaShow
     {
         if (running != null) host.StopCoroutine(running);
         running = null;
-        AudioManager.StopLoop();
-        AudioManager.Duck(1f);
+        // ガチャの画面に戻る：ガチャの BGM を小さく（メニューの BGM は画面を出るときに戻る）
+        AudioManager.PlayLoop(GachaMusic.Loop(), AmbientVolume);
         Reset();
         UIFactory.SetVisible(Layer, false);
         if (onClosed != null) onClosed();
@@ -216,8 +216,9 @@ public class GachaShow
     /// <summary>★3 があるときに確定演出（金の光の柱）が出る割合</summary>
     public static float OmenChance = 0.15f;
 
-    /// <summary>ガチャの BGM（GachaMusic）の音量（BGM の設定に掛ける）</summary>
+    /// <summary>ガチャの BGM（GachaMusic）の音量（BGM の設定に掛ける）。演出のあいだと、ガチャの画面にいるあいだ</summary>
     private const float LoopVolume = 0.55f;
+    public const float AmbientVolume = 0.3f;
 
     /// <summary>★3 のカードが、★2 の青い光で並び、めくる前に金色に変わる割合（カードの昇格演出）</summary>
     public static float CardDisguiseChance = 0.3f;
